@@ -5,7 +5,7 @@ feather
 
 Introduction
 ---------------
-Feather is 3d polygon modelling application based on Wings3d. Feather has a C++ core and Qt5 QML interface which eliminates issues that Wings has due to the Erlang language that it uses. Feather is currently only targeted for Linux OS's but other could be added later.
+Feather is 3d polygon modelling application based on Wings3d. Feather has a C++ core and Qt5 QML interface which eliminates issues that Wings has due to the Erlang language that it uses. Feather is currently only targeted for the Linux OS but others could be added later.
 
 Current Status
 ---------------
