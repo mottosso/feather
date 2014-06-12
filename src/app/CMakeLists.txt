@@ -45,4 +45,4 @@ target_link_libraries(feather ${feather_LIBS})
 
 # INSTALL
 install( TARGETS feather
-    RUNTIME DESTINATION /usr/bin)
+    RUNTIME DESTINATION /usr/local/feather)
