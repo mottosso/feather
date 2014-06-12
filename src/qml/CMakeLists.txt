@@ -1,0 +1,7 @@
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+# INSTALL
+
+FILE(GLOB QML_FILES "src/qml/*.qml")
+
+INSTALL(FILES ${QML_FILES} DESTINATION /usr/local/feather)
