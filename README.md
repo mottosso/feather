@@ -10,16 +10,16 @@ Feather is 3d polygon modelling application based on Wings3d. Feather has a C++ 
 Target Features
 ---------------
 Here's a list of features that are the goal for version 1.0.
-    * C++ core
-    * QtQuick interface
-    * Open/Save feather project files
-    * Import/Export obj files
-    * Full clone of Wings tools for all components (vertex, edge, face and object)
-    * Outliner
-    * Material Editor
-    * UV Editor
-    * Integrated Renderer (Mitsuba or Lux?)
-    * Support for 3DConnexion SpaceNavigator
+* C++ core
+* QtQuick interface
+* Open/Save feather project files
+* Import/Export obj files
+* Full clone of Wings tools for all components (vertex, edge, face and object)
+* Outliner
+* Material Editor
+* UV Editor
+* Integrated Renderer (Mitsuba or Lux?)
+* Support for 3DConnexion SpaceNavigator
 
 Current Status
 ---------------
