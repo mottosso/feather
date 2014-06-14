@@ -107,4 +107,6 @@
 #include <QPainter>
 #include <QPaintEngine>
 
+#include <QtOpenGL/QtOpenGL>
+
 #endif

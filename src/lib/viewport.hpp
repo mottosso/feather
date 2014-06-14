@@ -18,8 +18,8 @@
 
 #include "deps.hpp"
 
-class Viewport {
-
+class Viewport
+{
     public:
         Viewport();
         ~Viewport();
@@ -28,6 +28,7 @@ class Viewport {
         void initialize();
 
     private:
+        void drawGrid();
         QOpenGLShaderProgram program1;
         int vertexAttr1;
         int normalAttr1;
