@@ -13,16 +13,41 @@
 //        Company:  
 // 
 // =====================================================================================
-#include <QGuiApplication>
-#include <QQuickView>
+#include "deps.hpp"
+#include "viewportthread.hpp"
 
-int main (int argc, char *argv[])
+int main(int argc, char **argv)
 {
     QGuiApplication app(argc, argv);
-    QQuickView view;
-    view.setSource(QUrl("./main.qml"));
-    view.setGeometry(0,0,1024,768);
-    view.show();
-    return app.exec();
+
+    // ?? This always comes back with an error though my platform supports threading ??
+    /*
+    if (!QGuiApplicationPrivate::platform_integration->hasCapability(QPlatformIntegration::ThreadedOpenGL)) {
+        QQuickView view;
+        view.setSource(QUrl("error.qml"));
+        view.show();
+        return app.exec();
+    }
+    */
+
+    qmlRegisterType<ViewportThread>("FeatherViewport", 1, 0, "Viewport");
+    int execReturn = 0;
+
+    {
+        QQuickView view;
+        view.setPersistentOpenGLContext(true);
+        view.setPersistentSceneGraph(true);
+        view.setResizeMode(QQuickView::SizeRootObjectToView);
+        view.setSource(QUrl("main.qml"));
+        view.show();
+        execReturn = app.exec();
+    }
+
+    foreach (QThread *t, ViewportThread::threads) {
+        t->wait();
+        delete t;
+    }
+
+    return execReturn;
 };
 

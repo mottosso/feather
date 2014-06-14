@@ -19,6 +19,7 @@
 // C
 #include <dlfcn.h>
 #include <stdio.h>
+#include <math.h>
 
 // C++
 #include <cstddef>
@@ -81,5 +82,29 @@
 
 // boost::variant
 #include <boost/variant/recursive_variant.hpp>
+
+// QT5
+#include <QtQuick/QQuickView>
+#include <QtQuick/QQuickWindow>
+#include <QQuickItem>
+#include <QtCore/QMutex>
+#include <QtCore/QThread>
+#include <QtGui/QGuiApplication>
+#include <QtGui/QOffscreenSurface>
+#include <QTime>
+
+#include <QtGui/private/qguiapplication_p.h>
+#include <QtGui/qpa/qplatformintegration.h>
+
+// QtOpenGL
+#include <QtGui/QOpenGLContext>
+#include <QtGui/QOpenGLFramebufferObject>
+#include <QtGui/qvector3d.h>
+#include <QtGui/qmatrix4x4.h>
+#include <QtGui/qopenglshaderprogram.h>
+#include <qsgsimpletexturenode.h>
+#include <QVector>
+#include <QPainter>
+#include <QPaintEngine>
 
 #endif

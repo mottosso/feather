@@ -2,6 +2,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Gui REQUIRED)
+find_package(Qt5Core REQUIRED)
 find_package(Qt5Quick REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(Boost REQUIRED)
@@ -13,8 +14,14 @@ set(feather_SRCS
 set(QT_USE_QTOPENGL TRUE)
 
 include_directories(${feather_core_SOURCE_DIR}
+    ${Qt5Gui_INCLUDE_DIRS}
+    ${Qt5Core_INCLUDE_DIRS}
     ${Qt5Widgets_INCLUDE_DIRS}
     ${Qt5Quick_INCLUDE_DIRS}
+    "/usr/include/qt/QtGui/5.3.0"
+    "/usr/include/qt/QtGui/5.3.0/QtGui"
+    "/usr/include/qt/QtCore/5.3.0"
+    "/usr/include/qt/QtCore/5.3.0/QtCore"
 )
 
 link_directories(${feather_core_BINARY_DIR}
