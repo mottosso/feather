@@ -71,6 +71,7 @@ QSGNode *ViewportThread::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *
     }
 
     node->setRect(boundingRect());
+    m_renderThread->setSize(QSize(node->rect().width(),node->rect().height()));
 
     return node;
 }
