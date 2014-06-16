@@ -85,6 +85,8 @@
 
 // QT5
 #include <QtQuick/QQuickView>
+#include <QtQuick/QQuickItem>
+#include <QtQuick/qquickwindow.h>
 #include <QtQuick/QQuickWindow>
 #include <QQuickItem>
 #include <QtCore/QMutex>
@@ -99,6 +101,7 @@
 // QtOpenGL
 #include <QtGui/QOpenGLContext>
 #include <QtGui/QOpenGLFramebufferObject>
+#include <QtGui/QOpenGLShaderProgram>
 #include <QtGui/qvector3d.h>
 #include <QtGui/qmatrix4x4.h>
 #include <QtGui/qopenglshaderprogram.h>

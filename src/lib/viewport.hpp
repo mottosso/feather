@@ -18,22 +18,34 @@
 
 #include "deps.hpp"
 
-class Viewport
+class Viewport : public QQuickItem
 {
-    public:
-        Viewport();
-        ~Viewport();
+    Q_OBJECT
 
-        void render();
-        void initialize();
+    Q_PROPERTY(qreal t READ t WRITE setT NOTIFY tChanged)
 
-    private:
-        void drawGrid();
-        QOpenGLShaderProgram program1;
-        int vertexAttr1;
-        int normalAttr1;
-        int matrixUniform1;
+public:
+    Viewport();
 
+    qreal t() const { return m_t; }
+    void setT(qreal t);
+
+signals:
+    void tChanged();
+
+public slots:
+    void paint();
+    void cleanup();
+    void sync();
+
+private slots:
+    void handleWindowChanged(QQuickWindow *win);
+
+private:
+    QOpenGLShaderProgram *m_program;
+
+    qreal m_t;
+    qreal m_thread_t;
 };
 
 #endif

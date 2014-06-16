@@ -1,19 +1,14 @@
-import QtQuick 2.0
+import QtQuick 2.2
 import FeatherViewport 1.0
 
-Rectangle {
-    id: view3d
-    border.color: "yellow"
-    border.width: 2
-    color: "darkgrey"
-
-    anchors.fill: parent
+Item {
 
     Viewport {
         id: renderer
         anchors.fill: parent
-        anchors.margins: 10
+        anchors.margins: 4
 
+        /*
         MouseArea {
             id: mouseArea
             anchors.fill: parent
@@ -21,7 +16,7 @@ Rectangle {
 
             onClicked: {}
         }
-
+        */
     }
 
 }

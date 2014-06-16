@@ -1,26 +1,26 @@
-import QtQuick 2.0
+import QtQuick 2.2
 import QtQuick.Window 2.1
-import QtQuick.Dialogs 1.0
-import QtQuick.Controls 1.0
-import QtQuick.Controls.Styles 1.0
-import QtQuick.Layouts 1.0
 
-Item {
+Rectangle {
     id: main
-    width: 800
-    height: 600
+    width: 400
+    height: 540
+    color: "darkgrey"
 
-    ApplicationWindow {
-        id: main_window
-        visibility: Window.Maximized
+    MainMenu { id: mainmenu }
+
+    Window {
+         title: "Viewport"
+        flags: Qt.Window // Window, Dialog, Popup, SubWindow, Tool, ToolTip, SplashScreen
+        width: 500
+        height: 500
+        x: 100
+        y: 100
         visible: true
-        title: "Majestic" 
-
-        menuBar: MainMenu{}
-
-        toolBar: MainToolBar{}
-
-        Viewport3D{}
+ 
+        Viewport3D {
+            anchors.fill: parent 
+        } 
 
     }
 }

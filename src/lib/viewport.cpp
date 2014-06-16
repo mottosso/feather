@@ -29,126 +29,113 @@ GLfloat gridpoints[2][2][3] = {
 
 float graphres = 200.0;
 
-
-Viewport::Viewport()
+    Viewport::Viewport()
+    : m_program(0)
+    , m_t(0)
+      , m_thread_t(0)
 {
+    connect(this, SIGNAL(windowChanged(QQuickWindow*)), this, SLOT(handleWindowChanged(QQuickWindow*)));
 }
 
-Viewport::~Viewport()
+void Viewport::setT(qreal t)
 {
+    if (t == m_t)
+        return;
+    m_t = t;
+    emit tChanged();
+    if (window())
+        window()->update();
 }
 
-void Viewport::initialize()
+void Viewport::handleWindowChanged(QQuickWindow *win)
 {
-    glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
+    if (win) {
+        // Connect the beforeRendering signal to our paint function.
+        // Since this call is executed on the rendering thread it must be
+        // a Qt::DirectConnection
+        connect(win, SIGNAL(beforeRendering()), this, SLOT(paint()), Qt::DirectConnection);
+        connect(win, SIGNAL(beforeSynchronizing()), this, SLOT(sync()), Qt::DirectConnection);
 
-    QOpenGLShader *vshader1 = new QOpenGLShader(QOpenGLShader::Vertex, &program1);
-    const char *vsrc1 =
-        "attribute highp vec4 vertex;\n"
-        "attribute mediump vec3 normal;\n"
-        "uniform mediump mat4 matrix;\n"
-        "varying mediump vec4 color;\n"
-        "void main(void)\n"
-        "{\n"
-        " vec3 toLight = normalize(vec3(0.0, 0.3, 1.0));\n"
-        " float angle = max(dot(normal, toLight), 0.0);\n"
-        " vec3 col = vec3(0.40, 1.0, 0.0);\n"
-        " color = vec4(col * 0.2 + col * 0.8 * angle, 1.0);\n"
-        " color = clamp(color, 0.0, 1.0);\n"
-        " gl_Position = matrix * vertex;\n"
-        "}\n";
-
-    vshader1->compileSourceCode(vsrc1);
-
-    QOpenGLShader *fshader1 = new QOpenGLShader(QOpenGLShader::Fragment, &program1);
-    const char *fsrc1 =
-        "varying mediump vec4 color;\n"
-        "void main(void)\n"
-        "{\n"
-        " gl_FragColor = color;\n"
-        "}\n";
-    fshader1->compileSourceCode(fsrc1);
-
-    program1.addShader(vshader1);
-    program1.addShader(fshader1);
-    program1.link();
-
-    vertexAttr1 = program1.attributeLocation("vertex");
-    normalAttr1 = program1.attributeLocation("normal");
-    matrixUniform1 = program1.uniformLocation("matrix");
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-
-    // setup grid
-    // glMap2f(target,u1,u2,ustride,uorder,v1,v2,vstride,vorder,points)
-    // u1,u2 = min and max values for u
-    // v1,v2 = min and max values for v
-    // *stride = the number of values between indepentent settings for these values
-    // using the example of grid[2][2][3] would give you 0,1,3,2,0,1,6,2 (0.0,1.0,[3],[2],0.0,1.0,[2]*[3],[2])
-    glMap2f(GL_MAP2_VERTEX_3,0,1,3,2,0,1,6,2,&gridpoints[0][0][0]);
-    glEnable(GL_MAP2_VERTEX_3);
-
-    glDepthFunc(GL_LEQUAL);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_AUTO_NORMAL);
-    glEnable(GL_NORMALIZE);
-
-    // glMapGrid2f(nu,u1,u2,nv,v1,v2)
-    // n* = number of steps
-    // u1,u2 = from/to u
-    // v1,v2 = from/to v
-    glMapGrid2f(2,0.0,1.0,2,0.0,1.0);
-
-
-    std::cout << "init\n";
-
-    // setup the camera position here
-    // setup the meshes here
+        // If we allow QML to do the clearing, they would clear what we paint
+        // and nothing would show.
+        win->setClearBeforeRendering(false);
+    }
 }
 
-void Viewport::render()
+void Viewport::paint()
 {
-    glDepthMask(true);
-    std::cout << "render\n";
+    if (!m_program) {
+        m_program = new QOpenGLShaderProgram();
+        m_program->addShaderFromSourceCode(QOpenGLShader::Vertex,
+                "attribute highp vec4 vertex;\n"
+                "attribute mediump vec3 normal;\n"
+                "uniform mediump mat4 matrix;\n"
+                "varying mediump vec4 color;\n"
+                "void main(void)\n"
+                "{\n"
+                " vec3 toLight = normalize(vec3(0.0, 0.3, 1.0));\n"
+                " float angle = max(dot(normal, toLight), 0.0);\n"
+                " vec3 col = vec3(0.40, 1.0, 0.0);\n"
+                " color = vec4(col * 0.2 + col * 0.8 * angle, 1.0);\n"
+                " color = clamp(color, 0.0, 1.0);\n"
+                " gl_Position = matrix * vertex;\n"
+                "}\n"
+                );
+        m_program->addShaderFromSourceCode(QOpenGLShader::Fragment,
+                "varying mediump vec4 color;\n"
+                "void main(void)\n"
+                "{\n"
+                " gl_FragColor = color;\n"
+                "}\n"
+                );
 
+        m_program->bindAttributeLocation("vertices", 0);
+        m_program->link();
 
-    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        connect(window()->openglContext(), SIGNAL(aboutToBeDestroyed()),
+                this, SLOT(cleanup()), Qt::DirectConnection);
+    }
+    m_program->bind();
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    m_program->enableAttributeArray(0);
 
-    glFrontFace(GL_CW);
-    glCullFace(GL_FRONT);
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_DEPTH_TEST);
+    float values[] = {
+        -1, -1,
+        1, -1,
+        -1, 1,
+        1, 1
+    };
+    m_program->setAttributeArray(0, GL_FLOAT, values, 2);
+    m_program->setUniformValue("t", (float) m_thread_t);
 
-    // position camera
-    glTranslatef(0,0.7,0);
-
-    // draw scenegraph here
-    
-    // draw the grid
-    drawGrid();
-
-   glLineWidth(1.5);
+    qreal ratio = window()->devicePixelRatio();
+    int w = int(ratio * window()->width());
+    int h = int(ratio * window()->height());
+    glViewport(0, 0, w, h);
 
     glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
+
+    glClearColor(1, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    m_program->disableAttributeArray(0);
+    m_program->release();
 }
 
-void Viewport::drawGrid()
+void Viewport::cleanup()
 {
-    // min grid lines
-    glLineWidth(1.25);
-    glColor3f(0,0,1);
-    glMapGrid2f(40,0.0,1.0,40,0.0,1.0);
-    glEvalMesh2(GL_LINE,0,40,0,40); // GL_FILL and GL_POINT
+    if (m_program) {
+        delete m_program;
+        m_program = 0;
+    }
+}
 
-    // max grid lines
-    glLineWidth(1.5);
-    glColor3f(0,0,0);
-    glMapGrid2f(4,0.0,1.0,4,0.0,1.0);
-    glEvalMesh2(GL_LINE,0,4,0,4); // GL_FILL and GL_POINT
+void Viewport::sync()
+{
+    m_thread_t = m_t;
 }
