@@ -95,9 +95,6 @@
 #include <QtGui/QOffscreenSurface>
 #include <QTime>
 
-#include <QtGui/private/qguiapplication_p.h>
-#include <QtGui/qpa/qplatformintegration.h>
-
 // QtOpenGL
 #include <QtGui/QOpenGLContext>
 #include <QtGui/QOpenGLFramebufferObject>

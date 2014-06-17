@@ -15,20 +15,6 @@
 // =====================================================================================
 #include "viewport.hpp"
 
-// this is the grid 
-GLfloat gridpoints[2][2][3] = {
-    {
-        {2,0,2}, // top right
-        {2,0,-2} // bottom right
-    },
-    {
-        {-2,0,2}, // top left
-        {-2,0,-2} // bottom left
-    }
-};
-
-float graphres = 200.0;
-
     Viewport::Viewport()
     : m_program(0)
     , m_t(0)
@@ -67,27 +53,21 @@ void Viewport::paint()
     if (!m_program) {
         m_program = new QOpenGLShaderProgram();
         m_program->addShaderFromSourceCode(QOpenGLShader::Vertex,
-                "attribute highp vec4 vertex;\n"
-                "attribute mediump vec3 normal;\n"
-                "uniform mediump mat4 matrix;\n"
-                "varying mediump vec4 color;\n"
-                "void main(void)\n"
-                "{\n"
-                " vec3 toLight = normalize(vec3(0.0, 0.3, 1.0));\n"
-                " float angle = max(dot(normal, toLight), 0.0);\n"
-                " vec3 col = vec3(0.40, 1.0, 0.0);\n"
-                " color = vec4(col * 0.2 + col * 0.8 * angle, 1.0);\n"
-                " color = clamp(color, 0.0, 1.0);\n"
-                " gl_Position = matrix * vertex;\n"
-                "}\n"
-                );
+                                           "attribute highp vec4 vertices;"
+                                           "varying highp vec2 coords;"
+                                           "void main() {"
+                                           "    gl_Position = vertices;"
+                                           "    coords = vertices.xy;"
+                                           "}");
         m_program->addShaderFromSourceCode(QOpenGLShader::Fragment,
-                "varying mediump vec4 color;\n"
-                "void main(void)\n"
-                "{\n"
-                " gl_FragColor = color;\n"
-                "}\n"
-                );
+                                           "uniform lowp float t;"
+                                           "varying highp vec2 coords;"
+                                           "void main() {"
+                                           "    lowp float i = 1. - (pow(abs(coords.x), 4.) + pow(abs(coords.y), 4.));"
+                                           "    i = smoothstep(t - 0.8, t + 0.8, i);"
+                                           "    i = floor(i * 20.) / 20.;"
+                                           "    gl_FragColor = vec4(coords * .5 + .5, i, i);"
+                                           "}");
 
         m_program->bindAttributeLocation("vertices", 0);
         m_program->link();
@@ -115,7 +95,7 @@ void Viewport::paint()
 
     glDisable(GL_DEPTH_TEST);
 
-    glClearColor(1, 0, 0, 1);
+    glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glEnable(GL_BLEND);

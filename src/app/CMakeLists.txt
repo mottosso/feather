@@ -1,55 +1,51 @@
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Gui REQUIRED)
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Quick REQUIRED)
-find_package(OpenGL REQUIRED)
-find_package(Boost REQUIRED)
+FIND_PACKAGE(Qt5Widgets REQUIRED)
+FIND_PACKAGE(Qt5Gui REQUIRED)
+FIND_PACKAGE(Qt5Core REQUIRED)
+FIND_PACKAGE(Qt5Quick REQUIRED)
+FIND_PACKAGE(Qt5OpenGL REQUIRED)
+FIND_PACKAGE(OpenGL REQUIRED)
+FIND_PACKAGE(Boost REQUIRED)
 
-set(feather_SRCS
+SET(feather_SRCS
  main.cpp
 )
 
-set(QT_USE_QTOPENGL TRUE)
+SET(QT_USE_QTOPENGL TRUE)
 
-include_directories(${feather_core_SOURCE_DIR}
+INCLUDE_DIRECTORIES(${feather_core_SOURCE_DIR}
     ${Qt5Gui_INCLUDE_DIRS}
     ${Qt5Core_INCLUDE_DIRS}
     ${Qt5Widgets_INCLUDE_DIRS}
     ${Qt5Quick_INCLUDE_DIRS}
-    "/usr/include/qt/QtGui/5.3.0"
-    "/usr/include/qt/QtGui/5.3.0/QtGui"
-    "/usr/include/qt/QtCore/5.3.0"
-    "/usr/include/qt/QtCore/5.3.0/QtCore"
 )
 
-link_directories(${feather_core_BINARY_DIR}
+LINK_DIRECTORIES(${feather_core_BINARY_DIR}
 )
 
-link_libraries( feather_core
-)
+LINK_LIBRARIES(feather_core)
 
-add_definitions( ${Qt5Widgets_DEFINITIONS}
+ADD_DEFINITIONS( ${Qt5Widgets_DEFINITIONS}
     ${Qt5Quick_DEFINITIONS}
 )
 
-set(feather_LIBS
+SET(feather_LIBS
  ${Qt5Widgets_LIBRARIES}
  ${Qt5Quick_LIBRARIES}
  ${QTOPENGL_LIBRARIES}
  ${OPENGL_LIBRARIES}
  ${BOOST_LIBRARIES})
 
-set(CMAKE_CXX_FLAGS "-I/usr/include/boost")
+SET(CMAKE_CXX_FLAGS "-I/usr/include/boost")
 
-set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
-set(CMAKE_CXX_FLAGS "${Qt5Quick_EXECUTABLE_COMPILE_FLAGS}")
+SET(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
+SET(CMAKE_CXX_FLAGS "${Qt5Quick_EXECUTABLE_COMPILE_FLAGS}")
 
-add_executable(feather ${feather_SRCS} ${feather_MOC_SRCS})
+ADD_EXECUTABLE(feather ${feather_SRCS} ${feather_MOC_SRCS})
 
-target_link_libraries(feather ${feather_LIBS})
+TARGET_LINK_LIBRARIES(feather ${feather_LIBS})
 
 # INSTALL
-install( TARGETS feather
+INSTALL( TARGETS feather
     RUNTIME DESTINATION /usr/local/feather)
