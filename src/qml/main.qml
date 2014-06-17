@@ -7,7 +7,10 @@ Rectangle {
     height: 540
     color: "darkgrey"
 
-    MainMenu { id: mainmenu }
+    MainMenu {
+        id: mainmenu
+        
+    }
 
     Window {
          title: "Viewport"
@@ -17,10 +20,11 @@ Rectangle {
         x: 100
         y: 100
         visible: true
- 
-        Viewport3D {
+         
+     Viewport3D {
             anchors.fill: parent 
         } 
 
     }
+
 }
