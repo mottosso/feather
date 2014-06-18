@@ -3,13 +3,14 @@ import QtQuick 2.2
 Rectangle {
     id: background
     color: "grey"
-    width: 100
-    anchors.top: parent.top
-    anchors.bottom: parent.bottom
-    anchors.margins: 4
-    radius: 4
+    //width: 100
+    //height: 20
+    //anchors.top: parent.top
+    //anchors.bottom: parent.bottom
+    //anchors.margins: 4
     property alias title: label.text 
- 
+    radius: 4
+
     Text {
         id: label
         anchors.verticalCenter: parent.verticalCenter

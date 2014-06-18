@@ -12,6 +12,14 @@ Rectangle {
         
     }
 
+    Popup {
+        id: popup
+        //width: 100
+        //height: 200
+        //anchors.top: parent.top
+        //anchors.left: parent.left
+    }
+
     Window {
          title: "Viewport"
         flags: Qt.Window // Window, Dialog, Popup, SubWindow, Tool, ToolTip, SplashScreen
