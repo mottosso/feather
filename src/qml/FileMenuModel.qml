@@ -10,4 +10,16 @@ ListModel {
             name: "Save"
         }
 
+        ListElement {
+            name: "Import"
+        }
+
+        ListElement {
+            name: "Export"
+        }
+
+        ListElement {
+            name: "Exit"
+        }
+
 }
