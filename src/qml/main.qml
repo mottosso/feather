@@ -10,6 +10,8 @@ Rectangle {
     Viewport3D {
         width: 500
         height: 500
+        x: 100
+        y: 100
     }
     
     MainMenu { id: mainmenu }
@@ -21,4 +23,5 @@ Rectangle {
         //anchors.top: parent.top
         //anchors.left: parent.left
     }
+
 }
