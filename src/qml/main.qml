@@ -24,4 +24,21 @@ Rectangle {
         //anchors.left: parent.left
     }
 
+    Rectangle {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: 28
+        color: "grey"
+        border.color: "black"
+        border.width: 1
+        radius: 2
+        
+        Text {
+            text: "feedback goes here"
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.margins: 4
+        } 
+    }
 }
