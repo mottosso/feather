@@ -11,7 +11,7 @@ set(feather_core_SRCS
     core.cpp
     #test.cpp
     viewport.cpp
-    #viewportthread.cpp
+    viewportthread.cpp
 )
 
 INCLUDE_DIRECTORIES(${Qt5Widgets_INCLUDE_DIRS}
