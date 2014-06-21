@@ -14,7 +14,15 @@ Rectangle {
         y: 100
     }
     
-    MainMenu { id: mainmenu }
+    MainMenu {
+        id: mainmenu
+        height: 25
+    }
+
+    ToolBar {
+        id: toolbar
+        anchors.top: mainmenu.bottom
+    }
 
     Popup {
         id: popup
