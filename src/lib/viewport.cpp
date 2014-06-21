@@ -15,8 +15,6 @@
 // =====================================================================================
 #include "viewport.hpp"
 
-#include "viewport.hpp"
-
 Viewport::Viewport()
 {
 }
@@ -28,6 +26,8 @@ Viewport::~Viewport()
 void Viewport::initialize()
 {
     glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
+
+
 
     QOpenGLShader *vshader1 = new QOpenGLShader(QOpenGLShader::Vertex, &program1);
     vshader1->compileSourceFile("test.vert");
