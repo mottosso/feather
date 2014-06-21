@@ -26,13 +26,15 @@ class Viewport {
 
         void render();
         void initialize();
+        void createMesh();
 
     private:
         QOpenGLShaderProgram program1;
         int vertexAttr1;
         int normalAttr1;
         int matrixUniform1;
-
+        GLuint vbo;
+        GLuint vao;
 };
 
 #endif
