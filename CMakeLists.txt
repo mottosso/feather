@@ -34,3 +34,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_LINK_FLAGS "-ldl")
 
 add_subdirectory(src)
+add_subdirectory(assets)
