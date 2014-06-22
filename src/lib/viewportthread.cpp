@@ -22,7 +22,7 @@ ViewportThread::ViewportThread()
 : m_renderThread(0)
 {
     setFlag(ItemHasContents, true);
-    m_renderThread = new RenderViewportThread(QSize(512, 512));
+    m_renderThread = new RenderViewportThread(QSize(500, 500));
 }
 
 void ViewportThread::ready()
@@ -98,15 +98,36 @@ void RenderViewportThread::renderNext()
         m_renderFbo = new QOpenGLFramebufferObject(m_size, format);
         m_displayFbo = new QOpenGLFramebufferObject(m_size, format);
         m_viewport= new Viewport();
+        m_viewport->setContext(context);
         m_viewport->initialize();
     }
 
     m_renderFbo->bind();
     glViewport(0, 0, m_size.width(), m_size.height());
 
+    glMatrixMode(GL_PROJECTION);
+
+    glLoadIdentity();
+
+    float ar = (float)m_size.height()/(float)m_size.width();
+
+    // glFrustum(left,right,bottom,top,near,far)
+
+    glFrustum(-1.0,1.0,-1.0*ar,1.0*ar,0.01,20.0);
+
+    // glOrtho(left,right,bottom,top,near,far)
+
+    //glOrtho(-1,1,-1*ar,1*ar,0,20);
+
+    glMatrixMode(GL_MODELVIEW);
+
+    glLoadIdentity();
+
+    //std::cout << "renderNext " << ar << " " << m_size.width() << " " << m_size.height() << std::endl;
+
     m_viewport->render();
 
-    glFlush();
+    //glFlush();
 
     m_renderFbo->bindDefault();
     qSwap(m_renderFbo, m_displayFbo);

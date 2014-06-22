@@ -27,7 +27,7 @@ class Viewport {
         void render();
         void initialize();
         void createMesh();
-
+        void setContext(QOpenGLContext* context) { m_context=context; };
     private:
         QOpenGLShaderProgram program1;
         int vertexAttr1;
@@ -35,6 +35,12 @@ class Viewport {
         int matrixUniform1;
         GLuint vbo;
         GLuint vao;
+
+        // VBO Items
+        QOpenGLVertexArrayObject* m_vao1;
+        QOpenGLContext* m_context;
+        QOpenGLBuffer m_positionBuffer;
+        QOpenGLBuffer m_colorBuffer;
 };
 
 #endif

@@ -40,6 +40,7 @@
 #include <GL/glext.h>
 //#include <GL/glut.h>
 #include <GL/freeglut.h>
+//#include <GLFW/glfw3.h>
 
 // boost
 #include <boost/assert.hpp>
