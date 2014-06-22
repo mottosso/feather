@@ -32,6 +32,7 @@ class Viewport {
         QOpenGLShaderProgram program1;
         int vertexAttr1;
         int normalAttr1;
+        int colorUniform1;
         int matrixUniform1;
         GLuint vbo;
         GLuint vao;
