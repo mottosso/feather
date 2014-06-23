@@ -105,23 +105,23 @@ void RenderViewportThread::renderNext()
     m_renderFbo->bind();
     glViewport(0, 0, m_size.width(), m_size.height());
 
-    glMatrixMode(GL_PROJECTION);
+    //glMatrixMode(GL_PROJECTION);
 
-    glLoadIdentity();
+    //glLoadIdentity();
 
-    float ar = (float)m_size.height()/(float)m_size.width();
+    //float ar = (float)m_size.height()/(float)m_size.width();
 
     // glFrustum(left,right,bottom,top,near,far)
 
-    glFrustum(-1.0,1.0,-1.0*ar,1.0*ar,0.01,20.0);
+    //glFrustum(-1.0,1.0,-1.0*ar,1.0*ar,0.01,20.0);
 
     // glOrtho(left,right,bottom,top,near,far)
 
     //glOrtho(-1,1,-1*ar,1*ar,0,20);
 
-    glMatrixMode(GL_MODELVIEW);
+    //glMatrixMode(GL_MODELVIEW);
 
-    glLoadIdentity();
+    //glLoadIdentity();
 
     //std::cout << "renderNext " << ar << " " << m_size.width() << " " << m_size.height() << std::endl;
 

@@ -15,13 +15,14 @@
 // =====================================================================================
 #include "viewport.hpp"
 
-float points[] = {
-   0.0f,  1.0f,  0.0f,
-   -1.0f, 1.0f,  0.0f,
-  1.0f, -1.0f,  0.0f
+
+QVector3D points[] = {
+   QVector3D(0.0,  1.0,  0.0),
+   QVector3D(-1.0, 1.0,  0.0),
+  QVector3D(1.0, -1.0,  0.0)
 };
 
-int indics[] = { 0, 1, 2 };
+GLuint indics[] = { 0, 1, 2 };
 
 float color[] = {
   1.0f,  1.0f,  1.0f,
@@ -29,7 +30,7 @@ float color[] = {
   1.0f, 1.0f,  1.0f
 };
 
-Viewport::Viewport()
+Viewport::Viewport() : vboIds(new GLuint[2])
 {
 }
 
@@ -59,17 +60,22 @@ void Viewport::initialize()
 
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-
+    
     // setup the camera position here
     // setup the meshes here
     //createMesh();
 
+    initializeGLFunctions();
+    glGenBuffers(2,vboIds);
+    initMesh();
+
+
     // VBO ITEMS
 
     // Create VAO for first object to render
-    m_vao1 = new QOpenGLVertexArrayObject(m_context);
-    m_vao1->create();
-    m_vao1->bind();
+    //m_vao1 = new QOpenGLVertexArrayObject(m_context);
+    //m_vao1->create();
+    //m_vao1->bind();
 
     // Setup VBOs and IBO (use QOpenGLBuffer to buffer data,
     // specify format, usage hint etc). These will be
@@ -108,10 +114,10 @@ void Viewport::render()
 
     //glFrontFace(GL_CW);
     //glCullFace(GL_FRONT);
-    //glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 
-    QColor color(0,255,0,255);
+    //QColor color(0,255,0,255);
 
     QMatrix4x4 modelview;
     //modelview.rotate(m_fAngle, 0.0f, 1.0f, 0.0f);
@@ -120,8 +126,17 @@ void Viewport::render()
     //modelview.scale(m_fScale);
     //modelview.translate(0.0f, 0.0f, 0.4f);
     modelview.lookAt(QVector3D(0,0,1),QVector3D(0,0,0),QVector3D(0,1,0)); 
-    program1.bind();
+    const qreal fov=45.0,near=0.1, far=20.0;
+    qreal aspect=500.0/500.0;
+    modelview.setToIdentity();
+    modelview.perspective(fov,near,far,aspect); 
 
+    program1.setUniformValue(matrixUniform1, modelview);
+ 
+
+    //program1.bind();
+
+    /*
     program1.enableAttributeArray(vertexAttr1);
     program1.setAttributeArray(vertexAttr1,points,3);
     program1.setUniformValue(matrixUniform1, modelview);
@@ -139,16 +154,44 @@ void Viewport::render()
     // draw scenegraph here
     program1.enableAttributeArray(vertexAttr1);
     program1.setAttributeBuffer(vertexAttr1, GL_FLOAT, 0, 3 );
+    */
+    
+    drawMesh(&program1);
 
 
-
-
-    program1.release();
+    //program1.release();
 
     glDisable(GL_DEPTH_TEST);
-    //glDisable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
+}
 
+void Viewport::initMesh() {
+    // Transfer vertex data to VBO 0
+    glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
+    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(QVector3D), points, GL_STATIC_DRAW);
 
+    // Transfer index data to VBO 1
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIds[1]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(GLuint), indics, GL_STATIC_DRAW); 
+}
+
+void Viewport::drawMesh(QOpenGLShaderProgram* program) {
+    // Tell OpenGL which VBOs to use
+     glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
+     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIds[1]);
+
+     // Offset for position
+     int offset = 0;
+
+     // Tell OpenGL programmable pipeline how to locate vertex position data
+     int vertexLocation = program->attributeLocation("vertex");
+     program->enableAttributeArray(vertexLocation);
+     glVertexAttribPointer(vertexLocation, 3, GL_FLOAT, GL_FALSE, sizeof(QVector3D), (const void *)offset);
+
+    // TEXTURE WOULD GO HERE
+
+    // Draw using indices from VBO 1
+     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
 }
 
 void Viewport::createMesh()
@@ -164,6 +207,7 @@ void Viewport::createMesh()
     glBindVertexArray (0);
     */
 
+    /*
     vbo = 0;
     glGenBuffers (1, &vbo);
     glBindBuffer (GL_ARRAY_BUFFER, vbo);
@@ -175,5 +219,6 @@ void Viewport::createMesh()
     glEnableVertexAttribArray (0);
     glBindBuffer (GL_ARRAY_BUFFER, vbo);
     glVertexAttribPointer (0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-
+    */
 }
+
