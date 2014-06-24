@@ -98,7 +98,7 @@ void RenderViewportThread::renderNext()
         m_renderFbo = new QOpenGLFramebufferObject(m_size, format);
         m_displayFbo = new QOpenGLFramebufferObject(m_size, format);
         m_viewport= new Viewport();
-        m_viewport->setContext(context);
+        //m_viewport->setContext(context);
         m_viewport->initialize();
     }
 

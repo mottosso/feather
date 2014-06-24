@@ -55,18 +55,18 @@ void Viewport::initialize()
     // use these to access variable in the glsl
     vertexAttr1 = program1.attributeLocation("vertex");
     normalAttr1 = program1.attributeLocation("normal");
-    colorUniform1 = program1.uniformLocation("color");
+    //colorUniform1 = program1.uniformLocation("color");
     matrixUniform1 = program1.uniformLocation("matrix");
 
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     
     // setup the camera position here
     // setup the meshes here
     //createMesh();
 
-    initializeGLFunctions();
-    glGenBuffers(2,vboIds);
+    //initializeGLFunctions();
+    //glGenBuffers(2,vboIds);
     initMesh();
 
 
@@ -109,8 +109,8 @@ void Viewport::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
     //glFrontFace(GL_CW);
     //glCullFace(GL_FRONT);
@@ -124,18 +124,16 @@ void Viewport::render()
     //modelview.rotate(m_fAngle, 1.0f, 0.0f, 0.0f);
     //modelview.rotate(m_fAngle, 0.0f, 0.0f, 1.0f);
     //modelview.scale(m_fScale);
-    //modelview.translate(0.0f, 0.0f, 0.4f);
-    modelview.lookAt(QVector3D(0,0,1),QVector3D(0,0,0),QVector3D(0,1,0)); 
-    const qreal fov=45.0,near=0.1, far=20.0;
+    //modelview.translate(0.0f, 0.0f, -1.4f);
+    modelview.lookAt(QVector3D(0,0,0.01),QVector3D(0,0,0),QVector3D(0,1,0)); 
+    const qreal fov=45.0,near=0.01, far=20.0;
     qreal aspect=500.0/500.0;
-    modelview.setToIdentity();
+    //modelview.setToIdentity();
     modelview.perspective(fov,near,far,aspect); 
 
+    program1.bind();
     program1.setUniformValue(matrixUniform1, modelview);
  
-
-    //program1.bind();
-
     /*
     program1.enableAttributeArray(vertexAttr1);
     program1.setAttributeArray(vertexAttr1,points,3);
@@ -156,10 +154,10 @@ void Viewport::render()
     program1.setAttributeBuffer(vertexAttr1, GL_FLOAT, 0, 3 );
     */
     
-    drawMesh(&program1);
+    drawMesh();
 
 
-    //program1.release();
+    program1.release();
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
@@ -167,16 +165,24 @@ void Viewport::render()
 
 void Viewport::initMesh() {
     // Transfer vertex data to VBO 0
-    glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
-    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(QVector3D), points, GL_STATIC_DRAW);
+    //glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
+    //glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(QVector3D), points, GL_STATIC_DRAW);
 
     // Transfer index data to VBO 1
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIds[1]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(GLuint), indics, GL_STATIC_DRAW); 
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIds[1]);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(GLuint), indics, GL_STATIC_DRAW); 
 }
 
-void Viewport::drawMesh(QOpenGLShaderProgram* program) {
-    // Tell OpenGL which VBOs to use
+void Viewport::drawMesh() {
+    //program1.enableAttributeArray(normalAttr1);
+    program1.enableAttributeArray(vertexAttr1);
+    program1.setAttributeArray(vertexAttr1, points);
+    //program1.setAttributeArray(normalAttr1, normals.constData());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    //program1.disableAttributeArray(normalAttr1);
+    program1.disableAttributeArray(vertexAttr1);
+    /*
+     // Tell OpenGL which VBOs to use
      glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIds[1]);
 
@@ -192,6 +198,7 @@ void Viewport::drawMesh(QOpenGLShaderProgram* program) {
 
     // Draw using indices from VBO 1
      glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
+    */
 }
 
 void Viewport::createMesh()

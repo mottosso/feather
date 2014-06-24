@@ -18,7 +18,7 @@
 
 #include "deps.hpp"
 
-class Viewport : protected QGLFunctions
+class Viewport
 {
 
     public:
@@ -28,9 +28,9 @@ class Viewport : protected QGLFunctions
         void render();
         void initialize();
         void initMesh();
-        void drawMesh(QOpenGLShaderProgram* program);
+        void drawMesh();
         void createMesh();
-        void setContext(QOpenGLContext* context) { m_context=context; };
+        //void setContext(QOpenGLContext* context) { m_context=context; };
     private:
         QOpenGLShaderProgram program1;
         int vertexAttr1;
@@ -43,7 +43,7 @@ class Viewport : protected QGLFunctions
 
         // VBO Items
         QOpenGLVertexArrayObject* m_vao1;
-        QOpenGLContext* m_context;
+        //QOpenGLContext* m_context;
         QOpenGLBuffer m_positionBuffer;
         QOpenGLBuffer m_colorBuffer;
 };
