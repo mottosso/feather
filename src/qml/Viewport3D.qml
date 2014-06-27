@@ -8,7 +8,7 @@ Rectangle {
     border.color: "black"
     border.width: 1
     radius: 4
-  
+
     Viewport {
         id: renderer
         anchors.fill: parent

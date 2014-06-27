@@ -11,3 +11,5 @@ void main(void)
     color = clamp(color, 0.0, 1.0);
     gl_Position = matrix * vertex;
 }
+
+

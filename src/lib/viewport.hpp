@@ -25,27 +25,20 @@ class Viewport
         Viewport();
         ~Viewport();
 
-        void render();
         void initialize();
-        void initMesh();
+        void render();
         void drawMesh();
-        void createMesh();
-        //void setContext(QOpenGLContext* context) { m_context=context; };
+
     private:
+        QSize m_viewportSize;
         QOpenGLShaderProgram program1;
         int vertexAttr1;
         int normalAttr1;
         int colorUniform1;
         int matrixUniform1;
-        GLuint vbo;
-        GLuint vao;
-        GLuint* vboIds;
-
-        // VBO Items
-        QOpenGLVertexArrayObject* m_vao1;
-        //QOpenGLContext* m_context;
-        QOpenGLBuffer m_positionBuffer;
-        QOpenGLBuffer m_colorBuffer;
+        float m_fAngle;
+        float m_fScale;
 };
+
 
 #endif

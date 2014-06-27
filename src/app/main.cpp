@@ -31,6 +31,16 @@ return app.exec();
 */
 
     qmlRegisterType<ViewportThread>("FeatherViewport", 1, 0, "Viewport");
+
+    /*
+    QQuickView view;
+    view.setResizeMode(QQuickView::SizeRootObjectToView);
+    view.setSource(QUrl("main.qml"));
+    view.show();
+
+    return app.exec();
+    */
+
     int execReturn = 0;
 
     {
@@ -49,6 +59,5 @@ return app.exec();
     }
 
     return execReturn;
-
 };
 

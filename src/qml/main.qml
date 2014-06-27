@@ -1,6 +1,7 @@
 import QtQuick 2.2
 import QtQuick.Window 2.1
 
+
 Rectangle {
     id: main
     width: 1024
