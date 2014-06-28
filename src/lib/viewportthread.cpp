@@ -127,7 +127,7 @@ void RenderViewportThread::renderNext()
 
     m_viewport->render();
 
-    //glFlush();
+    glFlush();
 
     m_renderFbo->bindDefault();
     qSwap(m_renderFbo, m_displayFbo);
