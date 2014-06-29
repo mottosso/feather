@@ -51,4 +51,8 @@ Rectangle {
             anchors.margins: 4
         } 
     }
+
+    Outliner {
+        id: outliner
+    }
 }
