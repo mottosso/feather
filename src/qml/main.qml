@@ -9,10 +9,10 @@ Rectangle {
     color: "darkgrey"
 
     Viewport3D {
-        width: 500
-        height: 500
-        x: 100
-        y: 100
+        anchors.top: toolbar.bottom
+        anchors.bottom: statusbar.top
+        anchors.left: parent.left
+        anchors.right: parent.right
     }
     
     MainMenu {
@@ -34,6 +34,7 @@ Rectangle {
     }
 
     Rectangle {
+        id: statusbar
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom

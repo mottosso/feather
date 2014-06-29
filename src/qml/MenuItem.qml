@@ -4,7 +4,8 @@ Item {
     property alias title: label.text 
     width: 100
     height: 32
- 
+     
+    // Title
     Rectangle {
         id: background
         color: "grey"
@@ -19,6 +20,8 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         color: "black"
     }
+
+    // SubMenu
 
     MouseArea {
         anchors.fill: parent
