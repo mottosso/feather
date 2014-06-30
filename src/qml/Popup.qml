@@ -3,7 +3,7 @@ import QtQuick 2.2
 Item {
     id: popup
     width: 100
-    height: 200
+    //height: 200
 
     Rectangle {
         anchors.fill: parent
@@ -20,7 +20,7 @@ Item {
         delegate: Column {
             MenuItem {
                 title: name
-                //height: 20
+                height: 20
                 width: popup.width
             }
         }
