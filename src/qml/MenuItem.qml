@@ -11,7 +11,6 @@ Item {
         color: "grey"
         anchors.fill: parent
         anchors.margins: 2
-        radius: 4
     }
 
     Text {

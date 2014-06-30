@@ -10,7 +10,6 @@ Item {
         color: "darkgrey"
         border.color: "black"
         border.width: 1
-        radius: 4
     }
 
     ListView {

@@ -7,5 +7,4 @@ Rectangle {
     height: 32
     border.color: "black"
     border.width: 1
-    radius: 4
 }

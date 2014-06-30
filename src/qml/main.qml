@@ -42,7 +42,6 @@ Rectangle {
         color: "grey"
         border.color: "black"
         border.width: 1
-        radius: 2
         
         Text {
             text: "feedback goes here"
