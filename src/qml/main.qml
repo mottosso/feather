@@ -25,13 +25,7 @@ Rectangle {
         anchors.top: mainmenu.bottom
     }
 
-    Popup {
-        id: popup
-        //width: 100
-        //height: 200
-        //anchors.top: parent.top
-        //anchors.left: parent.left
-    }
+    FileMenu {}
 
     Rectangle {
         id: statusbar
