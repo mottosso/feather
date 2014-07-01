@@ -1,31 +1,28 @@
 import QtQuick 2.2
 
-Item {
+Rectangle {
     height: 32
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.right: parent.right
+    MainMenuModel { id: mainModel }
+    MenuItemDelegate { id: mainDelegate }
+    color: "grey"
+    border.color: "black"
+    border.width: 1
 
-    MenuBar { 
+    ListView {
+        id: view
         anchors.fill: parent
-       
-        Row {
-            spacing: 4 
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
+        anchors.margins: 2
+        orientation: Qt.Horizontal
+        spacing: 2
+        model: mainModel
+        delegate: mainDelegate
 
-        MenuItem {
-            id: filemenu
-            title: "File"
-        } 
-
-        MenuItem {
-            id: editmenu
-            title: "Edit"
-        } 
+   }
 
 
-        }
+    //FileMenu {}
 
-    }
 }

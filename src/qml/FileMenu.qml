@@ -6,6 +6,9 @@ Rectangle {
     height: 24*view.count
     FileMenuModel { id: fileModel }
     MenuItemDelegate { id: fileDelegate }
+    color: "grey"
+    border.color: "black"
+    border.width: 1
 
     ListView {
         id: view

@@ -23,6 +23,7 @@ Item {
     // SubMenu
 
     MouseArea {
+        id: mouse
         anchors.fill: parent
         hoverEnabled: true
 

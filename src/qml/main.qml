@@ -17,15 +17,13 @@ Rectangle {
     
     MainMenu {
         id: mainmenu
-        height: 25
+        //height: 25
     }
 
     ToolBar {
         id: toolbar
         anchors.top: mainmenu.bottom
     }
-
-    FileMenu {}
 
     Rectangle {
         id: statusbar

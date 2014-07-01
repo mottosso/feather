@@ -4,7 +4,7 @@ Component {
  
     Rectangle {
         id: item
-        width: parent.width
+        width: 50
         height: 20 
         color: "grey"
 
