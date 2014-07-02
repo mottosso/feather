@@ -18,7 +18,7 @@ MenuBar {
        MenuItem {
             text: "Save"
             shortcut: "Ctrl+S"
-            onTriggered: { /*console.log("triggered")*/ }
+            onTriggered: { console.log("triggered") }
        }
 
        MenuSeparator {}
