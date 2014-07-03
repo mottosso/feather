@@ -62,7 +62,7 @@ void Viewport::initialize()
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 }
 
-void Viewport::render()
+void Viewport::render(int width, int height)
 {
     glDepthMask(true);
 
@@ -79,9 +79,15 @@ void Viewport::render()
 
     //QColor color(0,255,0,255);
 
-    const qreal fov=45.0,near=0.01, far=20.0;
-    qreal aspect=500.0/500.0;
+    const qreal fov=65.0,near=0.01, far=20.0;
+    qreal aspect=(float)width/(float)height;
 
+    program1.bind();
+ 
+    QMatrix4x4 pview;
+    pview.perspective(fov,near,far,aspect); 
+    pview.lookAt(QVector3D(3.0,0,3.0),QVector3D(0,0,0),QVector3D(0,1,0)); 
+ 
     QMatrix4x4 modelview;
     //modelview.setToIdentity();
     //modelview.perspective(fov,near,far,aspect); 
@@ -89,11 +95,12 @@ void Viewport::render()
     modelview.rotate(m_fAngle, 1.0f, 0.0f, 0.0f);
     modelview.rotate(m_fAngle, 0.0f, 0.0f, 1.0f);
     modelview.scale(m_fScale);
-    modelview.translate(0.0f, -1.5f, 0.0f);
+    modelview.translate(0.0f, 0.0f, 1.0f);
+    //modelview.perspective(fov,near,far,aspect); 
     //modelview.lookAt(QVector3D(0,-3,0.0),QVector3D(0,0,0),QVector3D(0,1,0)); 
     program1.bind();
-    program1.setUniformValue(matrixUniform1, modelview);
-
+    program1.setUniformValue(matrixUniform1, pview * modelview);
+    //glTranslatef(0.0,-8.0,0.0);
     drawMesh();
 
     program1.release();

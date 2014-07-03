@@ -26,7 +26,7 @@ class Viewport
         ~Viewport();
 
         void initialize();
-        void render();
+        void render(int width, int height);
         void drawMesh();
 
     private:
