@@ -15,13 +15,13 @@
 // =====================================================================================
 #include "viewport.hpp"
 
-float values[] = {
-    -1, -1,
-    1, -1,
-    -1, 1,
-    1, 1
+struct Vector3D
+{
+    Vector3D(float _x=0, float _y=0, float _z=0): x(_x),y(_y),z(_z){};
+    float x,y,z;
 };
 
+std::vector<Vector3D> points;
 
 Viewport::Viewport() : m_fAngle(0),m_fScale(1)
 {
@@ -52,6 +52,11 @@ void Viewport::initialize()
     //normalAttr1 = program1.attributeLocation("normal");
     //colorUniform1 = program1.uniformLocation("color");
     matrixUniform1 = program1.uniformLocation("matrix");
+
+    points.push_back(Vector3D(-1,-1,0));
+    points.push_back(Vector3D(1,-1,0));
+    points.push_back(Vector3D(-1,1,0));
+    points.push_back(Vector3D(1,1,0));
 
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
@@ -101,7 +106,7 @@ void Viewport::render()
 void Viewport::drawMesh() {
     //program1.enableAttributeArray(normalAttr1);
     program1.enableAttributeArray(vertexAttr1);
-    program1.setAttributeArray(vertexAttr1, GL_FLOAT, values, 2);
+    program1.setAttributeArray(vertexAttr1, GL_FLOAT, &points[0], 3);
     //program1.setAttributeArray(normalAttr1, normals.constData());
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     //program1.disableAttributeArray(normalAttr1);
