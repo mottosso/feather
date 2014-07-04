@@ -28,7 +28,6 @@ class Viewport
         void initialize(int width, int height);
         void render();
         void drawMesh();
-        //void drawFloor();
         void drawGrid();
 
     private:
