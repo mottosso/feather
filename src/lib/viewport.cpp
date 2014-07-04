@@ -63,24 +63,28 @@ void Viewport::initialize(int width, int height)
     program1.link();
 
 
-    QOpenGLShader *vfloorshader1 = new QOpenGLShader(QOpenGLShader::Vertex, &floorShader);
-    vfloorshader1->compileSourceFile("floor.vert");
+    /*
+    QOpenGLShader *meshShader = new QOpenGLShader(QOpenGLShader::Vertex, &floorShader);
+    meshShader->compileSourceFile("floor.vert");
+    */
 
-    QOpenGLShader *ffloorshader1 = new QOpenGLShader(QOpenGLShader::Fragment, &floorShader);
-    ffloorshader1->compileSourceFile("floor.frag");
+    QOpenGLShader *gridShader = new QOpenGLShader(QOpenGLShader::Vertex, &gridProgram);
+    gridShader->compileSourceFile("grid.glsl");
+ 
+    greenShader = new QOpenGLShader(QOpenGLShader::Fragment, &gridProgram);
+    greenShader->compileSourceFile("green.glsl");
 
-    floorShader.addShader(vfloorshader1);
-    floorShader.addShader(ffloorshader1);
-    floorShader.link();
-
+    gridProgram.addShader(gridShader);
+    gridProgram.addShader(greenShader);
+    gridProgram.link();
 
     // use these to access variable in the glsl
     vertexAttr1 = program1.attributeLocation("vertex");
-    floorVertexAttr1 = floorShader.attributeLocation("fvertex");
+    gridVAttr = gridProgram.attributeLocation("vertex");
     //normalAttr1 = program1.attributeLocation("normal");
     //colorUniform1 = program1.uniformLocation("color");
     matrixUniform1 = program1.uniformLocation("matrix");
-    matrixFloorUniform1 = floorShader.uniformLocation("fmatrix");
+    gridMAttr = gridProgram.uniformLocation("matrix");
 
     points.push_back(Vector3D(-1,-1,0));
     points.push_back(Vector3D(1,-1,0));
@@ -102,6 +106,7 @@ void Viewport::initialize(int width, int height)
     pview.perspective(fov,aspect,near,far); 
     pview.lookAt(QVector3D(0.0,-2,6.0),QVector3D(0,0,0),QVector3D(0,1,0)); 
 
+/*
     // setup grid
     // glMap2f(target,u1,u2,ustride,uorder,v1,v2,vstride,vorder,points)
     // u1,u2 = min and max values for u
@@ -122,7 +127,7 @@ void Viewport::initialize(int width, int height)
     // u1,u2 = from/to u
     // v1,v2 = from/to v
     glMapGrid2f(2,0.0,1.0,2,0.0,1.0);
-
+*/
 }
 
 void Viewport::render()
@@ -164,26 +169,25 @@ void Viewport::render()
     modelview.translate(0.0f, 0.0f, 0.0f);
     //modelview.perspective(fov,near,far,aspect); 
     //modelview.lookAt(QVector3D(0,-3,0.0),QVector3D(0,0,0),QVector3D(0,1,0)); 
+
+    // draw test plane
     program1.bind();
     program1.setUniformValue(matrixUniform1, pview * modelview);
-    //glTranslatef(0.0,-8.0,0.0);
     drawMesh();
-
     program1.release();
 
-    floorShader.bind();
-    floorShader.setUniformValue(matrixFloorUniform1, pview * floorview);
-    //glTranslatef(0.0,-8.0,0.0);
-    //drawFloor();
-
-    floorShader.release();
+    // draw the grid
+    gridProgram.bind();
+    gridProgram.setUniformValue(gridMAttr, pview);
+    drawGrid();
+    gridProgram.release();
 
 
 
     // draw the grid
-    drawGrid();
+    //drawGrid();
 
-    glLineWidth(1.5);
+    //glLineWidth(1.5);
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
@@ -200,14 +204,23 @@ void Viewport::drawMesh() {
     program1.disableAttributeArray(vertexAttr1);
 }
 
+/*
 void Viewport::drawFloor() {
-    floorShader.enableAttributeArray(floorVertexAttr1);
-    floorShader.setAttributeArray(floorVertexAttr1, GL_FLOAT, &floorVertex[0], 3);
+    program1.enableAttributeArray(floorVertexAttr1);
+    program1.setAttributeArray(floorVertexAttr1, GL_FLOAT, &floorVertex[0], 3);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    floorShader.disableAttributeArray(floorVertexAttr1);
+    program1.disableAttributeArray(floorVertexAttr1);
 }
+*/
 
 void Viewport::drawGrid() {
+    gridProgram.enableAttributeArray(gridVAttr);
+    gridProgram.setAttributeArray(gridVAttr, GL_FLOAT, &floorVertex[0], 3);
+    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    gridProgram.disableAttributeArray(gridVAttr);
+/*
     // min grid lines
     glLineWidth(1.25);
     glColor3f(0,0,1);
@@ -219,5 +232,6 @@ void Viewport::drawGrid() {
     glColor3f(0,0,0);
     glMapGrid2f(4,0.0,1.0,4,0.0,1.0);
     glEvalMesh2(GL_LINE,0,4,0,4); // GL_FILL and GL_POINT
+*/
 }
 

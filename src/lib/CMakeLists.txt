@@ -58,6 +58,6 @@ set_target_properties(feather_core
 install(TARGETS feather_core
     LIBRARY DESTINATION /usr/lib64/feather)
 
-FILE(GLOB GLSL_FILES "*.vert" "*.frag")
+FILE(GLOB GLSL_FILES "*.vert" "*.frag" "*.glsl")
 
 INSTALL(FILES ${GLSL_FILES} DESTINATION /usr/local/feather)

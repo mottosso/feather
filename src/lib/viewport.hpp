@@ -28,15 +28,16 @@ class Viewport
         void initialize(int width, int height);
         void render();
         void drawMesh();
-        void drawFloor();
+        //void drawFloor();
         void drawGrid();
 
     private:
         QSize m_viewportSize;
         QOpenGLShaderProgram program1;
-        QOpenGLShaderProgram floorShader;
+        QOpenGLShaderProgram gridProgram;
         int vertexAttr1;
-        int floorVertexAttr1;
+        int gridVAttr;
+        int gridMAttr;
         int normalAttr1;
         int colorUniform1;
         int matrixUniform1;
@@ -44,6 +45,9 @@ class Viewport
         float m_fAngle;
         float m_fScale;
         QMatrix4x4 pview;
+        QOpenGLShader* meshShader;
+        QOpenGLShader* gridShader;
+        QOpenGLShader* greenShader;
 };
 
 
