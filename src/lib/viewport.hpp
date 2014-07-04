@@ -29,6 +29,7 @@ class Viewport
         void render();
         void drawMesh();
         void drawFloor();
+        void drawGrid();
 
     private:
         QSize m_viewportSize;
