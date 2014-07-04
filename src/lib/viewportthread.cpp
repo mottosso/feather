@@ -99,7 +99,7 @@ void RenderViewportThread::renderNext()
         m_displayFbo = new QOpenGLFramebufferObject(m_size, format);
         m_viewport= new Viewport();
         //m_viewport->setContext(context);
-        m_viewport->initialize();
+        m_viewport->initialize(m_size.width(), m_size.height());
     }
 
     m_renderFbo->bind();
@@ -129,7 +129,7 @@ void RenderViewportThread::renderNext()
 
     //std::cout << "renderNext " << ar << " " << m_size.width() << " " << m_size.height() << std::endl;
 
-    m_viewport->render(m_size.width(), m_size.height());
+    m_viewport->render();
 
     glFlush();
 

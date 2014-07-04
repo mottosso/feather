@@ -25,19 +25,24 @@ class Viewport
         Viewport();
         ~Viewport();
 
-        void initialize();
-        void render(int width, int height);
+        void initialize(int width, int height);
+        void render();
         void drawMesh();
+        void drawFloor();
 
     private:
         QSize m_viewportSize;
         QOpenGLShaderProgram program1;
+        QOpenGLShaderProgram floorShader;
         int vertexAttr1;
+        int floorVertexAttr1;
         int normalAttr1;
         int colorUniform1;
         int matrixUniform1;
+        int matrixFloorUniform1;
         float m_fAngle;
         float m_fScale;
+        QMatrix4x4 pview;
 };
 
 
