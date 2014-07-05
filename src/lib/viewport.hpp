@@ -29,6 +29,7 @@ class Viewport
         void render();
         void drawMesh();
         void drawGrid();
+        void initTextures();
 
     private:
         QSize m_viewportSize;
@@ -41,6 +42,8 @@ class Viewport
         int colorUniform1;
         int matrixUniform1;
         int matrixFloorUniform1;
+        int texture;
+        int texcoord;
         float m_fAngle;
         float m_fScale;
         QMatrix4x4 pview;

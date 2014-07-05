@@ -56,8 +56,12 @@ void Viewport::initialize(int width, int height)
     gridProgram.addShader(greenShader);
     gridProgram.link();
 
+    initTextures();
+
     // use these to access variable in the glsl
     vertexAttr1 = program1.attributeLocation("vertex");
+    texture = program1.uniformLocation("tex");
+    texcoord = program1.uniformLocation("texcoord");
     gridVAttr = gridProgram.attributeLocation("vertex");
     //normalAttr1 = program1.attributeLocation("normal");
     //colorUniform1 = program1.uniformLocation("color");
@@ -74,8 +78,9 @@ void Viewport::initialize(int width, int height)
     grid.push_back(Vector3D(-1,0,1));
     grid.push_back(Vector3D(1,0,1));
 
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
     const qreal fov=45.0,near=0.01, far=20.0;
     qreal aspect=(float)width/(float)height;
@@ -92,8 +97,8 @@ void Viewport::render()
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
     glFrontFace(GL_CW);
     glCullFace(GL_FRONT);
@@ -103,6 +108,7 @@ void Viewport::render()
     // draw test plane
     program1.bind();
     program1.setUniformValue(matrixUniform1, pview);
+    program1.setUniformValue(texture,0);
     drawMesh();
     program1.release();
 
@@ -136,3 +142,23 @@ void Viewport::drawGrid() {
     gridProgram.disableAttributeArray(gridVAttr);
 }
 
+void Viewport::initTextures()
+{
+    // Loading texture unit 0
+    glActiveTexture(GL_TEXTURE0);
+    glEnable(GL_TEXTURE_2D);
+    //texture = bindTexture(QImage("texture.png"));
+    //glBindTexture(GL_TEXTURE_2D, texture);
+    //glBindSampler(0, linearFiltering);
+
+    // Set nearest filtering mode for texture minification
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    // Set bilinear filtering mode for texture magnification
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Wrap texture coordinates by repeating
+    // f.ex. texture coordinate (1.1, 1.2) is same as (0.1, 0.2)
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+}
