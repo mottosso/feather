@@ -37,10 +37,10 @@ Viewport::~Viewport()
 void Viewport::initialize(int width, int height)
 {
     QOpenGLShader *vshader1 = new QOpenGLShader(QOpenGLShader::Vertex, &program1);
-    vshader1->compileSourceFile("test.vert");
+    vshader1->compileSourceFile("mesh.glsl");
 
     QOpenGLShader *fshader1 = new QOpenGLShader(QOpenGLShader::Fragment, &program1);
-    fshader1->compileSourceFile("test.frag");
+    fshader1->compileSourceFile("texture.glsl");
 
     program1.addShader(vshader1);
     program1.addShader(fshader1);
