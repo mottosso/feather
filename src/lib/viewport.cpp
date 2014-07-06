@@ -23,6 +23,10 @@ struct Vector3D
 
 std::vector<Vector3D> points;
 std::vector<Vector3D> grid;
+std::vector<Vector3D> axis;
+//std::vector<Vector3D> axisX;
+//std::vector<Vector3D> axisY;
+//std::vector<Vector3D> axisZ;
 
 Viewport::Viewport() : m_fAngle(0),m_fScale(1)
 {
@@ -36,6 +40,7 @@ Viewport::~Viewport()
 
 void Viewport::initialize(int width, int height)
 {
+    // Test
     QOpenGLShader *vshader1 = new QOpenGLShader(QOpenGLShader::Vertex, &program1);
     vshader1->compileSourceFile("mesh.glsl");
 
@@ -46,7 +51,8 @@ void Viewport::initialize(int width, int height)
     program1.addShader(fshader1);
     program1.link();
 
-    QOpenGLShader *gridShader = new QOpenGLShader(QOpenGLShader::Vertex, &gridProgram);
+    // Grid
+    gridShader = new QOpenGLShader(QOpenGLShader::Vertex, &gridProgram);
     gridShader->compileSourceFile("grid.glsl");
  
     greenShader = new QOpenGLShader(QOpenGLShader::Fragment, &gridProgram);
@@ -56,17 +62,27 @@ void Viewport::initialize(int width, int height)
     gridProgram.addShader(greenShader);
     gridProgram.link();
 
-    initTextures();
+    // Axis 
+    axisVShader = new QOpenGLShader(QOpenGLShader::Vertex, &axisProgram);
+    axisVShader->compileSourceFile("axis.glsl"); 
+
+    axisProgram.addShader(axisVShader);
+    axisProgram.link();
+
+    //initTextures();
 
     // use these to access variable in the glsl
     vertexAttr1 = program1.attributeLocation("vertex");
     texture = program1.uniformLocation("tex");
-    texcoord = program1.uniformLocation("texcoord");
+    //texcoord = program1.uniformLocation("texcoord");
     gridVAttr = gridProgram.attributeLocation("vertex");
+    axisVAttr = axisProgram.attributeLocation("vertex");
     //normalAttr1 = program1.attributeLocation("normal");
     //colorUniform1 = program1.uniformLocation("color");
     matrixUniform1 = program1.uniformLocation("matrix");
     gridMAttr = gridProgram.uniformLocation("matrix");
+    axisMAttr = axisProgram.uniformLocation("matrix");
+
 
     points.push_back(Vector3D(-1,-1,0));
     points.push_back(Vector3D(1,-1,0));
@@ -78,6 +94,12 @@ void Viewport::initialize(int width, int height)
     grid.push_back(Vector3D(-1,0,1));
     grid.push_back(Vector3D(1,0,1));
 
+    axis.push_back(Vector3D(0,0,0));
+    axis.push_back(Vector3D(10,0,0)); // X
+    axis.push_back(Vector3D(0,0,0));
+    axis.push_back(Vector3D(0,10,0)); // Y
+    axis.push_back(Vector3D(0,0,0));
+    axis.push_back(Vector3D(0,0,10)); // Z
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
@@ -87,7 +109,7 @@ void Viewport::initialize(int width, int height)
 
     pview.setToIdentity();
     pview.perspective(fov,aspect,near,far); 
-    pview.lookAt(QVector3D(0.0,-2,6.0),QVector3D(0,0,0),QVector3D(0,1,0)); 
+    pview.lookAt(QVector3D(1.0,2.0,6.0),QVector3D(0,0,0),QVector3D(0,-1,0)); 
 }
 
 void Viewport::render()
@@ -118,6 +140,12 @@ void Viewport::render()
     drawGrid();
     gridProgram.release();
 
+    // draw the axis 
+    axisProgram.bind();
+    axisProgram.setUniformValue(axisMAttr, pview);
+    drawAxis();
+    axisProgram.release();
+
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     m_fAngle += 0.1;
@@ -140,6 +168,20 @@ void Viewport::drawGrid() {
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     gridProgram.disableAttributeArray(gridVAttr);
+}
+
+void Viewport::drawAxis() {
+    axisProgram.enableAttributeArray(axisVAttr);
+    axisProgram.setAttributeArray(axisVAttr, GL_FLOAT, &axis[0], 3);
+    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    glDrawArrays(GL_LINES, 0, 2);
+    glColor3f(1.0,0.0,0.0);
+    glDrawArrays(GL_LINES, 2, 2);
+    glColor3f(0.0,1.0,0.0);
+    glDrawArrays(GL_LINES, 4, 2);
+    glColor3f(0.0,0.0,1.0);
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    axisProgram.disableAttributeArray(axisVAttr);
 }
 
 void Viewport::initTextures()

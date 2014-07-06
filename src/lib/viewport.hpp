@@ -29,15 +29,19 @@ class Viewport
         void render();
         void drawMesh();
         void drawGrid();
+        void drawAxis();
         void initTextures();
 
     private:
         QSize m_viewportSize;
         QOpenGLShaderProgram program1;
         QOpenGLShaderProgram gridProgram;
+        QOpenGLShaderProgram axisProgram;
         int vertexAttr1;
         int gridVAttr;
         int gridMAttr;
+        int axisVAttr;
+        int axisMAttr;
         int normalAttr1;
         int colorUniform1;
         int matrixUniform1;
@@ -50,6 +54,7 @@ class Viewport
         QOpenGLShader* meshShader;
         QOpenGLShader* gridShader;
         QOpenGLShader* greenShader;
+        QOpenGLShader* axisVShader;
 };
 
 
