@@ -18,7 +18,7 @@
 
 #include "deps.hpp"
 
-namespace Feather
+namespace feather
 {
     typedef bool FBool;
     typedef int FInt;

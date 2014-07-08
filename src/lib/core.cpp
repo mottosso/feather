@@ -16,5 +16,5 @@
 
 #include "core.hpp"
 
-using namespace Feather;
+using namespace feather;
 

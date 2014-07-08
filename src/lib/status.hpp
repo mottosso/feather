@@ -1,11 +1,11 @@
 // =====================================================================================
 // 
-//       Filename:  core.hpp
+//       Filename:  status.hpp
 // 
 //    Description:  
 // 
 //        Version:  1.0
-//        Created:  09/06/2012 08:00:10 PM
+//        Created:  07/08/2014 04:58:46 AM
 //       Revision:  none
 //       Compiler:  g++
 // 
@@ -13,14 +13,22 @@
 //        Company:  
 // 
 // =====================================================================================
-#ifndef CORE_HPP
-#define CORE_HPP
+#ifndef STATUS_HPP
+#define STATUS_HPP
 
 #include "deps.hpp"
-#include "types.hpp"
 
 namespace feather 
 {
+
+    enum StatusState { FAILED, PASSED, WARNING };
+
+    struct status
+    {
+        status(StatusState _state=PASSED, std::string _msg="") : state(_state),msg(_msg) {};
+        StatusState state;
+        std::string msg;
+    };
 
 }; // namespace feather
 
