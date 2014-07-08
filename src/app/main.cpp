@@ -15,9 +15,13 @@
 // =====================================================================================
 #include "deps.hpp"
 #include "viewportthread.hpp"
+#include "scenegraph.hpp"
 
 int main(int argc, char **argv)
 {
+
+    feather::scenegraph::SceneGraph sg;
+
     QGuiApplication app(argc, argv);
 
     // ?? This always comes back with an error though my platform supports threading ??
