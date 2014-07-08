@@ -29,7 +29,8 @@ namespace feather
         template <int _Type, typename _Args>
             struct Node
             {
-                static status do_it() { return status(FAILED,"No matching Type for Node."); };
+                static status init(_Args args) { return status(FAILED,"No matching Type for Node."); };
+                static status do_it(_Args args) { return status(FAILED,"No matching Type for Node."); };
                 static status undo() { return status(FAILED,"No matching Type for Node."); };
                 static status remove() { return status(FAILED,"No matching Type for Node."); };
                 static status init_gl() { return status(FAILED,"No matching Type for Node."); };
