@@ -26,18 +26,24 @@ namespace feather
     namespace node
     {
 
-        template <int _Type>
+        template <int _Type, typename _Args>
             struct Node
             {
                 static status do_it() { return status(FAILED,"No matching Type for Node."); };
-                static status draw() { return status(FAILED,"No matching Type for Node."); };
                 static status undo() { return status(FAILED,"No matching Type for Node."); };
                 static status remove() { return status(FAILED,"No matching Type for Node."); };
-
+                static status init_gl() { return status(FAILED,"No matching Type for Node."); };
+                static status draw_gl() { return status(FAILED,"No matching Type for Node."); };
+                static status cleanup() { return status(FAILED,"No matching Type for Node."); };
+                
                 private:
                 FVertexArray m_v;
                 FVertexArray m_vn;
                 FTextureCoordArray m_st;
+                // opengl
+                int m_vAttr;
+                int m_mAttr;
+                QOpenGLShader* m_shader;
             };
 
     } // namespace node
