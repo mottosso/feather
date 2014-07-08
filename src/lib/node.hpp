@@ -44,6 +44,7 @@ namespace feather
                 // opengl
                 int m_vAttr;
                 int m_mAttr;
+                QOpenGLShaderProgram m_program;
                 QOpenGLShader* m_shader;
             };
 
