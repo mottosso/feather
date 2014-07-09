@@ -1,20 +1,25 @@
 project(feather_core)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 FIND_PACKAGE(Qt5Widgets REQUIRED)
 FIND_PACKAGE(Qt5Quick REQUIRED)
 FIND_PACKAGE(Qt5Quick REQUIRED)
 
-
-
 SET(CMAKE_AUTOMOC ON)
 SET(QT_USE_QTOPENGL TRUE)
 
-set(feather_core_SRCS
+SET(feather_core_SRCS
     core.cpp
+    scenegraph.cpp
     #test.cpp
     viewport.cpp
     viewportthread.cpp
 )
+
+SET_SOURCE_FILES_PROPERTIES(${feather_core_SRCS}
+ PROPERTIES
+ COMPILE_FLAGS ${CMAKE_CXX_FLAGS} )
+
 
 INCLUDE_DIRECTORIES(${Qt5Widgets_INCLUDE_DIRS}
     ${Qt5Quick_INCLUDE_DIRS}
@@ -34,11 +39,11 @@ SET(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 SET(CMAKE_CXX_FLAGS "${Qt5Quick_EXECUTABLE_COMPILE_FLAGS}")
 SET(CMAKE_CXX_FLAGS "${Qt5OpenGL_EXECUTABLE_COMPILE_FLAGS}")
 
-add_library(feather_core SHARED ${feather_core_SRCS})
+ADD_LIBRARY(feather_core SHARED ${feather_core_SRCS})
 
 QT5_USE_MODULES(feather_core Widgets Quick OpenGL)
 
-set(feather_core_LIBS
+SET(feather_core_LIBS
  ${BOOST_LIBRARIES}
  ${OPENGL_LIBRARIES}
  ${QT5Widgets_LIBRARIES}
@@ -46,16 +51,16 @@ set(feather_core_LIBS
  ${QT5OpenGL_LIBRARIES}
 )
 
-target_link_libraries(feather_core ${feather_core_LIBS})
+TARGET_LINK_LIBRARIES(feather_core ${feather_core_LIBS})
 
-set(CMAKE_CXX_FLAGS "-I/usr/include/boost")
+SET(CMAKE_CXX_FLAGS "-I/usr/include/boost")
 
-set_target_properties(feather_core
+SET_TARGET_PROPERTIES(feather_core
     PROPERTIES
     VERSION 0.01
     SOVERSION 1)
 
-install(TARGETS feather_core
+INSTALL(TARGETS feather_core
     LIBRARY DESTINATION /usr/lib64/feather)
 
 FILE(GLOB GLSL_FILES "*.vert" "*.frag" "*.glsl")

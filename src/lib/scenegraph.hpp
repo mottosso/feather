@@ -29,6 +29,22 @@ namespace feather
         typedef struct { int type; } sgNode;
 
         typedef std::vector<sgNode> SceneGraph;
+        SceneGraph sg;
+
+        status draw_gl();
+
+        template <int _StartType, int _EndType>
+        struct get_type
+        {
+            static int exec(sgNode& n) {
+                if(n.type == _StartType)
+                    return _StartType;
+                else
+                    return get_type<_StartType-1,_EndType>::exec(n);
+            };
+        };
+
+        template <> int get_type<0,0>::exec(sgNode& n) { return 0; };
 
     } // namespace scenegraph
 
