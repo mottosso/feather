@@ -120,8 +120,6 @@ void Viewport::render(int width, int height)
     const qreal fov=45.0,near=0.01, far=20.0;
     qreal aspect=(float)width/(float)height;
 
-    std::cout << "w=" << width << ",y=" << height << std::endl;
-
     pview.setToIdentity();
     pview.perspective(fov,aspect,near,far); 
     //pview.lookAt(QVector3D(1.0,2.0,6.0),QVector3D(0,0,0),QVector3D(0,-1,0)); 
