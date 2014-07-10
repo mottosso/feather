@@ -40,6 +40,7 @@ Viewport::~Viewport()
 
 void Viewport::initialize(int width, int height)
 {
+    std::cout << "init\n";
     // Test
     QOpenGLShader *vshader1 = new QOpenGLShader(QOpenGLShader::Vertex, &program1);
     vshader1->compileSourceFile("mesh.glsl");
@@ -104,16 +105,33 @@ void Viewport::initialize(int width, int height)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
+    /*
     const qreal fov=45.0,near=0.01, far=20.0;
     qreal aspect=(float)width/(float)height;
 
     pview.setToIdentity();
     pview.perspective(fov,aspect,near,far); 
     pview.lookAt(QVector3D(1.0,2.0,6.0),QVector3D(0,0,0),QVector3D(0,-1,0)); 
+    */
 }
 
-void Viewport::render()
+void Viewport::render(int width, int height)
 {
+    const qreal fov=45.0,near=0.01, far=20.0;
+    qreal aspect=(float)width/(float)height;
+
+    glViewport(0, 0, width, height);
+ 
+    pview.setToIdentity();
+    pview.perspective(fov,aspect,near,far); 
+    //pview.lookAt(QVector3D(1.0,2.0,6.0),QVector3D(0,0,0),QVector3D(0,-1,0)); 
+    pview.translate(0.0,1.0,-6.0);
+    pview.rotate(0,1.0,0.0,0.0);
+    pview.rotate(r,0.0,1.0,0.0);
+    pview.rotate(0,0.0,0.0,1.0);
+
+    r=r+0.1; 
+
     glDepthMask(true);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -124,7 +142,7 @@ void Viewport::render()
 
     glFrontFace(GL_CW);
     glCullFace(GL_FRONT);
-    glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 
     // draw test plane
@@ -174,12 +192,12 @@ void Viewport::drawAxis() {
     axisProgram.enableAttributeArray(axisVAttr);
     axisProgram.setAttributeArray(axisVAttr, GL_FLOAT, &axis[0], 3);
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-    glDrawArrays(GL_LINES, 0, 2);
     glColor3f(1.0,0.0,0.0);
-    glDrawArrays(GL_LINES, 2, 2);
+    glDrawArrays(GL_LINES, 0, 2);
     glColor3f(0.0,1.0,0.0);
-    glDrawArrays(GL_LINES, 4, 2);
+    glDrawArrays(GL_LINES, 2, 2);
     glColor3f(0.0,0.0,1.0);
+    glDrawArrays(GL_LINES, 4, 2);
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     axisProgram.disableAttributeArray(axisVAttr);
 }

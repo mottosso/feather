@@ -26,7 +26,7 @@ class Viewport
         ~Viewport();
 
         void initialize(int width, int height);
-        void render();
+        void render(int width, int height);
         void drawMesh();
         void drawGrid();
         void drawAxis();
@@ -55,6 +55,8 @@ class Viewport
         QOpenGLShader* gridShader;
         QOpenGLShader* greenShader;
         QOpenGLShader* axisVShader;
+    
+        float r;
 };
 
 

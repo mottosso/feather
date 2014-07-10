@@ -103,7 +103,7 @@ void RenderViewportThread::renderNext()
     }
 
     m_renderFbo->bind();
-    glViewport(0, 0, m_size.width(), m_size.height());
+    //glViewport(0, 0, m_size.width(), m_size.height());
     //glMatrixMode(GL_PROJECTION);
     //float ar = (float)m_size.height()/(float)m_size.width();
     //glFrustum(-1.0,1.0,-1.0*ar,1.0*ar,0.01,20.0);
@@ -129,7 +129,7 @@ void RenderViewportThread::renderNext()
 
     //std::cout << "renderNext " << ar << " " << m_size.width() << " " << m_size.height() << std::endl;
 
-    m_viewport->render();
+    m_viewport->render(m_size.width(),m_size.height());
 
     glFlush();
 
