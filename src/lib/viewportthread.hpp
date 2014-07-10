@@ -51,7 +51,7 @@ class RenderViewportThread : public QThread
     Q_OBJECT
     public:
         RenderViewportThread(const QSize &size);
-
+        void setSize(const QSize& size) { m_size=size; };
         QOffscreenSurface *surface;
         QOpenGLContext *context;
 
