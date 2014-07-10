@@ -142,6 +142,10 @@ void Viewport::render(int width, int height)
     glCullFace(GL_FRONT);
     //glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
 
     // draw test plane
     program1.bind();
@@ -190,6 +194,7 @@ void Viewport::drawAxis() {
     axisProgram.enableAttributeArray(axisVAttr);
     axisProgram.setAttributeArray(axisVAttr, GL_FLOAT, &axis[0], 3);
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    glLineWidth(1.25);
     glColor3f(1.0,0.0,0.0);
     glDrawArrays(GL_LINES, 0, 2);
     glColor3f(0.0,1.0,0.0);
