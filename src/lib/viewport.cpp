@@ -117,12 +117,12 @@ void Viewport::initialize(int width, int height)
 
 void Viewport::render(int width, int height)
 {
-    const qreal fov=45.0,near=0.01, far=20.0;
+    const qreal fov=25.0,near=0.1, far=20.0;
     qreal aspect=(float)width/(float)height;
 
     pview.setToIdentity();
     pview.perspective(fov,aspect,near,far); 
-    //pview.lookAt(QVector3D(1.0,2.0,6.0),QVector3D(0,0,0),QVector3D(0,-1,0)); 
+    //pview.ortho(-1.0/aspect,1.0/aspect,-1.0*aspect,1.0*aspect,1.0,20.0);
     pview.translate(0.0,1.0,-6.0);
     pview.rotate(0,1.0,0.0,0.0);
     pview.rotate(r,0.0,1.0,0.0);
@@ -132,7 +132,7 @@ void Viewport::render(int width, int height)
 
     glDepthMask(true);
 
-    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClearColor(0.5f, 0.0f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );

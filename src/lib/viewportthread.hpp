@@ -65,7 +65,8 @@ signals:
     private:
         QOpenGLFramebufferObject *m_renderFbo;
         QOpenGLFramebufferObject *m_displayFbo;
-
+        int m_width;
+        int m_height;
         Viewport *m_viewport;
         QSize m_size;
 };

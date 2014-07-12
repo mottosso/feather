@@ -22,7 +22,7 @@ ViewportThread::ViewportThread()
 : m_renderThread(0)
 {
     setFlag(ItemHasContents, true);
-    m_renderThread = new RenderViewportThread(QSize(500, 500));
+    m_renderThread = new RenderViewportThread(QSize(0, 0));
 }
 
 void ViewportThread::ready()
@@ -71,6 +71,9 @@ QSGNode *ViewportThread::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *
     }
 
     node->setRect(boundingRect());
+
+    //std::cout << "thread x=" << node->rect().width() << ", y= " << node->rect().height() << std::endl;
+
     m_renderThread->setSize(QSize(node->rect().width(), node->rect().height()));
 
     return node;
@@ -91,7 +94,7 @@ QSGNode *ViewportThread::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *
 void RenderViewportThread::renderNext()
 {
     context->makeCurrent(surface);
-
+    
     if (!m_renderFbo) {
         // Initialize the buffers and renderer
         QOpenGLFramebufferObjectFormat format;
@@ -101,41 +104,39 @@ void RenderViewportThread::renderNext()
         m_viewport= new Viewport();
         //m_viewport->setContext(context);
         m_viewport->initialize(m_size.width(), m_size.height());
+        m_width = m_size.width();
+        m_height = m_size.height();
+    }
+
+    if(m_size.width() != m_width || m_size.height() != m_height) {
+        delete m_renderFbo;
+        QOpenGLFramebufferObjectFormat format;
+        format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+        m_renderFbo = new QOpenGLFramebufferObject(m_size, format);
     }
 
     m_renderFbo->bind();
+
+    int side = qMin(m_size.width(),m_size.height());
     glViewport(0, 0, m_size.width(), m_size.height());
-    //glMatrixMode(GL_PROJECTION);
-    //float ar = (float)m_size.height()/(float)m_size.width();
-    //glFrustum(-1.0,1.0,-1.0*ar,1.0*ar,0.01,20.0);
-
-
-    //glMatrixMode(GL_PROJECTION);
-
-    //glLoadIdentity();
-
-    //float ar = (float)m_size.height()/(float)m_size.width();
-
-    // glFrustum(left,right,bottom,top,near,far)
-
-    //glFrustum(-1.0,1.0,-1.0*ar,1.0*ar,0.01,20.0);
-
-    // glOrtho(left,right,bottom,top,near,far)
-
-    //glOrtho(-1,1,-1*ar,1*ar,0,20);
-
-    //glMatrixMode(GL_MODELVIEW);
-    
-    //glLoadIdentity();
-
-    //std::cout << "renderNext " << ar << " " << m_size.width() << " " << m_size.height() << std::endl;
 
     m_viewport->render(m_size.width(),m_size.height());
 
     glFlush();
 
     m_renderFbo->bindDefault();
+
+    if(m_size.width() != m_width || m_size.height() != m_height) {
+        delete m_displayFbo;
+        QOpenGLFramebufferObjectFormat format;
+        format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+        m_displayFbo = new QOpenGLFramebufferObject(m_size, format);
+    }
+
     qSwap(m_renderFbo, m_displayFbo);
+
+    m_width = m_size.width();
+    m_height = m_size.height();
 
     emit textureReady(m_displayFbo->texture(), m_size);
 }
