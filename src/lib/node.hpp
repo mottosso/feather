@@ -26,6 +26,16 @@ namespace feather
     namespace node
     {
 
+        enum Type {
+            EndNode,
+            Camera,
+            Light,
+            Texture,
+            Shader,
+            PolygonMesh,
+            StartNode
+        };
+
         template <int _Type, typename _Args>
             struct Node
             {
