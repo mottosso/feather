@@ -26,7 +26,7 @@ namespace feather
     namespace scenegraph
     {
 
-        typedef struct { int id; node::Type type; } sgNode;
+        typedef struct { int id; node::Type node; } sgNode;
 
         typedef std::vector<sgNode> SceneGraph;
         SceneGraph sg;
@@ -45,6 +45,17 @@ namespace feather
         };
 
         template <> int get_type<0,0>::exec(sgNode& n) { return 0; };
+
+
+        /* ADD NODE TO SCENEGRAPH */
+    
+        template <int _Node, typename _Fields>
+        struct add_node
+        {
+            static status exec(_Fields field) { };
+        };
+
+
 
     } // namespace scenegraph
 
