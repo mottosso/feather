@@ -16,12 +16,22 @@ Rectangle {
             id: mouseArea
             anchors.fill: parent
             hoverEnabled: false
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-            onClicked: { renderer.mousePressed(mouse.x,mouse.y) }
+            onClicked: {
+                if(mouse.button == Qt.RightButton)
+                    main_popup.popup();
+
+                renderer.mousePressed(mouse.x,mouse.y)
+
+            }
             onPositionChanged: { renderer.moveCamera(mouse.x,mouse.y) }
             //onReleased: { console.log("released") }
             onWheel: { renderer.zoomCamera(wheel.angleDelta.y); }
         }
+
+    MainPopup { id: main_popup; visible: true }
+
     }
 
 }
