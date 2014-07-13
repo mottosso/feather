@@ -28,7 +28,7 @@ std::vector<Vector3D> axis;
 //std::vector<Vector3D> axisY;
 //std::vector<Vector3D> axisZ;
 
-Viewport::Viewport() : m_fAngle(0),m_fScale(1),r(0)
+Viewport::Viewport() : m_camPitchAngle(0),m_camTiltAngle(0),m_fScale(1),r(0)
 {
 
 }
@@ -124,8 +124,8 @@ void Viewport::render(int width, int height)
     pview.perspective(fov,aspect,near,far); 
     //pview.ortho(-1.0/aspect,1.0/aspect,-1.0*aspect,1.0*aspect,1.0,20.0);
     pview.translate(0.0,1.0,-6.0);
-    pview.rotate(0,1.0,0.0,0.0);
-    pview.rotate(r,0.0,1.0,0.0);
+    pview.rotate(m_camTiltAngle,1.0,0.0,0.0);
+    pview.rotate(m_camPitchAngle,0.0,1.0,0.0);
     pview.rotate(0,0.0,0.0,1.0);
 
     r=r+0.1; 
@@ -168,7 +168,6 @@ void Viewport::render(int width, int height)
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
-    m_fAngle += 0.1;
 }
 
 void Viewport::drawMesh() {
@@ -224,4 +223,10 @@ void Viewport::initTextures()
     // f.ex. texture coordinate (1.1, 1.2) is same as (0.1, 0.2)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+}
+
+void Viewport::rotateCamera(int x, int y)
+{
+    m_camPitchAngle += x;
+    m_camTiltAngle -= y;
 }

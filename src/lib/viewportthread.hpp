@@ -29,15 +29,21 @@ class ViewportThread : public QQuickItem
         ViewportThread();
 
         static QList<QThread *> threads;
+       Q_INVOKABLE void mousePressed(int x, int y);
+       Q_INVOKABLE void moveCamera(int x, int y);
 
         public Q_SLOTS:
             void ready();
 
+
     protected:
         QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
+        //void mousePressEvent(QMouseEvent* event);
 
     private:
         RenderViewportThread *m_renderThread;
+        int m_x;
+        int m_y;
 };
 
 
@@ -54,6 +60,7 @@ class RenderViewportThread : public QThread
         void setSize(const QSize& size) { m_size=size; };
         QOffscreenSurface *surface;
         QOpenGLContext *context;
+        void moveCamera(int x, int y);
 
         public slots:
             void renderNext();

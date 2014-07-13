@@ -31,6 +31,7 @@ class Viewport
         void drawGrid();
         void drawAxis();
         void initTextures();
+        void rotateCamera(int x, int y);
 
     private:
         QSize m_viewportSize;
@@ -48,7 +49,8 @@ class Viewport
         int matrixFloorUniform1;
         int texture;
         int texcoord;
-        float m_fAngle;
+        float m_camPitchAngle;
+        float m_camTiltAngle;
         float m_fScale;
         QMatrix4x4 pview;
         QOpenGLShader* meshShader;

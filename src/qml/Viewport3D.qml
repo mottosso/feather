@@ -12,15 +12,16 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: 2
 
-        /*
         MouseArea {
             id: mouseArea
             anchors.fill: parent
             hoverEnabled: false
 
-            onClicked: {}
+            onClicked: { renderer.mousePressed(mouse.x,mouse.y) }
+            onPositionChanged: { renderer.moveCamera(mouse.x,mouse.y) }
+            //onReleased: { console.log("released") }
+            onWheel: { console.log("wheel") }
         }
-        */
     }
 
 }

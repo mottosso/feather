@@ -19,7 +19,7 @@ QList<QThread *> ViewportThread::threads;
 
 
 ViewportThread::ViewportThread()
-: m_renderThread(0)
+: m_renderThread(0), m_x(0), m_y(0)
 {
     setFlag(ItemHasContents, true);
     m_renderThread = new RenderViewportThread(QSize(0, 0));
@@ -80,6 +80,19 @@ QSGNode *ViewportThread::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *
 }
 
 
+void ViewportThread::mousePressed(int x, int y)
+{
+    m_x=x;
+    m_y=y;
+}
+
+void ViewportThread::moveCamera(int x, int y)
+{
+    m_renderThread->moveCamera(x-m_x, y-m_y);
+    m_x=x;
+    m_y=y;
+}
+
     RenderViewportThread::RenderViewportThread(const QSize &size)
     : surface(0)
     , context(0)
@@ -89,6 +102,11 @@ QSGNode *ViewportThread::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *
       , m_size(size)
 {
     ViewportThread::threads << this;
+}
+
+void RenderViewportThread::moveCamera(int x, int y)
+{
+    m_viewport->rotateCamera(x,y);
 }
 
 void RenderViewportThread::renderNext()
@@ -117,7 +135,7 @@ void RenderViewportThread::renderNext()
 
     m_renderFbo->bind();
 
-    int side = qMin(m_size.width(),m_size.height());
+    //int side = qMin(m_size.width(),m_size.height());
     glViewport(0, 0, m_size.width(), m_size.height());
 
     m_viewport->render(m_size.width(),m_size.height());

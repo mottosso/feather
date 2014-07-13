@@ -15,8 +15,8 @@ Item {
     ApplicationWindow {
         id: main_window
         //visibility: Window.Maximized
-        width: 500
-        height: 900
+        width: 900
+        height: 600
         visible: true
         title: "Feather"
 
