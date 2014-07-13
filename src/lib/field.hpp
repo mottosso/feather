@@ -57,6 +57,8 @@ namespace feather
                 static _Type value;
             };
 
+        typedef struct {} FieldContainer;
+
     } // namespace field
 
 #define MAKE_FIELD(_type,_name,_default,_min,_max)\

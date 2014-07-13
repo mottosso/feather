@@ -19,21 +19,22 @@
 #include "deps.hpp"
 #include "types.hpp"
 #include "status.hpp"
+#include "field.hpp"
 
 namespace feather
 {
 
-    namespace field
-    {
-
-        
-
-    }
-
     namespace node
     {
 
-        template <typename _Fields> struct Node<PolygonMesh, _Fields>::init(_Fields fields)
+        struct PolygonMeshFields : public FieldContainer
+        {
+            field::Field<field::Vertex3D> v;
+            field::Field<field::Normal3D> n;
+            field::Field<field::TextureCoord> st;
+        };
+
+        template <> struct Node<PolygonMesh, PolygonMeshFields>::init(PolygonMeshFields fields)
         {
             return status();
         };
