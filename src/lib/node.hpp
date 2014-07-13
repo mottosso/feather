@@ -36,11 +36,11 @@ namespace feather
             StartNode
         };
 
-        template <int _Type, typename _Args>
+        template <int _Type, typename _Fields>
             struct Node
             {
-                static status init(_Args args) { return status(FAILED,"No matching Type for Node."); };
-                static status do_it(_Args args) { return status(FAILED,"No matching Type for Node."); };
+                static status init(_Fields fields) { return status(FAILED,"No matching Type for Node."); };
+                static status do_it(_Fields fields) { return status(FAILED,"No matching Type for Node."); };
                 static status undo() { return status(FAILED,"No matching Type for Node."); };
                 static status remove() { return status(FAILED,"No matching Type for Node."); };
                 static status init_gl() { return status(FAILED,"No matching Type for Node."); };

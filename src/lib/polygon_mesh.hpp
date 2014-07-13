@@ -26,7 +26,7 @@ namespace feather
     namespace node
     {
 
-        template <typename _Args> struct Node<PolygonMesh, _Args>::init(_Args args)
+        template <typename _Fields> struct Node<PolygonMesh, _Fields>::init(_Fields fields)
         {
             return status();
         };
