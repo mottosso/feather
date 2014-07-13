@@ -56,6 +56,10 @@ namespace feather
         };
 
 
+        /* DRAW SCENEGRAPH */
+
+        status draw_sg() { return status(); };
+
 
     } // namespace scenegraph
 
