@@ -52,7 +52,7 @@ namespace feather
         template <int _Node, typename _Fields>
         struct add_node
         {
-            static status exec(_Fields field) { };
+            static status exec(_Fields field) { return status(); };
         };
 
 
