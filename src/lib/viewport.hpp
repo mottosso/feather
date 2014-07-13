@@ -32,6 +32,8 @@ class Viewport
         void drawAxis();
         void initTextures();
         void rotateCamera(int x, int y);
+        void zoomCamera(int z);
+
 
     private:
         QSize m_viewportSize;
@@ -51,6 +53,7 @@ class Viewport
         int texcoord;
         float m_camPitchAngle;
         float m_camTiltAngle;
+        float m_camZoom;
         float m_fScale;
         QMatrix4x4 pview;
         QOpenGLShader* meshShader;

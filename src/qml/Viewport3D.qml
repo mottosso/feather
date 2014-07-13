@@ -20,7 +20,7 @@ Rectangle {
             onClicked: { renderer.mousePressed(mouse.x,mouse.y) }
             onPositionChanged: { renderer.moveCamera(mouse.x,mouse.y) }
             //onReleased: { console.log("released") }
-            onWheel: { console.log("wheel") }
+            onWheel: { renderer.zoomCamera(wheel.angleDelta.y); }
         }
     }
 

@@ -93,6 +93,13 @@ void ViewportThread::moveCamera(int x, int y)
     m_y=y;
 }
 
+void ViewportThread::zoomCamera(int z)
+{
+    m_renderThread->zoomCamera(z);
+}
+
+
+
     RenderViewportThread::RenderViewportThread(const QSize &size)
     : surface(0)
     , context(0)
@@ -108,6 +115,12 @@ void RenderViewportThread::moveCamera(int x, int y)
 {
     m_viewport->rotateCamera(x,y);
 }
+
+void RenderViewportThread::zoomCamera(int z)
+{
+    m_viewport->zoomCamera(z);
+}
+
 
 void RenderViewportThread::renderNext()
 {

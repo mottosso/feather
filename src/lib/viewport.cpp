@@ -28,7 +28,7 @@ std::vector<Vector3D> axis;
 //std::vector<Vector3D> axisY;
 //std::vector<Vector3D> axisZ;
 
-Viewport::Viewport() : m_camPitchAngle(0),m_camTiltAngle(0),m_fScale(1),r(0)
+Viewport::Viewport() : m_camPitchAngle(0),m_camTiltAngle(0),m_camZoom(-6.0),m_fScale(1),r(0)
 {
 
 }
@@ -40,7 +40,6 @@ Viewport::~Viewport()
 
 void Viewport::initialize(int width, int height)
 {
-    std::cout << "init\n";
     // Test
     QOpenGLShader *vshader1 = new QOpenGLShader(QOpenGLShader::Vertex, &program1);
     vshader1->compileSourceFile("mesh.glsl");
@@ -123,7 +122,7 @@ void Viewport::render(int width, int height)
     pview.setToIdentity();
     pview.perspective(fov,aspect,near,far); 
     //pview.ortho(-1.0/aspect,1.0/aspect,-1.0*aspect,1.0*aspect,1.0,20.0);
-    pview.translate(0.0,1.0,-6.0);
+    pview.translate(0.0,1.0,m_camZoom);
     pview.rotate(m_camTiltAngle,1.0,0.0,0.0);
     pview.rotate(m_camPitchAngle,0.0,1.0,0.0);
     pview.rotate(0,0.0,0.0,1.0);
@@ -229,4 +228,9 @@ void Viewport::rotateCamera(int x, int y)
 {
     m_camPitchAngle += x;
     m_camTiltAngle -= y;
+}
+
+void Viewport::zoomCamera(int z)
+{
+    m_camZoom += (float)z/240.0;
 }
