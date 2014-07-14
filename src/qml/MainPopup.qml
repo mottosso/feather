@@ -1,11 +1,15 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
+import feather.scenegraph 1.0
 
 Menu {
+
+    SceneGraph { id: sg }
+
     MenuItem {
         text: "Cube"
         //shortcut: "Ctrl+C"
-        onTriggered: {}            
+        onTriggered: { sg.make_cube() }            
     }
 
     MenuItem {

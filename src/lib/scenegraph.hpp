@@ -19,6 +19,7 @@
 #include "deps.hpp"
 #include "types.hpp"
 #include "node.hpp"
+#include "field.hpp"
 
 namespace feather
 {
@@ -26,7 +27,7 @@ namespace feather
     namespace scenegraph
     {
 
-        typedef struct { int id; node::Type node; FieldContainer* fields; } sgNode;
+        typedef struct { int id; node::Type node; field::FieldContainer* fields; } sgNode;
 
         typedef std::vector<sgNode> SceneGraph;
         SceneGraph sg;
@@ -37,7 +38,7 @@ namespace feather
         struct get_type
         {
             static int exec(sgNode& n) {
-                if(n.type == _StartType)
+                if(n.node == _StartType)
                     return _StartType;
                 else
                     return get_type<_StartType-1,_EndType>::exec(n);

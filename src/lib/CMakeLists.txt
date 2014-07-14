@@ -14,6 +14,7 @@ SET(feather_core_SRCS
     #test.cpp
     viewport.cpp
     viewportthread.cpp
+    qml.cpp
 )
 
 SET_SOURCE_FILES_PROPERTIES(${feather_core_SRCS}

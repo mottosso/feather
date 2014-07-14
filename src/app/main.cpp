@@ -16,6 +16,7 @@
 #include "deps.hpp"
 #include "viewportthread.hpp"
 #include "scenegraph.hpp"
+#include "qml.hpp"
 
 int main(int argc, char **argv)
 {
@@ -35,6 +36,8 @@ return app.exec();
 */
 
     qmlRegisterType<ViewportThread>("FeatherViewport", 1, 0, "Viewport");
+    qmlRegisterType<feather::qml::QmlSceneGraph>("feather.scenegraph", 1, 0, "SceneGraph");
+
 
     /*
     QQuickView view;

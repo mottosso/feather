@@ -49,12 +49,11 @@ namespace feather
             TextureCoordArray,
             Matrix4x4Array,
             StartField
-        }
+        };
 
         template <int _Type>
             struct Field
             {
-                static _Type value;
             };
 
         typedef struct {} FieldContainer;
