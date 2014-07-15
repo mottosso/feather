@@ -10,7 +10,7 @@ SET(QT_USE_QTOPENGL TRUE)
 
 SET(feather_core_SRCS
     core.cpp
-    scenegraph.cpp
+    #scenegraph.cpp
     #test.cpp
     viewport.cpp
     viewportthread.cpp

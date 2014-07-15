@@ -34,7 +34,7 @@ namespace feather
 
         typedef Singleton<SceneGraph> SceneGraphSingleton;        
         
-        status draw_gl();
+        status draw_gl() { return status(); };
 
         template <int _StartType, int _EndType>
         struct get_type

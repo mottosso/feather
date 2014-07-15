@@ -15,13 +15,10 @@
 // =====================================================================================
 #include "deps.hpp"
 #include "viewportthread.hpp"
-#include "scenegraph.hpp"
 #include "qml.hpp"
 
 int main(int argc, char **argv)
 {
-
-    feather::scenegraph::SceneGraph sg;
 
     QGuiApplication app(argc, argv);
 

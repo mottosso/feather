@@ -20,6 +20,7 @@
 #include "types.hpp"
 #include "status.hpp"
 #include "field.hpp"
+#include "node.hpp"
 
 namespace feather
 {
@@ -27,14 +28,14 @@ namespace feather
     namespace node
     {
 
-        struct PolygonMeshFields : public FieldContainer
+        struct PolygonMeshFields : public field::FieldContainer
         {
             field::Field<field::Vertex3D> v;
             field::Field<field::Normal3D> n;
             field::Field<field::TextureCoord> st;
         };
 
-        template <> struct Node<PolygonMesh, PolygonMeshFields>::init(PolygonMeshFields fields)
+        template <> status Node<PolygonMesh, PolygonMeshFields>::init(PolygonMeshFields fields)
         {
             return status();
         };

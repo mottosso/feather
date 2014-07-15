@@ -32,3 +32,6 @@ status scenegraph::draw_gl() {
     return status();
 }
 
+status scenegraph::draw_sg() {
+    return status();
+}

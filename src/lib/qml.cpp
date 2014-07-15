@@ -14,6 +14,8 @@
 // 
 // =====================================================================================
 #include "qml.hpp"
+#include "polygon_mesh.hpp"
+#include "scenegraph.hpp"
 
 using namespace feather::qml;
 
@@ -30,4 +32,13 @@ QmlSceneGraph::~QmlSceneGraph()
 void QmlSceneGraph::make_cube()
 {
     std::cout << "make cube\n";
+
+    // create a sgNode
+    scenegraph::sgNode sgnode;
+
+    // setup the node 
+    sgnode.id=0;
+    sgnode.node = node::PolygonMesh;    
+    sgnode.fields = new node::PolygonMeshFields();
+
 }
