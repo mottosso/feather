@@ -20,6 +20,7 @@
 #include "types.hpp"
 #include "node.hpp"
 #include "field.hpp"
+#include "singleton.hpp"
 
 namespace feather
 {
@@ -30,8 +31,9 @@ namespace feather
         typedef struct { int id; node::Type node; field::FieldContainer* fields; } sgNode;
 
         typedef std::vector<sgNode> SceneGraph;
-        SceneGraph sg;
 
+        typedef Singleton<SceneGraph> SceneGraphSingleton;        
+        
         status draw_gl();
 
         template <int _StartType, int _EndType>
