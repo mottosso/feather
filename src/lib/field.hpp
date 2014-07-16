@@ -51,9 +51,10 @@ namespace feather
             StartField
         };
 
-        template <int _Type>
+        template <int _Node, typename _T>
             struct Field
             {
+                static status get_value(_T& val) { return status(FAILED,"No matching Node and Type for Field"); };
             };
 
         typedef struct {} FieldContainer;
@@ -65,6 +66,10 @@ namespace feather
     typedef Field<_type> _name;\
     template <> _type _name::value=_default;
 
+#define ADD_FIELD_TO_NODE(_name,_type,_node)\
+    typedef Field<_node,get_type<_type>()> _name;\
+    template <> status _name::get_value(get_type<_type>()& val) { return status(); };
+    
 } // namespace feather
 
 #endif
