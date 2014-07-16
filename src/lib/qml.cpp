@@ -40,5 +40,8 @@ void QmlSceneGraph::make_cube()
     sgnode.id=0;
     sgnode.node = node::PolygonMesh;    
     sgnode.fields = new node::PolygonMeshFields();
+    //sgnode.fields.v
 
+    scenegraph::SceneGraphSingleton::Instance()->push_back(sgnode);
+    scenegraph::update();
 }

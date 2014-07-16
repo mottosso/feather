@@ -63,6 +63,7 @@ namespace feather
 
         status draw_sg() { return status(); };
 
+        status update() { return status(); };
 
     } // namespace scenegraph
 

@@ -48,8 +48,8 @@ namespace feather
                 static status cleanup() { return status(FAILED,"No matching Type for Node."); };
                 
                 private:
-                FVertexArray m_v;
-                FVertexArray m_vn;
+                FVertex3DArray m_v;
+                FVertex3DArray m_vn;
                 FTextureCoordArray m_st;
                 // opengl
                 int m_vAttr;

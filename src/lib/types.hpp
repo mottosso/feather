@@ -28,9 +28,9 @@ namespace feather
     typedef struct{double x; double y;} FPoint2D;
     typedef struct{double x; double y; double z;} FPoint3D;
 
-    struct FVertex
+    struct FVertex3D
     {
-        FVertex(FDouble _x=0, FDouble _y=0, FDouble _z=0) { x=_x; y=_y; z=_z; };
+        FVertex3D(FDouble _x=0, FDouble _y=0, FDouble _z=0) { x=_x; y=_y; z=_z; };
         FDouble x;
         FDouble y;
         FDouble z;
@@ -57,7 +57,7 @@ namespace feather
     typedef std::vector<FInt> FIntArray;
     typedef std::vector<FDouble> FDoubleArray;
     typedef std::vector<FString> FStringArray;
-    typedef std::vector<FVertex> FVertexArray;
+    typedef std::vector<FVertex3D> FVertex3DArray;
     typedef std::vector<FVector> FVectorArray;
     typedef std::vector<FTextureCoord> FTextureCoordArray;
     typedef std::vector<FNormal> FNormalArray;
@@ -85,7 +85,7 @@ namespace feather
 
     struct FMesh
     {
-        FVertexArray v;
+        FVertex3DArray v;
         FTextureCoordArray st;
         FNormalArray vn;
         void clear() { v.clear(); st.clear(); vn.clear(); };
