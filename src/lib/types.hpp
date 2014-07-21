@@ -36,7 +36,7 @@ namespace feather
         FDouble z;
     };
 
-    typedef struct{double x; double y; double z;} FNormal;
+    typedef struct{double x; double y; double z;} FNormal3D;
     typedef struct{ double x; double y; double z; double w;} FVector;
     typedef struct{int r; int g; int b;} FColorRGB;
     typedef struct{int r; int g; int b; int a;} FColorRGBA;
@@ -60,7 +60,7 @@ namespace feather
     typedef std::vector<FVertex3D> FVertex3DArray;
     typedef std::vector<FVector> FVectorArray;
     typedef std::vector<FTextureCoord> FTextureCoordArray;
-    typedef std::vector<FNormal> FNormalArray;
+    typedef std::vector<FNormal3D> FNormal3DArray;
     typedef std::vector<FFace> FFaceArray;
 
     struct FStatus
@@ -87,7 +87,7 @@ namespace feather
     {
         FVertex3DArray v;
         FTextureCoordArray st;
-        FNormalArray vn;
+        FNormal3DArray vn;
         void clear() { v.clear(); st.clear(); vn.clear(); };
     };
 

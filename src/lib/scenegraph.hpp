@@ -28,7 +28,7 @@ namespace feather
     namespace scenegraph
     {
 
-        typedef struct { int id; node::Type node; field::FieldContainer* fields; } sgNode;
+        typedef struct { int id; node::Type node; } sgNode;
 
         typedef std::vector<sgNode> SceneGraph;
 

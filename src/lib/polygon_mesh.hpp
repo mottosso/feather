@@ -28,14 +28,14 @@ namespace feather
     namespace node
     {
 
-        struct PolygonMeshFields : public field::FieldContainer
+        struct PolygonMeshNode
         {
-            field::Field<field::Vertex3D> v;
-            field::Field<field::Normal3D> n;
-            field::Field<field::TextureCoord> st;
+            field::Field<FVertex3D> v;
+            field::Field<FNormal3D> n;
+            field::Field<FTextureCoord> st;
         };
 
-        template <> status Node<PolygonMesh, PolygonMeshFields>::init(PolygonMeshFields fields)
+        template <> status Node<PolygonMeshNode,PolygonMesh>::init(PolygonMeshNode node)
         {
             return status();
         };
