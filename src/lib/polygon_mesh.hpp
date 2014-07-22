@@ -28,17 +28,25 @@ namespace feather
     namespace node
     {
 
-        struct PolygonMeshNode
+        struct PolygonMeshNode : public Object
         {
-            field::Field<FVertex3D> v;
-            field::Field<FNormal3D> n;
-            field::Field<FTextureCoord> st;
+            FVertex3DArray v;
+            FNormal3DArray n;
+            FTextureCoordArray st;
         };
 
-        template <> status Node<PolygonMeshNode,PolygonMesh>::init(PolygonMeshNode node)
+        typedef Node<PolygonMeshNode> polymesh;
+
+        template <> status polymesh::init(PolygonMeshNode node)
         {
             return status();
         };
+
+        template <> status polymesh::do_it(PolygonMeshNode node)
+        {
+            return status();
+        };
+
 
     } // namespace node
 

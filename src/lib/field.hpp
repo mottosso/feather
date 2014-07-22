@@ -27,7 +27,7 @@ namespace feather
     {
 
         enum Type {
-            EndField,
+            None,
             Bool,
             Int,
             Double,
@@ -48,14 +48,7 @@ namespace feather
             NormalArray,
             TextureCoordArray,
             Matrix4x4Array,
-            StartField
         };
-
-        template <typename _Field>
-            struct Field
-            {
-                _Field value;            
-            };
 
     } // namespace field
 
