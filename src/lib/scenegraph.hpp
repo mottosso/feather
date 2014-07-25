@@ -34,21 +34,23 @@ namespace feather
 
         typedef Singleton<SceneGraph> SceneGraphSingleton;        
         
-        status draw_gl() { return status(); };
+        inline status draw_gl() { return status(); };
 
+
+        /*
         template <int _StartType, int _EndType>
-        struct get_type
-        {
-            static int exec(sgNode& n) {
-                if(n.node == _StartType)
-                    return _StartType;
-                else
-                    return get_type<_StartType-1,_EndType>::exec(n);
+            struct get_type
+            {
+                static int exec(scenegraph::sgNode& n) {
+                    if(n.node == _StartType)
+                        return _StartType;
+                    else
+                        return get_type<_StartType-1,_EndType>::exec(n);
+                };
             };
-        };
 
-        template <> int get_type<0,0>::exec(sgNode& n) { return 0; };
-
+        template <> int get_type<0,0>::exec(scenegraph::sgNode& n) { return 0; };
+        */
 
         /* ADD NODE TO SCENEGRAPH */
     
@@ -61,9 +63,9 @@ namespace feather
 
         /* DRAW SCENEGRAPH */
 
-        status draw_sg() { return status(); };
+        inline status draw_sg() { return status(); };
 
-        status update() { return status(); };
+        inline status update() { return status(); };
 
     } // namespace scenegraph
 

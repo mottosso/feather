@@ -14,6 +14,7 @@
 // 
 // =====================================================================================
 #include "viewport.hpp"
+#include "scenegraph.hpp"
 
 struct Vector3D
 {
@@ -116,6 +117,7 @@ void Viewport::initialize(int width, int height)
 
 void Viewport::render(int width, int height)
 {
+
     const qreal fov=25.0,near=0.1, far=20.0;
     qreal aspect=(float)width/(float)height;
 
@@ -164,6 +166,9 @@ void Viewport::render(int width, int height)
     axisProgram.setUniformValue(axisMAttr, pview);
     drawAxis();
     axisProgram.release();
+
+    // draw each node
+    //feather::scenegraph::draw_gl();
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);

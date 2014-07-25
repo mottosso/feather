@@ -21,13 +21,11 @@ using namespace feather;
 status scenegraph::draw_gl() {
     
     // can use the if statement for obvious reasons
-    /*
     for(sgNode &n : SceneGraphSingleton::Instance())
     {
         std::cout << "draw node" << std::endl;
         //node::Node<get_type<20,0>::exec(n),int>::draw_gl();
     }
-    */
 
     return status();
 }

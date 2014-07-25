@@ -17,6 +17,7 @@
 #include "polygon_mesh.hpp"
 #include "scenegraph.hpp"
 
+using namespace feather;
 using namespace feather::qml;
 
 QmlSceneGraph::QmlSceneGraph(QObject* parent)
