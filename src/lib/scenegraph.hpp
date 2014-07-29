@@ -28,13 +28,18 @@ namespace feather
     namespace scenegraph
     {
 
-        typedef struct { int id; node::Type node; } sgNode;
+        struct sgNode
+        {
+            sgNode(int _id, node::Type _node):id(_id),node(_node){};
+            int id;
+            node::Type node;
+        };
 
         typedef std::vector<sgNode> SceneGraph;
 
         typedef Singleton<SceneGraph> SceneGraphSingleton;        
         
-        inline status draw_gl() { return status(); };
+        //inline status draw_gl() { return status(); };
 
 
         /*
@@ -53,17 +58,28 @@ namespace feather
         */
 
         /* ADD NODE TO SCENEGRAPH */
-    
+   
+        /* 
         template <int _Node, typename _Fields>
         struct add_node
         {
             static status exec(_Fields field) { return status(); };
         };
+        */
 
+        inline status add_node(int id, node::Type node)
+        {
+            SceneGraphSingleton::Instance()->push_back(sgNode(id,node));
+            return status();
+        };
 
         /* DRAW SCENEGRAPH */
 
-        inline status draw_sg() { return status(); };
+        inline status draw_sg()
+        {
+            std::cout << "sg size:" << SceneGraphSingleton::Instance()->size() << std::endl;
+            return status();
+        };
 
         inline status update() { return status(); };
 
