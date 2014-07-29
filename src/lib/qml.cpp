@@ -14,7 +14,6 @@
 // 
 // =====================================================================================
 #include "qml.hpp"
-#include "polygon_mesh.hpp"
 #include "node.hpp"
 #include "scenegraph.hpp"
 

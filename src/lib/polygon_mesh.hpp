@@ -37,16 +37,25 @@ namespace feather
 
         typedef Node<PolygonMeshNode> polymesh;
 
+        // INIT
         template <> status polymesh::init(PolygonMeshNode node)
         {
+            
             return status();
         };
 
+        // DO IT
         template <> status polymesh::do_it(PolygonMeshNode node)
         {
             return status();
         };
 
+        // DRAW GL
+        template <> status polymesh::do_it(PolygonMeshNode node)
+        {
+            std::cout << "draw polycube\n";
+            return status();
+        };
 
     } // namespace node
 
