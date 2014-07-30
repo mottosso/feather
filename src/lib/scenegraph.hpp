@@ -21,7 +21,7 @@
 #include "node.hpp"
 #include "field.hpp"
 #include "singleton.hpp"
-//#include "polygon_mesh.hpp"
+#include "polygon_mesh.hpp"
 
 namespace feather
 {
@@ -50,23 +50,24 @@ namespace feather
 
         inline status draw_sg()
         {
-            std::cout << "sg size:" << SceneGraphSingleton::Instance()->size() << std::endl;
+            //std::cout << "sg size:" << SceneGraphSingleton::Instance()->size() << std::endl;
 
-            for(int i=0; i<SceneGraphSingleton::Instance()->size(); i++)
+            for(uint i=0; i<SceneGraphSingleton::Instance()->size(); i++)
             {
-                sgNode node = SceneGraphSingleton::Instance()->at(i);
-/*        
-                switch(node.node)
+                sgNode n = SceneGraphSingleton::Instance()->at(i);
+
+                /*                
+                switch(n.node)
                 {
                     case node::PolygonMesh :
-                        node::PolygonMeshNode pnode;
-                        node::polymesh::do_it(pnode);
+                        //node::polymesh pnode;
+                        //node::polymesh::do_it(pnode);
                         break;
 
                     default :
                         break;
                 }
-*/
+                */
             }
 
             return status();

@@ -51,7 +51,7 @@ namespace feather
         };
 
         // DRAW GL
-        template <> status polymesh::do_it(PolygonMeshNode node)
+        template <> status polymesh::draw_gl()
         {
             std::cout << "draw polycube\n";
             return status();
