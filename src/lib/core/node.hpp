@@ -60,8 +60,8 @@ namespace feather
                 FTextureCoordArray m_st;
                 int m_vAttr;
                 int m_mAttr;
-                QOpenGLShaderProgram m_program;
-                QOpenGLShader* m_shader;
+                //QOpenGLShaderProgram m_program;
+                //QOpenGLShader* m_shader;
             };
 
     } // namespace node

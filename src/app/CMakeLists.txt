@@ -15,16 +15,17 @@ SET(feather_SRCS
 SET(QT_USE_QTOPENGL TRUE)
 
 INCLUDE_DIRECTORIES(${feather_core_SOURCE_DIR}
+    ${feather_qml_SOURCE_DIR}
     ${Qt5Gui_INCLUDE_DIRS}
     ${Qt5Core_INCLUDE_DIRS}
     ${Qt5Widgets_INCLUDE_DIRS}
     ${Qt5Quick_INCLUDE_DIRS}
 )
 
-LINK_DIRECTORIES(${feather_core_BINARY_DIR}
+LINK_DIRECTORIES(${feather_qml_BINARY_DIR}
 )
 
-LINK_LIBRARIES(feather_core)
+LINK_LIBRARIES(feather_qml)
 
 ADD_DEFINITIONS( ${Qt5Widgets_DEFINITIONS}
     ${Qt5Quick_DEFINITIONS}
