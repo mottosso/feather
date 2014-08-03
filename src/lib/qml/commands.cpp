@@ -14,12 +14,18 @@
 // 
 // =====================================================================================
 #include "commands.hpp"
+#include "polygon_mesh.hpp"
+#include "scenegraph.hpp"
 
 using namespace feather;
 using namespace feather::qml;
 
 status command::make_cube() {
     std::cout << "make cube\n";
+   // create a sgNode
+    scenegraph::sgNode sgnode(1,node::PolygonMesh);
+    scenegraph::SceneGraphSingleton::Instance()->push_back(sgnode);
+    scenegraph::update();
     return status();
 }
 

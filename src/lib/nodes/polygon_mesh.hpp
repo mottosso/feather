@@ -40,21 +40,21 @@ namespace feather
         // INIT
         template <> status polymesh::init(Fields* node)
         {
-            std::cout << "polycube init\n";
+            //std::cout << "polycube init\n";
             return status();
         };
 
         // DO IT
         template <> status polymesh::do_it(Fields* node)
         {
-            std::cout << "polycube do_it\n";
+            //std::cout << "polycube do_it\n";
             return status();
         };
 
         // DRAW GL
         template <> status polymesh::draw_gl()
         {
-            std::cout << "polycube draw_gl\n";
+            //std::cout << "polycube draw_gl\n";
             return status();
         };
 

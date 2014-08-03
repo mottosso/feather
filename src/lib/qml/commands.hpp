@@ -19,22 +19,21 @@
 #include "deps.hpp"
 #include "types.hpp"
 #include "status.hpp"
-//#include "polygon_mesh.hpp"
 
 namespace feather
 {
 
-namespace qml
-{
+    namespace qml
+    {
 
-namespace command
-{
+        namespace command
+        {
 
-status make_cube();
+            status make_cube();
 
-} // namespace command
+        } // namespace command
 
-} // namespace qml
+    } // namespace qml
 
 } // namespace feather
 

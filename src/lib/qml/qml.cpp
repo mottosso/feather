@@ -30,16 +30,3 @@ QmlSceneGraph::~QmlSceneGraph()
 {
 
 }
-
-/*
-void QmlSceneGraph::make_cube()
-{
-    std::cout << "make cube\n";
-
-    // create a sgNode
-    scenegraph::sgNode sgnode(1,node::PolygonMesh);
-
-    scenegraph::SceneGraphSingleton::Instance()->push_back(sgnode);
-    scenegraph::update();
-}
-*/
