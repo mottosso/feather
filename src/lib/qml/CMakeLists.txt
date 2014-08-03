@@ -9,6 +9,7 @@ SET(CMAKE_AUTOMOC ON)
 SET(QT_USE_QTOPENGL TRUE)
 
 SET(feather_qml_SRCS
+    commands.cpp
     viewport.cpp
     viewportthread.cpp
     qml.cpp

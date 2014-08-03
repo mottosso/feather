@@ -23,6 +23,8 @@
 namespace feather
 {
 
+    struct Fields{};
+
     namespace field
     {
 

@@ -1,11 +1,11 @@
 // =====================================================================================
 // 
-//       Filename:  qml.hpp
+//       Filename:  commands.hpp
 // 
 //    Description:  
 // 
 //        Version:  1.0
-//        Created:  07/14/2014 05:41:06 AM
+//        Created:  08/02/2014 09:45:17 PM
 //       Revision:  none
 //       Compiler:  g++
 // 
@@ -13,34 +13,28 @@
 //        Company:  
 // 
 // =====================================================================================
-#ifndef QML_HPP
-#define QML_HPP
+#ifndef COMMANDS_HPP
+#define COMMANDS_HPP
 
 #include "deps.hpp"
 #include "types.hpp"
 #include "status.hpp"
-#include "qml_deps.hpp"
-#include "commands.hpp"
+//#include "polygon_mesh.hpp"
 
 namespace feather
 {
 
-    namespace qml
-    {
+namespace qml
+{
 
-        class QmlSceneGraph : public QObject
-        {
-            Q_OBJECT
+namespace command
+{
 
-            public:
-                QmlSceneGraph(QObject* parent=0);
-                ~QmlSceneGraph();
+status make_cube();
 
-                // commands
-                Q_INVOKABLE void make_cube() { command::make_cube(); };
-        };
+} // namespace command
 
-    } // namespace qml
+} // namespace qml
 
 } // namespace feather
 

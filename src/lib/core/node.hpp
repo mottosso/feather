@@ -20,6 +20,7 @@
 #include "types.hpp"
 #include "status.hpp"
 #include "object.hpp"
+#include "field.hpp"
 
 namespace feather
 {
@@ -37,13 +38,13 @@ namespace feather
             StartNode
         };
 
-        template <typename _Node>
+        template <int _Node>
             struct Node : public Object
             {
                 /* called when the node is created */
-                static status init(_Node node) { return status(FAILED,"No matching Type for Node."); };
+                static status init(Fields* fields) { return status(FAILED,"No matching Type for Node."); };
                 /* called during a scenegraph update */
-                static status do_it(_Node node) { return status(FAILED,"No matching Type for Node."); };
+                static status do_it(Fields* fields) { return status(FAILED,"No matching Type for Node."); };
                 /* called during an undo */
                 static status undo() { return status(FAILED,"No matching Type for Node."); };
                 /* called when the viewport is setup for opengl */

@@ -14,8 +14,9 @@
 // 
 // =====================================================================================
 #include "qml.hpp"
-#include "node.hpp"
-#include "scenegraph.hpp"
+//#include "node.hpp"
+//#include "scenegraph.hpp"
+//#include "polygon_mesh.hpp"
 
 using namespace feather;
 using namespace feather::qml;
@@ -30,6 +31,7 @@ QmlSceneGraph::~QmlSceneGraph()
 
 }
 
+/*
 void QmlSceneGraph::make_cube()
 {
     std::cout << "make cube\n";
@@ -40,3 +42,4 @@ void QmlSceneGraph::make_cube()
     scenegraph::SceneGraphSingleton::Instance()->push_back(sgnode);
     scenegraph::update();
 }
+*/
