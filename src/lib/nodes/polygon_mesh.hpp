@@ -52,11 +52,13 @@ namespace feather
         };
 
         // DRAW GL
-        template <> status polymesh::draw_gl()
+        template <> status polymesh::draw_gl(Fields* node);
+        /*
         {
             //std::cout << "polycube draw_gl\n";
             return status();
         };
+        */
 
     } // namespace node
 

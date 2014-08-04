@@ -50,7 +50,7 @@ namespace feather
                 /* called when the viewport is setup for opengl */
                 static status init_gl() { return status(FAILED,"No matching Type for Node."); };
                 /* called when the node is draw in the viewport */
-                static status draw_gl() { return status(FAILED,"No matching Type for Node."); };
+                static status draw_gl(Fields* fields) { return status(FAILED,"No matching Type for Node."); };
                 /* called when the node is deleted */
                 static status cleanup() { return status(FAILED,"No matching Type for Node."); };
 

@@ -60,7 +60,7 @@ namespace feather
                 {
                     case node::PolygonMesh :
 //                        std::cout << "draw polgon mesh\n";
-                        node::Node<node::PolygonMesh>::do_it(n.fields);
+                        node::Node<node::PolygonMesh>::draw_gl(n.fields);
                         break;
 
                     default :
