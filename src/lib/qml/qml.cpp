@@ -14,9 +14,6 @@
 // 
 // =====================================================================================
 #include "qml.hpp"
-//#include "node.hpp"
-//#include "scenegraph.hpp"
-//#include "polygon_mesh.hpp"
 
 using namespace feather;
 using namespace feather::qml;

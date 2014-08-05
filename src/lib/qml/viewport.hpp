@@ -17,7 +17,6 @@
 #define VIEWPORT_HPP
 
 #include "deps.hpp"
-#include "qml_deps.hpp"
 
 class Viewport
 {

@@ -19,7 +19,6 @@
 #include "deps.hpp"
 #include "types.hpp"
 #include "status.hpp"
-#include "qml_deps.hpp"
 #include "commands.hpp"
 
 namespace feather

@@ -30,10 +30,10 @@ namespace feather
 
     struct FVertex3D
     {
-        FVertex3D(FDouble _x=0, FDouble _y=0, FDouble _z=0) { x=_x; y=_y; z=_z; };
-        FDouble x;
-        FDouble y;
-        FDouble z;
+        FVertex3D(FFloat _x=0, FFloat _y=0, FFloat _z=0) { x=_x; y=_y; z=_z; };
+        FFloat x;
+        FFloat y;
+        FFloat z;
     };
 
     typedef struct{double x; double y; double z;} FNormal3D;

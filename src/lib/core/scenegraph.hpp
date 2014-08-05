@@ -30,9 +30,10 @@ namespace feather
 
         struct sgNode
         {
-            sgNode(int _id, node::Type _node, Fields* _fields=NULL):id(_id),node(_node),fields(_fields){};
+            sgNode(int _id, node::Type _ntype, node::NodeAttributes* _nattr=NULL, Fields* _fields=NULL):id(_id),ntype(_ntype),nattr(_nattr),fields(_fields){};
             int id;
-            node::Type node;
+            node::Type ntype;
+            node::NodeAttributes* nattr;
             Fields* fields;
         };
 
@@ -40,27 +41,26 @@ namespace feather
 
         typedef Singleton<SceneGraph> SceneGraphSingleton;        
         
-        inline status add_node(int id, node::Type node, Fields* fields=NULL)
+        inline status add_node(int id, node::Type ntype, node::NodeAttributes* nattr=NULL, Fields* fields=NULL)
         {
-            SceneGraphSingleton::Instance()->push_back(sgNode(id,node,fields));
+            SceneGraphSingleton::Instance()->push_back(sgNode(id,ntype,nattr,fields));
             return status();
         };
 
         /* DRAW SCENEGRAPH */
 
-        inline status draw_sg()
+        inline status draw_sg(QMatrix4x4 view)
         {
             //std::cout << "sg size:" << SceneGraphSingleton::Instance()->size() << std::endl;
 
             for(uint i=0; i<SceneGraphSingleton::Instance()->size(); i++)
             {
                 sgNode n = SceneGraphSingleton::Instance()->at(i);
-//                std::cout << "draw_sg()\n";
-                switch(n.node)
+                n.nattr->view=view;
+                switch(n.ntype)
                 {
                     case node::PolygonMesh :
-//                        std::cout << "draw polgon mesh\n";
-                        node::Node<node::PolygonMesh>::draw_gl(n.fields);
+                        node::Node<node::PolygonMesh>::draw_gl(n.nattr,n.fields);
                         break;
 
                     default :

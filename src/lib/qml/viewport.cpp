@@ -168,7 +168,7 @@ void Viewport::render(int width, int height)
     axisProgram.release();
 
     // draw each node
-    feather::scenegraph::draw_sg();
+    feather::scenegraph::draw_sg(pview);
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
