@@ -30,9 +30,6 @@ namespace feather
 
         struct PolygonMeshFields : public Fields 
         {
-            FVertex3DArray v;
-            FNormal3DArray n;
-            FTextureCoordArray st;
         };
 
         typedef Node<node::PolygonMesh> polymesh;
