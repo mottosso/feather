@@ -5,7 +5,7 @@
 //    Description:  
 // 
 //        Version:  1.0
-//        Created:  07/13/2014 05:56:46 PM
+//        Created:  09/07/2013 05:48:43 PM
 //       Revision:  none
 //       Compiler:  g++
 // 
@@ -16,44 +16,42 @@
 #ifndef FIELD_HPP
 #define FIELD_HPP
 
-#include "deps.hpp"
-#include "types.hpp"
-#include "status.hpp"
-
-namespace feather
+namespace feather 
 {
-
-    struct Fields{};
-
+    
     namespace field
     {
 
+        namespace Connection
+        {
+            enum Type {
+                Null,
+                In,
+                Out,
+                In_Out
+            };
+        } // namespace Connection
+
         enum Type {
-            None,
+            Null,
             Bool,
             Int,
-            Double,
-            String,
-            ColorRGB,
-            ColorRGBA,
-            Vertex2D,
-            Vertex3D,
-            Normal3D,
-            TextureCoord,
-            Matrix4x4,
+            Float,
+            Vertex,
+            Vector,
+            RGB,
+            RGBA,
+            BoolArray,
             IntArray,
-            DoubleArray,
-            ColorRGBArray,
-            ColorRGBAArray,
-            Vertex2DArray,
-            Vertex3DArray,
-            NormalArray,
-            TextureCoordArray,
-            Matrix4x4Array,
+            FloatArray,
+            VertexArray,
+            VectoryArray,
+            RGBArray,
+            RGBAArray
         };
 
     } // namespace field
 
-} // namespace feather
+} // namespace feather 
 
 #endif

@@ -17,6 +17,8 @@
 #define TYPES_HPP
 
 #include "deps.hpp"
+#include "field.hpp"
+#include "node.hpp"
 
 namespace feather
 {
@@ -91,12 +93,41 @@ namespace feather
         void clear() { v.clear(); st.clear(); vn.clear(); };
     };
 
+    struct FNode;
+
+    struct FField;
+
+    typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS, FNode, FField> FSceneGraph;
+
+    typedef FSceneGraph::vertex_descriptor FNodeDescriptor;
+
+
+    typedef std::pair<FSceneGraph::edge_descriptor, bool> FFieldConnection;
+    struct DataObject
+    {
+        template <typename T> T* get_data(FNodeDescriptor node) { return NULL; };
+    };
+
     struct FNode
     {
-        FNode(FString _name) { name = _name; };
-        virtual FStatus doIt()=0;
-        FString name;
+        FNode(node::Type t=node::Null) : type(t),data(NULL) {};
+        std::string name;
+        node::Type type;
+        std::vector<FFieldConnection> connections;
+        DataObject* data;
     };
+
+    struct FField
+    {
+        FField(std::string n="", field::Type t=field::Null, field::Connection::Type c=field::Connection::Null) : name(n), type(t), conn_type(c) {};
+        std::string name;
+        field::Type type;
+        field::Connection::Type conn_type;
+        FField* pfield; // parent field
+        FNode* pnode; // parent node
+        int field;
+    };
+
 
     // plugins
     typedef void* FPluginHandle;
@@ -111,6 +142,6 @@ namespace feather
     };
 
 
-} // namespace Feather
+} // namespace feather
 
 #endif

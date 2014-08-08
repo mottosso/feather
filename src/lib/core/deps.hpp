@@ -34,6 +34,7 @@
 #include <assert.h>
 #include <algorithm>
 #include <memory>
+#include <utility>
 
 // OpenGL
 #include <GL/gl.h>
@@ -71,6 +72,9 @@
 // boost::bgl
 #include <boost/graph/dag_shortest_paths.hpp>
 #include <boost/graph/adjacency_list.hpp>
+#include "boost/graph/visitors.hpp"
+#include "boost/graph/breadth_first_search.hpp"
+#include "boost/graph/depth_first_search.hpp"
 
 // boost::tuple
 #include <boost/tuple/tuple.hpp>

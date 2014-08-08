@@ -28,6 +28,7 @@ namespace feather
     namespace node
     {
 
+        /*
         struct PolygonMeshFields : public Fields 
         {
         };
@@ -83,6 +84,9 @@ namespace feather
 
             return status();
         }
+
+        */
+
     } // namespace node
 
 } // namespace feather
