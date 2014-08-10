@@ -35,6 +35,7 @@ namespace feather
             Texture,
             Shader,
             PolygonMesh,
+            PolygonPlane,
             StartNode
         };
 
