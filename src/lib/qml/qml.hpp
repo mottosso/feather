@@ -36,6 +36,7 @@ namespace feather
                 ~QmlSceneGraph();
 
                 // commands
+                Q_INVOKABLE void make_plane() { command::make_plane(); };
                 Q_INVOKABLE void make_cube() { command::make_cube(); };
         };
 

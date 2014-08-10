@@ -29,6 +29,7 @@ namespace feather
         namespace command
         {
 
+            status make_plane();
             status make_cube();
 
         } // namespace command

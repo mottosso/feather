@@ -7,6 +7,11 @@ Menu {
     SceneGraph { id: sg }
 
     MenuItem {
+        text: "Plane"
+        onTriggered: { sg.make_plane() }            
+    }
+
+    MenuItem {
         text: "Cube"
         //shortcut: "Ctrl+C"
         onTriggered: { sg.make_cube() }            

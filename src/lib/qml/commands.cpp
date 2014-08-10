@@ -20,6 +20,18 @@
 using namespace feather;
 using namespace feather::qml;
 
+status command::make_plane() {
+    std::cout << "make plane\n";
+   // create a sgNode
+   /*
+    scenegraph::sgNode sgnode(1,node::PolygonMesh,new node::NodeAttributes(), new Fields());
+    scenegraph::SceneGraphSingleton::Instance()->push_back(sgnode);
+    node::Node<node::PolygonMesh>::init(sgnode.nattr,sgnode.fields);
+    scenegraph::update();
+    */
+    return status();
+}
+
 status command::make_cube() {
     std::cout << "make cube\n";
    // create a sgNode
