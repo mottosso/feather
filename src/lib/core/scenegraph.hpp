@@ -56,22 +56,22 @@ namespace feather
              *      A
              *     / \
              *  ->B-->C
-             *  |/
-             *  D 
+             *  |  \ /
+             *  ----D
              *
              *  would be this: 
-             *      init vertex A
+             *      init vertex A // do any setup that is needed for the node
              *      init vertex B
              *      init vertex C
              *      init vertex D
-             *      discover vertex A
-             *      examine edge A->B
+             *      discover vertex A // discover will call the parent and it's children nodes
+             *      examine edge A->B // send the field value to the target node's fields - this will probably not be needed send the target will just hold a pointer to the source field  
              *      tree edge A->B
              *      discover vertex B
              *      examine edge A->C
              *      tree edge A->C
              *      discover vertex C
-             *      finish vertex A
+             *      finish vertex A // call the nodes do_it() 
              *      examine edge A->B
              *      examine edge B->C
              *      examine edge B->D
@@ -87,6 +87,29 @@ namespace feather
              *      examine edge C->D
              *      examine edge D->B
              *      finish vertex D
+             */
+
+            /*
+             * The way node fields are handled are like this:
+             * __________               __________
+             * | NODE A |  bgl edge    | NODE B |
+             * | [field]|------------->|[field] |
+             * |________|              |________|
+             *
+             * Nodes are not connected - feilds are connected with Boost::BGL edges
+             * which will then call the proper order of update.
+             * When a field is adjusted it will call Boost::BGL and tell
+             * it that it has changed and what node to start the update at.
+             * BGL will first call all the node::init() functions for
+             * every node connected to the start node.
+             * Then the graph walking begins.
+             *      1: the node::discover() gets called for parent node followed by:
+             *              field::examine() [parent to child]
+             *              field::tree() [parent to child]
+             *              node::discover() [child node]
+             *              {THE ABOVE THREE STEPS ARE REPEATED FOR EACH CHILD}
+             *      2: the node::do_it() for the parent is called since everything is safe for it to update
+             *      3: move on to the next child node and repeat steps 1 and 2
              */
 
             /*
