@@ -226,6 +226,16 @@ namespace feather
         };
 
 
+        status draw_gl()
+        {
+            node_visitor vis;
+            //node_d_visitor vis;
+            std::cout << "\n*****DRAW GL START*****\n";
+            breadth_first_search(sg, vertex(0, sg), visitor(vis));
+            std::cout << "*****DRAW GL COMPLETE*****\n";
+            return status();
+        }
+
 
         bool connect(std::string n, FNodeDescriptor n1, FNodeDescriptor n2)
         {

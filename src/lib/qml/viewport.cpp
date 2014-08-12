@@ -31,7 +31,7 @@ std::vector<Vector3D> axis;
 
 Viewport::Viewport() : m_camPitchAngle(0),m_camTiltAngle(0),m_camZoom(-6.0),m_fScale(1),r(0)
 {
-
+    feather::qml::command::make_plane();
 }
 
 Viewport::~Viewport()

@@ -41,5 +41,6 @@ status command::make_cube() {
 
 status command::draw_sg(QMatrix4x4& view)
 {
+    scenegraph::draw_gl();
     return status();
 }
