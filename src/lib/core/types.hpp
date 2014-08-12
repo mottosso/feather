@@ -117,6 +117,8 @@ namespace feather
         DataObject* data;
     };
 
+    typedef std::vector<FNode*> FNodeArray;
+
     struct FField
     {
         FField(std::string n="", field::Type t=field::Null, field::Connection::Type c=field::Connection::Null) : name(n), type(t), conn_type(c) {};

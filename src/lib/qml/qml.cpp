@@ -20,10 +20,8 @@ using namespace feather::qml;
 
 QmlSceneGraph::QmlSceneGraph(QObject* parent)
 {
-
 }
 
 QmlSceneGraph::~QmlSceneGraph()
 {
-
 }

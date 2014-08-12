@@ -29,6 +29,7 @@ namespace feather
         namespace command
         {
 
+            status init();
             status make_plane();
             status make_cube();
             status draw_sg(QMatrix4x4& view);

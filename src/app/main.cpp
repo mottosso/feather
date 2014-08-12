@@ -16,10 +16,10 @@
 #include "deps.hpp"
 #include "viewportthread.hpp"
 #include "qml.hpp"
+#include "commands.hpp"
 
 int main(int argc, char **argv)
 {
-
     QGuiApplication app(argc, argv);
 
     // ?? This always comes back with an error though my platform supports threading ??
@@ -44,6 +44,8 @@ return app.exec();
 
     return app.exec();
     */
+
+    feather::qml::command::init();
 
     int execReturn = 0;
 

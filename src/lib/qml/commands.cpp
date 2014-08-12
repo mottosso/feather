@@ -17,9 +17,15 @@
 #include "polygon_mesh.hpp"
 #include "scenegraph.hpp"
 #include "polygon_plane.hpp"
+#include "root_node.hpp"
 
 using namespace feather;
 using namespace feather::qml;
+
+status command::init() {
+    scenegraph::add_node<node::Root>("root");
+    return status();
+}
 
 status command::make_plane() {
     std::cout << "make plane\n";

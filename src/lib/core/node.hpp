@@ -29,6 +29,7 @@ namespace feather
     {
 
         enum Type {
+            Root,
             Null,
             Camera,
             Light,
