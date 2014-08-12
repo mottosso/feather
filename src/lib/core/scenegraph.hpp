@@ -91,7 +91,7 @@ namespace feather
 
             /*
              * The way node fields are handled are like this:
-             * __________               __________
+             *  ________                ________
              * | NODE A |  bgl edge    | NODE B |
              * | [field]|------------->|[field] |
              * |________|              |________|

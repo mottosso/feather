@@ -16,6 +16,7 @@
 #include "commands.hpp"
 #include "polygon_mesh.hpp"
 #include "scenegraph.hpp"
+#include "polygon_plane.hpp"
 
 using namespace feather;
 using namespace feather::qml;

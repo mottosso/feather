@@ -36,21 +36,21 @@ namespace feather
 
     } // namespace polygon_plane
 
-    template <> polygon_plane::data* DataObject::get_data<polygon_plane::data>(FNodeDescriptor node) { return static_cast<polygon_plane::data*>(scenegraph[node].data); };
+    template <> polygon_plane::data* DataObject::get_data<polygon_plane::data>(FNodeDescriptor node) { return static_cast<polygon_plane::data*>(sg[node].data); };
 
 
     namespace scenegraph
     {
 
 
-        template <> status add_node<node::PolyPlane>(std::string n)
+        template <> status add_node<node::PolygonPlane>(std::string n)
         {
             std::cout << "ADD NODE " << n << std::endl;
-            FNodeDescriptor node = boost::add_vertex(scenegraph);
-            scenegraph[node].type = node::PolyPlane;
-            scenegraph[node].name = n;
+            FNodeDescriptor node = boost::add_vertex(sg);
+            sg[node].type = node::PolygonPlane;
+            sg[node].name = n;
             polygon_plane::data* pdata = new polygon_plane::data();
-            scenegraph[node].data = pdata;
+            sg[node].data = pdata;
 
             node_selection.push_back(node);
 
@@ -61,12 +61,12 @@ namespace feather
             return status();
         };
 
-        template <> status do_it<node::PolyPlane>::exec(FNodeDescriptor node)
+        template <> status do_it<node::PolygonPlane>::exec(FNodeDescriptor node)
         {
             // get the values for the input fields
-            polygon_plane::data* pdata = scenegraph[node].data->get_data<polygon_plane::data>(node);
+            polygon_plane::data* pdata = sg[node].data->get_data<polygon_plane::data>(node);
 
-            std::cout << "Polygon Plane " << scenegraph[node].name
+            std::cout << "Polygon Plane " << sg[node].name
                 << " subx=" << pdata->subx //pdata->subx.get_value()
                 << std::endl;
 

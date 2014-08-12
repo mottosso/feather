@@ -39,36 +39,6 @@ namespace feather
             StartNode
         };
 
-        /*
-        struct NodeAttributes {
-            FVertex3DArray v;
-            FVertex3DArray vn;
-            FTextureCoordArray st;
-            int vAttr;
-            int mAttr;
-            QOpenGLShaderProgram program;
-            QOpenGLShader* vshader;
-            QOpenGLShader* fshader;
-            QMatrix4x4 view;
-        };
-        
-        template <int _Node>
-            struct Node : public Object
-            {
-                // called when the node is created
-                static status init(NodeAttributes* nattr, Fields* fields) { return status(FAILED,"No matching Type for Node."); };
-                // called during a scenegraph update
-                static status do_it(Fields* fields) { return status(FAILED,"No matching Type for Node."); };
-                // called during an undo
-                static status undo() { return status(FAILED,"No matching Type for Node."); };
-                // called when the viewport is setup for opengl
-                static status init_gl() { return status(FAILED,"No matching Type for Node."); };
-                // called when the node is draw in the viewport
-                static status draw_gl(NodeAttributes* nattr, Fields* fields) { return status(FAILED,"No matching Type for Node."); };
-                // called when the node is deleted
-                static status cleanup() { return status(FAILED,"No matching Type for Node."); };
-            };
-        */
     } // namespace node
 
 } // namespace feather
