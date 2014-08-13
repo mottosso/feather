@@ -35,12 +35,21 @@ namespace feather
             Light,
             Texture,
             Shader,
+            Transform,
+            Shading,
             PolygonMesh,
             PolygonPlane,
             StartNode
         };
 
     } // namespace node
+
+#define SET_NODE_DATA(_data_)\
+    template <> _data_* DataObject::get_data<_data_>(FNodeDescriptor node) { return static_cast<_data_*>(sg[node].data); };
+
+#define GET_NODE_DATA(_data_)\
+    _data_* pdata = sg[node].data->get_data<_data_>(node);
+
 
 } // namespace feather
 
