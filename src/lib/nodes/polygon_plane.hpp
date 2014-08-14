@@ -66,9 +66,9 @@ namespace feather
             // get the values for the input fields
             polygon_plane::data* pdata = sg[node].data->get_data<polygon_plane::data>(node);
 
-            std::cout << "Polygon Plane " << sg[node].name
-                << " subx=" << pdata->subx //pdata->subx.get_value()
-                << std::endl;
+            //std::cout << "Polygon Plane " << sg[node].name
+            //    << " subx=" << pdata->subx //pdata->subx.get_value()
+            //    << std::endl;
 
             return status();
         };

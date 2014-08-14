@@ -126,7 +126,7 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void initialize_vertex(Vertex u, const Graph & g) const
                 {
-                    std::cout << "init vertex " << sg[u].name << std::endl;
+                    //std::cout << "init vertex " << sg[u].name << std::endl;
                 }
 
             // Start Vertex
@@ -136,7 +136,7 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void start_vertex(Vertex u, const Graph & g) const
                 {
-                    std::cout << "start vertex " << sg[u].name << std::endl;
+                    //std::cout << "start vertex " << sg[u].name << std::endl;
                 }
 
             // Discover Vertex
@@ -146,7 +146,7 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void discover_vertex(Vertex u, const Graph & g) const
                 {
-                    std::cout << "discover vertex " << sg[u].name << std::endl;
+                    //std::cout << "discover vertex " << sg[u].name << std::endl;
                     scenegraph::do_it<node::StartNode>::exec(u);
                 }
 
@@ -157,7 +157,7 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void finish_vertex(Vertex u, const Graph & g) const
                 {
-                    std::cout << "finish vertex " << sg[u].name << std::endl;
+                    //std::cout << "finish vertex " << sg[u].name << std::endl;
                 }
 
             // EDGES
@@ -169,7 +169,7 @@ namespace feather
             template < typename Edge, typename Graph >
                 void examine_edge(Edge u, const Graph & g) const
                 {
-                    std::cout << "examine edge " << sg[u].name << std::endl;
+                    //std::cout << "examine edge " << sg[u].name << std::endl;
                 }
 
 
@@ -182,7 +182,7 @@ namespace feather
             template < typename Edge, typename Graph >
                 void tree_edge(Edge u, const Graph & g) const
                 {
-                    std::cout << "tree edge " << sg[u].name << std::endl;
+                    //std::cout << "tree edge " << sg[u].name << std::endl;
                 }
 
             // Forward or Cross  Edge
@@ -212,7 +212,7 @@ namespace feather
         {
             node_visitor vis;
             //node_d_visitor vis;
-            std::cout << "\n*****GRAPH UPDATE*****\n";
+            //std::cout << "\n*****GRAPH UPDATE*****\n";
             breadth_first_search(sg, vertex(0, sg), visitor(vis));
             //FNodeDescriptor s = vertex(0, scenegraph);
             /*
@@ -221,7 +221,7 @@ namespace feather
                get(boost::vertex_index, scenegraph))).distance_map(boost::make_iterator_property_map(d.begin(),
                get(boost::vertex_index, scenegraph))));
                */
-            std::cout << "*****UPDATE COMPLETE*****\n";
+            //std::cout << "*****UPDATE COMPLETE*****\n";
             return status();
         };
 
@@ -230,9 +230,9 @@ namespace feather
         {
             node_visitor vis;
             //node_d_visitor vis;
-            std::cout << "\n*****DRAW GL START*****\n";
+            //std::cout << "\n*****DRAW GL START*****\n";
             breadth_first_search(sg, vertex(0, sg), visitor(vis));
-            std::cout << "*****DRAW GL COMPLETE*****\n";
+            //std::cout << "*****DRAW GL COMPLETE*****\n";
             return status();
         }
 
