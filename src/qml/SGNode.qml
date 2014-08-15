@@ -10,6 +10,8 @@ Rectangle {
     radius: 4
     property alias label: label.text
 
+    signal moved(int x, int y)
+
     Text {
         id: label
         anchors.margins: 2
@@ -41,6 +43,7 @@ Rectangle {
         onPositionChanged: {
             node.x = node.x + (mouse.x - x_offset)
             node.y = node.y + (mouse.y - y_offset)
+            node.moved(node.x, node.y)
         }
  
     }
