@@ -19,15 +19,14 @@ Path {
     Component.onCompleted: { in_node.moved.connect(in_update); out_node.moved.connect(out_update) } 
    
     function in_update(x,y) {
-        console.log( in_conn.startX + " " + x )
         in_conn.startX = x
-        in_conn.startY = y
+        in_conn.startY = (out_node.height/2) + y
         in_conn.update()
     }
 
     function out_update(x,y) {
-        out_conn.x = x
-        out_conn.y = y
+        out_conn.x = in_node.width + x
+        out_conn.y = (in_node.height/2) + y
         in_conn.update()
     }
 
