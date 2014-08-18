@@ -16,8 +16,6 @@ Path {
         x: in_node.x; y: in_node.y
     }
 
-    Component.onCompleted: { in_node.moved.connect(in_update); out_node.moved.connect(out_update) } 
-   
     function in_update(x,y) {
         in_conn.startX = x
         in_conn.startY = (out_node.height/2) + y
@@ -30,4 +28,6 @@ Path {
         in_conn.update()
     }
 
+    Component.onCompleted: { in_node.moved.connect(in_update); out_node.moved.connect(out_update); in_conn.update() } 
+ 
 }

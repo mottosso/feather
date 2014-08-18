@@ -48,4 +48,5 @@ Rectangle {
  
     }
 
+    Component.onCompleted: { node.moved(node.x, node.y) }
 }
