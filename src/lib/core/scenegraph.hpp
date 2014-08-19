@@ -147,7 +147,7 @@ namespace feather
                 void discover_vertex(Vertex u, const Graph & g) const
                 {
                     //std::cout << "discover vertex " << sg[u].name << std::endl;
-                    scenegraph::do_it<node::StartNode>::exec(u);
+                    scenegraph::do_it<node::N>::exec(u);
                 }
 
             // Finish Vertex
@@ -201,11 +201,27 @@ namespace feather
     namespace scenegraph
     {
 
-        template <node::Type T>
+        template <int T>
             status add_node(std::string name)
             {
                 return status(FAILED, "unknown node");
             };
+
+
+        template <int _Node>
+        struct add_sgnode {
+            static status exec(int node, std::string name) {
+                if(node == _Node) {
+                    add_node<_Node>(name);
+                    return status();
+                }
+                return add_sgnode<_Node-1>::exec(node,name);
+            };
+        };
+
+        template <> struct add_sgnode<0> {
+            static status exec(int node, std::string name) { return status(FAILED,"no known node found"); };
+        };
 
 
         status update()

@@ -39,7 +39,7 @@ namespace feather
             Shading,
             PolygonMesh,
             PolygonPlane,
-            StartNode
+            N 
         };
 
     } // namespace node

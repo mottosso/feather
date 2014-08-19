@@ -30,6 +30,7 @@ namespace feather
         {
 
             status init();
+            status add_node(int type, std::string name); 
             status make_plane();
             status make_cube();
             status draw_sg(QMatrix4x4& view);

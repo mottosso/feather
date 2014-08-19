@@ -29,6 +29,11 @@ status command::init() {
     return status();
 }
 
+status command::add_node(int node, std::string name)
+{
+    return scenegraph::add_sgnode<node::N>::exec(node,name);
+}
+
 status command::make_plane() {
     std::cout << "make plane\n";
     scenegraph::add_node<node::PolygonPlane>("A");
