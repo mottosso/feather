@@ -39,9 +39,16 @@ namespace feather
     };
 
     typedef struct{double x; double y; double z;} FNormal3D;
-    typedef struct{ double x; double y; double z; double w;} FVector;
+    typedef struct{ double x; double y; double z; double w;} FVector3D;
     typedef struct{int r; int g; int b;} FColorRGB;
     typedef struct{int r; int g; int b; int a;} FColorRGBA;
+
+    struct FTransform
+    {
+        FVertex3D translate;
+        FVector3D rotate;
+        FVector3D scale;
+    };
 
     struct FTextureCoord
     {
@@ -60,7 +67,7 @@ namespace feather
     typedef std::vector<FDouble> FDoubleArray;
     typedef std::vector<FString> FStringArray;
     typedef std::vector<FVertex3D> FVertex3DArray;
-    typedef std::vector<FVector> FVectorArray;
+    typedef std::vector<FVector3D> FVector3DArray;
     typedef std::vector<FTextureCoord> FTextureCoordArray;
     typedef std::vector<FNormal3D> FNormal3DArray;
     typedef std::vector<FFace> FFaceArray;
@@ -106,6 +113,8 @@ namespace feather
     struct DataObject
     {
         template <typename T> T* get_data(FNodeDescriptor node) { return NULL; };
+    
+        FTransform transform;
         FMesh mesh;
     };
 
