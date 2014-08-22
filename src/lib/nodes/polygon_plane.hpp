@@ -28,9 +28,9 @@ namespace feather
 
         struct data : public DataObject
         {
-            FInt subx;
-            FInt suby;
-            FInt subval;
+            FInt subx=2;
+            FInt suby=2;
+            FInt subval=2;
         };
 
     } // namespace polygon_plane
@@ -66,10 +66,7 @@ namespace feather
             // Get the values for the input fields.
             // pdata will hold the address of the data
             GET_NODE_DATA(polygon_plane::data)
-
-            //std::cout << "Polygon Plane " << sg[node].name
-            //    << " subx=" << pdata->subx //pdata->subx.get_value()
-            //    << std::endl;
+            std::cout << "subx = " << pdata->subx << std::endl;
 
             return status();
         };
