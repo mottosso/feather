@@ -35,8 +35,7 @@ namespace feather
 
     } // namespace polygon_plane
 
-    template <> polygon_plane::data* DataObject::get_data<polygon_plane::data>(FNodeDescriptor node) { return static_cast<polygon_plane::data*>(sg[node].data); };
-
+    SET_NODE_DATA(polygon_plane::data)
 
     namespace scenegraph
     {
@@ -48,7 +47,7 @@ namespace feather
             FNodeDescriptor node = boost::add_vertex(sg);
             sg[node].type = node::PolygonPlane;
             sg[node].name = n;
-            polygon_plane::data* pdata = new polygon_plane::data();
+            GET_NODE_DATA(polygon_plane::data)
             sg[node].data = pdata;
 
             node_selection.push_back(node);
@@ -60,7 +59,6 @@ namespace feather
             return status();
         };
 
-        //template <> status do_it<node::PolygonPlane>::exec(FNodeDescriptor node)
         DO_IT(node::PolygonPlane)
         {
             // Get the values for the input fields.
