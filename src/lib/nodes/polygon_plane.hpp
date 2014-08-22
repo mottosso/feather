@@ -31,7 +31,6 @@ namespace feather
             FInt* subx;
             FInt* suby;
             FInt* subval;
-            FMesh* mesh;
         };
 
     } // namespace polygon_plane
@@ -61,10 +60,12 @@ namespace feather
             return status();
         };
 
-        template <> status do_it<node::PolygonPlane>::exec(FNodeDescriptor node)
+        //template <> status do_it<node::PolygonPlane>::exec(FNodeDescriptor node)
+        DO_IT(node::PolygonPlane)
         {
-            // get the values for the input fields
-            polygon_plane::data* pdata = sg[node].data->get_data<polygon_plane::data>(node);
+            // Get the values for the input fields.
+            // pdata will hold the address of the data
+            GET_NODE_DATA(polygon_plane::data)
 
             //std::cout << "Polygon Plane " << sg[node].name
             //    << " subx=" << pdata->subx //pdata->subx.get_value()
