@@ -106,7 +106,7 @@ namespace feather
     struct DataObject
     {
         template <typename T> T* get_data(FNodeDescriptor node) { return NULL; };
-        FMesh* mesh;
+        FMesh mesh;
     };
 
     struct FNode

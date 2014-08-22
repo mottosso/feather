@@ -28,9 +28,9 @@ namespace feather
 
         struct data : public DataObject
         {
-            FInt* subx;
-            FInt* suby;
-            FInt* subval;
+            FInt subx;
+            FInt suby;
+            FInt subval;
         };
 
     } // namespace polygon_plane
