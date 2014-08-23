@@ -126,7 +126,7 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void initialize_vertex(Vertex u, const Graph & g) const
                 {
-                    //std::cout << "init vertex " << sg[u].name << std::endl;
+                    //std::cout << "init vertex " << sg[u].id << std::endl;
                 }
 
             // Start Vertex
@@ -136,7 +136,7 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void start_vertex(Vertex u, const Graph & g) const
                 {
-                    //std::cout << "start vertex " << sg[u].name << std::endl;
+                    //std::cout << "start vertex " << sg[u].id << std::endl;
                 }
 
             // Discover Vertex
@@ -146,7 +146,7 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void discover_vertex(Vertex u, const Graph & g) const
                 {
-                    //std::cout << "discover vertex " << sg[u].name << std::endl;
+                    //std::cout << "discover vertex " << sg[u].id << std::endl;
                     scenegraph::do_it<node::N>::exec(u);
                 }
 
@@ -157,7 +157,7 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void finish_vertex(Vertex u, const Graph & g) const
                 {
-                    //std::cout << "finish vertex " << sg[u].name << std::endl;
+                    //std::cout << "finish vertex " << sg[u].id << std::endl;
                 }
 
             // EDGES
@@ -169,7 +169,7 @@ namespace feather
             template < typename Edge, typename Graph >
                 void examine_edge(Edge u, const Graph & g) const
                 {
-                    //std::cout << "examine edge " << sg[u].name << std::endl;
+                    //std::cout << "examine edge " << sg[u].id << std::endl;
                 }
 
 
@@ -182,7 +182,7 @@ namespace feather
             template < typename Edge, typename Graph >
                 void tree_edge(Edge u, const Graph & g) const
                 {
-                    //std::cout << "tree edge " << sg[u].name << std::endl;
+                    //std::cout << "tree edge " << sg[u].id << std::endl;
                 }
 
             // Forward or Cross  Edge
@@ -192,7 +192,7 @@ namespace feather
             template < typename Edge, typename Graph >
                 void forward_or_cross_edge(Edge u, const Graph & g) const
                 {
-                    std::cout << "forward or cross edge " << sg[u].name << std::endl;
+                    std::cout << "forward or cross edge " << sg[u].id << std::endl;
                 }
 
 
@@ -202,7 +202,7 @@ namespace feather
     {
 
         template <int T>
-            status add_node(std::string name)
+            status add_node(int id)
             {
                 return status(FAILED, "unknown node");
             };
@@ -210,17 +210,17 @@ namespace feather
 
         template <int _Node>
         struct add_sgnode {
-            static status exec(int node, std::string name) {
+            static status exec(int node, int id) {
                 if(node == _Node) {
-                    add_node<_Node>(name);
+                    add_node<_Node>(id);
                     return status();
                 }
-                return add_sgnode<_Node-1>::exec(node,name);
+                return add_sgnode<_Node-1>::exec(node,id);
             };
         };
 
         template <> struct add_sgnode<0> {
-            static status exec(int node, std::string name) { return status(FAILED,"no known node found"); };
+            static status exec(int node, int id) { return status(FAILED,"no known node found"); };
         };
 
 
@@ -253,12 +253,12 @@ namespace feather
         }
 
 
-        bool connect(std::string n, FNodeDescriptor n1, FNodeDescriptor n2)
+        bool connect(int id, FNodeDescriptor n1, FNodeDescriptor n2)
         {
             // f1 = parent
             // f2 = child
             FFieldConnection connection = boost::add_edge(n1, n2, sg);
-            sg[connection.first].name = n;
+            sg[connection.first].id = id;
 
             return true;
             //return f2->connect(f1);

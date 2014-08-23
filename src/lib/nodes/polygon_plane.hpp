@@ -41,12 +41,12 @@ namespace feather
     {
 
 
-        template <> status add_node<node::PolygonPlane>(std::string n)
+        template <> status add_node<node::PolygonPlane>(int id)
         {
-            std::cout << "ADD NODE " << n << std::endl;
+            std::cout << "ADD NODE " << id << std::endl;
             FNodeDescriptor node = boost::add_vertex(sg);
             sg[node].type = node::PolygonPlane;
-            sg[node].name = n;
+            sg[node].id = id;
             GET_NODE_DATA(polygon_plane::data)
             sg[node].data = pdata;
 

@@ -39,12 +39,12 @@ namespace feather
     namespace scenegraph
     {
 
-        template <> status add_node<node::Root>(std::string n)
+        template <> status add_node<node::Root>(int id)
         {
             std::cout << "ADDING ROOT NODE" << std::endl;
             FNodeDescriptor node = boost::add_vertex(sg);
             sg[node].type = node::Root;
-            sg[node].name = n;
+            sg[node].id = id;
             root::data* pdata = new root::data();
             sg[node].data = pdata;
             node_selection.push_back(node);   
@@ -54,7 +54,7 @@ namespace feather
         template <> status do_it<node::Root>::exec(FNodeDescriptor node)
         {
             root::data* pdata=sg[node].data->get_data<root::data>(node);
-            std::cout << "Root " << sg[node].name << std::endl;
+            std::cout << "Root " << sg[node].id << std::endl;
             return status();
         }
 

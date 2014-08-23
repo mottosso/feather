@@ -52,9 +52,9 @@ namespace feather
 
     } // namespace field
 
-#define CONNECT_FIELDS(_name,_n1,_n2)\
+#define CONNECT_FIELDS(_id,_n1,_n2)\
     FFieldConnection connection = boost::add_edge(_n1,_n2,sg);\
-    sg[connection.first].name=_name; 
+    sg[connection.first].id=_id; 
 
 } // namespace feather 
 

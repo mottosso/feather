@@ -121,7 +121,7 @@ namespace feather
     struct FNode
     {
         FNode(node::Type t=node::Null) : type(t),data(NULL) {};
-        std::string name;
+        int id;
         node::Type type;
         std::vector<FFieldConnection> connections;
         DataObject* data;
@@ -131,8 +131,8 @@ namespace feather
 
     struct FField
     {
-        FField(std::string n="", field::Type t=field::Null, field::Connection::Type c=field::Connection::Null) : name(n), type(t), conn_type(c) {};
-        std::string name;
+        FField(int _id=0, field::Type t=field::Null, field::Connection::Type c=field::Connection::Null) : id(_id), type(t), conn_type(c) {};
+        int id;
         field::Type type;
         field::Connection::Type conn_type;
         FField* pfield; // parent field

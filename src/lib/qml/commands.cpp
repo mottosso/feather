@@ -15,30 +15,28 @@
 // =====================================================================================
 #include "commands.hpp"
 #include "field.hpp"
-#include "polygon_mesh.hpp"
 #include "scenegraph.hpp"
 #include "polygon_plane.hpp"
 #include "root_node.hpp"
-#include "transform.hpp"
 
 using namespace feather;
 using namespace feather::qml;
 
 status command::init() {
-    scenegraph::add_node<node::Root>("root");
+    scenegraph::add_node<node::Root>(0);
     return status();
 }
 
-status command::add_node(int node, std::string name)
+status command::add_node(int node, int id)
 {
-    return scenegraph::add_sgnode<node::N>::exec(node,name);
+    return scenegraph::add_sgnode<node::N>::exec(node,id);
 }
 
 status command::make_plane() {
     std::cout << "make plane\n";
-    scenegraph::add_node<node::PolygonPlane>("A");
-    scenegraph::add_node<node::Transform>("tx");
-    CONNECT_FIELDS("A->D",node_selection.at(0),node_selection.at(1))
+    scenegraph::add_node<node::PolygonPlane>(1);
+    //scenegraph::add_node<node::Transform>(2);
+    //CONNECT_FIELDS(1,node_selection.at(0),node_selection.at(1))
     return status();
 }
 

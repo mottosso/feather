@@ -33,7 +33,7 @@ Item {
             anchors.fill: parent
         }
 
-        SceneGraph {}
+        //SceneGraph {}
 
         Component.onCompleted: { }
 
