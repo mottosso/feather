@@ -2,8 +2,6 @@ import QtQuick 2.1
 import QtQuick.Window 2.1
 import QtQuick.Dialogs 1.0
 import QtQuick.Controls 1.0
-//import QtQuick.Controls.Styles 1.0
-//import QtQuick.Layouts 1.0
 
 MenuBar {
 
@@ -60,4 +58,31 @@ MenuBar {
 
     }
 
+    Menu {
+        title: "Edit"
+        MenuItem {
+            text: "Undo/Redo"
+            shortcut: "Ctrl+Z"
+            onTriggered: {}
+        }
+
+        MenuItem {
+            text: "Redo"
+            shortcut: "Ctrl+Shift+Z"
+            onTriggered: {}
+        }
+
+        MenuItem {
+            text: "Undo"
+            shortcut: "Alt+Ctrl+Z"
+            onTriggered: {}
+        }
+
+       MenuSeparator {}
+
+        MenuItem {
+            text: "Purge Undo History"
+            onTriggered: {}
+        }
+    }
 }
