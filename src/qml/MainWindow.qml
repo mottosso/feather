@@ -1,9 +1,5 @@
 import QtQuick 2.2
-//import QtQuick.Window 2.0
-//import QtQuick.Dialogs 1.1
 import QtQuick.Controls 1.2
-//import QtQuick.Controls.Styles 1.0
-//import QtQuick.Layouts 1.1
 
 Item {
     id: root
@@ -20,9 +16,6 @@ Item {
         visible: true
         title: "Feather"
 
-        // splash screen
-        //Window { id: splash; width: 600; height: 347; visible: true; flags: Qt.SplashScreen; Image { anchors.fill: parent; source: "./icons/splash.jpg" } }
-
         menuBar: MainMenu {}
 
         toolBar: MainToolBar {}
@@ -33,11 +26,7 @@ Item {
             anchors.fill: parent
         }
 
-        //SceneGraph {}
-
         Component.onCompleted: { }
-
-
     }
 
 }

@@ -7,6 +7,8 @@ import QtQuick.Controls 1.0
 
 MenuBar {
 
+    // File Menu
+
     Menu {
         title: "File"
         MenuItem {
@@ -59,4 +61,3 @@ MenuBar {
     }
 
 }
-
