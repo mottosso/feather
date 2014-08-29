@@ -34,6 +34,12 @@ ToolBar {
             iconName: "object select"
         }
 
+        ToolButton {
+            width: 32; height: 32 
+            iconSource: "/usr/local/feather/icons/smooth_shade.png"
+            iconName: "smooth shade"
+        }
+
     }
 
 }
