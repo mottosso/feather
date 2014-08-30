@@ -162,17 +162,17 @@ void Viewport::render(int width, int height)
     drawMesh();
     program1.release();
 
-    // draw the grid
-    gridProgram.bind();
-    gridProgram.setUniformValue(gridMAttr, pview);
-    drawGrid();
-    gridProgram.release();
-
     // draw the axis 
     axisProgram.bind();
     axisProgram.setUniformValue(axisMAttr, pview);
     drawAxis();
     axisProgram.release();
+
+    // draw the grid
+    gridProgram.bind();
+    gridProgram.setUniformValue(gridMAttr, pview);
+    drawGrid();
+    gridProgram.release();
 
     // draw each node
     feather::qml::command::draw_sg(pview);
@@ -225,13 +225,14 @@ void Viewport::drawAxis() {
     axisProgram.enableAttributeArray(axisVAttr);
     axisProgram.setAttributeArray(axisVAttr, GL_FLOAT, &axis[0], 3);
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-    glLineWidth(1.25);
+    glLineWidth(2.25);
     glColor3f(1.0,0.0,0.0);
     glDrawArrays(GL_LINES, 0, 2);
     glColor3f(0.0,1.0,0.0);
     glDrawArrays(GL_LINES, 2, 2);
     glColor3f(0.0,0.0,1.0);
     glDrawArrays(GL_LINES, 4, 2);
+    glLineWidth(1.25);
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     axisProgram.disableAttributeArray(axisVAttr);
 }
