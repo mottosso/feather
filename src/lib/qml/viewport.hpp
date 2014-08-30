@@ -27,6 +27,7 @@ class Viewport
 
         void initialize(int width, int height);
         void render(int width, int height);
+        void makeGrid();
         void drawMesh();
         void drawGrid();
         void drawAxis();
@@ -58,6 +59,7 @@ class Viewport
         QMatrix4x4 pview;
         QOpenGLShader* meshShader;
         QOpenGLShader* gridShader;
+        QOpenGLShader* gridFragShader;
         QOpenGLShader* greenShader;
         QOpenGLShader* axisVShader;
     

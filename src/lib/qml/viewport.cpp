@@ -56,11 +56,14 @@ void Viewport::initialize(int width, int height)
     gridShader = new QOpenGLShader(QOpenGLShader::Vertex, &gridProgram);
     gridShader->compileSourceFile("grid.glsl");
  
-    greenShader = new QOpenGLShader(QOpenGLShader::Fragment, &gridProgram);
-    greenShader->compileSourceFile("green.glsl");
+    gridFragShader = new QOpenGLShader(QOpenGLShader::Fragment, &gridProgram);
+    gridFragShader->compileSourceFile("grid_frag.glsl");
+
+    //greenShader = new QOpenGLShader(QOpenGLShader::Fragment, &gridProgram);
+    //greenShader->compileSourceFile("green.glsl");
 
     gridProgram.addShader(gridShader);
-    gridProgram.addShader(greenShader);
+    gridProgram.addShader(gridFragShader);
     gridProgram.link();
 
     // Axis 
@@ -90,10 +93,14 @@ void Viewport::initialize(int width, int height)
     points.push_back(Vector3D(-1,1,0));
     points.push_back(Vector3D(1,1,0));
 
+    // make the grid
+    makeGrid();
+    /*
     grid.push_back(Vector3D(-1,0,-1));
     grid.push_back(Vector3D(1,0,-1));
     grid.push_back(Vector3D(-1,0,1));
     grid.push_back(Vector3D(1,0,1));
+    */
 
     axis.push_back(Vector3D(0,0,0));
     axis.push_back(Vector3D(10,0,0)); // X
@@ -118,7 +125,7 @@ void Viewport::initialize(int width, int height)
 void Viewport::render(int width, int height)
 {
 
-    const qreal fov=25.0,near=0.1, far=20.0;
+    const qreal fov=25.0,near=0.1, far=60.0;
     qreal aspect=(float)width/(float)height;
 
     pview.setToIdentity();
@@ -184,11 +191,32 @@ void Viewport::drawMesh() {
     program1.disableAttributeArray(vertexAttr1);
 }
 
+void Viewport::makeGrid() {
+    int pos = -10;
+
+    for(int i=0; i <= 20; i++)
+    {
+        grid.push_back(Vector3D(-10,0,pos));
+        grid.push_back(Vector3D(10,0,pos));
+        pos += 1;
+    }
+
+    pos = -10;
+ 
+    for(int i=0; i <= 20; i++)
+    {
+        grid.push_back(Vector3D(pos,0,-10));
+        grid.push_back(Vector3D(pos,0,10));
+        pos += 1;
+    }
+ 
+}
+
 void Viewport::drawGrid() {
     gridProgram.enableAttributeArray(gridVAttr);
     gridProgram.setAttributeArray(gridVAttr, GL_FLOAT, &grid[0], 3);
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glDrawArrays(GL_LINES, 0, 84);
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     gridProgram.disableAttributeArray(gridVAttr);
 }
