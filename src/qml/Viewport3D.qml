@@ -18,7 +18,7 @@ Rectangle {
             hoverEnabled: false
             acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-            onClicked: {
+            onPressed: {
                 if(mouse.button == Qt.RightButton)
                     main_popup.popup();
 

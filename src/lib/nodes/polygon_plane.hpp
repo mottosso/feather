@@ -64,7 +64,7 @@ namespace feather
             // Get the values for the input fields.
             // pdata will hold the address of the data
             GET_NODE_DATA(polygon_plane::data)
-            std::cout << "subx = " << pdata->subx << std::endl;
+            //std::cout << "subx = " << pdata->subx << std::endl;
 
             return status();
         };
