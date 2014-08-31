@@ -93,23 +93,29 @@ namespace feather
              * The way node fields are handled are like this:
              *  ________                ________
              * | NODE A |  bgl edge    | NODE B |
-             * | [field]|------------->|[field] |
+             * |        |------------->|        |
              * |________|              |________|
              *
-             * Nodes are not connected - feilds are connected with Boost::BGL edges
-             * which will then call the proper order of update.
-             * When a field is adjusted it will call Boost::BGL and tell
-             * it that it has changed and what node to start the update at.
+             * When a node is adjusted it will call Boost::BGL and tell
+             * it that it has changed and to start the update at that node.
              * BGL will first call all the node::init() functions for
              * every node connected to the start node.
              * Then the graph walking begins.
              *      1: the node::discover() gets called for parent node followed by:
-             *              field::examine() [parent to child]
-             *              field::tree() [parent to child]
+             *              node::examine() [parent to child]
+             *              node::tree() [parent to child]
              *              node::discover() [child node]
              *              {THE ABOVE THREE STEPS ARE REPEATED FOR EACH CHILD}
              *      2: the node::do_it() for the parent is called since everything is safe for it to update
              *      3: move on to the next child node and repeat steps 1 and 2
+             *
+             * The opengl update is done the same except it always starts at
+             * the root node and node::finish() is where the specialized draw()
+             * function will be found.
+             *
+             * To handle these different states the scenegraph holds a State value
+             * that will tell wheither the graph is in UPDATE, DRAW, or RENDER.
+             *
              */
 
             /*
