@@ -102,13 +102,15 @@ namespace feather
 
     typedef struct {} DataObject;
 
+    typedef struct {} FAttributeArray;
+
     struct FNode
     {
-        FNode(node::Type t=node::Null) : type(t),data(NULL) {};
+        FNode(node::Type t=node::Null) : type(t),parent(NULL) {};
         int id;
         node::Type type;
-        //std::vector<FFieldConnection> connections;
-        DataObject* data;
+        DataObject* parent;
+        FAttributeArray* attrs;
     };
 
     typedef std::vector<FNode*> FNodeArray;

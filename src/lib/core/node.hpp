@@ -29,29 +29,15 @@ namespace feather
     {
 
         enum Type {
-            Root,
             Null,
             Camera,
             Light,
             Texture,
             Shader,
-            Transform,
-            Shading,
-            PolygonMesh,
-            PolygonPlane,
-            N 
+            Mesh
         };
 
     } // namespace node
-
-#define SET_NODE_DATA(_data_)\
-    template <> _data_* DataObject::get_data<_data_>(FNodeDescriptor node) { return static_cast<_data_*>(sg[node].data); };
-
-#define GET_NODE_DATA(_data_)\
-    _data_* pdata = sg[node].data->get_data<_data_>(node);
-
-#define DO_IT(_node_)\
-    template <> status do_it<_node_>::exec(FNodeDescriptor node)
 
 } // namespace feather
 

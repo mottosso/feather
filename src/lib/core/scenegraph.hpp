@@ -28,6 +28,15 @@ namespace feather
     namespace scenegraph
     {
 
+        template <int NodeType>       
+        status draw_gl(FAttributeArray* attrs) { return status(FAILED,"no node type for draw_gl()"); };
+ 
+        template <int RendererType, int NodeType>
+        status render(FAttributeArray* attrs) { return status(FAILED,"no node type for render()"); };
+
+        template <int NodeType>
+        status do_it(FAttributeArray* attrs) { return status(FAILED,"no node for do_it() for type"); };
+
     } // namespace scenegraph
 
 } // namespace feather
