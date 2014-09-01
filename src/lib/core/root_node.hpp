@@ -34,11 +34,12 @@ namespace feather
 
     } // namespace root
 
-    template <> root::data* DataObject::get_data<root::data>(FNodeDescriptor node) { return static_cast<root::data*>(sg[node].data); };
+    //template <> root::data* DataObject::get_data<root::data>(FNodeDescriptor node) { return static_cast<root::data*>(sg[node].data); };
 
     namespace scenegraph
     {
 
+        /*
         template <> status add_node<node::Root>(int id)
         {
             std::cout << "ADDING ROOT NODE" << std::endl;
@@ -57,6 +58,7 @@ namespace feather
             std::cout << "Root " << sg[node].id << std::endl;
             return status();
         }
+        */
 
     } // namespace scenegraph
 

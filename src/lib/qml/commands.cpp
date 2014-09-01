@@ -14,27 +14,27 @@
 // 
 // =====================================================================================
 #include "commands.hpp"
-#include "field.hpp"
+//#include "field.hpp"
 #include "scenegraph.hpp"
-#include "polygon_plane.hpp"
-#include "root_node.hpp"
+//#include "polygon_plane.hpp"
+//#include "root_node.hpp"
 
 using namespace feather;
 using namespace feather::qml;
 
 status command::init() {
-    scenegraph::add_node<node::Root>(0);
+    //scenegraph::add_node<node::Root>(0);
     return status();
 }
 
 status command::add_node(int node, int id)
 {
-    return scenegraph::add_sgnode<node::N>::exec(node,id);
+    //return scenegraph::add_sgnode<node::N>::exec(node,id);
 }
 
 status command::make_plane() {
     std::cout << "make plane\n";
-    scenegraph::add_node<node::PolygonPlane>(1);
+    //scenegraph::add_node<node::PolygonPlane>(1);
     //scenegraph::add_node<node::Transform>(2);
     //CONNECT_FIELDS(1,node_selection.at(0),node_selection.at(1))
     return status();
@@ -54,6 +54,6 @@ status command::make_cube() {
 
 status command::draw_sg(QMatrix4x4& view)
 {
-    scenegraph::draw_gl();
+    //scenegraph::draw_gl();
     return status();
 }

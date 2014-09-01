@@ -35,12 +35,12 @@ namespace feather
 
     } // namespace polygon_plane
 
-    SET_NODE_DATA(polygon_plane::data)
+    //SET_NODE_DATA(polygon_plane::data)
 
     namespace scenegraph
     {
 
-
+        /*
         template <> status add_node<node::PolygonPlane>(int id)
         {
             std::cout << "ADD NODE " << id << std::endl;
@@ -68,7 +68,7 @@ namespace feather
 
             return status();
         };
-
+        */
 
     } // namespace scenegraph
 

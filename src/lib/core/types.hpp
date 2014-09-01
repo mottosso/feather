@@ -100,58 +100,18 @@ namespace feather
         void clear() { v.clear(); st.clear(); vn.clear(); };
     };
 
-    struct FNode;
-
-    struct FField;
-
-    typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS, FNode, FField> FSceneGraph;
-
-    typedef FSceneGraph::vertex_descriptor FNodeDescriptor;
-
-
-    typedef std::pair<FSceneGraph::edge_descriptor, bool> FFieldConnection;
-    struct DataObject
-    {
-        template <typename T> T* get_data(FNodeDescriptor node) { return NULL; };
-    
-        FTransform transform;
-        FMesh mesh;
-    };
+    typedef struct {} DataObject;
 
     struct FNode
     {
         FNode(node::Type t=node::Null) : type(t),data(NULL) {};
         int id;
         node::Type type;
-        std::vector<FFieldConnection> connections;
+        //std::vector<FFieldConnection> connections;
         DataObject* data;
     };
 
     typedef std::vector<FNode*> FNodeArray;
-
-    struct FField
-    {
-        FField(int _id=0, field::Type t=field::Null, field::Connection::Type c=field::Connection::Null) : id(_id), type(t), conn_type(c) {};
-        int id;
-        field::Type type;
-        field::Connection::Type conn_type;
-        FField* pfield; // parent field
-        FNode* pnode; // parent node
-        int field;
-    };
-
-
-    // plugins
-    typedef void* FPluginHandle;
-
-    struct FPluginData
-    {
-        FString name;
-        FString file;
-        FString icon;
-        FPluginHandle handle;
-        //FNode* node;
-    };
 
 
 } // namespace feather
