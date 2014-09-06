@@ -30,6 +30,7 @@ status command::init() {
 status command::add_node(int node, int id)
 {
     //return scenegraph::add_sgnode<node::N>::exec(node,id);
+    return status();
 }
 
 status command::make_plane() {
