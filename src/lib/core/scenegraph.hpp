@@ -22,6 +22,7 @@
 #include "field.hpp"
 #include "singleton.hpp"
 #include "selection.hpp"
+#include "data.hpp"
 
 namespace feather
 {
