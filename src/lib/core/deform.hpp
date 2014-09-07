@@ -1,8 +1,8 @@
 // =====================================================================================
 // 
-//       Filename:  modify.hpp
+//       Filename:  deform.hpp
 // 
-//    Description:  This will change the change the object's component.
+//    Description:  This will change the position of object components.
 // 
 //        Version:  1.0
 //        Created:  09/06/2014 08:08:16 PM
@@ -13,24 +13,25 @@
 //        Company:  
 // 
 // =====================================================================================
-#ifndef MODIFY_HPP
-#define MODIFY_HPP
+#ifndef DEFORM_HPP 
+#define DEFORM_HPP
 
 #include "type.hpp"
 
 namespace feather
 {
 
-    namespace modify
+    namespace deform
     {
 
         /*
-         * The modify functions will work on SelectionStates to change the component.
-         * This can be used to subdivide, extrude, intrude, and so-on to the SelectionState's component.
+         * The deform functions will work on SelectionStates to move it's
+         * components position.
+         * This can be used to move, rotate, scale, or change the SelectionState's component.
          */
 
 
-    } // namespace modify
+    } // namespace deform
 
 } // namespace feather
 
