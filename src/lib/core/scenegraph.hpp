@@ -19,7 +19,7 @@
 #include "deps.hpp"
 #include "types.hpp"
 #include "node.hpp"
-#include "field.hpp"
+//#include "field.hpp"
 #include "singleton.hpp"
 #include "selection.hpp"
 #include "data.hpp"
@@ -52,6 +52,8 @@ namespace feather
      * data. As the more vertex's are selected, the SelectionState is modified to match it.
      * This SelectionState is also used to draw the selections during the viewport's update.
      *
+     * When a new node is added to the scenegraph a scenegraph vertex and datablock is created.
+     * The datablock location is kept in sync with the vertex number by the datamanager.
      */
 
     static FSceneGraph sg;
@@ -257,29 +259,6 @@ namespace feather
     namespace scenegraph
     {
 
-        template <int T>
-            status add_node(int id)
-            {
-                return status(FAILED, "unknown node");
-            };
-
-
-        template <int _Node>
-        struct add_sgnode {
-            static status exec(int node, int id) {
-                if(node == _Node) {
-                    add_node<_Node>(id);
-                    return status();
-                }
-                return add_sgnode<_Node-1>::exec(node,id);
-            };
-        };
-
-        template <> struct add_sgnode<0> {
-            static status exec(int node, int id) { return status(FAILED,"no known node found"); };
-        };
-
-
         status update()
         {
             node_visitor vis;
@@ -313,7 +292,7 @@ namespace feather
         {
             // f1 = parent
             // f2 = child
-            FFieldConnection connection = boost::add_edge(n1, n2, sg);
+            FNodeConnection connection = boost::add_edge(n1, n2, sg);
             sg[connection.first].id = id;
 
             return true;
