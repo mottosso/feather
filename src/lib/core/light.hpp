@@ -26,7 +26,6 @@ namespace feather
     {
 
         enum Type {
-            Null,
             Point,
             Spot,
             Area,

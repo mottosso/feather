@@ -71,7 +71,7 @@ namespace feather
                 };
             };
 
-        template <int N> struct do_it<N,0> { static status exec(FNodeDescriptor node) { return status(FAILED, "no node do_it found"); }; };
+        template <int N> struct do_it<N,-1> { static status exec(FNodeDescriptor node) { return status(FAILED, "no node do_it found"); }; };
 
     } // namespace scenegraph
 
