@@ -34,6 +34,19 @@ namespace feather
      * depending on the command. The scenegraph will manage when and in what order
      * the nodes will get called in. The scenegraph will also call the functions
      * for various stages of the update.
+     *
+     * When working with nodes 3 things are used - the scenegraph, data, and selection.
+     * The scenegraph manages the order the nodes are updated.
+     * The data holds each nodes value.
+     * The selection tells the components and indics of what is to be worked on.
+     * 
+     * The scenegraph will call the node's doit() which will take the node's data
+     * and work on it based on the selection.
+     * A selection is not tied to any node. When a user clicks on a node's component,
+     * a new SelectionState is added to the SelectionManager and is setup based on that node's
+     * data. As the more vertex's are selected, the SelectionState is modified to match it.
+     * This SelectionState is also used to draw the selections during the viewport's update.
+     *
      */
 
     static FSceneGraph sg;
