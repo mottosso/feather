@@ -34,7 +34,7 @@ namespace feather
             Light,
             Texture,
             Shader,
-            Mesh,
+            Object,
             N
         };
 

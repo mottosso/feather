@@ -23,7 +23,7 @@
 #include "singleton.hpp"
 #include "selection.hpp"
 #include "data.hpp"
-#include "mesh.hpp"
+#include "object.hpp"
 #include "camera.hpp"
 #include "light.hpp"
 #include "texture.hpp"
@@ -197,8 +197,8 @@ namespace feather
                         case node::Shader:
                             scenegraph::do_it<node::Shader,shader::N>::exec(u);
                             break;
-                        case node::Mesh:
-                            scenegraph::do_it<node::Mesh,mesh::N>::exec(u);
+                        case node::Object:
+                            scenegraph::do_it<node::Object,object::N>::exec(u);
                             break;
                         default:
                             break;
