@@ -23,6 +23,11 @@
 #include "singleton.hpp"
 #include "selection.hpp"
 #include "data.hpp"
+#include "mesh.hpp"
+#include "camera.hpp"
+#include "light.hpp"
+#include "texture.hpp"
+#include "shader.hpp"
 
 namespace feather
 {
@@ -57,16 +62,16 @@ namespace feather
     namespace scenegraph
     {
 
-        template <const int T>
+        template <int N, int T>
             //status do_it(FNodeDescriptor node) { std::cout << "base do_it() called\n"; return status(false,"missing node"); };
             struct do_it {
                 static status exec(FNodeDescriptor node)
                 {
-                    return do_it<T-1>::exec(node);
+                    return do_it<N,T-1>::exec(node);
                 };
             };
 
-        template <> status do_it<node::Null>::exec(FNodeDescriptor node) { return status(FAILED, "no node do_it found"); };
+        template <int N> struct do_it<N,0> { static status exec(FNodeDescriptor node) { return status(FAILED, "no node do_it found"); }; };
 
     } // namespace scenegraph
 
@@ -177,7 +182,27 @@ namespace feather
                 void discover_vertex(Vertex u, const Graph & g) const
                 {
                     //std::cout << "discover vertex " << sg[u].id << std::endl;
-                    scenegraph::do_it<node::N>::exec(u);
+                    //scenegraph::do_it<node::N>::exec(u);
+                    switch(sg[u].type)
+                    {
+                        case node::Camera:
+                            scenegraph::do_it<node::Camera,camera::N>::exec(u);
+                            break;
+                        case node::Light:
+                            scenegraph::do_it<node::Light,light::N>::exec(u);
+                            break;
+                        case node::Texture:
+                            scenegraph::do_it<node::Camera,texture::N>::exec(u);
+                            break;
+                        case node::Shader:
+                            scenegraph::do_it<node::Shader,shader::N>::exec(u);
+                            break;
+                        case node::Mesh:
+                            scenegraph::do_it<node::Mesh,mesh::N>::exec(u);
+                            break;
+                        default:
+                            break;
+                    }
                 }
 
             // Finish Vertex

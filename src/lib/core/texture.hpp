@@ -1,11 +1,11 @@
 // =====================================================================================
 // 
-//       Filename:  shader.hpp
+//       Filename:  texture.hpp
 // 
 //    Description:  
 // 
 //        Version:  1.0
-//        Created:  07/13/2014 04:42:31 PM
+//        Created:  09/07/2014 05:45:56 AM
 //       Revision:  none
 //       Compiler:  g++
 // 
@@ -13,27 +13,25 @@
 //        Company:  
 // 
 // =====================================================================================
-#ifndef SHADER_HPP
-#define SHADER_HPP
+#ifndef TEXTURE_HPP
+#define TEXTURE_HPP
 
-#include "deps.hpp"
 #include "types.hpp"
-#include "status.hpp"
+#include "deps.hpp"
 
 namespace feather
 {
 
-    namespace shader
+    namespace texture 
     {
 
         enum Type {
-            Matte,
-            Phong,
-            Blinn,
-            N 
+            Null,
+            Image,
+            N
         };
 
-    } // namespace shader
+    } // namespace texture 
 
 } // namespace feather
 
