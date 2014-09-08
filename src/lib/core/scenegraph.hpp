@@ -292,7 +292,7 @@ namespace feather
         {
             // f1 = parent
             // f2 = child
-            FNodeConnection connection = boost::add_edge(n1, n2, sg);
+            FFieldConnection connection = boost::add_edge(n1, n2, sg);
             sg[connection.first].id = id;
 
             return true;

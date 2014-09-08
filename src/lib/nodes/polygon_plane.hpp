@@ -19,18 +19,24 @@
 #include "types.hpp"
 #include "scenegraph.hpp"
 #include "node.hpp"
+#include "field.hpp"
 
 namespace feather
 {
 
     namespace polygon_plane
     {
+        enum Id { SubX, SubY, Mesh };
 
-        struct data : public DataObject
+        struct in
         {
-            FInt subx=2;
-            FInt suby=2;
-            FInt subval=2;
+            FField subx=FField(SubX);
+            FField suby=FField(SubY);
+        };
+
+        struct out 
+        {
+            FField mesh=FField(Mesh, field::Mesh, field::Connection::Out);
         };
 
     } // namespace polygon_plane

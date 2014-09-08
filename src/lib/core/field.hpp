@@ -25,20 +25,18 @@ namespace feather
         namespace Connection
         {
             enum Type {
-                Null,
                 In,
-                Out,
-                In_Out
+                Out
             };
         } // namespace Connection
 
         enum Type {
-            Null,
             Bool,
             Int,
             Float,
             Vertex,
             Vector,
+            Mesh,
             RGB,
             RGBA,
             BoolArray,
@@ -47,7 +45,8 @@ namespace feather
             VertexArray,
             VectoryArray,
             RGBArray,
-            RGBAArray
+            RGBAArray,
+            N
         };
 
     } // namespace field

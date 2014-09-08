@@ -17,7 +17,7 @@
 #define TYPES_HPP
 
 #include "deps.hpp"
-//#include "field.hpp"
+#include "field.hpp"
 #include "node.hpp"
 
 namespace feather
@@ -104,18 +104,17 @@ namespace feather
 
     struct FNode;
 
-    struct FConnection;
+    struct FField;
 
     typedef struct {} DataObject;
 
     typedef struct {} FAttributeArray;
 
-    typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS, FNode, FConnection> FSceneGraph;
+    typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS, FNode, FField> FSceneGraph;
 
     typedef FSceneGraph::vertex_descriptor FNodeDescriptor;
 
-    //typedef std::pair<FSceneGraph::edge_descriptor, bool> FFieldConnection;
-    typedef std::pair<FSceneGraph::edge_descriptor, bool> FNodeConnection;
+    typedef std::pair<FSceneGraph::edge_descriptor, bool> FFieldConnection;
  
     struct FNode
     {
@@ -128,16 +127,9 @@ namespace feather
 
     typedef std::vector<FNode*> FNodeArray;
 
-    struct FConnection
-    {
-        FConnection() : id(0) {};
-        int id;
-    };
-
-    /*
     struct FField
     {
-        FField(int _id=0, field::Type t=field::Null, field::Connection::Type c=field::Connection::Null) : id(_id), type(t), conn_type(c) {};
+        FField(int _id=0, field::Type t=field::Int, field::Connection::Type c=field::Connection::In) : id(_id),type(t),conn_type(c) {};
         int id;
         field::Type type;
         field::Connection::Type conn_type;
@@ -145,7 +137,6 @@ namespace feather
         FNode* pnode; // parent node
         int field;
     };
-    */
 
 } // namespace feather
 
