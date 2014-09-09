@@ -38,6 +38,16 @@ namespace feather
             N
         };
 
+        enum Camera {
+            Orthographic,
+            Perspective
+        };
+
+        enum Mesh {
+            PolygonPlane,
+            PolygonCube
+        };
+
     } // namespace node
 
 } // namespace feather

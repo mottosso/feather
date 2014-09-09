@@ -28,23 +28,34 @@ namespace feather
     {
         enum Id { SubX, SubY, Mesh };
 
-        struct in
+        struct data : public DataObject 
         {
             FField subx=FField(SubX);
             FField suby=FField(SubY);
-        };
-
-        struct out 
-        {
             FField mesh=FField(Mesh, field::Mesh, field::Connection::Out);
         };
 
     } // namespace polygon_plane
 
     //SET_NODE_DATA(polygon_plane::data)
+    //template <> polygon_plane::data* DataObject::get_data<polygon_plane::data>(FNodeDescriptor node) { return static_cast<polygon_plane::data*>(sg[node].data); };
 
     namespace scenegraph
     {
+        template <> status add_node<node::Object,node::PolygonPlane>(int id)
+        {
+            /*
+            std::cout << "ADD NODE " << id << std::endl;
+            FNodeDescriptor node = boost::add_vertex(sg);
+            sg[node].type = node::PolygonPlane;
+            sg[node].id = id;
+            GET_NODE_DATA(polygon_plane::data)
+            sg[node].data = pdata;
+            node_selection.push_back(node);
+            */
+            return status();
+        };
+
 
         /*
         template <> status add_node<node::PolygonPlane>(int id)

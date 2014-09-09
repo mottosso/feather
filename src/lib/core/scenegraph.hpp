@@ -299,6 +299,10 @@ namespace feather
             //return f2->connect(f1);
         };
 
+        
+        template <int _Type, int _Node>
+        status add_node(int id) { return status(FAILED,"no matching node for add_node"); };
+
         /* 
            status connect(FNodeDescriptor n1, FNodeDescriptor n2)
            {
@@ -312,8 +316,6 @@ namespace feather
         // template <> status do_it() { std::cout << "missing node" << std::endl; return status(false,"failed"); };
 
     } // namespace scenegraph
-
-
 
 } // namespace feather
 

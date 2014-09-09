@@ -49,7 +49,11 @@ namespace feather
             N
         };
 
+
     } // namespace field
+
+#define MAKE_FIELD(_id,_type,connection,_nodetype,_node,_default)\
+    
 
 #define CONNECT_FIELDS(_id,_n1,_n2)\
     FFieldConnection connection = boost::add_edge(_n1,_n2,sg);\
