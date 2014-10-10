@@ -25,6 +25,11 @@ ViewportThread::ViewportThread()
     m_renderThread = new RenderViewportThread(QSize(0, 0));
 }
 
+ViewportThread::~ViewportThread()
+{
+    m_renderThread->quit();
+}
+
 void ViewportThread::ready()
 {
     m_renderThread->surface = new QOffscreenSurface();
@@ -177,7 +182,7 @@ void RenderViewportThread::shutDown()
     context->makeCurrent(surface);
     delete m_renderFbo;
     delete m_displayFbo;
-    delete m_viewport;
+    //delete m_viewport;
     context->doneCurrent();
     delete context;
     surface->deleteLater();

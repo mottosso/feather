@@ -27,6 +27,7 @@ class ViewportThread : public QQuickItem
 
     public:
         ViewportThread();
+        ~ViewportThread();
 
         static QList<QThread *> threads;
        Q_INVOKABLE void mousePressed(int x, int y);

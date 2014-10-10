@@ -36,7 +36,11 @@ Viewport::Viewport() : m_camPitchAngle(0),m_camTiltAngle(0),m_camZoom(-6.0),m_fS
 
 Viewport::~Viewport()
 {
-
+    delete meshShader;
+    delete gridShader;
+    delete gridFragShader;
+    delete greenShader;
+    delete axisVShader;
 }
 
 void Viewport::initialize(int width, int height)
