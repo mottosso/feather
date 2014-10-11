@@ -1,11 +1,20 @@
-import QtQuick 2.0
+import QtQuick 2.1
 
 Rectangle {
-    id: status_bar 
     height: 32
     width: parent.width
-    color: "lightgreen"
+    color: "lightgrey"
     border.color: "black"
     border.width: 1
     radius: 4
+ 
+    Text {
+        anchors.fill: parent
+        anchors.margins: 4
+        horizontalAlignment: Text.AlignLeft
+        verticalAlignment: Text.AlignVCenter 
+        text: "Feather"
+        color: "black"
+    }
+ 
 }
