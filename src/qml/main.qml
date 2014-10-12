@@ -10,6 +10,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        z: 1
     }
 
     MainToolBar {

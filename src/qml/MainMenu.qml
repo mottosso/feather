@@ -4,12 +4,38 @@ import QtQuick 2.1
 //import QtQuick.Controls 1.0
 
 Rectangle {
+    id: menu
     height: 24
     color: "lightgrey"
     radius: 4
     border.color: "black"
     border.width: 1
 
+    Row {
+        spacing: 10
+
+        Text {
+            width: contentWidth + 10 
+            height: menu.height
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter 
+            text: "File"
+            color: "black"
+        }
+
+        Text {
+            width: contentWidth + 10 
+            height: menu.height
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter 
+            text: "Edit"
+            color: "black"
+        }
+
+
+    }
+
+    FileMenu {}
 }
 
 /*
