@@ -4,6 +4,8 @@ Item {
     width: 150 
     height: 24
     property alias label: label.text
+    signal triggered()
+    property MenuPanel menu: null
 
     Rectangle {
         id: bg
@@ -26,6 +28,10 @@ Item {
 
     MouseArea {
         anchors.fill: parent
-        //onHoverIn: { bg.visible = true } 
+        hoverEnabled: true
+        propagateComposedEvents: true
+        onEntered: { bg.visible = true; if(menu){ menu.visible=true } }
+        onExited: { bg.visible = false }
+        onClicked: { triggered() } 
     }
 }
