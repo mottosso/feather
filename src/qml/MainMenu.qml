@@ -8,7 +8,23 @@ Rectangle {
     border.color: "black"
     border.width: 1
 
-    FileMenu { id: fileMenu }
+
+    ListModel {
+        id: fileModel
+        
+        ListElement {
+            name: "File"
+            //action: { console.log("file clicked") }
+        }
+        
+        ListElement {
+            name: "Open"
+            //action: { console.log("open clicked") }
+        }
+
+    }
+
+    MenuPanel{ id: fileMenu; model: fileModel }
 
     Row {
         spacing: 10
