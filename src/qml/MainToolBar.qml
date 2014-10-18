@@ -2,12 +2,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 
-Rectangle {
-    height: 36
-    color: "lightgrey"
-    radius: 4
-    border.color: "black"
-    border.width: 1
+ToolBar {
 
     RowLayout {
         spacing: 6

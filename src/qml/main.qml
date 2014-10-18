@@ -1,5 +1,6 @@
 import QtQuick 2.2
 import QtQuick.Controls 1.2
+import QtQuick.Layouts 1.1
 
 ApplicationWindow {
     id: window
@@ -7,62 +8,20 @@ ApplicationWindow {
     height: 600
     visible: true
 
+    title: "Feather 0.1"
+
+    menuBar: MainMenu {}
+
+    toolBar: MainToolBar {}
+
+    statusBar: StatusBar {
+        RowLayout { Label { text: "Feather 0.1" } }
+    }
+
     Viewport3D { anchors.fill: parent }
- 
-}
 
-/*
-Rectangle {
-    width: 800
-    height: 600
-    color: "lightgrey"
+    Outliner {}
 
-    MainMenu {
-        id: menu
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        z: 1
-    }
-
-    MainToolBar {
-        id: toolbar
-        anchors.top: menu.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-    }
-
-    OutlinerWindow {
-        id: outliner
-        anchors.top: toolbar.bottom
-        anchors.right: parent.right
-        width: 200
-        height: parent.height/2
-    }
-
-    StatusBar {
-        id: statusbar
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-    }
- 
-    MaterialWindow {
-        id: material 
-        anchors.top: outliner.bottom
-        anchors.right: parent.right
-        anchors.bottom: statusbar.top
-        width: 200
-    }
-
-    Item {
-        anchors.top: toolbar.bottom
-        anchors.left: parent.left
-        anchors.right: outliner.left
-        anchors.bottom: statusbar.top
- 
-        Viewport3D { anchors.fill: parent }
-    }
+    Material {}
 
 }
-*/

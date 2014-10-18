@@ -7,13 +7,17 @@ Menu {
     FileDialog {
         id: importDialog
         title: "Import Obj"
-        
+        onAccepted: {
+            console.log("picked: " + importDialog.fileUrls)
+        }
+        onRejected: {} 
     }
 
     id: fileMenu 
     title: "File"
     visible: true
-    Menu {
+ 
+   Menu {
         id: importMenu
         title: "Import"
         MenuItem {
@@ -21,5 +25,12 @@ Menu {
             text: "Obj"
             onTriggered: { importDialog.visible=true }
         }
+    }
+
+    MenuSeparator {}
+
+    MenuItem {
+        text: "Close"
+        onTriggered: { Qt.quit() }
     }
 }
