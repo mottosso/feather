@@ -1,5 +1,17 @@
 import QtQuick 2.2
+import QtQuick.Controls 1.2
 
+ApplicationWindow {
+    id: window
+    width: 800
+    height: 600
+    visible: true
+
+    Viewport3D { anchors.fill: parent }
+ 
+}
+
+/*
 Rectangle {
     width: 800
     height: 600
@@ -53,3 +65,4 @@ Rectangle {
     }
 
 }
+*/

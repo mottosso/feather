@@ -1,71 +1,25 @@
 import QtQuick 2.3
-import QtQuick.Dialogs 1.2
-import QtQml.Models 2.1
+import QtQuick.Controls 1.2
+import QtQuick.Dialogs 1.0 
 
-Item {
+Menu {
 
     FileDialog {
-        id: open_dialog
-        title: "please select file"
-
-        onAccepted: {
-            console.log("file=" + open_dialog.fileUrls)
-            //Qt.quit()
-            close()
-        }
-
-        onRejected: {
-            //Qt.quit()
-            close()
-        }
-
-        Component.onCompleted: {
-            visible = false 
-        }
-    }
-
-    ListModel {
-        id: fileModel
+        id: importDialog
+        title: "Import Obj"
         
-        ListElement {
-            name: "File"
-            //action: { console.log("file clicked") }
+    }
+
+    id: fileMenu 
+    title: "File"
+    visible: true
+    Menu {
+        id: importMenu
+        title: "Import"
+        MenuItem {
+            id: importObj
+            text: "Obj"
+            onTriggered: { importDialog.visible=true }
         }
-        
-        ListElement {
-            name: "Open"
-            //action: { console.log("open clicked") }
-        }
-
     }
-
-        
-    MenuPanel {
-        id: menu
-        model: fileModel 
-    }
-
-    /*
-    Column {
-    spacing: 2
-
-    MenuItem {
-        id: open
-        label: "File"
-    }
-
-    MenuItem {
-        id: save 
-        label: "Save"
-    }
-
-    }
-
-    function open_file() {
-        console.log("open file")
-        open_dialog.open()
-    }
-
-    Component.onCompleted: { open.triggered.connect(open_file) }
-    */
 }

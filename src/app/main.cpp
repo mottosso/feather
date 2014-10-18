@@ -17,10 +17,12 @@
 #include "viewportthread.hpp"
 #include "qml.hpp"
 #include "commands.hpp"
+#include <QApplication>
+#include <QQmlApplicationEngine>
 
 int main(int argc, char **argv)
 {
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
 
     // ?? This always comes back with an error though my platform supports threading ??
     /*
@@ -50,6 +52,9 @@ return app.exec();
     int execReturn = 0;
 
     {
+        QQmlApplicationEngine view("main.qml");
+        execReturn = app.exec();
+        /*
         QQuickView view;
         view.setPersistentOpenGLContext(true);
         view.setPersistentSceneGraph(true);
@@ -57,6 +62,7 @@ return app.exec();
         view.setSource(QUrl("main.qml"));
         view.show();
         execReturn = app.exec();
+        */
     }
 
     foreach (QThread *t, ViewportThread::threads) {
