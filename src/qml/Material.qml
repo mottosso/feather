@@ -1,7 +1,7 @@
 import QtQuick 2.2
-import QtQuick.Controls 1.2
+import QtQuick.Window 2.2
 
-ApplicationWindow {
+Window {
     id: outliner
     title: "Material"
     visible: true
