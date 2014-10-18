@@ -24,28 +24,8 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
-    // ?? This always comes back with an error though my platform supports threading ??
-    /*
-if (!QGuiApplicationPrivate::platform_integration->hasCapability(QPlatformIntegration::ThreadedOpenGL)) {
-QQuickView view;
-view.setSource(QUrl("error.qml"));
-view.show();
-return app.exec();
-}
-*/
-
     qmlRegisterType<ViewportThread>("FeatherViewport", 1, 0, "Viewport");
     qmlRegisterType<feather::qml::QmlSceneGraph>("feather.scenegraph", 1, 0, "SceneGraph");
-
-
-    /*
-    QQuickView view;
-    view.setResizeMode(QQuickView::SizeRootObjectToView);
-    view.setSource(QUrl("main.qml"));
-    view.show();
-
-    return app.exec();
-    */
 
     feather::qml::command::init();
 
@@ -54,15 +34,6 @@ return app.exec();
     {
         QQmlApplicationEngine view("main.qml");
         execReturn = app.exec();
-        /*
-        QQuickView view;
-        view.setPersistentOpenGLContext(true);
-        view.setPersistentSceneGraph(true);
-        view.setResizeMode(QQuickView::SizeRootObjectToView);
-        view.setSource(QUrl("main.qml"));
-        view.show();
-        execReturn = app.exec();
-        */
     }
 
     foreach (QThread *t, ViewportThread::threads) {
