@@ -43,6 +43,7 @@ namespace feather
 
     namespace scenegraph
     {
+
         template <> status add_node<node::Object,object::PolygonPlane>(int id)
         {
             std::cout << "add plane\n";
@@ -51,9 +52,9 @@ namespace feather
             sg[node].type = node::Object;
             sg[node].id = id;
             /*
-            GET_NODE_DATA(polygon_plane::data)
-            sg[node].data = pdata;
-            */
+               GET_NODE_DATA(polygon_plane::data)
+               sg[node].data = pdata;
+               */
             node_selection.push_back(node);
             return status();
         };

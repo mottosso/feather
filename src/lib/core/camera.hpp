@@ -26,6 +26,7 @@ namespace feather
     {
 
         enum Type {
+            End=0,
             Orthographic,
             Perspective,
             N

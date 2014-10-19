@@ -26,33 +26,30 @@ using namespace feather;
 using namespace feather::qml;
 
 status command::init() {
-    return scenegraph::add_node<node::Null,null::Root>(0);
+    return add_node(node::Null,null::Root,0);
 }
 
-status command::add_node(int node, int id)
+status command::add_node(int type, int node, int id)
 {
-    //return scenegraph::add_sgnode<node::N>::exec(node,id);
-    return status();
-}
-
-status command::make_plane() {
-    std::cout << "make plane\n";
-    scenegraph::add_node<node::Object,object::PolygonPlane>(1);
-    //scenegraph::add_node<node::Transform>(2);
-    //CONNECT_FIELDS(1,node_selection.at(0),node_selection.at(1))
-    return status();
-}
-
-status command::make_cube() {
-    std::cout << "make cube\n";
-   // create a sgNode
-   /*
-    scenegraph::sgNode sgnode(1,node::PolygonMesh,new node::NodeAttributes(), new Fields());
-    scenegraph::SceneGraphSingleton::Instance()->push_back(sgnode);
-    node::Node<node::PolygonMesh>::init(sgnode.nattr,sgnode.fields);
-    scenegraph::update();
-    */
-    return status();
+    switch(type)
+    {
+        case node::Null:
+            return scenegraph::add_node_to_sg<node::Null,null::N>::exec(node,id);
+        case node::Camera:
+            return scenegraph::add_node_to_sg<node::Camera,camera::N>::exec(node,id);
+        case node::Light:
+            return scenegraph::add_node_to_sg<node::Light,light::N>::exec(node,id);
+        case node::Texture:
+            return scenegraph::add_node_to_sg<node::Texture,texture::N>::exec(node,id);
+        case node::Shader:
+            return scenegraph::add_node_to_sg<node::Shader,shader::N>::exec(node,id);
+        case node::Object:
+            return scenegraph::add_node_to_sg<node::Object,object::N>::exec(node,id);
+        default:
+            break;
+    }
+    
+    return status(FAILED, "no matching Type of Node found while trying to add node");
 }
 
 status command::draw_sg(QMatrix4x4& view)

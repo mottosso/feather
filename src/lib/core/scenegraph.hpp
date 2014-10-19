@@ -65,16 +65,51 @@ namespace feather
     namespace scenegraph
     {
 
-        template <int N, int T>
-            //status do_it(FNodeDescriptor node) { std::cout << "base do_it() called\n"; return status(false,"missing node"); };
-            struct do_it {
-                static status exec(FNodeDescriptor node)
+        /* Add Node
+         * This function is called during specialization of nodes when
+         * a new node is added to the scenegraph. It's called by add_node_to_sg
+         * and is specialized by each node.
+         */
+        template <int _Type, int _Node>
+        static status add_node(int id) { return status(FAILED,"no matching node for add_node"); };
+
+
+        /* Add Node to SceneGraph
+         * This is the recursive function that will keep going till
+         * finds a match for the node or fail.
+         * If a match is found the add_node function is called which
+         * is specialized by each node.
+         */
+        template <int _Type, int _Node>
+            struct add_node_to_sg {
+                static status exec(int node, int id)
                 {
-                    return do_it<N,T-1>::exec(node);
+                    if(node==_Node)
+                        return add_node<_Type,_Node>(id);
+                    else
+                        return add_node_to_sg<_Type,_Node-1>::exec(node,id);
                 };
             };
 
-        template <int N> struct do_it<N,-1> { static status exec(FNodeDescriptor node) { return status(FAILED, "no node do_it found"); }; };
+        template <int _Type>
+            struct add_node_to_sg<_Type,0> { static status exec(int node, int id) { return status(FAILED, "could not add unknown node to scenegraph"); }; };
+
+
+
+        /* DoIt
+         * This gets called during the scenegraph update and
+         * currently is used to display the data but this may
+         * change.
+         */
+        template <int _Type, int _Node>
+            struct do_it {
+                static status exec(FNodeDescriptor node)
+                {
+                    return do_it<_Type,_Node-1>::exec(node);
+                };
+            };
+
+        template <int _Type> struct do_it<_Type,-1> { static status exec(FNodeDescriptor node) { return status(FAILED, "no node do_it found"); }; };
 
     } // namespace scenegraph
 
@@ -304,8 +339,8 @@ namespace feather
         };
 
         
-        template <int _Type, int _Node>
-        status add_node(int id) { return status(FAILED,"no matching node for add_node"); };
+        //template <int _Type, int _Node>
+        //status add_node(int id) { return status(FAILED,"no matching node for add_node"); };
 
         /* 
            status connect(FNodeDescriptor n1, FNodeDescriptor n2)

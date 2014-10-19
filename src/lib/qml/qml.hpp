@@ -20,6 +20,9 @@
 #include "types.hpp"
 #include "status.hpp"
 #include "commands.hpp"
+#include "node.hpp"
+#include "object.hpp"
+
 
 namespace feather
 {
@@ -36,8 +39,46 @@ namespace feather
                 ~QmlSceneGraph();
 
                 // commands
-                Q_INVOKABLE void make_plane() { command::make_plane(); };
-                Q_INVOKABLE void make_cube() { command::make_cube(); };
+                Q_INVOKABLE void add_node(int type, int node, int id) { command::add_node(type,node,id); };
+        };
+
+        // NODE
+        class QmlNode: public QObject
+        {
+            Q_OBJECT
+
+                Q_ENUMS(Type)
+
+            public:
+                QmlNode(QObject* parent=0);
+                ~QmlNode();
+
+                enum Type {
+                    Camera = node::Camera,
+                    Light = node::Light,
+                    Texture = node::Texture,
+                    Shader = node::Shader,
+                    Object = node::Object 
+                };
+        };
+
+        // OBJECT NODE
+        class QmlObject: public QObject
+        {
+            Q_OBJECT
+
+                Q_ENUMS(Type)
+
+            public:
+                QmlObject(QObject* parent=0);
+                ~QmlObject();
+
+                enum Type {
+                    Polygon = object::Polygon,
+                    PolygonPlane = object::PolygonPlane,
+                    Curve = object::Curve,
+                    Point = object::Point
+                };
         };
 
     } // namespace qml

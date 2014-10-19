@@ -27,6 +27,7 @@ namespace feather
     {
 
         enum Type {
+            End=0,
             Matte,
             Phong,
             Blinn,

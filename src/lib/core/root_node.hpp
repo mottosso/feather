@@ -51,6 +51,7 @@ namespace feather
             node_selection.push_back(node);   
             return status();
         };
+
         /* 
         template <> status do_it<node::Root>::exec(FNodeDescriptor node)
         {

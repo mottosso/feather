@@ -26,7 +26,11 @@ int main(int argc, char **argv)
 
     qmlRegisterType<ViewportThread>("FeatherViewport", 1, 0, "Viewport");
     qmlRegisterType<feather::qml::QmlSceneGraph>("feather.scenegraph", 1, 0, "SceneGraph");
+    qmlRegisterType<feather::qml::QmlNode>("feather.nodes", 1, 0, "Node");
+    qmlRegisterType<feather::qml::QmlObject>("feather.nodes", 1, 0, "Object");
 
+
+    // Add the Root ndoe to the scenegraph and setup the scene
     feather::qml::command::init();
 
     int execReturn = 0;

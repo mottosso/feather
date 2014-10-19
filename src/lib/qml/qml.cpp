@@ -25,3 +25,23 @@ QmlSceneGraph::QmlSceneGraph(QObject* parent)
 QmlSceneGraph::~QmlSceneGraph()
 {
 }
+
+
+QmlNode::QmlNode(QObject* parent)
+{
+}
+
+QmlNode::~QmlNode()
+{
+}
+
+
+QmlObject::QmlObject(QObject* parent)
+{
+}
+
+QmlObject::~QmlObject()
+{
+}
+
+

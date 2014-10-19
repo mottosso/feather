@@ -28,7 +28,7 @@ namespace feather
 namespace null
 {
 
-    enum Type { Root, N };
+    enum Type { End=0, Root, N };
 
 } // namespace null
 
