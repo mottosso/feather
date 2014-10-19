@@ -5,4 +5,16 @@ MenuBar {
     id: menu
     
     FileMenu{}
+
+    EditMenu{}
+
+    ViewMenu{}
+
+    SelectMenu{}
+
+    ToolsMenu{}
+
+    WindowMenu{}
+
+    HelpMenu{}
 }

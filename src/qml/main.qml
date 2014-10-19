@@ -15,7 +15,7 @@ ApplicationWindow {
     toolBar: MainToolBar {}
 
     statusBar: StatusBar {
-        RowLayout { Label { text: "Feather 0.1" } }
+        RowLayout { BusyIndicator { implicitWidth: 10; implicitHeight: 10; running: true } Label { text: "Feather 0.1" } }
     }
 
     Viewport3D { anchors.fill: parent }
