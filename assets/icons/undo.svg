@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="64px"
+   height="64px"
+   id="svg3036"
+   version="1.1"
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="undo.svg"
+   enable-background="new"
+   inkscape:export-filename="/home/richard/programs/feather/assets/icons/undo.png"
+   inkscape:export-xdpi="45"
+   inkscape:export-ydpi="45">
+  <defs
+     id="defs3038">
+    <linearGradient
+       id="linearGradient5292"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#0000ff;stop-opacity:1;"
+         offset="0"
+         id="stop5294" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient5280">
+      <stop
+         style="stop-color:#0000ff;stop-opacity:1;"
+         offset="0"
+         id="stop5282" />
+      <stop
+         style="stop-color:#00ffff;stop-opacity:0.42335767;"
+         offset="1"
+         id="stop5284" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient5266"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#d7d7ff;stop-opacity:1;"
+         offset="0"
+         id="stop5268" />
+    </linearGradient>
+    <filter
+       inkscape:collect="always"
+       id="filter5345">
+      <feBlend
+         inkscape:collect="always"
+         mode="lighten"
+         in2="BackgroundImage"
+         id="feBlend5347" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="7.78"
+     inkscape:cx="25.789064"
+     inkscape:cy="32"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:document-units="px"
+     inkscape:grid-bbox="true"
+     inkscape:window-width="1089"
+     inkscape:window-height="963"
+     inkscape:window-x="14"
+     inkscape:window-y="32"
+     inkscape:window-maximized="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3044" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata3041">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer"
+     style="display:none" />
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     style="filter:url(#filter5345)">
+    <path
+       style="fill:#4d8fd5;fill-opacity:1;stroke:#000000;stroke-width:1.35400641px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 18.666667,25.125 39.999999,0 0,13.75 -39.999999,0 6.666666,20.625 -6.666666,0 L 5.3333337,32 18.666667,4.5 l 6.666666,0 -6.666666,20.625"
+       id="path3052"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/richard/programs/feather/assets/icons/undo.png"
+       inkscape:export-xdpi="51.086475"
+       inkscape:export-ydpi="51.086475" />
+  </g>
+</svg>
