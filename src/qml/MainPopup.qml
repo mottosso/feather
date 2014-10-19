@@ -1,52 +1,107 @@
 import QtQuick 2.1
-import QtQuick.Controls 1.0
+import QtQuick.Controls 1.2
+import QtQuick.Controls.Styles 1.2
 import feather.scenegraph 1.0
 
 Menu {
-
     SceneGraph { id: sg }
+    /*
+    style: MenuStyle {
+        frame: Rectangle { color: "red"; border.color: "black"; border.width: 1; radius: 10 }
+        //itemDelegate.background: Rectangle { border.color: "black"; border.width: 1; radius: 10 }
+    }
+    */
 
-    MenuItem {
+    // ACTIONS
+
+    // Make Plane 
+    Action {
+        id: makePlaneAction
         text: "Plane"
-        onTriggered: { sg.make_plane() }            
+        tooltip: "Create Polygon Plane"
+        onTriggered: {}
     }
 
-    MenuItem {
+    // Make Cube 
+    Action {
+        id: makeCubeAction
         text: "Cube"
-        //shortcut: "Ctrl+C"
-        onTriggered: { sg.make_cube() }            
+        tooltip: "Create Polygon Cube"
+        onTriggered: {}
     }
 
-    MenuItem {
+    // Make Torus 
+    Action {
+        id: makeTorusAction
         text: "Torus"
-        //shortcut: "Ctrl+C"
-        onTriggered: {}            
+        tooltip: "Create Polygon Torus"
+        onTriggered: {}
     }
 
-    MenuItem {
+    // Make Cylinder 
+    Action {
+        id: makeCylinderAction
         text: "Cylinder"
-        //shortcut: "Ctrl+C"
-        onTriggered: {}            
+        tooltip: "Create Polygon Cylinder"
+        onTriggered: {}
     }
 
-    MenuItem {
+    // Make Sphere 
+    Action {
+        id: makeSphereAction
         text: "Sphere"
-        //shortcut: "Ctrl+C"
-        onTriggered: {}            
+        tooltip: "Create Polygon Sphere"
+        onTriggered: {}
+    }
+
+    // Make Cone
+    Action {
+        id: makeConeAction
+        text: "Cone"
+        tooltip: "Create Polygon Cone"
+        onTriggered: {}
+    }
+
+    // Make Grid
+    Action {
+        id: makeGridAction
+        text: "Grid"
+        tooltip: "Create Polygon Grid"
+        onTriggered: {}
+    }
+
+
+
+    // LAYOUT
+
+    MenuItem {
+        action: makePlaneAction
     }
 
     MenuItem {
-        text: "Cone"
-        //shortcut: "Ctrl+C"
-        onTriggered: {}            
+        action: makeCubeAction
+    }
+
+    MenuItem {
+        action: makeTorusAction
+    }
+
+    MenuItem {
+        action: makeCylinderAction
+    }
+
+    MenuItem {
+        action: makeSphereAction
+    }
+
+    MenuItem {
+        action: makeConeAction
     }
 
     MenuSeparator {}
 
     MenuItem {
-        text: "Grid"
-        //shortcut: "Ctrl+C"
-        onTriggered: {}            
+        action: makeGridAction
     }
 
 }
