@@ -19,7 +19,7 @@ Menu {
         id: makePlaneAction
         text: "Plane"
         tooltip: "Create Polygon Plane"
-        onTriggered: {}
+        onTriggered: { sg.make_plane() }
     }
 
     // Make Cube 

@@ -20,6 +20,7 @@
 #include "scenegraph.hpp"
 #include "node.hpp"
 #include "field.hpp"
+#include "object.hpp"
 
 namespace feather
 {
@@ -42,17 +43,18 @@ namespace feather
 
     namespace scenegraph
     {
-        template <> status add_node<node::Object,node::PolygonPlane>(int id)
+        template <> status add_node<node::Object,object::PolygonPlane>(int id)
         {
-            /*
+            std::cout << "add plane\n";
             std::cout << "ADD NODE " << id << std::endl;
             FNodeDescriptor node = boost::add_vertex(sg);
-            sg[node].type = node::PolygonPlane;
+            sg[node].type = node::Object;
             sg[node].id = id;
+            /*
             GET_NODE_DATA(polygon_plane::data)
             sg[node].data = pdata;
-            node_selection.push_back(node);
             */
+            node_selection.push_back(node);
             return status();
         };
 

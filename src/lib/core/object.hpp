@@ -27,6 +27,7 @@ namespace feather
 
         enum Type {
             Polygon,
+            PolygonPlane,
             Curve,
             Point,
             N

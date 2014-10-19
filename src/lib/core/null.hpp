@@ -1,11 +1,11 @@
 // =====================================================================================
 // 
-//       Filename:  node.hpp
+//       Filename:  null.hpp
 // 
 //    Description:  
 // 
 //        Version:  1.0
-//        Created:  07/08/2014 04:46:04 AM
+//        Created:  10/19/2014 02:44:53 AM
 //       Revision:  none
 //       Compiler:  g++
 // 
@@ -13,8 +13,8 @@
 //        Company:  
 // 
 // =====================================================================================
-#ifndef NODE_HPP
-#define NODE_HPP
+#ifndef NULL_HPP
+#define NULL_HPP
 
 #include "deps.hpp"
 #include "types.hpp"
@@ -25,20 +25,12 @@
 namespace feather
 {
 
-    namespace node
-    {
+namespace null
+{
 
-        enum Type {
-            Null,
-            Camera,
-            Light,
-            Texture,
-            Shader,
-            Object,
-            N
-        };
+    enum Type { Root, N };
 
-    } // namespace node
+} // namespace null
 
 } // namespace feather
 

@@ -20,6 +20,7 @@
 #include "status.hpp"
 #include "node.hpp"
 #include "scenegraph.hpp"
+#include "null.hpp"
 
 namespace feather
 {
@@ -39,19 +40,18 @@ namespace feather
     namespace scenegraph
     {
 
-        /*
-        template <> status add_node<node::Root>(int id)
+        template <> status add_node<node::Null,null::Root>(int id)
         {
             std::cout << "ADDING ROOT NODE" << std::endl;
             FNodeDescriptor node = boost::add_vertex(sg);
-            sg[node].type = node::Root;
+            sg[node].type = node::Null;
             sg[node].id = id;
-            root::data* pdata = new root::data();
-            sg[node].data = pdata;
+            //root::data* pdata = new root::data();
+            //sg[node].data = pdata;
             node_selection.push_back(node);   
             return status();
         };
-
+        /* 
         template <> status do_it<node::Root>::exec(FNodeDescriptor node)
         {
             root::data* pdata=sg[node].data->get_data<root::data>(node);
