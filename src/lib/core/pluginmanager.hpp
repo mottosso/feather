@@ -27,8 +27,11 @@ namespace feather
         public:
             PluginManager();
             ~PluginManager();
+            status load_nodes();
+            status load_commands();
         private:
-            std::string m_path;
+            std::string m_nodePath;
+            std::string m_commandPath;
     };
 
 } // namespace feather

@@ -26,6 +26,7 @@ using namespace feather;
 using namespace feather::qml;
 
 status command::init() {
+    load_node_plugins();
     return add_node(node::Null,null::Root,0);
 }
 
@@ -55,4 +56,9 @@ status command::add_node(int type, int node, int id)
 status command::draw_sg(QMatrix4x4& view)
 {
     return scenegraph::update();
+}
+
+status command::load_node_plugins()
+{
+    return scenegraph::load_nodes(); 
 }

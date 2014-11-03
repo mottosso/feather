@@ -29,6 +29,7 @@
 #include "texture.hpp"
 #include "shader.hpp"
 #include "null.hpp"
+#include "pluginmanager.hpp"
 
 namespace feather
 {
@@ -58,13 +59,17 @@ namespace feather
      */
 
     static FSceneGraph sg;
+    static PluginManager plugins;
 
     static std::vector<FNodeDescriptor> node_selection;
 
 
     namespace scenegraph
     {
-
+        status load_nodes() {
+            return plugins.load_nodes();
+        };
+        
         /* Add Node
          * This function is called during specialization of nodes when
          * a new node is added to the scenegraph. It's called by add_node_to_sg

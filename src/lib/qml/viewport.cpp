@@ -181,7 +181,7 @@ void Viewport::render(int width, int height)
     gridProgram.release();
 
     // draw each node
-    feather::qml::command::draw_sg(pview);
+    //feather::qml::command::draw_sg(pview);
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
