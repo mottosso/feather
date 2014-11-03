@@ -17,6 +17,7 @@
 #define QML_HPP
 
 #include "deps.hpp"
+#include "qml_deps.hpp"
 #include "types.hpp"
 #include "status.hpp"
 #include "commands.hpp"

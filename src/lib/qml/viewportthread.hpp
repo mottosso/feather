@@ -17,6 +17,7 @@
 #define VIEWPORTTHREAD_HPP
 
 #include "deps.hpp"
+#include "qml_deps.hpp"
 #include "viewport.hpp"
 
 class RenderViewportThread;

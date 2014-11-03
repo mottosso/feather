@@ -31,6 +31,11 @@ INCLUDE_DIRECTORIES(${feather_core_SOURCE_DIR}
     "/usr/include/qt/QtCore/5.3.0/QtCore"
 )
 
+LINK_DIRECTORIES(${feather_core_BINARY_DIR}
+)
+
+LINK_LIBRARIES(feather_core)
+
 ADD_DEFINITIONS(${Qt5Widgets_DEFINITIONS}
     ${Qt5Quick_DEFINITIONS}
     ${Qt5OpenGL_DEFINITIONS}

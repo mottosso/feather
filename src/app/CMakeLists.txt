@@ -22,10 +22,11 @@ INCLUDE_DIRECTORIES(${feather_core_SOURCE_DIR}
     ${Qt5Quick_INCLUDE_DIRS}
 )
 
-LINK_DIRECTORIES(${feather_qml_BINARY_DIR}
+LINK_DIRECTORIES(${feather_core_BINARY_DIR}
+    ${feather_qml_BINARY_DIR}
 )
 
-LINK_LIBRARIES(feather_qml)
+LINK_LIBRARIES(feather_qml feather_core)
 
 ADD_DEFINITIONS( ${Qt5Widgets_DEFINITIONS}
     ${Qt5Quick_DEFINITIONS}
