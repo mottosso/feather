@@ -160,11 +160,13 @@ void Viewport::render(int width, int height)
     glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
 
     // draw test plane
+    /* 
     program1.bind();
     program1.setUniformValue(matrixUniform1, pview);
     program1.setUniformValue(texture,0);
     drawMesh();
     program1.release();
+    */
 
     // draw the axis 
     axisProgram.bind();
