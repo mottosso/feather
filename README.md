@@ -3,7 +3,7 @@ Feather
 
 3d polygon modeller based off of Wings3d
 
-![Feather UI](https://raw.githubusercontent.com/richardlayman/feather/tree/master/assets/images/ui_v0_1.png)
+![Feather UI](https://raw.githubusercontent.com/richardlayman/feather/master/assets/images/ui_v0_1.png)
 
 Introduction
 ---------------
