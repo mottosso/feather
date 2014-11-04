@@ -22,6 +22,12 @@
 namespace feather
 {
 
+    struct PluginInfo {
+        void *handle;
+        int (*get_id)();
+        bool (*call_node)(int*);
+    };
+
     class PluginManager
     {
         public:
@@ -32,6 +38,7 @@ namespace feather
         private:
             std::string m_nodePath;
             std::string m_commandPath;
+            std::vector<PluginInfo> m_nodes;
     };
 
 } // namespace feather

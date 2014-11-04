@@ -19,10 +19,12 @@
 extern "C" {
 #endif
 
+    int get_id();
     bool call_node(int *);
 
 #ifdef __cplusplus
 }
 #endif
 
+int get_id() { return 325; };
 bool call_node(int *) { std::cout << "plugin called\n"; return true; };
