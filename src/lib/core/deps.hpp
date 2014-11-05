@@ -50,6 +50,8 @@
 #include <boost/lambda/lambda.hpp>
 #include <boost/config/warning_disable.hpp>
 #include <boost/config.hpp>
+#include <boost/system/error_code.hpp>
+#include <boost/filesystem.hpp>
 
 // boost::fusion
 #include <boost/fusion/include/adapt_struct.hpp>

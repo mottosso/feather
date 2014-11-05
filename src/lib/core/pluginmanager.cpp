@@ -31,16 +31,59 @@ PluginManager::~PluginManager()
 
 status PluginManager::load_nodes()
 {
-    //int x;
-    char *error;
+    boost::filesystem::path node_path("/usr/local/feather/plugins/nodes");
+    typedef std::vector<boost::filesystem::path> files;
+    files node_paths;
 
-    PluginInfo node;
+    if (boost::filesystem::exists(node_path))
+    {
+        if (boost::filesystem::is_regular_file(node_path))   
+            std::cout << node_path << " size is " << boost::filesystem::file_size(node_path) << '\n';
 
-    node.handle = dlopen("/usr/local/feather/plugins/nodes/libpolyplaneshape.so", RTLD_LAZY);
+        else if (boost::filesystem::is_directory(node_path)) {
+            std::cout << node_path << "is a directory\n";
+            std::copy(boost::filesystem::directory_iterator(node_path), boost::filesystem::directory_iterator(), std::back_inserter(node_paths));
+            for (files::const_iterator it (node_paths.begin()); it != node_paths.end(); ++it)
+            {
+                if((*it).extension()==".so") {
+                    // load plugin here
+                    std::cout << "LOADING: " << *it << std::endl;
+                    PluginInfo node;
+                    node.path = (*it).string();
+                    status s = load_node(node);
+                    if(s.state){
+                        m_nodes.push_back(node);
+                        std::cout << node.path << " loaded\n";
+                    }
+                    else
+                        std::cout << node.path << " " << s.msg << std::endl;
+                }
+            }
+        }
+
+        else
+            std::cout << node_path << "exists, but is neither a regular file nor a directory\n";
+    }
+    else
+        std::cout << node_path << "does not exist\n";
+
+    return status();
+}
+
+status PluginManager::load_commands()
+{
+    return status(FAILED,"no commands added");
+}
+
+status PluginManager::load_node(PluginInfo &node)
+{
+   char *error;
+
+   node.handle = dlopen(node.path.c_str(), RTLD_LAZY);
     if (!node.handle) 
     {
         fprintf(stderr, "%s\n", dlerror());
-        exit(1);
+        return status(FAILED,"loaded failed to load");
     }
 
     node.get_id = (int(*)())dlsym(node.handle, "get_id");
@@ -49,18 +92,17 @@ status PluginManager::load_nodes()
     if ((error = dlerror()) != NULL)  
     {
         fprintf(stderr, "%s\n", error);
-        exit(1);
+        return status(FAILED,"library error");
     }
 
-    std::cout << "node id=" << node.get_id() << std::endl; 
+    //std::cout << "node id=" << node.get_id() << std::endl; 
     //(*fn)(&x);
     //printf("Valx=%d\n",x);
 
-    m_nodes.push_back(node);
-    return status(FAILED,"no nodes added");
+    return status();
 }
 
-status PluginManager::load_commands()
+status PluginManager::load_command(PluginInfo &command)
 {
-    return status(FAILED,"no commands added");
+    return status(FAILED,"no command to load");
 }

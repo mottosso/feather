@@ -23,6 +23,7 @@ namespace feather
 {
 
     struct PluginInfo {
+        std::string path;
         void *handle;
         int (*get_id)();
         bool (*call_node)(int*);
@@ -36,6 +37,8 @@ namespace feather
             status load_nodes();
             status load_commands();
         private:
+            status load_node(PluginInfo &node);
+            status load_command(PluginInfo &command);
             std::string m_nodePath;
             std::string m_commandPath;
             std::vector<PluginInfo> m_nodes;
