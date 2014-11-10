@@ -75,6 +75,13 @@ status PluginManager::load_commands()
     return status(FAILED,"no commands added");
 }
 
+status PluginManager::do_it(int node)
+{
+    std::cout << "call node " << node << std::endl;
+    std::for_each(m_nodes.begin(),m_nodes.end(), call_do_it(node) );
+    return status();
+}
+
 status PluginManager::load_node(PluginInfo &node)
 {
    char *error;

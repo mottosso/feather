@@ -29,6 +29,13 @@ namespace feather
         bool (*call_node)(int*);
     };
 
+    struct call_do_it {
+        call_do_it(int node){ m_node = node; };
+        void operator()(PluginInfo n) { if(n.get_id()==m_node) { std::cout << "found node " << m_node << std::endl; } };
+        private:
+            int m_node;
+    };
+
     class PluginManager
     {
         public:
@@ -36,6 +43,7 @@ namespace feather
             ~PluginManager();
             status load_nodes();
             status load_commands();
+            status do_it(int node); // this is called by the scenegraph
         private:
             status load_node(PluginInfo &node);
             status load_command(PluginInfo &command);

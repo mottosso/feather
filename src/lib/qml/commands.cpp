@@ -27,7 +27,10 @@ using namespace feather::qml;
 
 status command::init() {
     load_node_plugins();
-    return add_node(node::Null,null::Root,0);
+    add_node(node::Null,null::Root,0);
+    // just testing the do_it plugin calls
+    scenegraph::update();
+    return status();
 }
 
 status command::add_node(int type, int node, int id)
