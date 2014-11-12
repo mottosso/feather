@@ -33,7 +33,7 @@ namespace feather
             status init();
             status add_node(int type, int node, int id); 
             status draw_sg(QMatrix4x4& view);
-            status load_node_plugins();
+            status load_plugins();
 
         } // namespace command
 

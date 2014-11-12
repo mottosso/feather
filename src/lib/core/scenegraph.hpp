@@ -66,8 +66,8 @@ namespace feather
 
     namespace scenegraph
     {
-        status load_nodes() {
-            return plugins.load_nodes();
+        status load_plugins() {
+            return plugins.load_plugins();
         };
         
         /* Add Node

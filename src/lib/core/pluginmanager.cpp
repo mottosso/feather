@@ -17,33 +17,32 @@
 
 using namespace feather;
 
-PluginManager::PluginManager():m_nodePath("~/.feather/plugins/nodes"),m_commandPath("~/.feather/plugins/commands")
-
+PluginManager::PluginManager():m_pluginPath("~/.feather/plugins")
 {
 
 }
 
 PluginManager::~PluginManager()
 {
-    for(auto n : m_nodes)
+    for(auto n : m_plugins)
         dlclose(n.handle);
 }
 
-status PluginManager::load_nodes()
+status PluginManager::load_plugins()
 {
-    boost::filesystem::path node_path("/usr/local/feather/plugins/nodes");
+    boost::filesystem::path plugin_path("/usr/local/feather/plugins");
     typedef std::vector<boost::filesystem::path> files;
-    files node_paths;
+    files plugin_paths;
 
-    if (boost::filesystem::exists(node_path))
+    if (boost::filesystem::exists(plugin_path))
     {
-        if (boost::filesystem::is_regular_file(node_path))   
-            std::cout << node_path << " size is " << boost::filesystem::file_size(node_path) << '\n';
+        if (boost::filesystem::is_regular_file(plugin_path))   
+            std::cout << plugin_path << " size is " << boost::filesystem::file_size(plugin_path) << '\n';
 
-        else if (boost::filesystem::is_directory(node_path)) {
-            std::cout << node_path << "is a directory\n";
-            std::copy(boost::filesystem::directory_iterator(node_path), boost::filesystem::directory_iterator(), std::back_inserter(node_paths));
-            for (files::const_iterator it (node_paths.begin()); it != node_paths.end(); ++it)
+        else if (boost::filesystem::is_directory(plugin_path)) {
+            std::cout << plugin_path << "is a directory\n";
+            std::copy(boost::filesystem::directory_iterator(plugin_path), boost::filesystem::directory_iterator(), std::back_inserter(plugin_paths));
+            for (files::const_iterator it (plugin_paths.begin()); it != plugin_paths.end(); ++it)
             {
                 if((*it).extension()==".so") {
                     // load plugin here
@@ -52,7 +51,7 @@ status PluginManager::load_nodes()
                     node.path = (*it).string();
                     status s = load_node(node);
                     if(s.state){
-                        m_nodes.push_back(node);
+                        m_plugins.push_back(node);
                         std::cout << node.path << " loaded\n";
                     }
                     else
@@ -62,23 +61,18 @@ status PluginManager::load_nodes()
         }
 
         else
-            std::cout << node_path << "exists, but is neither a regular file nor a directory\n";
+            std::cout << plugin_path << "exists, but is neither a regular file nor a directory\n";
     }
     else
-        std::cout << node_path << "does not exist\n";
+        std::cout << plugin_path << "does not exist\n";
 
     return status();
-}
-
-status PluginManager::load_commands()
-{
-    return status(FAILED,"no commands added");
 }
 
 status PluginManager::do_it(int node)
 {
     std::cout << "call node " << node << std::endl;
-    std::for_each(m_nodes.begin(),m_nodes.end(), call_do_it(node) );
+    std::for_each(m_plugins.begin(),m_plugins.end(), call_do_it(node) );
     return status();
 }
 

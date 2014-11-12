@@ -26,7 +26,7 @@ using namespace feather;
 using namespace feather::qml;
 
 status command::init() {
-    load_node_plugins();
+    load_plugins();
     add_node(node::Null,null::Root,0);
     // just testing the do_it plugin calls
     scenegraph::update();
@@ -61,7 +61,7 @@ status command::draw_sg(QMatrix4x4& view)
     return scenegraph::update();
 }
 
-status command::load_node_plugins()
+status command::load_plugins()
 {
-    return scenegraph::load_nodes(); 
+    return scenegraph::load_plugins(); 
 }

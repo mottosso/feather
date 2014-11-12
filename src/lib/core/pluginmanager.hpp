@@ -27,6 +27,7 @@ namespace feather
         void *handle;
         int (*get_id)();
         bool (*call_node)(int*);
+        //bool (*call_command)(Arguments*);
     };
 
     struct call_do_it {
@@ -41,15 +42,13 @@ namespace feather
         public:
             PluginManager();
             ~PluginManager();
-            status load_nodes();
-            status load_commands();
+            status load_plugins();
             status do_it(int node); // this is called by the scenegraph
         private:
             status load_node(PluginInfo &node);
             status load_command(PluginInfo &command);
-            std::string m_nodePath;
-            std::string m_commandPath;
-            std::vector<PluginInfo> m_nodes;
+            std::string m_pluginPath;
+            std::vector<PluginInfo> m_plugins;
     };
 
 } // namespace feather
