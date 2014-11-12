@@ -1,5 +1,4 @@
-add_subdirectory(nodes)
-#add_subdirectory(commands)
+add_subdirectory(src)
 #add_subdirectory(widgets)
 #add_subdirectory(assets)
 #add_subdirectory(docs)
