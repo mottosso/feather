@@ -27,8 +27,19 @@ namespace feather
         void *handle;
         int (*get_id)();
         bool (*call_node)(int*);
-        //bool (*call_command)(Arguments*);
+        status (*do_it)(int,int);
     };
+
+    /*
+    struct do_it_functor {
+        do_it_functor(int type, int id) { };
+        operator()() {};
+        
+    };
+    */
+
+    template <int _Type, int _Id> static status do_it() { return status(FAILED,"no node found"); };
+    
 
     struct call_do_it {
         call_do_it(int node){ m_node = node; };
