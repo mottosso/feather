@@ -30,13 +30,17 @@ namespace feather
         status (*do_it)(int,int);
     };
 
-    /*
-    struct do_it_functor {
-        do_it_functor(int type, int id) { };
-        operator()() {};
-        
+    struct test_call {
+        test_call(int t) {};
+        void operator()() {};
     };
-    */
+
+    template <int _Number>
+    struct call_do_its {
+        static status exec(int type, int id) { return call_do_its<_Number-1>::exec(); };
+    };
+
+    template <> struct call_do_its<0> { static status exec(int type, int id) { return status(FAILED,"could not find node"); }; };
 
     template <int _Type, int _Id> static status do_it() { return status(FAILED,"no node found"); };
     

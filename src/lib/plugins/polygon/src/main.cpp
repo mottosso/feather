@@ -35,13 +35,35 @@ using namespace feather;
 
 int get_id() { return 325; };
 
-bool call_node(int *) { std::cout << "plugin called\n"; return true; };
+bool call_node(int *) {
+    std::cout << "plugin called\n"; return true;
+};
 
 feather::status do_it(int type, int id) {
-    return status();
+    return call_do_its<2>::exec(type,id);
 };
 
 namespace feather {
+
+template <> struct call_do_its<1> {
+    static status exec(int type, int id) {
+        if(type==1 && id==POLYGON_PLANE){
+            return do_it<1,POLYGON_PLANE>();
+        } else {
+            return call_do_its<1-1>::exec(type,id);
+        }
+    };
+};
+
+template <> struct call_do_its<2> {
+    static status exec(int type, int id) {
+        if(type==1 && id==POLYGON_PLANE){
+            return do_it<1,POLYGON_CUBE>();
+        } else {
+            return call_do_its<2-1>::exec(type,id);
+        }
+    };
+}; 
 
 template <> status do_it<1,POLYGON_PLANE>() { std::cout << "plane node doit\n"; return status(); };
 template <> status do_it<1,POLYGON_CUBE>() { std::cout << "cube node doit\n"; return status(); };
