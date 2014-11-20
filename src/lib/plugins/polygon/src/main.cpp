@@ -22,7 +22,7 @@ extern "C" {
 
     int get_id();
     bool call_node(int *);
-    feather::status do_it(int, int);
+    feather::status do_it(int, int, feather::PluginNodeFields*);
 
 #ifdef __cplusplus
 }
@@ -39,33 +39,46 @@ bool call_node(int *) {
     std::cout << "plugin called\n"; return true;
 };
 
-feather::status do_it(int type, int id) {
-    return call_do_its<2>::exec(type,id);
+feather::status do_it(int type, int id, feather::PluginNodeFields* fields) {
+    return call_do_its<3>::exec(type,id,fields);
 };
 
 namespace feather {
 
-template <> struct call_do_its<1> {
-    static status exec(int type, int id) {
-        if(type==1 && id==POLYGON_PLANE){
-            return do_it<1,POLYGON_PLANE>();
-        } else {
-            return call_do_its<1-1>::exec(type,id);
-        }
-    };
-};
+    // functions
+ 
+    
+    // do_it
+    template <> status node_do_it<1,POLYGON_PLANE>(PluginNodeFields* fields) { std::cout << "plane node doit\n"; return status(); };
 
-template <> struct call_do_its<2> {
-    static status exec(int type, int id) {
-        if(type==1 && id==POLYGON_PLANE){
-            return do_it<1,POLYGON_CUBE>();
-        } else {
-            return call_do_its<2-1>::exec(type,id);
-        }
-    };
-}; 
+   
+    // do_it
+    template <> status node_do_it<1,POLYGON_CUBE>(PluginNodeFields* fields) { std::cout << "cube node doit\n"; return status(); };
 
-template <> status do_it<1,POLYGON_PLANE>() { std::cout << "plane node doit\n"; return status(); };
-template <> status do_it<1,POLYGON_CUBE>() { std::cout << "cube node doit\n"; return status(); };
+    // PLANE NODE
+    template <> struct call_do_its<1> {
+        static status exec(int type, int id, PluginNodeFields* fields) {
+            if(type==1 && id==POLYGON_PLANE){
+                return node_do_it<1,POLYGON_PLANE>(fields);
+            } else {
+                return call_do_its<1-1>::exec(type,id,fields);
+            }
+        };
+    };
+
+    // functions
+
+    // CUBE NODE
+    template <> struct call_do_its<2> {
+        static status exec(int type, int id, PluginNodeFields* fields) {
+            if(type==1 && id==POLYGON_CUBE){
+                return node_do_it<1,POLYGON_CUBE>(fields);
+            } else {
+                return call_do_its<2-1>::exec(type,id,fields);
+            }
+        };
+    }; 
 
 }
+
+
