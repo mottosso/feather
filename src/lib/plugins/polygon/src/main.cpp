@@ -23,6 +23,7 @@ extern "C" {
     int get_id();
     bool call_node(int *);
     feather::status do_it(int, int, feather::PluginNodeFields*);
+    bool node_match(int,int);
 
 #ifdef __cplusplus
 }
@@ -39,23 +40,41 @@ bool call_node(int *) {
     std::cout << "plugin called\n"; return true;
 };
 
+// call node do_it()'s
 feather::status do_it(int type, int id, feather::PluginNodeFields* fields) {
     return call_do_its<3>::exec(type,id,fields);
 };
 
+// see if the node is in the plugin
+bool node_match(int type, int id) {
+    return find_nodes<3>::exec(type,id);
+};
+
+
 namespace feather {
+
+    // POLYGON PLANE NODE SETUP
+
+    // FIELDS
+    struct PolygonPlaneFields : public PluginNodeFields
+    {
+        int subX;
+        int subY;
+    };
 
     // functions
  
-    
     // do_it
-    template <> status node_do_it<1,POLYGON_PLANE>(PluginNodeFields* fields) { std::cout << "plane node doit\n"; return status(); };
+    template <> status node_do_it<1,POLYGON_PLANE>(PluginNodeFields* fields) {
+        PolygonPlaneFields* plane = static_cast<PolygonPlaneFields*>(fields);
+        std::cout << "plane: subX:" << plane->subX << std::endl;
+        return status();
+    };
 
-   
-    // do_it
-    template <> status node_do_it<1,POLYGON_CUBE>(PluginNodeFields* fields) { std::cout << "cube node doit\n"; return status(); };
 
-    // PLANE NODE
+    // POLYGON PLANE NODE CALLS
+
+    // plugin call do it()
     template <> struct call_do_its<1> {
         static status exec(int type, int id, PluginNodeFields* fields) {
             if(type==1 && id==POLYGON_PLANE){
@@ -66,9 +85,38 @@ namespace feather {
         };
     };
 
+    // plugin find node
+    template <> struct find_nodes<1> {
+        static bool exec(int type, int id) {
+            if(type==1 && id==POLYGON_PLANE){
+                return true; 
+            } else {
+                return find_nodes<1-1>::exec(type,id);
+            }
+        };
+    };
+
+
+    
+    // CUBE NODE
+
+    struct PolygonCubeFields : public PluginNodeFields
+    {
+        int subX;
+        int subY;
+        int subZ;
+    };
+
     // functions
 
-    // CUBE NODE
+    // do_it
+    template <> status node_do_it<1,POLYGON_CUBE>(PluginNodeFields* fields) {
+        PolygonCubeFields* cube = static_cast<PolygonCubeFields*>(fields);
+        std::cout << "cube: subX:" << cube->subX << std::endl;
+        return status();
+    };
+
+    // plugin call do_it()
     template <> struct call_do_its<2> {
         static status exec(int type, int id, PluginNodeFields* fields) {
             if(type==1 && id==POLYGON_CUBE){
@@ -78,6 +126,17 @@ namespace feather {
             }
         };
     }; 
+
+    // plugin find node
+    template <> struct find_nodes<2> {
+        static bool exec(int type, int id) {
+            if(type==1 && id==POLYGON_CUBE){
+                return true; 
+            } else {
+                return find_nodes<2-1>::exec(type,id);
+            }
+        };
+    };
 
 }
 
