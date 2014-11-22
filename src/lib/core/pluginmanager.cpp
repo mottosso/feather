@@ -91,6 +91,7 @@ status PluginManager::load_node(PluginInfo &node)
     node.call_node = (bool(*)(int*))dlsym(node.handle, "call_node");
     node.do_it = (status(*)(int,PluginNodeFields*))dlsym(node.handle, "do_it");
     node.node_match = (bool(*)(int))dlsym(node.handle, "node_match");
+    node.add_node = (status(*)(int,PluginNodeFields*))dlsym(node.handle, "add_node");
 
 
     if ((error = dlerror()) != NULL)  

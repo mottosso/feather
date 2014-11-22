@@ -24,6 +24,7 @@ extern "C" {
     bool call_node(int *);
     feather::status do_it(int, feather::PluginNodeFields*);
     bool node_match(int,int);
+    feather::status add_node(int, feather::PluginNodeFields*);
 
 #ifdef __cplusplus
 }
@@ -50,6 +51,9 @@ bool node_match(int id) {
     return find_nodes<MAX_NODE_ID>::exec(id);
 };
 
+feather::status add_node(int id, feather::PluginNodeFields* fields) {
+    return feather::status(FAILED, "function not yet working");
+}
 
 namespace feather {
 
