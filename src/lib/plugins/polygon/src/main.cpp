@@ -46,8 +46,8 @@ feather::status do_it(int id, feather::PluginNodeFields* fields) {
 };
 
 // see if the node is in the plugin
-bool node_match(int type, int id) {
-    return find_nodes<3>::exec(type,id);
+bool node_match(int id) {
+    return find_nodes<MAX_NODE_ID>::exec(id);
 };
 
 
@@ -85,12 +85,12 @@ namespace feather {
     };
 
     // plugin find node
-    template <> struct find_nodes<1> {
-        static bool exec(int type, int id) {
-            if(type==1 && id==POLYGON_PLANE){
+    template <> struct find_nodes<POLYGON_PLANE> {
+        static bool exec(int id) {
+            if(id==POLYGON_PLANE){
                 return true; 
             } else {
-                return find_nodes<1-1>::exec(type,id);
+                return find_nodes<POLYGON_PLANE-1>::exec(id);
             }
         };
     };
@@ -126,12 +126,12 @@ namespace feather {
     }; 
 
     // plugin find node
-    template <> struct find_nodes<2> {
-        static bool exec(int type, int id) {
-            if(type==1 && id==POLYGON_CUBE){
+    template <> struct find_nodes<POLYGON_CUBE> {
+        static bool exec(int id) {
+            if(id==POLYGON_CUBE){
                 return true; 
             } else {
-                return find_nodes<2-1>::exec(type,id);
+                return find_nodes<POLYGON_CUBE-1>::exec(id);
             }
         };
     };

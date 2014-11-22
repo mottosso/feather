@@ -32,7 +32,7 @@ namespace feather
         int (*get_id)();
         bool (*call_node)(int*);
         status (*do_it)(int,PluginNodeFields*);
-        bool (*node_match)(int,int); // is there a node with the given type and id in this plugin
+        bool (*node_match)(int); // is there a node with the given type and id in this plugin
         status (*add_node)(int,int,PluginNodeFields*);
     };
 
@@ -63,12 +63,12 @@ namespace feather
     
     // NODE MATCHING
 
-    template <int _Number>
+    template <int _Id>
     struct find_nodes {
-        static bool exec(int type, int id) { return find_nodes<_Number-1>::exec(type,id); };
+        static bool exec(int id) { return find_nodes<_Id-1>::exec(id); };
     };
 
-    template <> struct find_nodes<0> { static bool exec(int type, int id) { return false; }; };
+    template <> struct find_nodes<0> { static bool exec(int id) { return false; }; };
 
 
     // PLUGIN MANAGER
