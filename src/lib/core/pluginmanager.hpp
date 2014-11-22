@@ -19,6 +19,8 @@
 #include "deps.hpp"
 #include "types.hpp"
 
+#define MAX_NODE_ID 900
+
 namespace feather
 {
 
@@ -29,7 +31,7 @@ namespace feather
         void *handle;
         int (*get_id)();
         bool (*call_node)(int*);
-        status (*do_it)(int,int,PluginNodeFields*);
+        status (*do_it)(int,PluginNodeFields*);
         bool (*node_match)(int,int); // is there a node with the given type and id in this plugin
         status (*add_node)(int,int,PluginNodeFields*);
     };
@@ -42,23 +44,22 @@ namespace feather
 
     // DO_IT()
 
-    template <int _Number>
+    template <int _Id>
     struct call_do_its {
-        static status exec(int type, int id, PluginNodeFields* fields) { return call_do_its<_Number-1>::exec(type,id,fields); };
+        static status exec(int id, PluginNodeFields* fields) { return call_do_its<_Id-1>::exec(id,fields); };
     };
 
-    template <> struct call_do_its<0> { static status exec(int type, int id, PluginNodeFields* fields) { return status(FAILED,"could not find node"); }; };
+    template <> struct call_do_its<0> { static status exec(int id, PluginNodeFields* fields) { return status(FAILED,"could not find node"); }; };
 
-    template <int _Type, int _Id> status node_do_it(PluginNodeFields* fields) { return status(FAILED,"no node found"); };
+
+    template <int _Id> status node_do_it(PluginNodeFields* fields) { return status(FAILED,"no node found"); };
     
-
     struct call_do_it {
         call_do_it(int node){ m_node = node; };
         void operator()(PluginInfo n) { if(n.get_id()==m_node) { std::cout << "found node " << m_node << std::endl; } };
         private:
             int m_node;
     };
-
     
     // NODE MATCHING
 
