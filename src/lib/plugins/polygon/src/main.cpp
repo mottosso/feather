@@ -25,6 +25,7 @@ extern "C" {
     feather::status do_it(int, feather::PluginNodeFields*);
     bool node_match(int,int);
     feather::status add_node(int, feather::PluginNodeFields*);
+    feather::status remove_node(int, feather::PluginNodeFields*);
 
 #ifdef __cplusplus
 }
