@@ -22,6 +22,17 @@ namespace feather
     namespace field
     {
 
+        struct FieldBase
+        {
+            int id;
+        };
+
+        template <typename _T>
+        struct Field : public FieldBase
+        {
+            typedef _T type;
+        };
+
         namespace Connection
         {
             enum Type {

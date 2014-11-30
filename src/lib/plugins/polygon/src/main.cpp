@@ -15,6 +15,8 @@
 // =====================================================================================
 #include "deps.hpp"
 #include "pluginmanager.hpp"
+#include "field.hpp"
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -63,8 +65,8 @@ namespace feather {
     // FIELDS
     struct PolygonPlaneFields : public PluginNodeFields
     {
-        int subX;
-        int subY;
+        field::Field<int> *subX;
+        field::Field<int> *subY;
     };
 
     // functions

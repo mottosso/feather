@@ -35,6 +35,7 @@ namespace feather
         bool (*node_match)(int); // is there a node with the given type and id in this plugin
         status (*add_node)(int,PluginNodeFields*);
         status (*remove_node)(int,PluginNodeFields*);
+        
     };
 
     struct test_call {
