@@ -15,6 +15,8 @@ Here's a list of features that are the goal for version 1.0.
 * C++ core
 * QtQuick interface
 * Open/Save feather project files
+* DAG with field connections between different nodes
+* Plugin architecture supporting Nodes, Commands, and UI elements
 * Import/Export obj files
 * Full clone of Wings tools for all components (vertex, edge, face and object)
 * Outliner
