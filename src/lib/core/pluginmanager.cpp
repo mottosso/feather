@@ -93,6 +93,7 @@ status PluginManager::load_node(PluginInfo &node)
     node.node_match = (bool(*)(int))dlsym(node.handle, "node_match");
     node.add_node = (status(*)(int,PluginNodeFields*))dlsym(node.handle, "add_node");
     node.remove_node = (status(*)(int,PluginNodeFields*))dlsym(node.handle, "remove_node");
+    node.get_field = (field::FieldBase*(*)(int,int,PluginNodeFields*))dlsym(node.handle, "get_field");
 
 
 

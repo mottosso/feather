@@ -35,7 +35,7 @@ namespace feather
         bool (*node_match)(int); // is there a node with the given type and id in this plugin
         status (*add_node)(int,PluginNodeFields*);
         status (*remove_node)(int,PluginNodeFields*);
-        
+        field::FieldBase* (*get_field)(int,int,PluginNodeFields*);        
     };
 
     struct test_call {
@@ -71,6 +71,26 @@ namespace feather
     };
 
     template <> struct find_nodes<0> { static bool exec(int id) { return false; }; };
+
+
+    // GET FIELD DATA
+
+    template <int _NodeId, int _FieldId>
+    field::FieldBase* field_data(PluginNodeFields* fields) { return NULL; };  
+
+    template <int _NodeId, int _StartFieldId>
+    struct find_field {
+        static field::FieldBase* exec(int fid, PluginNodeFields* fields) {
+            return find_field<_NodeId,_StartFieldId-1>::exec(fid,fields);
+        };
+    };
+
+    template <int _NodeId>
+    struct find_field<_NodeId,0> {
+        static field::FieldBase* exec(int fid, PluginNodeFields* fields) {
+            return NULL;
+        };
+    };
 
 
     // PLUGIN MANAGER

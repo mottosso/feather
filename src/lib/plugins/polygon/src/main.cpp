@@ -28,6 +28,7 @@ extern "C" {
     bool node_match(int,int);
     feather::status add_node(int, feather::PluginNodeFields*);
     feather::status remove_node(int, feather::PluginNodeFields*);
+    feather::field::FieldBase* get_field(int,int);
 
 #ifdef __cplusplus
 }
@@ -56,7 +57,19 @@ bool node_match(int id) {
 
 feather::status add_node(int id, feather::PluginNodeFields* fields) {
     return feather::status(FAILED, "function not yet working");
-}
+};
+
+// get the field
+feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields) {
+    switch(nid) {
+        case POLYGON_PLANE:
+            return find_field<POLYGON_PLANE,2>::exec(fid,fields);
+        case POLYGON_CUBE:
+            return find_field<POLYGON_CUBE,2>::exec(fid,fields);
+        default:
+            return NULL;
+    }
+};
 
 namespace feather {
 
@@ -67,6 +80,23 @@ namespace feather {
     {
         field::Field<int> *subX;
         field::Field<int> *subY;
+    };
+
+    // FIELD DATA
+    template <> field::FieldBase* field_data<POLYGON_PLANE,1>(PluginNodeFields* fields)
+    {
+        PolygonPlaneFields* f = static_cast<PolygonPlaneFields*>(fields);
+        return f->subX;   
+    };
+
+    // FIND THE FIELD DATA
+    template <> struct find_field<POLYGON_PLANE,1> {
+        static field::FieldBase* exec(int fid, PluginNodeFields* fields) {
+            if(fid==1)
+                return field_data<POLYGON_PLANE,1>(fields);
+            else
+                return field_data<POLYGON_PLANE,1-1>(fields);
+        };
     };
 
     // functions
