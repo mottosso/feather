@@ -44,15 +44,15 @@ namespace feather
         };
 
         // NODE
-        class QmlNode: public QObject
+        class Node: public QObject
         {
             Q_OBJECT
 
                 Q_ENUMS(Type)
 
             public:
-                QmlNode(QObject* parent=0);
-                ~QmlNode();
+                Node(QObject* parent=0);
+                ~Node();
 
                 enum Type {
                     Camera = node::Camera,
@@ -61,25 +61,23 @@ namespace feather
                     Shader = node::Shader,
                     Object = node::Object 
                 };
+
+            private:
+                int m_id; // node id
+                int m_uid; // scenegraph vertex
         };
 
-        // OBJECT NODE
-        class QmlObject: public QObject
+        // FIELD 
+        class Field: public QObject
         {
             Q_OBJECT
 
-                Q_ENUMS(Type)
-
             public:
-                QmlObject(QObject* parent=0);
-                ~QmlObject();
-
-                enum Type {
-                    Polygon = object::Polygon,
-                    PolygonPlane = object::PolygonPlane,
-                    Curve = object::Curve,
-                    Point = object::Point
-                };
+                Field(QObject* parent=0);
+                ~Field();
+            
+            private:
+                int m_id;
         };
 
     } // namespace qml

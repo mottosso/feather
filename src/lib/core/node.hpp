@@ -21,8 +21,6 @@
 #include "status.hpp"
 #include "object.hpp"
 #include "field.hpp"
-#include "connection.hpp"
-#include "pluginmanager.hpp"
 
 namespace feather
 {

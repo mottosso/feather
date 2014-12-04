@@ -27,20 +27,20 @@ QmlSceneGraph::~QmlSceneGraph()
 }
 
 
-QmlNode::QmlNode(QObject* parent)
+Node::Node(QObject* parent)
 {
 }
 
-QmlNode::~QmlNode()
+Node::~Node()
 {
 }
 
 
-QmlObject::QmlObject(QObject* parent)
+Field::Field(QObject* parent)
 {
 }
 
-QmlObject::~QmlObject()
+Field::~Field()
 {
 }
 
