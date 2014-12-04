@@ -21,6 +21,8 @@
 #include "status.hpp"
 #include "object.hpp"
 #include "field.hpp"
+#include "connection.hpp"
+#include "pluginmanager.hpp"
 
 namespace feather
 {
@@ -37,6 +39,20 @@ namespace feather
             Object,
             N
         };
+
+
+        /* This is the class mapped to the sg vertex and gets
+         * called during a sg update or other sg action
+         */
+        /*
+        struct NodeBase
+        {
+            int node; // unique id of the node
+            //feather::PluginInfo plugin; // holds plugin data
+            //PluginNodeFields* fields; // holds field data for the node
+            std::vector<connection::Connection> connections; // what fields are connected
+        };
+        */
 
     } // namespace node
 
