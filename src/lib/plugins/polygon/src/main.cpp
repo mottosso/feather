@@ -36,6 +36,7 @@ extern "C" {
 
 using namespace feather;
 
+// define nodes
 #define POLYGON_PLANE 325
 #define POLYGON_CUBE 326
 
@@ -63,9 +64,9 @@ feather::status add_node(int id, feather::PluginNodeFields* fields) {
 feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields) {
     switch(nid) {
         case POLYGON_PLANE:
-            return find_field<POLYGON_PLANE,2>::exec(fid,fields);
+            return find_field<POLYGON_PLANE,3>::exec(fid,fields);
         case POLYGON_CUBE:
-            return find_field<POLYGON_CUBE,2>::exec(fid,fields);
+            return find_field<POLYGON_CUBE,3>::exec(fid,fields);
         default:
             return NULL;
     }
@@ -83,19 +84,40 @@ namespace feather {
     };
 
     // FIELD DATA
+    
+    // subX
     template <> field::FieldBase* field_data<POLYGON_PLANE,1>(PluginNodeFields* fields)
     {
         PolygonPlaneFields* f = static_cast<PolygonPlaneFields*>(fields);
         return f->subX;   
     };
+ 
+    // subY
+    template <> field::FieldBase* field_data<POLYGON_PLANE,2>(PluginNodeFields* fields)
+    {
+        PolygonPlaneFields* f = static_cast<PolygonPlaneFields*>(fields);
+        return f->subY;   
+    };
 
     // FIND THE FIELD DATA
+   
+    // subX
     template <> struct find_field<POLYGON_PLANE,1> {
         static field::FieldBase* exec(int fid, PluginNodeFields* fields) {
             if(fid==1)
                 return field_data<POLYGON_PLANE,1>(fields);
             else
                 return field_data<POLYGON_PLANE,1-1>(fields);
+        };
+    };
+      
+    // subY
+    template <> struct find_field<POLYGON_PLANE,2> {
+        static field::FieldBase* exec(int fid, PluginNodeFields* fields) {
+            if(fid==2)
+                return field_data<POLYGON_PLANE,2>(fields);
+            else
+                return field_data<POLYGON_PLANE,2-1>(fields);
         };
     };
 

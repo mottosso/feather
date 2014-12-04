@@ -78,6 +78,7 @@ namespace feather
     template <int _NodeId, int _FieldId>
     field::FieldBase* field_data(PluginNodeFields* fields) { return NULL; };  
 
+    // remember that the StartFieldId has to be the last field id + 1
     template <int _NodeId, int _StartFieldId>
     struct find_field {
         static field::FieldBase* exec(int fid, PluginNodeFields* fields) {
