@@ -18,11 +18,11 @@
 using namespace feather;
 using namespace feather::qml;
 
-QmlSceneGraph::QmlSceneGraph(QObject* parent)
+SceneGraph::SceneGraph(QObject* parent)
 {
 }
 
-QmlSceneGraph::~QmlSceneGraph()
+SceneGraph::~SceneGraph()
 {
 }
 

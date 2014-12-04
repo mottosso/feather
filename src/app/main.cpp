@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
 
     qmlRegisterType<ViewportThread>("FeatherViewport", 1, 0, "Viewport");
-    qmlRegisterType<feather::qml::QmlSceneGraph>("feather.scenegraph", 1, 0, "SceneGraph");
+    qmlRegisterType<feather::qml::SceneGraph>("feather.scenegraph", 1, 0, "SceneGraph");
     qmlRegisterType<feather::qml::Node>("feather.nodes", 1, 0, "Node");
     qmlRegisterType<feather::qml::Field>("feather.feilds", 1, 0, "Field");
 

@@ -31,13 +31,13 @@ namespace feather
     namespace qml
     {
 
-        class QmlSceneGraph : public QObject
+        class SceneGraph : public QObject
         {
             Q_OBJECT
 
             public:
-                QmlSceneGraph(QObject* parent=0);
-                ~QmlSceneGraph();
+                SceneGraph(QObject* parent=0);
+                ~SceneGraph();
 
                 // commands
                 Q_INVOKABLE void add_node(int type, int node, int id) { command::add_node(type,node,id); };
