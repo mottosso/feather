@@ -23,7 +23,7 @@
 #include "commands.hpp"
 #include "node.hpp"
 #include "object.hpp"
-
+#include "field.hpp"
 
 namespace feather
 {
@@ -71,11 +71,30 @@ namespace feather
         class Field: public QObject
         {
             Q_OBJECT
+            Q_ENUMS(Type)
 
             public:
                 Field(QObject* parent=0);
                 ~Field();
-            
+
+                enum Type {
+                    Bool=field::Bool,
+                    Int=field::Int,
+                    Float=field::Float,
+                    Vertex=field::Vertex,
+                    Vector=field::Vector,
+                    Mesh=field::Mesh,
+                    RGB=field::RGB,
+                    RGBA=field::RGBA,
+                    BoolArray=field::BoolArray,
+                    IntArray=field::IntArray,
+                    FloatArray=field::FloatArray,
+                    VertexArray=field::VertexArray,
+                    VectoryArray=field::VectoryArray,
+                    RGBArray=field::RGBArray,
+                    RGBAArray=field::RGBAArray
+                };
+
             private:
                 int m_id;
         };
