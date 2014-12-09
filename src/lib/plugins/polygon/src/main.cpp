@@ -29,6 +29,7 @@ extern "C" {
     feather::status add_node(int, feather::PluginNodeFields*);
     feather::status remove_node(int, feather::PluginNodeFields*);
     feather::field::FieldBase* get_field(int,int);
+    void ui_layout(int,std::string& msg);
 
 #ifdef __cplusplus
 }
