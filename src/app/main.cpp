@@ -35,7 +35,7 @@ int main(int argc, char **argv)
     int execReturn = 0;
 
     {
-        QQmlApplicationEngine view("main.qml");
+        QQmlApplicationEngine view("ui/main.qml");
         execReturn = app.exec();
     }
 

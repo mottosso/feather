@@ -73,6 +73,10 @@ feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields)
     }
 };
 
+void ui_layout(int node, std::string& msg) {
+    // TODO
+}
+
 namespace feather {
 
     // POLYGON PLANE NODE SETUP

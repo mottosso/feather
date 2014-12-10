@@ -4,4 +4,4 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 FILE(GLOB ICON_FILES "*.png")
 
-INSTALL(FILES ${ICON_FILES} DESTINATION /usr/local/feather/icons)
+INSTALL(FILES ${ICON_FILES} DESTINATION /usr/local/feather/ui/icons)
