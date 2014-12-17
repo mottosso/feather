@@ -4,6 +4,7 @@ import QtQuick.Dialogs 1.0
 
 Menu {
 
+    /*
     FileDialog {
         id: importDialog
         title: "Import Obj"
@@ -12,6 +13,7 @@ Menu {
         }
         onRejected: {} 
     }
+    */
 
     id: fileMenu 
     title: "File"
@@ -38,12 +40,14 @@ Menu {
     }
 
     // Import Obj
+    /*
     Action {
         id: importObjAction
         text: "Obj"
         tooltip: "Import models in the Obj format"
         onTriggered: {}
     }
+    */
 
     // Close 
     Action {
@@ -74,11 +78,13 @@ Menu {
         id: importMenu
         title: "Import"
 
+        
         // Obj
+        /*
         MenuItem {
             action: importObjAction
         }
-
+        */
     }
 
     MenuSeparator {}

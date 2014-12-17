@@ -78,6 +78,8 @@ Menu {
         id: importMenu
         title: "Import"
 
+        <IMPORT_MENU_ITEMS>
+
         // Obj
         /*
         MenuItem {
