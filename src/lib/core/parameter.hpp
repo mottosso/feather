@@ -35,11 +35,11 @@ namespace feather
             String
         };
 
-        template <typename _T> Type get_type() { return Null; };
-        template <> Type get_type<bool>() { return Bool; };
-        template <> Type get_type<int>() { return Int; };
-        template <> Type get_type<double>() { return Real; };
-        template <> Type get_type<std::string>() { return String; };
+        template <typename _T> Type get_type_id() { return Null; };
+        template <> Type get_type_id<bool>() { return Bool; };
+        template <> Type get_type_id<int>() { return Int; };
+        template <> Type get_type_id<double>() { return Real; };
+        template <> Type get_type_id<std::string>() { return String; };
 
         struct ParameterBase
         {
@@ -51,7 +51,7 @@ namespace feather
         template <typename _T>
             struct Parameter : public ParameterBase
         {
-            Parameter(std::string n, _T v=0) : ParameterBase(name,get_type<_T>()){ value=v; };
+            Parameter(std::string n, _T v=0) : ParameterBase(name,get_type_id<_T>()){ value=v; };
             _T value;
         };
 
