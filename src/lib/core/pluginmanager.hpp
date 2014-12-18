@@ -39,6 +39,7 @@ namespace feather
         field::FieldBase* (*get_field)(int,int,PluginNodeFields*);
         status (*import_data)(int,parameter::ParameterList);
         status (*export_data)(int,parameter::ParameterList);
+        status (*render)(int,parameter::ParameterList);
     };
 
     struct test_call {
