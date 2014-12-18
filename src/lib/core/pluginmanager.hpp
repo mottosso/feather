@@ -18,6 +18,7 @@
 
 #include "deps.hpp"
 #include "types.hpp"
+#include "parameter.hpp"
 
 #define MAX_NODE_ID 900
 
@@ -36,6 +37,7 @@ namespace feather
         status (*add_node)(int,PluginNodeFields*);
         status (*remove_node)(int,PluginNodeFields*);
         field::FieldBase* (*get_field)(int,int,PluginNodeFields*);
+        status (*import_data)(int,parameter::ParameterList);
     };
 
     struct test_call {

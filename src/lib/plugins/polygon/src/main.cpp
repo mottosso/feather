@@ -30,6 +30,7 @@ extern "C" {
     feather::status add_node(int, feather::PluginNodeFields*);
     feather::status remove_node(int, feather::PluginNodeFields*);
     feather::field::FieldBase* get_field(int,int);
+    feather::status import_data(int,feather::parameter::ParameterList);
 
 #ifdef __cplusplus
 }
@@ -72,6 +73,12 @@ feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields)
             return NULL;
     }
 };
+
+// import command
+feather::status import_data(int format, feather::parameter::ParameterList params) {
+    return feather::status(FAILED,"import command not set for plugin");
+}
+
 
 namespace feather {
 
