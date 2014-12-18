@@ -36,7 +36,6 @@ namespace feather
         status (*add_node)(int,PluginNodeFields*);
         status (*remove_node)(int,PluginNodeFields*);
         field::FieldBase* (*get_field)(int,int,PluginNodeFields*);
-        void (*ui_layout)(int,std::string&);        
     };
 
     struct test_call {

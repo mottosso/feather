@@ -30,7 +30,6 @@ extern "C" {
     feather::status add_node(int, feather::PluginNodeFields*);
     feather::status remove_node(int, feather::PluginNodeFields*);
     feather::field::FieldBase* get_field(int,int);
-    void ui_layout(int,std::string& msg);
 
 #ifdef __cplusplus
 }
@@ -73,10 +72,6 @@ feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields)
             return NULL;
     }
 };
-
-void ui_layout(int node, std::string& msg) {
-    // TODO
-}
 
 namespace feather {
 
