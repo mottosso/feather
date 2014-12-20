@@ -1,6 +1,7 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.0 
+import feather.command 1.0
 
 Menu {
 
@@ -11,6 +12,14 @@ Menu {
             console.log("picked: " + importDialog.fileUrls)
         }
         onRejected: {} 
+    }
+
+    Item {
+    Command {
+        id: importObj
+        //name: "import"
+        parameters: [ Parameter { name: "path" }, Parameter { name: "arg1" } ]
+    }
     }
 
     id: fileMenu 

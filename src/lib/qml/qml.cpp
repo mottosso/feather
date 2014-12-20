@@ -45,3 +45,37 @@ Field::~Field()
 }
 
 
+Parameter::Parameter(QObject* parent)
+{
+}
+
+Parameter::~Parameter()
+{
+}
+
+
+Command::Command(QObject* parent)
+{
+}
+
+Command::~Command()
+{
+}
+
+QQmlListProperty<Parameter> Command::parameters()
+{
+    return QQmlListProperty<Parameter>(this,0,&Command::append_parameter,0,0,0);
+}
+
+void Command::append_parameter(QQmlListProperty<Parameter> *list, Parameter *param)
+{
+    Command *cmd = qobject_cast<Command*>(list->object);
+    if(cmd) {
+        param->setParentItem(cmd);
+        cmd->m_parameters.append(param);
+    }
+}
+
+
+
+

@@ -16,7 +16,6 @@
 #include "commands.hpp"
 //#include "field.hpp"
 #include "scenegraph.hpp"
-#include "polygon_plane.hpp"
 #include "root_node.hpp"
 #include "null.hpp"
 #include "object.hpp"
