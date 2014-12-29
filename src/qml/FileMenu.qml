@@ -14,21 +14,19 @@ Menu {
         onRejected: {} 
     }
 
-    Item {
-    Command {
-        id: importObj
-        //name: "import"
-        parameters: [ Parameter { name: "path" }, Parameter { name: "arg1" } ]
-    }
-    }
-
     id: fileMenu 
     title: "File"
     visible: true
 
+    // COMMANDS
+    Command {
+        id: importObj
+        name: "import"
+        parameters: [ Parameter { name: "A" }, Parameter { name: "B" } ]
+    }
+
 
     // ACTIONS
-
 
     // New 
     Action {
