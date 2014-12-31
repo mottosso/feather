@@ -183,7 +183,7 @@ using namespace feather;
                 }
 
                 QString stringValue() { return m_string; }
-            
+           
             private:
                 QString m_name;
                 Type m_type;
@@ -212,6 +212,8 @@ using namespace feather;
 
                 QQmlListProperty<Parameter> parameters();
 
+                Q_INVOKABLE bool exec();
+ 
             private:
                 QString m_name;
                 static void append_parameter(QQmlListProperty<Parameter> *list, Parameter *parameter);

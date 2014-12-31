@@ -21,8 +21,8 @@ Menu {
     // COMMANDS
     Command {
         id: importObj
-        name: "import"
-        parameters: [ Parameter { name: "A" }, Parameter { name: "B" } ]
+        name: "import_obj"
+        parameters: [ Parameter { name: "filename"; type: Parameter.String }, Parameter { name: "selection"; type: Parameter.Bool } ]
     }
 
 

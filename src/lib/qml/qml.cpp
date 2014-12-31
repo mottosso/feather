@@ -67,6 +67,12 @@ Command::~Command()
 {
 }
 
+bool Command::exec()
+{
+    return false;
+}
+
+
 QQmlListProperty<Parameter> Command::parameters()
 {
     return QQmlListProperty<Parameter>(this,0,&Command::append_parameter,0,0,0);
