@@ -21,7 +21,6 @@ SET_SOURCE_FILES_PROPERTIES(${feather_qml_SRCS}
 
 
 INCLUDE_DIRECTORIES(${feather_core_SOURCE_DIR}
-    ${feather_nodes_SOURCE_DIR}
     ${Qt5Widgets_INCLUDE_DIRS}
     ${Qt5Quick_INCLUDE_DIRS}
     ${QtOpenGL_INCLUDE_DIRS}

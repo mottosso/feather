@@ -20,6 +20,8 @@
 #include "qml_deps.hpp"
 #include "types.hpp"
 #include "status.hpp"
+#include "command.hpp"
+#include "parameter.hpp"
 
 namespace feather
 {
@@ -34,6 +36,7 @@ namespace feather
             status add_node(int type, int node, int id); 
             status draw_sg(QMatrix4x4& view);
             status load_plugins();
+            status run_command(std::string cmd, feather::parameter::ParameterList params);
 
         } // namespace command
 

@@ -17,7 +17,7 @@
 #include "pluginmanager.hpp"
 #include "field.hpp"
 #include "parameter.hpp"
-
+#include "command.hpp"
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,7 +33,7 @@ extern "C" {
     feather::status import_data(int,feather::parameter::ParameterList);
     feather::status export_data(int,feather::parameter::ParameterList);
     feather::status render(int,feather::parameter::ParameterList);
-
+    feather::status command(std::string cmd, feather::parameter::ParameterList);
 #ifdef __cplusplus
 }
 #endif
@@ -91,6 +91,19 @@ feather::status render(int format, feather::parameter::ParameterList params) {
     return feather::status(FAILED,"render command not set for plugin");
 };
 
+
+namespace feather
+{
+    namespace command
+    {
+        enum Command { N=0, IMPORT_OBJ, EXPORT_OBJ };
+    } // namespace command
+} // namespace feather
+
+// command
+feather::status command(std::string cmd, feather::parameter::ParameterList params) {
+    return feather::command::run<feather::command::EXPORT_OBJ>::exec(cmd, params);
+};
 
 namespace feather {
 
@@ -224,6 +237,31 @@ namespace feather {
         };
     };
 
+/*
+    namespace polygon
+    {
+        enum Command { N=0, IMPORT_OBJ, EXPORT_OBJ };
+    } // namespace polygon
+*/
+
+    namespace command
+    {
+        status import_obj(parameter::ParameterList params) {
+            std::cout << "running import_obj command" << std::endl;
+            return status();
+        };
+
+
+        // verify command
+        template <> struct run<IMPORT_OBJ> {
+            static status exec(std::string cmd, parameter::ParameterList params) {
+                if(cmd=="import_obj")
+                    return import_obj(params);
+                else
+                    return run<IMPORT_OBJ-1>::exec(cmd, params); 
+            };
+        };
+    }
 }
 
 

@@ -18,6 +18,7 @@
 
 #include "deps.hpp"
 #include "types.hpp"
+#include "command.hpp"
 #include "parameter.hpp"
 
 #define MAX_NODE_ID 900
@@ -40,6 +41,7 @@ namespace feather
         status (*import_data)(int,parameter::ParameterList);
         status (*export_data)(int,parameter::ParameterList);
         status (*render)(int,parameter::ParameterList);
+        status (*command)(std::string cmd, parameter::ParameterList);
     };
 
     struct test_call {
@@ -110,6 +112,7 @@ namespace feather
         private:
             status load_node(PluginInfo &node);
             status load_command(PluginInfo &command);
+            status run_command(std::string cmd, parameter::ParameterList);
             std::string m_pluginPath;
             std::vector<PluginInfo> m_plugins;
     };

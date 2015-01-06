@@ -115,20 +115,11 @@ using namespace feather;
                 ~Parameter();
 
                 enum Type {
-                    Bool,
-                    Int,
-                    Real,
-                    String
-                };
-
-                /*
-                enum Type {
                     Bool=parameter::Bool,
                     Int=parameter::Int,
                     Real=parameter::Real,
                     String=parameter::String
                 };
-                */
 
                 // name
                 void setName(const QString& n) {

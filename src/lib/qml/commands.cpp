@@ -19,12 +19,15 @@
 #include "root_node.hpp"
 #include "null.hpp"
 #include "object.hpp"
-
+#include "parameter.hpp"
+#include "command.hpp"
 
 using namespace feather;
-using namespace feather::qml;
+//using namespace feather::qml;
 
-status command::init() {
+static PluginManager plugins;
+
+status qml::command::init() {
     load_plugins();
     add_node(node::Null,null::Root,0);
     // just testing the do_it plugin calls
@@ -32,7 +35,7 @@ status command::init() {
     return status();
 }
 
-status command::add_node(int type, int node, int id)
+status qml::command::add_node(int type, int node, int id)
 {
     switch(type)
     {
@@ -55,12 +58,19 @@ status command::add_node(int type, int node, int id)
     return status(FAILED, "no matching Type of Node found while trying to add node");
 }
 
-status command::draw_sg(QMatrix4x4& view)
+status qml::command::draw_sg(QMatrix4x4& view)
 {
     return scenegraph::update();
 }
 
-status command::load_plugins()
+status qml::command::load_plugins()
 {
     return scenegraph::load_plugins(); 
+}
+
+status qml::command::run_command(std::string cmd, feather::parameter::ParameterList params)
+{
+    //feather::parameter::ParameterList parameters;
+    return status();
+    //return plugins.run_command(cmd, params);
 }

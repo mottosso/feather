@@ -97,7 +97,7 @@ status PluginManager::load_node(PluginInfo &node)
     node.import_data = (status(*)(int,parameter::ParameterList))dlsym(node.handle, "import_data");
     node.export_data = (status(*)(int,parameter::ParameterList))dlsym(node.handle, "export_data");
     node.render = (status(*)(int,parameter::ParameterList))dlsym(node.handle, "render");
-
+    node.command = (status(*)(std::string,parameter::ParameterList))dlsym(node.handle, "command");
 
     if ((error = dlerror()) != NULL)  
     {
@@ -115,4 +115,9 @@ status PluginManager::load_node(PluginInfo &node)
 status PluginManager::load_command(PluginInfo &command)
 {
     return status(FAILED,"no command to load");
+}
+
+status PluginManager::run_command(std::string cmd, parameter::ParameterList)
+{
+    return status(FAILED,"could not find command");
 }

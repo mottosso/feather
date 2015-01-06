@@ -35,7 +35,7 @@ namespace feather
             String
         };
 
-        template <typename _T> Type get_type_id() { return Null; };
+        template <typename _T> static Type get_type_id() { return Null; };
         template <> Type get_type_id<bool>() { return Bool; };
         template <> Type get_type_id<int>() { return Int; };
         template <> Type get_type_id<double>() { return Real; };
