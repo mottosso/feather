@@ -70,7 +70,5 @@ status qml::command::load_plugins()
 
 status qml::command::run_command(std::string cmd, feather::parameter::ParameterList params)
 {
-    //feather::parameter::ParameterList parameters;
-    return status();
-    //return plugins.run_command(cmd, params);
+    return plugins.run_command(cmd, params);
 }

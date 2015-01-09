@@ -69,6 +69,8 @@ Command::~Command()
 
 bool Command::exec()
 {
+    parameter::ParameterList params;
+    qml::command::run_command(m_name.toStdString(), params);  
     return false;
 }
 

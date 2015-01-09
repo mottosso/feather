@@ -33,6 +33,7 @@ extern "C" {
     feather::status import_data(int,feather::parameter::ParameterList);
     feather::status export_data(int,feather::parameter::ParameterList);
     feather::status render(int,feather::parameter::ParameterList);
+    bool command_exist(std::string cmd);
     feather::status command(std::string cmd, feather::parameter::ParameterList);
 #ifdef __cplusplus
 }
@@ -89,20 +90,6 @@ feather::status export_data(int format, feather::parameter::ParameterList params
 // render command
 feather::status render(int format, feather::parameter::ParameterList params) {
     return feather::status(FAILED,"render command not set for plugin");
-};
-
-
-namespace feather
-{
-    namespace command
-    {
-        enum Command { N=0, IMPORT_OBJ, EXPORT_OBJ };
-    } // namespace command
-} // namespace feather
-
-// command
-feather::status command(std::string cmd, feather::parameter::ParameterList params) {
-    return feather::command::run<feather::command::EXPORT_OBJ>::exec(cmd, params);
 };
 
 namespace feather {
@@ -237,23 +224,22 @@ namespace feather {
         };
     };
 
-/*
-    namespace polygon
-    {
-        enum Command { N=0, IMPORT_OBJ, EXPORT_OBJ };
-    } // namespace polygon
-*/
 
     namespace command
     {
+        enum Command { N=0, IMPORT_OBJ, EXPORT_OBJ };
+
         status import_obj(parameter::ParameterList params) {
             std::cout << "running import_obj command" << std::endl;
             return status();
         };
 
+        status export_obj(parameter::ParameterList params) {
+            std::cout << "running export_obj command" << std::endl;
+            return status();
+        };
 
-        // verify command
-        template <> struct run<IMPORT_OBJ> {
+       template <> struct run<IMPORT_OBJ> {
             static status exec(std::string cmd, parameter::ParameterList params) {
                 if(cmd=="import_obj")
                     return import_obj(params);
@@ -261,7 +247,23 @@ namespace feather {
                     return run<IMPORT_OBJ-1>::exec(cmd, params); 
             };
         };
+ 
+        template <> struct run<EXPORT_OBJ> {
+            static status exec(std::string cmd, parameter::ParameterList params) {
+                if(cmd=="export_obj")
+                    return export_obj(params);
+                else
+                    return run<EXPORT_OBJ-1>::exec(cmd, params); 
+            };
+        };
     }
 }
 
+// check if the command exists
+bool command_exist(std::string cmd) { return (cmd=="import_obj") ? true : false; };
 
+// call the command
+feather::status command(std::string cmd, feather::parameter::ParameterList params) {
+    typedef feather::command::run<feather::command::EXPORT_OBJ> call;
+    return call::exec(cmd, params);
+};

@@ -49,7 +49,7 @@ Menu {
         id: importObjAction
         text: "Obj"
         tooltip: "Import models in the Obj format"
-        onTriggered: {}
+        onTriggered: { importObj.exec() }
     }
 
     // Close 

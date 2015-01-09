@@ -41,6 +41,7 @@ namespace feather
         status (*import_data)(int,parameter::ParameterList);
         status (*export_data)(int,parameter::ParameterList);
         status (*render)(int,parameter::ParameterList);
+        bool (*command_exist)(std::string cmd);
         status (*command)(std::string cmd, parameter::ParameterList);
     };
 
@@ -100,6 +101,18 @@ namespace feather
     };
 
 
+    // COMMANDS 
+
+    struct call_command {
+        call_command(std::string cmd, parameter::ParameterList params){ m_cmd = cmd; m_params = params; };
+        void operator()(PluginInfo n) { if(n.command_exist(m_cmd)) { std::cout << "found command " << m_cmd << std::endl; n.command(m_cmd,m_params); } };
+        private:
+            std::string m_cmd;
+            parameter::ParameterList m_params;
+    };
+    
+
+
     // PLUGIN MANAGER
 
     class PluginManager
@@ -109,10 +122,11 @@ namespace feather
             ~PluginManager();
             status load_plugins();
             status do_it(int node); // this is called by the scenegraph
+            status run_command(std::string cmd, parameter::ParameterList);
+
         private:
             status load_node(PluginInfo &node);
             status load_command(PluginInfo &command);
-            status run_command(std::string cmd, parameter::ParameterList);
             std::string m_pluginPath;
             std::vector<PluginInfo> m_plugins;
     };
