@@ -38,9 +38,6 @@ namespace feather
         status (*add_node)(int,PluginNodeFields*);
         status (*remove_node)(int,PluginNodeFields*);
         field::FieldBase* (*get_field)(int,int,PluginNodeFields*);
-        status (*import_data)(int,parameter::ParameterList);
-        status (*export_data)(int,parameter::ParameterList);
-        status (*render)(int,parameter::ParameterList);
         bool (*command_exist)(std::string cmd);
         status (*command)(std::string cmd, parameter::ParameterList);
     };

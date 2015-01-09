@@ -94,9 +94,6 @@ status PluginManager::load_node(PluginInfo &node)
     node.add_node = (status(*)(int,PluginNodeFields*))dlsym(node.handle, "add_node");
     node.remove_node = (status(*)(int,PluginNodeFields*))dlsym(node.handle, "remove_node");
     node.get_field = (field::FieldBase*(*)(int,int,PluginNodeFields*))dlsym(node.handle, "get_field");
-    node.import_data = (status(*)(int,parameter::ParameterList))dlsym(node.handle, "import_data");
-    node.export_data = (status(*)(int,parameter::ParameterList))dlsym(node.handle, "export_data");
-    node.render = (status(*)(int,parameter::ParameterList))dlsym(node.handle, "render");
     node.command_exist = (bool(*)(std::string))dlsym(node.handle, "command_exist");
     node.command = (status(*)(std::string,parameter::ParameterList))dlsym(node.handle, "command");
 
