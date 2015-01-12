@@ -23,192 +23,191 @@
 #include "commands.hpp"
 #include "node.hpp"
 #include "object.hpp"
-#include "parameter.hpp"
 #include "field.hpp"
 #include <QtQuick/QQuickPaintedItem>
 
 using namespace feather;
 
-        class SceneGraph : public QObject
-        {
-            Q_OBJECT
+class SceneGraph : public QObject
+{
+    Q_OBJECT
 
-            public:
-                SceneGraph(QObject* parent=0);
-                ~SceneGraph();
+    public:
+        SceneGraph(QObject* parent=0);
+        ~SceneGraph();
 
-                // commands
-                Q_INVOKABLE void add_node(int type, int node, int id) { qml::command::add_node(type,node,id); };
+        // commands
+        Q_INVOKABLE void add_node(int type, int node, int id) { qml::command::add_node(type,node,id); };
+};
+
+// NODE
+class Node: public QObject
+{
+    Q_OBJECT
+
+        Q_ENUMS(Type)
+
+    public:
+        Node(QObject* parent=0);
+        ~Node();
+
+        enum Type {
+            Camera = node::Camera,
+            Light = node::Light,
+            Texture = node::Texture,
+            Shader = node::Shader,
+            Object = node::Object 
         };
 
-        // NODE
-        class Node: public QObject
-        {
-            Q_OBJECT
+    private:
+        int m_id; // node id
+        int m_uid; // scenegraph vertex
+};
 
-                Q_ENUMS(Type)
+// FIELD 
+class Field: public QObject
+{
+    Q_OBJECT
+        Q_ENUMS(Type)
 
-            public:
-                Node(QObject* parent=0);
-                ~Node();
+    public:
+        Field(QObject* parent=0);
+        ~Field();
 
-                enum Type {
-                    Camera = node::Camera,
-                    Light = node::Light,
-                    Texture = node::Texture,
-                    Shader = node::Shader,
-                    Object = node::Object 
-                };
-
-            private:
-                int m_id; // node id
-                int m_uid; // scenegraph vertex
+        enum Type {
+            Bool=field::Bool,
+            Int=field::Int,
+            Float=field::Float,
+            Vertex=field::Vertex,
+            Vector=field::Vector,
+            Mesh=field::Mesh,
+            RGB=field::RGB,
+            RGBA=field::RGBA,
+            BoolArray=field::BoolArray,
+            IntArray=field::IntArray,
+            FloatArray=field::FloatArray,
+            VertexArray=field::VertexArray,
+            VectoryArray=field::VectoryArray,
+            RGBArray=field::RGBArray,
+            RGBAArray=field::RGBAArray
         };
 
-        // FIELD 
-        class Field: public QObject
-        {
-            Q_OBJECT
-            Q_ENUMS(Type)
+    private:
+        int m_id;
+};
 
-            public:
-                Field(QObject* parent=0);
-                ~Field();
 
-                enum Type {
-                    Bool=field::Bool,
-                    Int=field::Int,
-                    Float=field::Float,
-                    Vertex=field::Vertex,
-                    Vector=field::Vector,
-                    Mesh=field::Mesh,
-                    RGB=field::RGB,
-                    RGBA=field::RGBA,
-                    BoolArray=field::BoolArray,
-                    IntArray=field::IntArray,
-                    FloatArray=field::FloatArray,
-                    VertexArray=field::VertexArray,
-                    VectoryArray=field::VectoryArray,
-                    RGBArray=field::RGBArray,
-                    RGBAArray=field::RGBAArray
-                };
+// Parameter
+class Parameter : public QObject
+{
+    Q_OBJECT
+        Q_ENUMS(Type)
+        Q_PROPERTY(QString name READ name WRITE setName)
+        Q_PROPERTY(Type type READ type WRITE setType)
+        Q_PROPERTY(bool boolValue READ boolValue WRITE setBoolValue)
+        Q_PROPERTY(int intValue READ intValue WRITE setIntValue)
+        Q_PROPERTY(double realValue READ realValue WRITE setRealValue)
+        Q_PROPERTY(QString stringValue READ stringValue WRITE setStringValue)
 
-            private:
-                int m_id;
+    public:
+        Parameter(QObject* parent=0);
+        ~Parameter();
+
+        enum Type {
+            Bool=parameter::Bool,
+            Int=parameter::Int,
+            Real=parameter::Real,
+            String=parameter::String
         };
 
+        // name
+        void setName(const QString& n) {
+            if(m_name != n) {
+                m_name=n;
+            }
+        }
 
-        // Parameter
-        class Parameter : public QObject
-        {
-            Q_OBJECT
-            Q_ENUMS(Type)
-            Q_PROPERTY(QString name READ name WRITE setName)
-            Q_PROPERTY(Type type READ type WRITE setType)
-            Q_PROPERTY(bool boolValue READ boolValue WRITE setBoolValue)
-            Q_PROPERTY(int intValue READ intValue WRITE setIntValue)
-            Q_PROPERTY(double realValue READ realValue WRITE setRealValue)
-            Q_PROPERTY(QString stringValue READ stringValue WRITE setStringValue)
+        QString name() const { return m_name; }
 
-            public:
-                Parameter(QObject* parent=0);
-                ~Parameter();
+        // type 
+        void setType(Type& t) {
+            if(m_type != t) {
+                m_type=t;
+            }
+        }
 
-                enum Type {
-                    Bool=parameter::Bool,
-                    Int=parameter::Int,
-                    Real=parameter::Real,
-                    String=parameter::String
-                };
+        Type type() { return m_type; }
 
-                // name
-                void setName(const QString& n) {
-                    if(m_name != n) {
-                        m_name=n;
-                    }
-                }
+        // boolValue 
+        void setBoolValue(bool& v) {
+            if(m_bool != v) {
+                m_bool=v;
+            }
+        }
 
-                QString name() const { return m_name; }
+        bool boolValue() { return m_bool; }
 
-                // type 
-                void setType(Type& t) {
-                    if(m_type != t) {
-                        m_type=t;
-                    }
-                }
+        // intValue 
+        void setIntValue(int& v) {
+            if(m_int != v) {
+                m_int=v;
+            }
+        }
 
-                Type type() { return m_type; }
+        int intValue() { return m_int; }
 
-                // boolValue 
-                void setBoolValue(bool& v) {
-                    if(m_bool != v) {
-                        m_bool=v;
-                    }
-                }
+        // realValue 
+        void setRealValue(double& v) {
+            if(m_real != v) {
+                m_real=v;
+            }
+        }
 
-                bool boolValue() { return m_bool; }
+        double realValue() { return m_real; }
 
-                // intValue 
-                void setIntValue(int& v) {
-                    if(m_int != v) {
-                        m_int=v;
-                    }
-                }
+        // stringValue 
+        void setStringValue(QString& v) {
+            if(m_string != v) {
+                m_string=v;
+            }
+        }
 
-                int intValue() { return m_int; }
+        QString stringValue() { return m_string; }
 
-                // realValue 
-                void setRealValue(double& v) {
-                    if(m_real != v) {
-                        m_real=v;
-                    }
-                }
+    private:
+        QString m_name;
+        Type m_type;
+        bool m_bool;
+        int m_int;
+        double m_real;
+        QString m_string;
+};
 
-                double realValue() { return m_real; }
+// Command
+class Command : public QObject
+{
+    Q_OBJECT
+        Q_PROPERTY(QQmlListProperty<Parameter> parameters READ parameters)
+        Q_PROPERTY(QString name READ name WRITE setName)
 
-                // stringValue 
-                void setStringValue(QString& v) {
-                    if(m_string != v) {
-                        m_string=v;
-                    }
-                }
+    public:
+        Command(QObject* parent=0);
+        ~Command();
 
-                QString stringValue() { return m_string; }
-           
-            private:
-                QString m_name;
-                Type m_type;
-                bool m_bool;
-                int m_int;
-                double m_real;
-                QString m_string;
+        void setName( const QString& n) {
+            m_name=n;
         };
 
-        // Command
-        class Command : public QObject
-        {
-            Q_OBJECT
-            Q_PROPERTY(QQmlListProperty<Parameter> parameters READ parameters)
-            Q_PROPERTY(QString name READ name WRITE setName)
+        QString name() const { return m_name; };
 
-            public:
-                Command(QObject* parent=0);
-                ~Command();
+        QQmlListProperty<Parameter> parameters();
 
-                void setName( const QString& n) {
-                        m_name=n;
-                };
+        Q_INVOKABLE bool exec();
 
-                QString name() const { return m_name; };
-
-                QQmlListProperty<Parameter> parameters();
-
-                Q_INVOKABLE bool exec();
- 
-            private:
-                QString m_name;
-                static void append_parameter(QQmlListProperty<Parameter> *list, Parameter *parameter);
-                QList<Parameter *> m_parameters;
-        };
+    private:
+        QString m_name;
+        static void append_parameter(QQmlListProperty<Parameter> *list, Parameter *parameter);
+        QList<Parameter *> m_parameters;
+};
 
 #endif

@@ -213,7 +213,10 @@ namespace feather {
         enum Command { N=0, IMPORT_OBJ, EXPORT_OBJ };
 
         status import_obj(parameter::ParameterList params) {
-            std::cout << "running import_obj command" << std::endl;
+            std::string filename = params.getParameterValue<std::string>("filename");
+            bool selection = params.getParameterValue<bool>("selection");
+
+            std::cout << "running import_obj command\nfilename: " << filename << "\n\tselection: " << selection << std::endl;
             return status();
         };
 

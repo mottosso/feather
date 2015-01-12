@@ -39,13 +39,14 @@ Viewport::~Viewport()
     delete meshShader;
     delete gridShader;
     delete gridFragShader;
-    delete greenShader;
+    //delete greenShader;
     delete axisVShader;
 }
 
 void Viewport::initialize(int width, int height)
 {
     // Test
+    /*
     QOpenGLShader *vshader1 = new QOpenGLShader(QOpenGLShader::Vertex, &program1);
     vshader1->compileSourceFile("mesh.glsl");
 
@@ -55,6 +56,7 @@ void Viewport::initialize(int width, int height)
     program1.addShader(vshader1);
     program1.addShader(fshader1);
     program1.link();
+    */
 
     // Grid
     gridShader = new QOpenGLShader(QOpenGLShader::Vertex, &gridProgram);
@@ -80,14 +82,14 @@ void Viewport::initialize(int width, int height)
     //initTextures();
 
     // use these to access variable in the glsl
-    vertexAttr1 = program1.attributeLocation("vertex");
-    texture = program1.uniformLocation("tex");
+    //vertexAttr1 = program1.attributeLocation("vertex");
+    //texture = program1.uniformLocation("tex");
     //texcoord = program1.uniformLocation("texcoord");
     gridVAttr = gridProgram.attributeLocation("vertex");
     axisVAttr = axisProgram.attributeLocation("vertex");
     //normalAttr1 = program1.attributeLocation("normal");
     //colorUniform1 = program1.uniformLocation("color");
-    matrixUniform1 = program1.uniformLocation("matrix");
+    //matrixUniform1 = program1.uniformLocation("matrix");
     gridMAttr = gridProgram.uniformLocation("matrix");
     axisMAttr = axisProgram.uniformLocation("matrix");
 

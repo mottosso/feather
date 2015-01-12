@@ -1,8 +1,12 @@
-project(feather_polygon)
+PROJECT(feather_polygon)
 
 SET(feather_polygon_SRCS
     main.cpp
 )
+
+SET_SOURCE_FILES_PROPERTIES(${feather_qml_SRCS}
+ PROPERTIES
+ COMPILE_FLAGS ${CMAKE_CXX_FLAGS} )
 
 INCLUDE_DIRECTORIES(${feather_core_SOURCE_DIR})
 

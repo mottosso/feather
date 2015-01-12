@@ -21,7 +21,6 @@
 #include "types.hpp"
 #include "status.hpp"
 #include "command.hpp"
-#include "parameter.hpp"
 
 namespace feather
 {

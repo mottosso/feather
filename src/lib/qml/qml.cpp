@@ -14,6 +14,7 @@
 // 
 // =====================================================================================
 #include "qml.hpp"
+#include "parameter.hpp"
 
 using namespace feather;
 
@@ -70,7 +71,36 @@ Command::~Command()
 bool Command::exec()
 {
     parameter::ParameterList params;
+    for(int i=0; i < m_parameters.size(); i++)
+    {
+        Parameter* p = m_parameters.at(i);
+
+        switch(p->type())
+        {
+            case Parameter::Bool:
+                params.addBoolParameter(p->name().toStdString(), p->boolValue()); 
+                break;
+
+            case Parameter::Int:
+                params.addIntParameter(p->name().toStdString(), p->intValue()); 
+                break;
+
+            case Parameter::Real:
+                params.addRealParameter(p->name().toStdString(), p->realValue()); 
+                break;
+
+            case Parameter::String:
+                params.addStringParameter(p->name().toStdString(), p->stringValue().toStdString()); 
+                break;
+
+            default:
+                break; 
+        }
+
+    }
+
     qml::command::run_command(m_name.toStdString(), params);  
+
     return false;
 }
 

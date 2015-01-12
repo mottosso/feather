@@ -22,7 +22,18 @@ Menu {
     Command {
         id: importObj
         name: "import_obj"
-        parameters: [ Parameter { name: "filename"; type: Parameter.String }, Parameter { name: "selection"; type: Parameter.Bool } ]
+        parameters: [
+            Parameter { 
+                name: "filename"
+                type: Parameter.String
+                stringValue: "test"
+            },
+            Parameter { 
+                name: "selection"
+                type: Parameter.Bool
+                boolValue: true
+            }
+        ]
     }
 
 

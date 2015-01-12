@@ -19,11 +19,8 @@
 #include "root_node.hpp"
 #include "null.hpp"
 #include "object.hpp"
-#include "parameter.hpp"
-#include "command.hpp"
 
 using namespace feather;
-//using namespace feather::qml;
 
 static PluginManager plugins;
 

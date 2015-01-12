@@ -2,7 +2,7 @@ set(CMAKE_CXX_COMPILER "g++")
 
 project(Feather)
 
-cmake_minimum_required(VERSION 2.8.8)
+cmake_minimum_required(VERSION 3.1.0)
 
 find_package(OpenGL REQUIRED)
 find_package(Boost REQUIRED)
@@ -20,7 +20,7 @@ add_definitions("-D GL_GLEXT_PROTOTYPES")
 #set(CMAKE_BUILD_TYPE=Debug)
 #set(CMAKE_CXX_FLAGS "-ggdb -Wall")
 #set(CMAKE_CXX_FLAGS_RELEASE "-O0")
-set(CMAKE_BUILD_TYPE Debug)
+#set(CMAKE_BUILD_TYPE Debug)
 #set(CMAKE_BUILD_TYPE=Profile)
 
 #set(CMAKE_CXX_LANGUAGE_STANDARD "c++11")
@@ -28,6 +28,8 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS "-g")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+# for seg fault debugging
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -v -da -Q -std=c++11")
 
 #set(CMAKE_CXX_FLAGS_PROFILE "-pg")
 #set(CMAKE_CXX_LINK_FLAGS "-Wl")
