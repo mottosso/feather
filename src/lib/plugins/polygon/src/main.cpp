@@ -216,23 +216,9 @@ namespace feather {
             return status();
         };
 
-       template <> struct run<IMPORT_OBJ> {
-            static status exec(std::string cmd, parameter::ParameterList params) {
-                if(cmd=="import_obj")
-                    return import_obj(params);
-                else
-                    return run<IMPORT_OBJ-1>::exec(cmd, params); 
-            };
-        };
- 
-        template <> struct run<EXPORT_OBJ> {
-            static status exec(std::string cmd, parameter::ParameterList params) {
-                if(cmd=="export_obj")
-                    return export_obj(params);
-                else
-                    return run<EXPORT_OBJ-1>::exec(cmd, params); 
-            };
-        };
+        ADD_COMMAND("import_obj",IMPORT_OBJ,import_obj)
+        ADD_COMMAND("export_obj",EXPORT_OBJ,export_obj)
+
     }
 }
 

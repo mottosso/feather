@@ -36,6 +36,18 @@ namespace feather
             static status exec(std::string cmd, parameter::ParameterList) { return status(FAILED,"no command found"); };
         }; 
 
+
+#define ADD_COMMAND(cmdstring,cmdenum,funct)\
+        template <> struct run<cmdenum> {\
+            static status exec(std::string cmd, parameter::ParameterList params) {\
+                if(cmd==cmdstring)\
+                return funct(params);\
+                else\
+                return run<cmdenum-1>::exec(cmd, params);\
+            };\
+        };
+
+
     } // namespace command
 
 } // namespace feather
