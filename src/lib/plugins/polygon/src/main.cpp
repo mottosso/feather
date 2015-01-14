@@ -19,6 +19,21 @@
 #include "parameter.hpp"
 #include "command.hpp"
 
+/*
+ ***************************************
+ *              PLUGIN INIT            *
+ ***************************************
+ *
+ * PLUGIN_INIT()
+ * 
+ * This macro is needed to make it callable
+ * by the core.
+ * Every plugin needs it and it's always
+ * the same so you should never have to
+ * edit the below code.
+ *
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -28,6 +43,9 @@ extern "C" {
 #endif
 
 using namespace feather;
+
+
+
 
 // define nodes
 #define POLYGON_PLANE 325
