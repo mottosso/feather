@@ -197,12 +197,54 @@ namespace feather {
             }
         };
     };
+} // namespace feather
 
 
+
+/*
+ ***************************************
+ *              COMMANDS               *
+ ***************************************
+ * Put all your commands here.
+ * Commands are functions that can
+ * be called from the interface and
+ * are only called once. An example
+ * of this would be something like
+ * render() or import_obj().
+ * You will still need to edit the
+ * qml interface to call an commands
+ * that you've created.
+ */
+
+namespace feather
+{
     namespace command
     {
+        /*
+         * Here you will add enums for every
+         * command that you need to call.
+         * The first enum must always be N.
+         * example:
+         * enum Command { N=0, IMPORT_OBJ, EXPORT_OBJ };
+         */
         enum Command { N=0, IMPORT_OBJ, EXPORT_OBJ };
 
+        /*
+         * Here you will add all the commands that
+         * will be linked the the above enums.
+         * You need to have a function for each
+         * enum above and they need to be formated
+         * this way:
+         *      status [name](parameter::ParameterList params)
+         *      {
+         *              ...
+         *      };
+         * example:
+         *      status import_obj(parameter::ParameterList params)
+         *      {
+         *              // code to import obj file
+         *      };
+         */
         status import_obj(parameter::ParameterList params) {
             std::string filename = params.getParameterValue<std::string>("filename");
             bool selection = params.getParameterValue<bool>("selection");
@@ -216,17 +258,29 @@ namespace feather {
             return status();
         };
 
-        ADD_COMMAND("import_obj",IMPORT_OBJ,import_obj)
-        ADD_COMMAND("export_obj",EXPORT_OBJ,export_obj)
+    } // namespace command
 
-    }
-}
+} // namespace feather
 
-// check if the command exists
-bool command_exist(std::string cmd) { return (cmd=="import_obj") ? true : false; };
+/*
+ * ADD_COMMAND([name],[enum],[function])
+ * Add all the commands that can be called from
+ * the qml interface.
+ *
+ * example:
+ * ADD_COMMAND("import_obj",IMPORT_OBJ,import_obj)
+ */
+ADD_COMMAND("import_obj",IMPORT_OBJ,import_obj)
+ADD_COMMAND("export_obj",EXPORT_OBJ,export_obj)
 
-// call the command
-feather::status command(std::string cmd, feather::parameter::ParameterList params) {
-    typedef feather::command::run<feather::command::EXPORT_OBJ> call;
-    return call::exec(cmd, params);
-};
+
+/*
+ * INIT_COMMAND_CALLS([enum])
+ * Make the command callable by the core.
+ * This make takes the last enum of the
+ * feather::command::Command enum.
+ *
+ * example:
+ * INIT_COMMAND_CALLS(EXPORT_OBJ)
+ */
+INIT_COMMAND_CALLS(EXPORT_OBJ)
