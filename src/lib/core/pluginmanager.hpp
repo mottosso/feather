@@ -141,4 +141,7 @@ namespace feather
     bool command_exist(std::string cmd);\
     feather::status command(std::string cmd, feather::parameter::ParameterList);\
 
+#define SET_NODE_ID(__name,__id)\
+    int get_id() { return __id; }; 
+
 #endif

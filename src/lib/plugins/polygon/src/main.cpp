@@ -2,7 +2,7 @@
 // 
 //       Filename:  main.cpp
 // 
-//    Description:  
+//    Description:  This plugin holds the POLYGON_PLANE, POLYGON_CUBE scenegraph nodes.
 // 
 //        Version:  1.0
 //        Created:  11/03/2014 04:44:11 AM
@@ -44,14 +44,22 @@ extern "C" {
 
 using namespace feather;
 
+/*
+ ***************************************
+ *              PLUGIN INIT            *
+ ***************************************
+ *
+ * Here is where the scenegraph nodes are
+ * described. Each node needs to have a
+ * unique number attached to it.
+ */ 
 
-
-
-// define nodes
 #define POLYGON_PLANE 325
 #define POLYGON_CUBE 326
 
-int get_id() { return 325; };
+// THIS NEEDS TO BE FIXED
+SET_NODE_ID(POLYGON_PLANE,325)
+//SET_NODE_ID(POLYGON_CUBE,326)
 
 bool call_node(int *) {
     std::cout << "plugin called\n"; return true;
