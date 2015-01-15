@@ -38,7 +38,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    PLUGIN_INIT()
+    C_PLUGIN_WRAPPER()
 #ifdef __cplusplus
 }
 #endif

@@ -129,7 +129,7 @@ namespace feather
 
 } // namespace feather
 
-#define PLUGIN_INIT()\
+#define C_PLUGIN_WRAPPER()\
     feather::status do_it(int, feather::PluginNodeFields*);\
     bool node_exist(int);\
     feather::status add_node(int, feather::PluginNodeFields*);\
