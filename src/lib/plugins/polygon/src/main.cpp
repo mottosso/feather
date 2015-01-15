@@ -61,9 +61,11 @@ using namespace feather;
 SET_NODE_ID(POLYGON_PLANE,325)
 //SET_NODE_ID(POLYGON_CUBE,326)
 
+/*
 bool call_node(int *) {
     std::cout << "plugin called\n"; return true;
 };
+*/
 
 // call node do_it()'s
 feather::status do_it(int id, feather::PluginNodeFields* fields) {

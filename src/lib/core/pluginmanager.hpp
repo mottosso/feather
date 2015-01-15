@@ -32,7 +32,6 @@ namespace feather
         std::string path;
         void *handle;
         int (*get_id)();
-        bool (*call_node)(int*);
         status (*do_it)(int,PluginNodeFields*);
         bool (*node_match)(int); // is there a node with the given type and id in this plugin
         status (*add_node)(int,PluginNodeFields*);
@@ -132,7 +131,6 @@ namespace feather
 
 #define PLUGIN_INIT()\
     int get_id();\
-    bool call_node(int *);\
     feather::status do_it(int, feather::PluginNodeFields*);\
     bool node_match(int,int);\
     feather::status add_node(int, feather::PluginNodeFields*);\
