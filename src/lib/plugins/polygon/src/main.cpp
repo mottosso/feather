@@ -45,16 +45,6 @@ extern "C" {
 
 using namespace feather;
 
-/*
- ***************************************
- *              PLUGIN INIT            *
- ***************************************
- *
- * Here is where the scenegraph nodes are
- * described. Each node needs to have a
- * unique number attached to it.
- */ 
-
 #define POLYGON_PLANE 325
 #define POLYGON_CUBE 326
 
@@ -62,19 +52,15 @@ using namespace feather;
 SET_NODE_ID(POLYGON_PLANE,325)
 //SET_NODE_ID(POLYGON_CUBE,326)
 
-// call node do_it()'s
-feather::status do_it(int id, feather::PluginNodeFields* fields) {
-    return call_do_its<MAX_NODE_ID>::exec(id,fields);
-};
-
-// see if the node is in the plugin
-bool node_exist(int id) {
-    return find_nodes<MAX_NODE_ID>::exec(id);
-};
-
-feather::status add_node(int id, feather::PluginNodeFields* fields) {
-    return feather::status(FAILED, "function not yet working");
-};
+/*
+ ***************************************
+ *              PLUGIN INIT            *
+ ***************************************
+ *
+ * This macro handles some misc bindings
+ * between the plugin and the pluginmanager.
+ */ 
+PLUGIN_INIT()
 
 // get the field
 feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields) {
