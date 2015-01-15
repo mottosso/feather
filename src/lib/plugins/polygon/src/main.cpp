@@ -76,9 +76,17 @@ feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields)
 
 namespace feather {
 
-    // POLYGON PLANE NODE SETUP
-
-    // FIELDS
+    /*
+     ***************************************
+     *              NODE FIELDS            *
+     ***************************************
+     *
+     * You need to make a struct that uses
+     * PluginNodeFields as it's base class.
+     * This struct will hold all input and
+     * outout fields. These fields will be
+     * used to connect nodes together 
+     */
     struct PolygonPlaneFields : public PluginNodeFields
     {
         field::Field<int> *subX;
@@ -123,8 +131,8 @@ namespace feather {
         };
     };
 
-    // functions
- 
+    // POLYGON PLANE NODE SETUP
+
     // do_it
     template <> status node_do_it<POLYGON_PLANE>(PluginNodeFields* fields) {
         PolygonPlaneFields* plane = static_cast<PolygonPlaneFields*>(fields);
