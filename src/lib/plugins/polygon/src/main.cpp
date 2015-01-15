@@ -16,6 +16,7 @@
 #include "deps.hpp"
 #include "pluginmanager.hpp"
 #include "field.hpp"
+#include "node.hpp"
 #include "parameter.hpp"
 #include "command.hpp"
 
@@ -61,19 +62,13 @@ using namespace feather;
 SET_NODE_ID(POLYGON_PLANE,325)
 //SET_NODE_ID(POLYGON_CUBE,326)
 
-/*
-bool call_node(int *) {
-    std::cout << "plugin called\n"; return true;
-};
-*/
-
 // call node do_it()'s
 feather::status do_it(int id, feather::PluginNodeFields* fields) {
     return call_do_its<MAX_NODE_ID>::exec(id,fields);
 };
 
 // see if the node is in the plugin
-bool node_match(int id) {
+bool node_exist(int id) {
     return find_nodes<MAX_NODE_ID>::exec(id);
 };
 
@@ -92,7 +87,6 @@ feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields)
             return NULL;
     }
 };
-
 
 namespace feather {
 

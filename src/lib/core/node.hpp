@@ -38,6 +38,12 @@ namespace feather
             N
         };
 
+        /*
+         * This is used by the PluginManager to find
+         * out if the node is in the plugin.
+         */
+        template <int _Node>
+        static bool exist() { return false; };
 
         /* This is the class mapped to the sg vertex and gets
          * called during a sg update or other sg action

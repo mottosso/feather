@@ -31,9 +31,8 @@ namespace feather
     struct PluginInfo {
         std::string path;
         void *handle;
-        int (*get_id)();
         status (*do_it)(int,PluginNodeFields*);
-        bool (*node_match)(int); // is there a node with the given type and id in this plugin
+        bool (*node_exist)(int); // is there a node with the given type and id in this plugin
         status (*add_node)(int,PluginNodeFields*);
         status (*remove_node)(int,PluginNodeFields*);
         field::FieldBase* (*get_field)(int,int,PluginNodeFields*);
@@ -61,7 +60,8 @@ namespace feather
     
     struct call_do_it {
         call_do_it(int node){ m_node = node; };
-        void operator()(PluginInfo n) { if(n.get_id()==m_node) { std::cout << "found node " << m_node << std::endl; } };
+        //void operator()(PluginInfo n) { if(n.get_id()==m_node) { std::cout << "found node " << m_node << std::endl; } };
+        void operator()(PluginInfo n) { if(n.node_exist(m_node)) { std::cout << "found node " << m_node << std::endl; } };
         private:
             int m_node;
     };
@@ -130,9 +130,8 @@ namespace feather
 } // namespace feather
 
 #define PLUGIN_INIT()\
-    int get_id();\
     feather::status do_it(int, feather::PluginNodeFields*);\
-    bool node_match(int,int);\
+    bool node_exist(int);\
     feather::status add_node(int, feather::PluginNodeFields*);\
     feather::status remove_node(int, feather::PluginNodeFields*);\
     feather::field::FieldBase* get_field(int,int);\
