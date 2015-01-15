@@ -142,19 +142,19 @@ namespace feather
     int get_id() { return __id; }; 
 
 #define PLUGIN_INIT()\
-/* call node do_it()'s */\
-feather::status do_it(int id, feather::PluginNodeFields* fields) {\
-    return call_do_its<MAX_NODE_ID>::exec(id,fields);\
-};\
-\
-/* see if the node is in the plugin */\
-bool node_exist(int id) {\
-    return find_nodes<MAX_NODE_ID>::exec(id);\
-};\
-\
-feather::status add_node(int id, feather::PluginNodeFields* fields) {\
-    return feather::status(FAILED, "function not yet working");\
-};
+    /* call node do_it()'s */\
+    feather::status do_it(int id, feather::PluginNodeFields* fields) {\
+        return call_do_its<MAX_NODE_ID>::exec(id,fields);\
+    };\
+    \
+    /* see if the node is in the plugin */\
+    bool node_exist(int id) {\
+        return find_nodes<MAX_NODE_ID>::exec(id);\
+    };\
+    \
+    feather::status add_node(int id, feather::PluginNodeFields* fields) {\
+        return feather::status(FAILED, "function not yet working");\
+    };
 
 
 #endif
