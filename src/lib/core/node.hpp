@@ -62,4 +62,27 @@ namespace feather
 
 } // namespace feather
 
+#define NODE_INIT(node_enum)\
+    namespace feather {\
+        template <> struct call_do_its<node_enum> {\
+            static status exec(int id, PluginNodeFields* fields) {\
+                if(id==node_enum){\
+                    return node_do_it<node_enum>(fields);\
+                } else {\
+                    return call_do_its<node_enum-1>::exec(id,fields);\
+                }\
+            };\
+        };\
+        \
+        template <> struct find_nodes<node_enum> {\
+            static bool exec(int id) {\
+                if(id==node_enum){\
+                    return true;\
+                } else {\
+                    return find_nodes<node_enum-1>::exec(id);\
+                }\
+            };\
+        };\
+    }
+
 #endif

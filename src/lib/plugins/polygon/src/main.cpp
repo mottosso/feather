@@ -50,7 +50,7 @@ using namespace feather;
 
 // THIS NEEDS TO BE FIXED
 SET_NODE_ID(POLYGON_PLANE,325)
-SET_NODE_ID(POLYGON_CUBE,326)
+//SET_NODE_ID(POLYGON_CUBE,326)
 
 /*
  ***************************************
@@ -130,33 +130,24 @@ namespace feather
         return status();
     };
 
-    // POLYGON PLANE NODE CALLS
+} // namespace feather
 
-    // plugin call do it()
-    template <> struct call_do_its<POLYGON_PLANE> {
-        static status exec(int id, PluginNodeFields* fields) {
-            if(id==POLYGON_PLANE){
-                return node_do_it<POLYGON_PLANE>(fields);
-            } else {
-                return call_do_its<POLYGON_PLANE-1>::exec(id,fields);
-            }
-        };
-    };
+/*
+ ***************************************
+ *              NODE_INIT              *
+ ***************************************
+ * NODE_INIT(node)
+ * node = Enum of the node that the field
+ *      will be put into.
+ *
+ * This macro will setup the node so that
+ * it can be called by the scenegraph.
+ */
+NODE_INIT(POLYGON_PLANE)
 
-    // plugin find node
-    template <> struct find_nodes<POLYGON_PLANE> {
-        static bool exec(int id) {
-            if(id==POLYGON_PLANE){
-                return true; 
-            } else {
-                return find_nodes<POLYGON_PLANE-1>::exec(id);
-            }
-        };
-    };
-
-    
+namespace feather
+{
     // CUBE NODE
-
     struct PolygonCubeFields : public PluginNodeFields
     {
         int subX;
