@@ -45,12 +45,10 @@ extern "C" {
 
 using namespace feather;
 
+// Define all of our nodes
+// with id's here.
 #define POLYGON_PLANE 325
 #define POLYGON_CUBE 326
-
-// THIS NEEDS TO BE FIXED
-SET_NODE_ID(POLYGON_PLANE,325)
-//SET_NODE_ID(POLYGON_CUBE,326)
 
 /*
  ***************************************

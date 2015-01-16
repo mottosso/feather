@@ -60,7 +60,6 @@ namespace feather
     
     struct call_do_it {
         call_do_it(int node){ m_node = node; };
-        //void operator()(PluginInfo n) { if(n.get_id()==m_node) { std::cout << "found node " << m_node << std::endl; } };
         void operator()(PluginInfo n) { if(n.node_exist(m_node)) { std::cout << "found node " << m_node << std::endl; } };
         private:
             int m_node;
@@ -137,9 +136,6 @@ namespace feather
     feather::field::FieldBase* get_field(int,int);\
     bool command_exist(std::string cmd);\
     feather::status command(std::string cmd, feather::parameter::ParameterList);\
-
-#define SET_NODE_ID(__name,__id)\
-    int get_id() { return __id; }; 
 
 #define PLUGIN_INIT()\
     /* call node do_it()'s */\
