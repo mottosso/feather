@@ -73,12 +73,31 @@ namespace feather
 
     } // namespace field
 
+/*
 #define MAKE_FIELD(_id,_type,connection,_nodetype,_node,_default)\
-    
 
 #define CONNECT_FIELDS(_id,_n1,_n2)\
     FFieldConnection connection = boost::add_edge(_n1,_n2,sg);\
     sg[connection.first].id=_id; 
+*/
+
+#define ADD_FIELD_TO_NODE(node,field_struct,field_attr,field_key)\
+    namespace feather {\
+        template <> field::FieldBase* field_data<node,field_key>(PluginNodeFields* fields)\
+        {\
+            field_struct* f = static_cast<field_struct*>(fields);\
+            return f->field_attr;\
+        };\
+ \
+        template <> struct find_field<node,field_key> {\
+            static field::FieldBase* exec(int fid, PluginNodeFields* fields) {\
+                if(fid==field_key)\
+                    return field_data<node,field_key>(fields);\
+                else\
+                    return field_data<node,field_key-1>(fields);\
+            };\
+        };\
+    }
 
 } // namespace feather 
 

@@ -93,44 +93,33 @@ namespace feather {
         field::Field<int> *subY;
     };
 
-    // FIELD DATA
-    
-    // subX
-    template <> field::FieldBase* field_data<POLYGON_PLANE,1>(PluginNodeFields* fields)
-    {
-        PolygonPlaneFields* f = static_cast<PolygonPlaneFields*>(fields);
-        return f->subX;   
-    };
- 
-    // subY
-    template <> field::FieldBase* field_data<POLYGON_PLANE,2>(PluginNodeFields* fields)
-    {
-        PolygonPlaneFields* f = static_cast<PolygonPlaneFields*>(fields);
-        return f->subY;   
-    };
+} // namespace feather
 
-    // FIND THE FIELD DATA
-   
-    // subX
-    template <> struct find_field<POLYGON_PLANE,1> {
-        static field::FieldBase* exec(int fid, PluginNodeFields* fields) {
-            if(fid==1)
-                return field_data<POLYGON_PLANE,1>(fields);
-            else
-                return field_data<POLYGON_PLANE,1-1>(fields);
-        };
-    };
-      
-    // subY
-    template <> struct find_field<POLYGON_PLANE,2> {
-        static field::FieldBase* exec(int fid, PluginNodeFields* fields) {
-            if(fid==2)
-                return field_data<POLYGON_PLANE,2>(fields);
-            else
-                return field_data<POLYGON_PLANE,2-1>(fields);
-        };
-    };
 
+/*
+ ***************************************
+ *          ADD_FIELD_TO_NODE          *
+ ***************************************
+ * ADD_FIELD_TO_NODE(node,struct,attr,key)
+ * node = Enum of the node that the field
+ *      will be put into.
+ * struct = Name of the struct that holds
+ *      the fields.
+ * attr = Name of the field attr in the
+ *      struct.
+ * key = Starting from 1, the number of
+ *      the field in the attribute.
+ *
+ * The macro will tie the field to the node
+ * so that it's value can be used by the
+ * node's do_it command.
+ */
+ADD_FIELD_TO_NODE(POLYGON_PLANE,PolygonPlaneFields,subX,1)
+ADD_FIELD_TO_NODE(POLYGON_PLANE,PolygonPlaneFields,subY,2)
+
+
+namespace feather
+{
     // POLYGON PLANE NODE SETUP
 
     // do_it
