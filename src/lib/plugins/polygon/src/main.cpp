@@ -50,7 +50,7 @@ using namespace feather;
 
 // THIS NEEDS TO BE FIXED
 SET_NODE_ID(POLYGON_PLANE,325)
-//SET_NODE_ID(POLYGON_CUBE,326)
+SET_NODE_ID(POLYGON_CUBE,326)
 
 /*
  ***************************************
@@ -126,14 +126,6 @@ namespace feather
     template <> status node_do_it<POLYGON_PLANE>(PluginNodeFields* fields) {
         PolygonPlaneFields* plane = static_cast<PolygonPlaneFields*>(fields);
         std::cout << "plane: subX:" << plane->subX << std::endl;
-
-        // TESTING
-        /*
-        parameter::Parameter<int> *subx = new parameter::Parameter<int>("subx",10);
-
-        parameter::ParameterList list;
-        list.push_back(subx);
-        */
 
         return status();
     };
