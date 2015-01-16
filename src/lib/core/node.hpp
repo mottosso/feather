@@ -62,6 +62,9 @@ namespace feather
 
 } // namespace feather
 
+#define DO_IT(node_enum)\
+    template <> status node_do_it<node_enum>(PluginNodeFields* fields)
+
 #define NODE_INIT(node_enum)\
     namespace feather {\
         template <> struct call_do_its<node_enum> {\

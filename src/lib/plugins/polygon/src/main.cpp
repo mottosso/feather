@@ -126,10 +126,24 @@ ADD_FIELD_TO_NODE(POLYGON_PLANE,PolygonPlaneFields,subY,2)
 
 namespace feather
 {
-    // POLYGON PLANE NODE SETUP
+    /*
+     ***************************************
+     *              DO_IT                  *
+     ***************************************
+     * DO_IT(node)
+     * node = Enum of the node that the field
+     *      will be put into.
+     *
+     * This function will be call everytime
+     * the node updates in the scenegraph.
+     * A node will get updated when it's
+     * input field changes. This can be from
+     * the user or another node's field that's
+     * connected to the node's input field. 
+     */
 
-    // do_it
-    template <> status node_do_it<POLYGON_PLANE>(PluginNodeFields* fields) {
+    DO_IT(POLYGON_PLANE)
+    { 
         PolygonPlaneFields* plane = static_cast<PolygonPlaneFields*>(fields);
         std::cout << "plane: subX:" << plane->subX << std::endl;
 
@@ -178,7 +192,9 @@ namespace feather
 {
 
     // do_it
-    template <> status node_do_it<POLYGON_CUBE>(PluginNodeFields* fields) {
+    //template <> status node_do_it<POLYGON_CUBE>(PluginNodeFields* fields) {
+    DO_IT(POLYGON_CUBE) 
+    {
         PolygonCubeFields* cube = static_cast<PolygonCubeFields*>(fields);
         std::cout << "cube: subX:" << cube->subX << std::endl;
         return status();
