@@ -62,6 +62,9 @@ PLUGIN_INIT()
 
 // get the field
 feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields) {
+    // TODO FIX
+    //return find_field<get_node_id<POLYGON_PLANE,POLYGON_CUBE>::exec(nid),5>::exec(fid,fields);
+    /*
     switch(nid) {
         case POLYGON_PLANE:
             return find_field<POLYGON_PLANE,5>::exec(fid,fields);
@@ -70,6 +73,8 @@ feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields)
         default:
             return NULL;
     }
+    */
+    return NULL;
 };
 
 

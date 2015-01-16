@@ -74,6 +74,18 @@ namespace feather
 
     template <> struct find_nodes<0> { static bool exec(int id) { return false; }; };
 
+    // NODE ID
+    template <int _EndNode, int _StartNode>
+    struct get_node_id {
+        static const int exec(int id) {
+            if(id==_StartNode)
+                return _StartNode;
+            if(_StartNode==_EndNode)
+                return 0;
+            else
+                return get_node_id<_EndNode,_StartNode-1>::exec(id);
+        }
+    };
 
     // GET FIELD DATA
 
