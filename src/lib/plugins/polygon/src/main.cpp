@@ -66,13 +66,21 @@ PLUGIN_INIT()
 feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields) {
     switch(nid) {
         case POLYGON_PLANE:
-            return find_field<POLYGON_PLANE,3>::exec(fid,fields);
+            return find_field<POLYGON_PLANE,5>::exec(fid,fields);
         case POLYGON_CUBE:
-            return find_field<POLYGON_CUBE,3>::exec(fid,fields);
+            return find_field<POLYGON_CUBE,5>::exec(fid,fields);
         default:
             return NULL;
     }
 };
+
+
+
+/*
+ ***************************************
+ *            POLYGON PLANE            *
+ ***************************************
+*/
 
 namespace feather {
 
@@ -145,17 +153,31 @@ namespace feather
  */
 NODE_INIT(POLYGON_PLANE)
 
+
+
+/*
+ ***************************************
+ *            POLYGON CUBE             *
+ ***************************************
+*/
+
 namespace feather
 {
-    // CUBE NODE
     struct PolygonCubeFields : public PluginNodeFields
     {
-        int subX;
-        int subY;
-        int subZ;
+        field::Field<int> *subX;
+        field::Field<int> *subY;
+        field::Field<int> *subZ;
     };
 
-    // functions
+} // namespace feather
+
+ADD_FIELD_TO_NODE(POLYGON_CUBE,PolygonCubeFields,subX,1)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,PolygonCubeFields,subY,2)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,PolygonCubeFields,subZ,3)
+
+namespace feather
+{
 
     // do_it
     template <> status node_do_it<POLYGON_CUBE>(PluginNodeFields* fields) {
@@ -164,29 +186,9 @@ namespace feather
         return status();
     };
 
-    // plugin call do_it()
-    template <> struct call_do_its<POLYGON_CUBE> {
-        static status exec(int id, PluginNodeFields* fields) {
-            if(id==POLYGON_CUBE){
-                return node_do_it<POLYGON_CUBE>(fields);
-            } else {
-                return call_do_its<POLYGON_CUBE-1>::exec(id,fields);
-            }
-        };
-    }; 
-
-    // plugin find node
-    template <> struct find_nodes<POLYGON_CUBE> {
-        static bool exec(int id) {
-            if(id==POLYGON_CUBE){
-                return true; 
-            } else {
-                return find_nodes<POLYGON_CUBE-1>::exec(id);
-            }
-        };
-    };
 } // namespace feather
 
+NODE_INIT(POLYGON_CUBE)
 
 
 /*
