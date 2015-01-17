@@ -74,18 +74,6 @@ namespace feather
 
     template <> struct find_nodes<0> { static bool exec(int id) { return false; }; };
 
-    // NODE ID
-    template <int _EndNode, int _StartNode>
-    struct get_node_id {
-        static const int exec(int id) {
-            if(id==_StartNode)
-                return _StartNode;
-            if(_StartNode==_EndNode)
-                return 0;
-            else
-                return get_node_id<_EndNode,_StartNode-1>::exec(id);
-        }
-    };
 
     // GET FIELD DATA
 
@@ -107,6 +95,27 @@ namespace feather
         };
     };
 
+    template <int _EndNode, int _StartNode, int _StartField>
+        struct find_node_field {
+            static field::FieldBase* exec(int nid, int fid, PluginNodeFields* fields) {
+                if(nid==_StartNode)
+                    return find_field<_StartNode,_StartField>::exec(fid,fields);
+                else if(_EndNode > _StartNode)
+                    return NULL;
+                else
+                    return find_node_field<_EndNode,_StartNode-1,_StartField>::exec(nid,fid,fields);
+            };
+        };
+
+    template <int _StartNode, int _StartField>
+        struct find_node_field<_StartNode,_StartNode,_StartField> {
+            static field::FieldBase* exec(int nid, int fid, PluginNodeFields* fields) {
+                if(nid==_StartNode)
+                    return find_field<_StartNode,_StartField>::exec(fid,fields);
+                else
+                    return NULL;
+            }; 
+        };
 
     // COMMANDS 
 
@@ -149,7 +158,7 @@ namespace feather
     bool command_exist(std::string cmd);\
     feather::status command(std::string cmd, feather::parameter::ParameterList);\
 
-#define PLUGIN_INIT()\
+#define PLUGIN_INIT(startnode,endnode)\
     /* call node do_it()'s */\
     feather::status do_it(int id, feather::PluginNodeFields* fields) {\
         return call_do_its<MAX_NODE_ID>::exec(id,fields);\
@@ -162,6 +171,9 @@ namespace feather
     \
     feather::status add_node(int id, feather::PluginNodeFields* fields) {\
         return feather::status(FAILED, "function not yet working");\
+    };\
+    feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields) {\
+        return find_node_field<startnode,endnode,5>::exec(nid,fid,fields);\
     };
 
 

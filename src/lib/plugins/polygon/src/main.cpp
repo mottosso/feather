@@ -22,10 +22,10 @@
 
 /*
  ***************************************
- *              PLUGIN INIT            *
+ *           C PLUGIN WRAPPER          *
  ***************************************
  *
- * PLUGIN_INIT()
+ * C_PLUGIN_WRAPPER()
  * 
  * This macro is needed to make it callable
  * by the core.
@@ -54,30 +54,13 @@ using namespace feather;
  ***************************************
  *              PLUGIN INIT            *
  ***************************************
- *
+ * PLUGIN_INIT(startnode,endnode)
+ * startnode = id of the first node
+ * endnode = id of the last node
  * This macro handles some misc bindings
  * between the plugin and the pluginmanager.
  */ 
-PLUGIN_INIT()
-
-// get the field
-feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields) {
-    // TODO FIX
-    //return find_field<get_node_id<POLYGON_PLANE,POLYGON_CUBE>::exec(nid),5>::exec(fid,fields);
-    /*
-    switch(nid) {
-        case POLYGON_PLANE:
-            return find_field<POLYGON_PLANE,5>::exec(fid,fields);
-        case POLYGON_CUBE:
-            return find_field<POLYGON_CUBE,5>::exec(fid,fields);
-        default:
-            return NULL;
-    }
-    */
-    return NULL;
-};
-
-
+PLUGIN_INIT(POLYGON_PLANE,POLYGON_CUBE)
 
 /*
  ***************************************
