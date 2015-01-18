@@ -47,8 +47,8 @@ using namespace feather;
 
 // Define all of our nodes
 // with id's here.
-#define POLYGON_PLANE 325
-#define POLYGON_CUBE 326
+//#define POLYGON_PLANE 325
+//#define POLYGON_CUBE 326
 
 /*
  ***************************************
@@ -60,137 +60,7 @@ using namespace feather;
  * This macro handles some misc bindings
  * between the plugin and the pluginmanager.
  */ 
-PLUGIN_INIT(POLYGON_PLANE,POLYGON_CUBE)
-
-/*
- ***************************************
- *            POLYGON PLANE            *
- ***************************************
-*/
-
-namespace feather {
-
-    /*
-     ***************************************
-     *              NODE FIELDS            *
-     ***************************************
-     *
-     * You need to make a struct that uses
-     * PluginNodeFields as it's base class.
-     * This struct will hold all input and
-     * outout fields. These fields will be
-     * used to connect nodes together 
-     */
-    struct PolygonPlaneFields : public PluginNodeFields
-    {
-        field::Field<int> *subX;
-        field::Field<int> *subY;
-    };
-
-} // namespace feather
-
-
-/*
- ***************************************
- *          ADD_FIELD_TO_NODE          *
- ***************************************
- * ADD_FIELD_TO_NODE(node,struct,attr,key)
- * node = Enum of the node that the field
- *      will be put into.
- * struct = Name of the struct that holds
- *      the fields.
- * attr = Name of the field attr in the
- *      struct.
- * key = Starting from 1, the number of
- *      the field in the attribute.
- *
- * The macro will tie the field to the node
- * so that it's value can be used by the
- * node's do_it command.
- */
-ADD_FIELD_TO_NODE(POLYGON_PLANE,PolygonPlaneFields,subX,1)
-ADD_FIELD_TO_NODE(POLYGON_PLANE,PolygonPlaneFields,subY,2)
-
-
-namespace feather
-{
-    /*
-     ***************************************
-     *              DO_IT                  *
-     ***************************************
-     * DO_IT(node)
-     * node = Enum of the node that the field
-     *      will be put into.
-     *
-     * This function will be call everytime
-     * the node updates in the scenegraph.
-     * A node will get updated when it's
-     * input field changes. This can be from
-     * the user or another node's field that's
-     * connected to the node's input field. 
-     */
-
-    DO_IT(POLYGON_PLANE)
-    { 
-        PolygonPlaneFields* plane = static_cast<PolygonPlaneFields*>(fields);
-        std::cout << "plane: subX:" << plane->subX << std::endl;
-
-        return status();
-    };
-
-} // namespace feather
-
-/*
- ***************************************
- *              NODE_INIT              *
- ***************************************
- * NODE_INIT(node)
- * node = Enum of the node that the field
- *      will be put into.
- *
- * This macro will setup the node so that
- * it can be called by the scenegraph.
- */
-NODE_INIT(POLYGON_PLANE)
-
-
-
-/*
- ***************************************
- *            POLYGON CUBE             *
- ***************************************
-*/
-
-namespace feather
-{
-    struct PolygonCubeFields : public PluginNodeFields
-    {
-        field::Field<int> *subX;
-        field::Field<int> *subY;
-        field::Field<int> *subZ;
-    };
-
-} // namespace feather
-
-ADD_FIELD_TO_NODE(POLYGON_CUBE,PolygonCubeFields,subX,1)
-ADD_FIELD_TO_NODE(POLYGON_CUBE,PolygonCubeFields,subY,2)
-ADD_FIELD_TO_NODE(POLYGON_CUBE,PolygonCubeFields,subZ,3)
-
-namespace feather
-{
-
-    // do_it
-    //template <> status node_do_it<POLYGON_CUBE>(PluginNodeFields* fields) {
-    DO_IT(POLYGON_CUBE) 
-    {
-        PolygonCubeFields* cube = static_cast<PolygonCubeFields*>(fields);
-        std::cout << "cube: subX:" << cube->subX << std::endl;
-        return status();
-    };
-
-} // namespace feather
-
-NODE_INIT(POLYGON_CUBE)
+PLUGIN_INIT(0,0)
 
 
 /*
@@ -219,7 +89,7 @@ namespace feather
          * example:
          * enum Command { N=0, IMPORT_OBJ, EXPORT_OBJ };
          */
-        enum Command { N=0 };
+        enum Command { N=0, IMPORT_OBJ, EXPORT_OBJ };
 
         /*
          * Here you will add all the commands that
@@ -237,7 +107,6 @@ namespace feather
          *              // code to import obj file
          *      };
          */
-        /*
         status import_obj(parameter::ParameterList params) {
             std::string filename = params.getParameterValue<std::string>("filename");
             bool selection = params.getParameterValue<bool>("selection");
@@ -250,7 +119,7 @@ namespace feather
             std::cout << "running export_obj command" << std::endl;
             return status();
         };
-        */
+
     } // namespace command
 
 } // namespace feather
@@ -263,9 +132,8 @@ namespace feather
  * example:
  * ADD_COMMAND("import_obj",IMPORT_OBJ,import_obj)
  */
-//ADD_COMMAND("import_obj",IMPORT_OBJ,import_obj)
-//ADD_COMMAND("export_obj",EXPORT_OBJ,export_obj)
-
+ADD_COMMAND("import_obj",IMPORT_OBJ,import_obj)
+ADD_COMMAND("export_obj",EXPORT_OBJ,export_obj)
 
 /*
  * INIT_COMMAND_CALLS([enum])
@@ -276,4 +144,4 @@ namespace feather
  * example:
  * INIT_COMMAND_CALLS(EXPORT_OBJ)
  */
-INIT_COMMAND_CALLS(N)
+INIT_COMMAND_CALLS(EXPORT_OBJ)
