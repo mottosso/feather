@@ -110,7 +110,10 @@ namespace feather
             struct do_it {
                 static status exec(FNodeDescriptor node)
                 {
-                    return plugins.do_it(325);
+                    return plugins.do_it(node);
+                    // used this if you need to call a specific node
+                    //return plugins.do_it(325);
+                    // old test
                     //return do_it<_Type,_Node-1>::exec(node);
                 };
             };
@@ -227,6 +230,13 @@ namespace feather
                 {
                     std::cout << "discover vertex " << sg[u].id << std::endl;
                     //scenegraph::do_it<node::N>::exec(u);
+                    
+                    status p = plugins.do_it(u);
+                    if(!p.state)
+                        std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
+
+                    // This might still come in handy later on
+                    /*
                     switch(sg[u].type)
                     {
                         case node::Null:
@@ -250,6 +260,7 @@ namespace feather
                         default:
                             break;
                     }
+                    */
                 }
 
             // Finish Vertex
