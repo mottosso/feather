@@ -32,7 +32,7 @@ namespace feather
         {
 
             status init();
-            status add_node(int type, int node, int id); 
+            int add_node(int type, int node); 
             status draw_sg(QMatrix4x4& view);
             status load_plugins();
             status run_command(std::string cmd, feather::parameter::ParameterList params);

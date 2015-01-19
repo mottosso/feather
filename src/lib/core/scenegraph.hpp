@@ -75,9 +75,27 @@ namespace feather
          * a new node is added to the scenegraph. It's called by add_node_to_sg
          * and is specialized by each node.
          */
+        /* 
         template <int _Type, int _Node>
         static status add_node(int id) { return status(FAILED,"no matching node for add_node"); };
+        */
 
+        int add_node(int t, int n) {
+            std::cout << "add node: " << n << ", type: " << t << std::endl;
+
+            // TODO
+            // Here I need to ask the plugin manager if the node exists
+ 
+            FNodeDescriptor node = boost::add_vertex(sg);
+            sg[n].type = static_cast<feather::node::Type>(t);
+            sg[n].id = n;
+
+            // TODO
+            // Add fields to node
+            
+            // Return the node number
+            return node;
+        };
 
         /* Add Node to SceneGraph
          * This is the recursive function that will keep going till
@@ -85,20 +103,21 @@ namespace feather
          * If a match is found the add_node function is called which
          * is specialized by each node.
          */
+        /*
         template <int _Type, int _Node>
             struct add_node_to_sg {
-                static status exec(int node, int id)
+                static status exec(int node)
                 {
                     if(node==_Node)
-                        return add_node<_Type,_Node>(id);
+                        return add_node<_Type,_Node>(node);
                     else
-                        return add_node_to_sg<_Type,_Node-1>::exec(node,id);
+                        return add_node_to_sg<_Type,_Node-1>::exec(node);
                 };
             };
 
         template <int _Type>
-            struct add_node_to_sg<_Type,0> { static status exec(int node, int id) { return status(FAILED, "could not add unknown node to scenegraph"); }; };
-
+            struct add_node_to_sg<_Type,0> { static status exec(int node) { return status(FAILED, "could not add unknown node to scenegraph"); }; };
+        */
 
 
         /* DoIt

@@ -37,7 +37,7 @@ class SceneGraph : public QObject
         ~SceneGraph();
 
         // commands
-        Q_INVOKABLE void add_node(int type, int node, int id) { qml::command::add_node(type,node,id); };
+        Q_INVOKABLE int add_node(int type, int node) { return qml::command::add_node(type,node); };
 };
 
 // NODE

@@ -16,7 +16,7 @@
 #include "commands.hpp"
 //#include "field.hpp"
 #include "scenegraph.hpp"
-#include "root_node.hpp"
+//#include "root_node.hpp"
 #include "null.hpp"
 #include "object.hpp"
 
@@ -26,14 +26,16 @@ static PluginManager plugins;
 
 status qml::command::init() {
     load_plugins();
-    add_node(node::Null,null::Root,0);
+    add_node(node::Null,null::Root);
     // just testing the do_it plugin calls
     scenegraph::update();
     return status();
 }
 
-status qml::command::add_node(int type, int node, int id)
+int qml::command::add_node(int type, int node)
 {
+    return scenegraph::add_node(type,node);
+    /*
     switch(type)
     {
         case node::Null:
@@ -51,8 +53,10 @@ status qml::command::add_node(int type, int node, int id)
         default:
             break;
     }
-    
-    return status(FAILED, "no matching Type of Node found while trying to add node");
+    */
+
+    // need to put a check here 
+    //return status();
 }
 
 status qml::command::draw_sg(QMatrix4x4& view)

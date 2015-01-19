@@ -1,6 +1,8 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.0 
+import feather.scenegraph 1.0
+import feather.nodes 1.0
 import feather.command 1.0
 
 Menu {
@@ -8,6 +10,10 @@ Menu {
     id: addMenu
     title: "Add"
     visible: true
+
+    SceneGraph {
+        id: sg
+    }
 
     // COMMANDS
     /*
@@ -36,7 +42,9 @@ Menu {
         id: addPolygonPlaneAction
         text: "Plane"
         tooltip: "Add polygon plane to the scenegraph"
-        onTriggered: {}
+        onTriggered: {
+            sg.add_node(Node.Object,325)
+        }
     }
 
     // Add Polygon Cube
