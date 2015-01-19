@@ -119,6 +119,7 @@ namespace feather
     {
         enum Command { N=0 };
     } // namespace command
+
 } // namespace feather
 
 INIT_COMMAND_CALLS(N)

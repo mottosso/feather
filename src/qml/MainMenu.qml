@@ -8,6 +8,8 @@ MenuBar {
 
     EditMenu{}
 
+    AddMenu{}
+
     ViewMenu{}
 
     SelectMenu{}
