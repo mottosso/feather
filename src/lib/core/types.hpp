@@ -104,13 +104,13 @@ namespace feather
 
     struct FNode;
 
-    struct FField;
+    struct FConnection;
 
     typedef struct {} DataObject;
 
     typedef struct {} FAttributeArray;
 
-    typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS, FNode, FField> FSceneGraph;
+    typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS, FNode, FConnection> FSceneGraph;
 
     typedef FSceneGraph::vertex_descriptor FNodeDescriptor;
 
@@ -127,15 +127,19 @@ namespace feather
 
     typedef std::vector<FNode*> FNodeArray;
 
-    struct FField
+    struct FConnection
     {
-        FField(int _id=0, field::Type t=field::Int, field::Connection::Type c=field::Connection::In) : id(_id),type(t),conn_type(c) {};
-        int id;
-        field::Type type;
-        field::Connection::Type conn_type;
-        FField* pfield; // parent field
-        FNode* pnode; // parent node
-        int field;
+        FConnection() {};
+        field::Type t1; // source type
+        FNodeDescriptor n1; // source node 
+        int f1; // source field
+        field::Type t2; // target type
+        FNodeDescriptor n2; // target node 
+        int f2; // target field
+        //field::Connection::Type conn_type;
+        //FField* pfield; // parent field
+        //FNode* pnode; // parent node
+        //int field;
     };
 
 } // namespace feather

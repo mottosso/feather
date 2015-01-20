@@ -306,7 +306,11 @@ namespace feather
             template < typename Edge, typename Graph >
                 void examine_edge(Edge u, const Graph & g) const
                 {
-                    std::cout << "examine edge " << sg[u].id << std::endl;
+                    std::cout << "examine edge - n1:" << sg[u].n1 
+                        << " f1:" << sg[u].f1
+                        << " n2:" << sg[u].n2
+                        << " f2:" << sg[u].f2
+                        << std::endl;
                 }
 
 
@@ -319,7 +323,11 @@ namespace feather
             template < typename Edge, typename Graph >
                 void tree_edge(Edge u, const Graph & g) const
                 {
-                    std::cout << "tree edge " << sg[u].id << std::endl;
+                    std::cout << "tree edge - n1:" << sg[u].n1 
+                        << " f1:" << sg[u].f1
+                        << " n2:" << sg[u].n2
+                        << " f2:" << sg[u].f2
+                        << std::endl;
                 }
 
             // Forward or Cross  Edge
@@ -368,15 +376,18 @@ namespace feather
         }
 
 
-        bool connect(int id, FNodeDescriptor n1, FNodeDescriptor n2)
+        status connect(FNodeDescriptor n1, int f1, FNodeDescriptor n2, int f2)
         {
-            // f1 = parent
-            // f2 = child
+            // verify that the two fields have types that can be connected.
+            
+            
             FFieldConnection connection = boost::add_edge(n1, n2, sg);
-            sg[connection.first].id = id;
+            sg[connection.first].n1 = n1;
+            sg[connection.first].f1 = f1;
+            sg[connection.first].n2 = n2;
+            sg[connection.first].f2 = f2;
 
-            return true;
-            //return f2->connect(f1);
+            return status();
         };
 
         

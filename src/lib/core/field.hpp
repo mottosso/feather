@@ -52,6 +52,7 @@ namespace feather
         } // namespace Connection
 
         enum Type {
+            N,
             Bool,
             Int,
             Float,
@@ -67,9 +68,28 @@ namespace feather
             VectoryArray,
             RGBArray,
             RGBAArray,
-            N
+            START
         };
 
+
+        template <int _Type1, int _Type2>
+        bool can_connect() { return false; };
+
+        template <int _Type1, int _Type2>
+        struct can_types_connect {
+            static bool exec(int t1, int t2) {
+                if(t1==_Type1 && t2==_Type2)
+                    return can_connect<_Type1,_Type2>();
+                else if(_Type2 == N)
+                    return can_types_connect<_Type1-1,START>::exec(t1,t2);
+                else 
+                    return can_types_connect<_Type1,_Type2-1>::exec(t1,t2);
+            };
+        };
+   
+        template <> struct can_types_connect<N,N> {
+            static bool exec(int t1, int t2) { return false; };
+        };
 
     } // namespace field
 
