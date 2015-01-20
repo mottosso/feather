@@ -58,9 +58,7 @@ namespace feather
      * The datablock location is kept in sync with the vertex number by the datamanager.
      */
 
-    //static FSceneGraph sg;
-     // Singleton
-    typedef Singleton<FSceneGraph> SceneGraphSingleton;
+    static FSceneGraph sg;
 
     static PluginManager plugins;
 
@@ -89,16 +87,15 @@ namespace feather
             // TODO
             // Here I need to ask the plugin manager if the node exists
  
-            FNodeDescriptor node = boost::add_vertex(*SceneGraphSingleton::Instance());
-            std::cout << "1\n";
-            (*SceneGraphSingleton::Instance())[n].type = static_cast<feather::node::Type>(t);
-            std::cout << "2\n";
-            (*SceneGraphSingleton::Instance())[n].id = n;
-            std::cout << "3\n";
+            FNodeDescriptor node = boost::add_vertex(sg);
+            sg[node].type = static_cast<feather::node::Type>(t);
+            sg[node].id = n;
  
+            node_selection.push_back(n); 
+
             // TODO
             // Add fields to node
-            
+
             // Return the node number
             return static_cast<int>(node);
         };
@@ -235,7 +232,7 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void initialize_vertex(Vertex u, const Graph & g) const
                 {
-                    std::cout << "init vertex " << (*SceneGraphSingleton::Instance())[u].id << std::endl;
+                    std::cout << "init vertex " << sg[u].id << std::endl;
                 }
 
             // Start Vertex
@@ -245,7 +242,7 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void start_vertex(Vertex u, const Graph & g) const
                 {
-                    std::cout << "start vertex " << (*SceneGraphSingleton::Instance())[u].id << std::endl;
+                    std::cout << "start vertex " << sg[u].id << std::endl;
                 }
 
             // Discover Vertex
@@ -255,10 +252,10 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void discover_vertex(Vertex u, const Graph & g) const
                 {
-                    std::cout << "discover vertex " << (*SceneGraphSingleton::Instance())[u].id << std::endl;
+                    std::cout << "discover vertex " << sg[u].id << std::endl;
                     //scenegraph::do_it<node::N>::exec(u);
                     
-                    status p = plugins.do_it((*SceneGraphSingleton::Instance())[u].id);
+                    status p = plugins.do_it(sg[u].id);
                     if(!p.state)
                         std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
 
@@ -297,7 +294,7 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void finish_vertex(Vertex u, const Graph & g) const
                 {
-                    std::cout << "finish vertex " << (*SceneGraphSingleton::Instance())[u].id << std::endl;
+                    std::cout << "finish vertex " << sg[u].id << std::endl;
                 }
 
             // EDGES
@@ -309,7 +306,7 @@ namespace feather
             template < typename Edge, typename Graph >
                 void examine_edge(Edge u, const Graph & g) const
                 {
-                    std::cout << "examine edge " << (*SceneGraphSingleton::Instance())[u].id << std::endl;
+                    std::cout << "examine edge " << sg[u].id << std::endl;
                 }
 
 
@@ -322,7 +319,7 @@ namespace feather
             template < typename Edge, typename Graph >
                 void tree_edge(Edge u, const Graph & g) const
                 {
-                    std::cout << "tree edge " << (*SceneGraphSingleton::Instance())[u].id << std::endl;
+                    std::cout << "tree edge " << sg[u].id << std::endl;
                 }
 
             // Forward or Cross  Edge
@@ -332,7 +329,7 @@ namespace feather
             template < typename Edge, typename Graph >
                 void forward_or_cross_edge(Edge u, const Graph & g) const
                 {
-                    std::cout << "forward or cross edge " << (*SceneGraphSingleton::Instance())[u].id << std::endl;
+                    std::cout << "forward or cross edge " << sg[u].id << std::endl;
                 }
 
 
@@ -347,7 +344,7 @@ namespace feather
             node_visitor vis;
             //node_d_visitor vis;
             std::cout << "\n*****GRAPH UPDATE*****\n";
-            breadth_first_search(*SceneGraphSingleton::Instance(), vertex(0, *SceneGraphSingleton::Instance()), visitor(vis));
+            breadth_first_search(sg, vertex(0, sg), visitor(vis));
             //FNodeDescriptor s = vertex(0, scenegraph);
             /*
                dijkstra_shortest_paths(scenegraph, s,
@@ -365,7 +362,7 @@ namespace feather
             node_visitor vis;
             //node_d_visitor vis;
             std::cout << "\n*****DRAW GL START*****\n";
-            breadth_first_search(*SceneGraphSingleton::Instance(), vertex(0, *SceneGraphSingleton::Instance()), visitor(vis));
+            breadth_first_search(sg, vertex(0, sg), visitor(vis));
             std::cout << "*****DRAW GL COMPLETE*****\n";
             return status();
         }
@@ -375,8 +372,8 @@ namespace feather
         {
             // f1 = parent
             // f2 = child
-            FFieldConnection connection = boost::add_edge(n1, n2, *SceneGraphSingleton::Instance());
-            (*SceneGraphSingleton::Instance())[connection.first].id = id;
+            FFieldConnection connection = boost::add_edge(n1, n2, sg);
+            sg[connection.first].id = id;
 
             return true;
             //return f2->connect(f1);
@@ -401,7 +398,7 @@ namespace feather
     } // namespace scenegraph
 
     #define GET_NODE_DATA(nodedata)\
-    template <> nodedata* DataObject::get_data<nodedata>(FNodeDescriptor node) { return static_cast<nodedata*>((*SceneGraphSingleton::Instance())[node].data); };
+    template <> nodedata* DataObject::get_data<nodedata>(FNodeDescriptor node) { return static_cast<nodedata*>(sg[node].data); };
 
  
 } // namespace feather
