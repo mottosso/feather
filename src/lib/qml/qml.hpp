@@ -38,6 +38,7 @@ class SceneGraph : public QObject
 
         // commands
         Q_INVOKABLE int add_node(int type, int node) { return qml::command::add_node(type,node); };
+        Q_INVOKABLE int connect_nodes(int n1, int f1, int n2, int f2) { status p = qml::command::connect_nodes(n1,f1,n2,f2); return p.state; };
 };
 
 // NODE
