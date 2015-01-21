@@ -18,6 +18,7 @@
 
 // QT5
 #include <QtQuick/QQuickView>
+#include <QtQuick/QQuickPaintedItem>
 #include <QtQuick/QQuickItem>
 #include <QtQuick/qquickwindow.h>
 #include <QtQuick/QQuickWindow>

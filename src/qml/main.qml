@@ -22,6 +22,8 @@ ApplicationWindow {
 
     Outliner {}
 
+    SceneGraphEditor {}
+
     Material {}
 
 }
