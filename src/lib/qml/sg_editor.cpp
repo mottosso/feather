@@ -27,6 +27,20 @@ SceneGraphEditor::~SceneGraphEditor()
 
 void SceneGraphEditor::paint(QPainter* painter)
 {
-    painter->setBackgroundMode(Qt::OpaqueMode);
-    painter->setBackground(QBrush(QColor(0,0,255)));
+    drawNode(painter);
+    setFillColor(QColor(125,125,125));
+}
+
+void SceneGraphEditor::drawNode(QPainter* painter)
+{
+    QPen trimPen = QPen(QColor(0,0,0),2);
+    //QPen textPen = QPen(QColor(0,0,0),2);
+    QBrush fillBrush = QBrush(QColor(175,175,175));
+    painter->setRenderHints(QPainter::Antialiasing, true);
+
+    painter->setPen(trimPen);
+    painter->drawText(QRect(0,0,200,100),"TestNode");
+    //painter->setPen(trimPen);
+    painter->drawRect(QRect(0,0,200,100));
+    painter->fillRect(QRect(0,0,200,100),fillBrush);
 }
