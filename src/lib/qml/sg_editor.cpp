@@ -34,13 +34,16 @@ void SceneGraphEditor::paint(QPainter* painter)
 void SceneGraphEditor::drawNode(QPainter* painter)
 {
     QPen trimPen = QPen(QColor(0,0,0),2);
-    //QPen textPen = QPen(QColor(0,0,0),2);
+    QPen textPen = QPen(QColor(0,255,0),2);
     QBrush fillBrush = QBrush(QColor(175,175,175));
     painter->setRenderHints(QPainter::Antialiasing, true);
 
     painter->setPen(trimPen);
-    painter->drawText(QRect(0,0,200,100),"TestNode");
+    //painter->drawText(QRect(0,0,200,100),"TestNode");
     //painter->setPen(trimPen);
     painter->drawRect(QRect(0,0,200,100));
     painter->fillRect(QRect(0,0,200,100),fillBrush);
+    painter->setPen(textPen);
+    painter->drawText(QRect(0,0,200,100),"TestNode");
+ 
 }
