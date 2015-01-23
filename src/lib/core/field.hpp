@@ -37,13 +37,15 @@ namespace feather
             //Connection connection;
         };
 
-        template <typename _T>
+        template <typename _Type, int _Conn>
         struct Field : public FieldBase
         {
-            typedef _T type;
+            Field():conn(_Conn){};
+            typedef _Type type;
+            int conn;
         };
 
-        namespace Connection
+        namespace connection
         {
             enum Type {
                 In,

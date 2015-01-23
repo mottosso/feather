@@ -45,8 +45,8 @@ namespace feather {
 
     struct PolygonPlaneFields : public PluginNodeFields
     {
-        field::Field<int> *subX;
-        field::Field<int> *subY;
+        field::Field<int,field::connection::In> *subX;
+        field::Field<int,field::connection::In> *subY;
     };
 
 } // namespace feather
@@ -81,9 +81,9 @@ namespace feather
 {
     struct PolygonCubeFields : public PluginNodeFields
     {
-        field::Field<int> *subX;
-        field::Field<int> *subY;
-        field::Field<int> *subZ;
+        field::Field<int,field::connection::In> *subX;
+        field::Field<int,field::connection::In> *subY;
+        field::Field<int,field::connection::In> *subZ;
     };
 
 } // namespace feather

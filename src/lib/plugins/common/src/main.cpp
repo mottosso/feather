@@ -83,7 +83,8 @@ namespace feather {
      */
     struct ShapeFields : public PluginNodeFields
     {
-        field::Field<FMesh> *mesh;
+        field::Field<FMesh,field::connection::In> *meshIn;
+        field::Field<FMesh,field::connection::Out> *meshOut;
     };
 
 } // namespace feather
@@ -107,7 +108,8 @@ namespace feather {
  * so that it's value can be used by the
  * node's do_it command.
  */
-ADD_FIELD_TO_NODE(SHAPE,ShapeFields,mesh,1)
+ADD_FIELD_TO_NODE(SHAPE,ShapeFields,meshIn,1)
+ADD_FIELD_TO_NODE(SHAPE,ShapeFields,meshOut,2)
 //ADD_FIELD_TO_NODE(POLYGON_PLANE,PolygonPlaneFields,subY,2)
 
 
@@ -132,7 +134,7 @@ namespace feather
     DO_IT(SHAPE)
     { 
         ShapeFields* shape = static_cast<ShapeFields*>(fields);
-        std::cout << "shape: mesh:" << shape->mesh << std::endl;
+        std::cout << "shape: meshIn:" << shape->meshIn << std::endl;
 
         return status();
     };
@@ -164,15 +166,15 @@ namespace feather
 {
     struct TransformFields : public PluginNodeFields
     {
-        field::Field<FDouble> *tx;
-        field::Field<FDouble> *ty;
-        field::Field<FDouble> *tz;
-        field::Field<FDouble> *rx;
-        field::Field<FDouble> *ry;
-        field::Field<FDouble> *rz;
-        field::Field<FDouble> *sx;
-        field::Field<FDouble> *sy;
-        field::Field<FDouble> *sz;
+        field::Field<FDouble,field::connection::Out> *tx;
+        field::Field<FDouble,field::connection::Out> *ty;
+        field::Field<FDouble,field::connection::Out> *tz;
+        field::Field<FDouble,field::connection::Out> *rx;
+        field::Field<FDouble,field::connection::Out> *ry;
+        field::Field<FDouble,field::connection::Out> *rz;
+        field::Field<FDouble,field::connection::Out> *sx;
+        field::Field<FDouble,field::connection::Out> *sy;
+        field::Field<FDouble,field::connection::Out> *sz;
     };
 
 } // namespace feather
