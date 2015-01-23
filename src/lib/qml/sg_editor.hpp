@@ -32,7 +32,7 @@ class SceneGraphEditor : public QQuickPaintedItem
         Q_INVOKABLE void update_sg() { update(); }; 
 
     private:
-        void drawNode(QPainter* painter);
+        void drawNode(int x, int y, QPainter* painter);
 };
 
 #endif

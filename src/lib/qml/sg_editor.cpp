@@ -27,23 +27,34 @@ SceneGraphEditor::~SceneGraphEditor()
 
 void SceneGraphEditor::paint(QPainter* painter)
 {
-    drawNode(painter);
+    drawNode(20,20,painter);
     setFillColor(QColor(125,125,125));
 }
 
-void SceneGraphEditor::drawNode(QPainter* painter)
+void SceneGraphEditor::drawNode(int x, int y, QPainter* painter)
 {
+    int w=100;
+    int h=50;
     QPen trimPen = QPen(QColor(0,0,0),2);
-    QPen textPen = QPen(QColor(0,255,0),2);
-    QBrush fillBrush = QBrush(QColor(175,175,175));
+    QPen textPen = QPen(QColor(0,0,155),2);
+    QBrush nodeFillBrush = QBrush(QColor(175,175,175));
+    QBrush connInFillBrush = QBrush(QColor(175,175,0));
+    QBrush connOutFillBrush = QBrush(QColor(0,175,175));
     painter->setRenderHints(QPainter::Antialiasing, true);
 
+    // draw the node box
     painter->setPen(trimPen);
-    //painter->drawText(QRect(0,0,200,100),"TestNode");
-    //painter->setPen(trimPen);
-    painter->drawRect(QRect(0,0,200,100));
-    painter->fillRect(QRect(0,0,200,100),fillBrush);
+    painter->setBrush(nodeFillBrush);
+    painter->drawRoundedRect(QRect(x,y,w,h),5,5);
+
+    // draw the input and output connectors
+    painter->setBrush(connInFillBrush);
+    painter->drawEllipse(QPoint(x,y+(h/2)),10,10);
+    painter->setBrush(connOutFillBrush);
+    painter->drawEllipse(QPoint(x+w,y+(h/2)),10,10);
+
+    // draw the node's name
     painter->setPen(textPen);
-    painter->drawText(QRect(0,0,200,100),"TestNode");
+    painter->drawText(QRect(x,y,w,h),Qt::AlignCenter,"TestNode");
  
 }
