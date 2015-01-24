@@ -33,8 +33,9 @@ class SceneGraphEditor : public QQuickPaintedItem
         Q_INVOKABLE void update_sg() { update(); }; 
 
     private:
-        void drawNode(int x, int y, QPainter* painter);
-        void drawConnection(int sx, int sy, int tx, int ty, feather::field::Type type, QPainter* painter);
+        void drawNode(QPoint& point, QPainter* painter);
+        void drawConnection(QPoint& snode, QPoint& tnode, feather::field::Type type, QPainter* painter);
+        void getConnectionPoint(feather::field::connection::Type conn, QPoint& npoint, QPoint& cpoint);
 
         int m_scale;
         int m_nodeWidth;

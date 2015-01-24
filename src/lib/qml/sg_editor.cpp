@@ -27,15 +27,20 @@ SceneGraphEditor::~SceneGraphEditor()
 
 void SceneGraphEditor::paint(QPainter* painter)
 {
-    drawNode(20,20,painter);
-    drawNode(220,300,painter);
+    QPoint snode = QPoint(20,20);
+    QPoint tnode = QPoint(200,300);
+    drawNode(snode,painter);
+    drawNode(tnode,painter);
     setFillColor(QColor(125,125,125));
 }
 
-void SceneGraphEditor::drawNode(int x, int y, QPainter* painter)
+void SceneGraphEditor::drawNode(QPoint& point, QPainter* painter)
 {
-    int w=m_nodeWidth;
-    int h=m_nodeHeight;
+    int w = m_nodeWidth;
+    int h = m_nodeHeight;
+    int x = point.x();
+    int y = point.y();
+
     QPen trimPen = QPen(QColor(0,0,0),2);
     QPen textPen = QPen(QColor(0,0,155),2);
     QBrush nodeFillBrush = QBrush(QColor(175,175,175));
@@ -49,10 +54,14 @@ void SceneGraphEditor::drawNode(int x, int y, QPainter* painter)
     painter->drawRoundedRect(QRect(x,y,w,h),5,5);
 
     // draw the input and output connectors
+    QPoint sConnPoint;
+    QPoint tConnPoint;
+    getConnectionPoint(feather::field::connection::In,point,sConnPoint);
+    getConnectionPoint(feather::field::connection::Out,point,tConnPoint);
     painter->setBrush(connInFillBrush);
-    painter->drawEllipse(QPoint(x,y+(h/2)),10,10);
+    painter->drawEllipse(sConnPoint,10,10);
     painter->setBrush(connOutFillBrush);
-    painter->drawEllipse(QPoint(x+w,y+(h/2)),10,10);
+    painter->drawEllipse(tConnPoint,10,10);
 
     // draw the node's name
     painter->setPen(textPen);
@@ -60,7 +69,22 @@ void SceneGraphEditor::drawNode(int x, int y, QPainter* painter)
  
 }
 
-void SceneGraphEditor::drawConnection(int sx, int sy, int tx, int ty, feather::field::Type type, QPainter* painter)
+void SceneGraphEditor::drawConnection(QPoint& snode, QPoint& tnode, feather::field::Type type, QPainter* painter)
 {
 
+}
+
+void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn, QPoint& npoint, QPoint& cpoint)
+{
+    if(conn == feather::field::connection::In)
+    {
+        cpoint.setX(npoint.x());
+        cpoint.setY(npoint.y()+(m_nodeHeight/2));
+ 
+    }
+    else
+    {
+        cpoint.setX(npoint.x()+m_nodeWidth);
+        cpoint.setY(npoint.y()+(m_nodeHeight/2));
+    }
 }
