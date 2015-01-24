@@ -15,7 +15,7 @@
 // =====================================================================================
 #include "sg_editor.hpp"
 
-SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(parent)
+SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(parent), m_scale(100), m_nodeWidth(100), m_nodeHeight(50)
 {
 
 }
@@ -28,13 +28,14 @@ SceneGraphEditor::~SceneGraphEditor()
 void SceneGraphEditor::paint(QPainter* painter)
 {
     drawNode(20,20,painter);
+    drawNode(220,300,painter);
     setFillColor(QColor(125,125,125));
 }
 
 void SceneGraphEditor::drawNode(int x, int y, QPainter* painter)
 {
-    int w=100;
-    int h=50;
+    int w=m_nodeWidth;
+    int h=m_nodeHeight;
     QPen trimPen = QPen(QColor(0,0,0),2);
     QPen textPen = QPen(QColor(0,0,155),2);
     QBrush nodeFillBrush = QBrush(QColor(175,175,175));
