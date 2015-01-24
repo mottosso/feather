@@ -27,8 +27,10 @@ SceneGraphEditor::~SceneGraphEditor()
 
 void SceneGraphEditor::paint(QPainter* painter)
 {
+    painter->setRenderHints(QPainter::Antialiasing, true);
     QPoint snode = QPoint(20,20);
     QPoint tnode = QPoint(200,300);
+    drawConnection(snode,tnode,feather::field::Int,painter);
     drawNode(snode,painter);
     drawNode(tnode,painter);
     setFillColor(QColor(125,125,125));
@@ -46,7 +48,6 @@ void SceneGraphEditor::drawNode(QPoint& point, QPainter* painter)
     QBrush nodeFillBrush = QBrush(QColor(175,175,175));
     QBrush connInFillBrush = QBrush(QColor(175,175,0));
     QBrush connOutFillBrush = QBrush(QColor(0,175,175));
-    painter->setRenderHints(QPainter::Antialiasing, true);
 
     // draw the node box
     painter->setPen(trimPen);
@@ -71,7 +72,20 @@ void SceneGraphEditor::drawNode(QPoint& point, QPainter* painter)
 
 void SceneGraphEditor::drawConnection(QPoint& snode, QPoint& tnode, feather::field::Type type, QPainter* painter)
 {
+    QPainterPath path;
+    QPoint sPoint;
+    QPoint tPoint;
+    QBrush brush = painter->brush();
+    brush.setStyle(Qt::NoBrush);
 
+    getConnectionPoint(feather::field::connection::Out,snode,sPoint);
+    getConnectionPoint(feather::field::connection::In,tnode,tPoint);
+
+    QPen pathPen = QPen(QColor(255,255,0),2);
+    path.moveTo(sPoint.x(),sPoint.y());
+    path.cubicTo(tPoint.x(),sPoint.y(),sPoint.x(),tPoint.y(),tPoint.x(),tPoint.y());
+    painter->setPen(pathPen);
+    painter->drawPath(path);
 }
 
 void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn, QPoint& npoint, QPoint& cpoint)
