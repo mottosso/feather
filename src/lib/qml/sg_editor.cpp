@@ -58,3 +58,8 @@ void SceneGraphEditor::drawNode(int x, int y, QPainter* painter)
     painter->drawText(QRect(x,y,w,h),Qt::AlignCenter,"TestNode");
  
 }
+
+void SceneGraphEditor::drawConnection(int sx, int sy, int tx, int ty, feather::field::Type type, QPainter* painter)
+{
+
+}

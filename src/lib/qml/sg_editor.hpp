@@ -18,6 +18,7 @@
 
 #include "deps.hpp"
 #include "qml_deps.hpp"
+#include "field.hpp"
 
 class SceneGraphEditor : public QQuickPaintedItem
 {
@@ -33,6 +34,7 @@ class SceneGraphEditor : public QQuickPaintedItem
 
     private:
         void drawNode(int x, int y, QPainter* painter);
+        void drawConnection(int sx, int sy, int tx, int ty, feather::field::Type type, QPainter* painter);
 };
 
 #endif
