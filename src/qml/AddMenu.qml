@@ -43,7 +43,7 @@ Menu {
         text: "Plane"
         tooltip: "Add polygon plane to the scenegraph"
         onTriggered: {
-            sg.add_node(Node.Object,325)
+            sg.add_node(Node.Object,321)
         }
     }
 
@@ -52,7 +52,9 @@ Menu {
         id: addPolygonCubeAction
         text: "Cube"
         tooltip: "Add polygon cube to the scenegraph"
-        onTriggered: {}
+        onTriggered: {
+            sg.add_node(Node.Object,322)
+        }
     }
 
 

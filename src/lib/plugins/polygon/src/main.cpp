@@ -30,10 +30,49 @@ extern "C" {
 
 using namespace feather;
 
-#define POLYGON_PLANE 325
-#define POLYGON_CUBE 326
+#define POLYGON_SHAPE 320
+#define POLYGON_PLANE 321
+#define POLYGON_CUBE 322
 
-PLUGIN_INIT(POLYGON_PLANE,POLYGON_CUBE)
+
+PLUGIN_INIT(POLYGON_SHAPE,POLYGON_CUBE)
+
+
+/*
+ ***************************************
+ *            POLYGON SHAPE            *
+ ***************************************
+*/
+
+namespace feather {
+
+    struct PolygonShapeFields : public PluginNodeFields
+    {
+        field::Field<FMesh,field::connection::In> *meshIn;
+        field::Field<FMesh,field::connection::Out> *meshOut;
+    };
+
+} // namespace feather
+
+ADD_FIELD_TO_NODE(POLYGON_SHAPE,PolygonShapeFields,meshIn,1)
+ADD_FIELD_TO_NODE(POLYGON_SHAPE,PolygonShapeFields,meshOut,2)
+
+
+namespace feather
+{
+
+    DO_IT(POLYGON_SHAPE)
+    { 
+        PolygonShapeFields* plane = static_cast<PolygonShapeFields*>(fields);
+        std::cout << "plane: mesh:" << plane->meshIn << std::endl;
+
+        return status();
+    };
+
+} // namespace feather
+
+NODE_INIT(POLYGON_SHAPE)
+
 
 /*
  ***************************************
