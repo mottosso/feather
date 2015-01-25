@@ -43,7 +43,12 @@ Menu {
         text: "Plane"
         tooltip: "Add polygon plane to the scenegraph"
         onTriggered: {
-            sg.add_node(Node.Object,321)
+            var shape
+            var plane
+            plane = sg.add_node(Node.Object,321)
+            shape = sg.add_node(Node.Object,320)
+            console.log("plane node = " + plane)
+            console.log("shape node = " + shape)
         }
     }
 

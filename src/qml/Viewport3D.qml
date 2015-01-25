@@ -2,7 +2,7 @@ import QtQuick 2.3
 import FeatherViewport 1.0
 
 Rectangle {
-    anchors.fill: parent
+    //anchors.fill: parent
     color: "orange"
     border.color: "black"
     border.width: 1

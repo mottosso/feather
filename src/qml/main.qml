@@ -4,8 +4,8 @@ import QtQuick.Layouts 1.1
 
 ApplicationWindow {
     id: window
-    width: 800
-    height: 600
+    width: 1200
+    height: 700
     visible: true
 
     title: "Feather 0.1"
@@ -18,12 +18,26 @@ ApplicationWindow {
         RowLayout { BusyIndicator { implicitWidth: 10; implicitHeight: 10; running: true } Label { text: "Feather 0.1" } }
     }
 
-    Viewport3D { anchors.fill: parent }
 
-    Outliner {}
+    //Outliner {}
 
-    SceneGraphEditor {}
 
-    Material {}
+    SplitView {
+        id: splitView
+        anchors.fill: parent
+        orientation: Qt.Horizontal
 
+        Viewport3D {
+            id: vp3d
+            Layout.fillWidth: true
+        }
+
+        SceneGraphEditor {
+            id: sgEditor
+            width: 300
+        }
+
+    }
+
+    //Material {}
 }
