@@ -32,6 +32,7 @@ namespace feather
         std::string path;
         void *handle;
         status (*do_it)(int,PluginNodeFields*);
+        void (*draw_gl)(int,PluginNodeFields*);
         bool (*node_exist)(int); // is there a node with the given type and id in this plugin
         status (*add_node)(int,PluginNodeFields*);
         status (*remove_node)(int,PluginNodeFields*);
@@ -64,7 +65,27 @@ namespace feather
         private:
             int m_node;
     };
-    
+
+   
+    // DRAW_GL()
+
+    template <int _Id>
+    struct call_draw_gls {
+        static void exec(int id, PluginNodeFields* fields) { call_draw_gls<_Id-1>::exec(id,fields); };
+    };
+ 
+    template <> struct call_draw_gls<0> { static void exec(int id, PluginNodeFields* fields) { }; };
+
+    template <int _Id> void node_draw_gl(PluginNodeFields* fields) { };
+
+    struct call_draw_gl {
+        call_draw_gl(int node){ m_node = node; };
+        void operator()(PluginInfo n) { if(n.node_exist(m_node)) { std::cout << "found node for drawing " << m_node << std::endl; } };
+        private:
+            int m_node;
+    };
+
+
     // NODE MATCHING
 
     template <int _Id>
@@ -138,6 +159,7 @@ namespace feather
             ~PluginManager();
             status load_plugins();
             status do_it(int node); // this is called by the scenegraph
+            void draw_gl(int node); // this is called by the scenegraph
             status run_command(std::string cmd, parameter::ParameterList);
 
         private:
@@ -151,6 +173,7 @@ namespace feather
 
 #define C_PLUGIN_WRAPPER()\
     feather::status do_it(int, feather::PluginNodeFields*);\
+    void draw_gl(int, feather::PluginNodeFields*);\
     bool node_exist(int);\
     feather::status add_node(int, feather::PluginNodeFields*);\
     feather::status remove_node(int, feather::PluginNodeFields*);\
@@ -162,6 +185,11 @@ namespace feather
     /* call node do_it()'s */\
     feather::status do_it(int id, feather::PluginNodeFields* fields) {\
         return call_do_its<MAX_NODE_ID>::exec(id,fields);\
+    };\
+    \
+    /* call node draw_gl()'s */\
+    void draw_gl(int id, feather::PluginNodeFields* fields) {\
+        call_draw_gls<MAX_NODE_ID>::exec(id,fields);\
     };\
     \
     /* see if the node is in the plugin */\

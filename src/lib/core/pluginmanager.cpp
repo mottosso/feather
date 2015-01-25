@@ -76,6 +76,12 @@ status PluginManager::do_it(int node)
     return status();
 }
 
+void PluginManager::draw_gl(int node)
+{
+    std::cout << "draw node " << node << std::endl;
+    std::for_each(m_plugins.begin(),m_plugins.end(), call_draw_gl(node) );
+}
+
 status PluginManager::load_node(PluginInfo &node)
 {
    char *error;
@@ -88,6 +94,7 @@ status PluginManager::load_node(PluginInfo &node)
     }
 
     node.do_it = (status(*)(int,PluginNodeFields*))dlsym(node.handle, "do_it");
+    node.draw_gl = (void(*)(int,PluginNodeFields*))dlsym(node.handle, "draw_gl");
     node.node_exist = (bool(*)(int))dlsym(node.handle, "node_exist");
     node.add_node = (status(*)(int,PluginNodeFields*))dlsym(node.handle, "add_node");
     node.remove_node = (status(*)(int,PluginNodeFields*))dlsym(node.handle, "remove_node");

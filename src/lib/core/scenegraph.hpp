@@ -30,6 +30,7 @@
 #include "shader.hpp"
 #include "null.hpp"
 #include "pluginmanager.hpp"
+#include "state.hpp"
 
 namespace feather
 {
@@ -58,6 +59,7 @@ namespace feather
      * The datablock location is kept in sync with the vertex number by the datamanager.
      */
 
+    static state::FState cstate;
     static FSceneGraph sg;
 
     static PluginManager plugins;
@@ -233,6 +235,9 @@ namespace feather
                 void initialize_vertex(Vertex u, const Graph & g) const
                 {
                     std::cout << "init vertex " << sg[u].id << std::endl;
+                    if(cstate.sgmode==state::DrawGL)
+                            plugins.draw_gl(sg[u].id);
+ 
                 }
 
             // Start Vertex
@@ -252,12 +257,32 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void discover_vertex(Vertex u, const Graph & g) const
                 {
-                    std::cout << "discover vertex " << sg[u].id << std::endl;
+                    std::cout << "discover vertex:" << u << " id:" << sg[u].id << std::endl;
                     //scenegraph::do_it<node::N>::exec(u);
-                    
-                    status p = plugins.do_it(sg[u].id);
-                    if(!p.state)
-                        std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
+
+                    if(cstate.sgmode==state::DoIt)
+                    {
+                        status p = plugins.do_it(sg[u].id);
+                        if(!p.state)
+                            std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
+                    }
+                   
+                    /* 
+                    switch(cstate.sgmode) {
+                        case state::DoIt:
+                            plugins.do_it(sg[u].id);
+                            //status p = plugins.do_it(sg[u].id);
+                            //if(!p.state)
+                            //    std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
+                            break;
+                        case state::DrawGL:
+                            std::cout << "draw_gl " << sg[u].id << std::endl;
+                            plugins.draw_gl(sg[u].id);
+                            break;
+                        default:
+                            break;
+                    }
+                    */
 
                     // This might still come in handy later on
                     /*
@@ -347,8 +372,24 @@ namespace feather
     namespace scenegraph
     {
 
+        status draw_gl()
+        {
+            // set the state node drawing the gl 
+            cstate.sgmode = state::DrawGL;
+
+            node_visitor vis;
+            //node_d_visitor vis;
+            std::cout << "\n*****DRAW GL START*****\n";
+            breadth_first_search(sg, vertex(0, sg), visitor(vis));
+            std::cout << "*****DRAW GL COMPLETE*****\n";
+            return status();
+        }
+
         status update()
         {
+            // set the state node update 
+            cstate.sgmode = state::DoIt;
+
             node_visitor vis;
             //node_d_visitor vis;
             std::cout << "\n*****GRAPH UPDATE*****\n";
@@ -361,19 +402,11 @@ namespace feather
                get(boost::vertex_index, scenegraph))));
                */
             std::cout << "*****UPDATE COMPLETE*****\n";
+
+            draw_gl();
+
             return status();
         };
-
-
-        status draw_gl()
-        {
-            node_visitor vis;
-            //node_d_visitor vis;
-            std::cout << "\n*****DRAW GL START*****\n";
-            breadth_first_search(sg, vertex(0, sg), visitor(vis));
-            std::cout << "*****DRAW GL COMPLETE*****\n";
-            return status();
-        }
 
 
         status connect(FNodeDescriptor n1, int f1, FNodeDescriptor n2, int f2)

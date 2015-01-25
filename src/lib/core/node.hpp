@@ -65,6 +65,9 @@ namespace feather
 #define DO_IT(node_enum)\
     template <> status node_do_it<node_enum>(PluginNodeFields* fields)
 
+#define DRAW_GL(node_enum)\
+    template <> void node_draw_gl<node_enum>(PluginNodeFields* fields)
+
 #define NODE_INIT(node_enum)\
     namespace feather {\
         template <> struct call_do_its<node_enum> {\
@@ -73,6 +76,16 @@ namespace feather
                     return node_do_it<node_enum>(fields);\
                 } else {\
                     return call_do_its<node_enum-1>::exec(id,fields);\
+                }\
+            };\
+        };\
+        \
+        template <> struct call_draw_gls<node_enum> {\
+            static void exec(int id, PluginNodeFields* fields) {\
+                if(id==node_enum){\
+                    node_draw_gl<node_enum>(fields);\
+                } else {\
+                    call_draw_gls<node_enum-1>::exec(id,fields);\
                 }\
             };\
         };\

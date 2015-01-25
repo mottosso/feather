@@ -63,10 +63,16 @@ namespace feather
 
     DO_IT(POLYGON_SHAPE)
     { 
-        PolygonShapeFields* plane = static_cast<PolygonShapeFields*>(fields);
-        std::cout << "plane: mesh:" << plane->meshIn << std::endl;
+        PolygonShapeFields* shape = static_cast<PolygonShapeFields*>(fields);
+        std::cout << "shape: mesh:" << shape->meshIn << std::endl;
 
         return status();
+    };
+
+    DRAW_GL(POLYGON_SHAPE)
+    { 
+        PolygonShapeFields* plane = static_cast<PolygonShapeFields*>(fields);
+        std::cout << "drawing shape mesh:" << plane->meshIn << std::endl;
     };
 
 } // namespace feather
