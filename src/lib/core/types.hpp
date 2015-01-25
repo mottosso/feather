@@ -115,11 +115,14 @@ namespace feather
     typedef FSceneGraph::vertex_descriptor FNodeDescriptor;
 
     typedef std::pair<FSceneGraph::edge_descriptor, bool> FFieldConnection;
+
+    struct PluginNodeFields;
  
     struct FNode
     {
         FNode(node::Type t=node::Null) : type(t),parent(NULL) {};
         int id;
+        PluginNodeFields* fields;
         node::Type type;
         DataObject* parent;
         FAttributeArray* attrs;
