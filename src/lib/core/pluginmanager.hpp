@@ -34,8 +34,9 @@ namespace feather
         status (*do_it)(int,PluginNodeFields*);
         void (*draw_gl)(int,PluginNodeFields*);
         bool (*node_exist)(int); // is there a node with the given type and id in this plugin
-        status (*add_node)(int,PluginNodeFields*);
-        status (*remove_node)(int,PluginNodeFields*);
+        status (*add_node)(int,PluginNodeFields*); // not used
+        status (*remove_node)(int,PluginNodeFields*); // not used 
+        PluginNodeFields* (*create_fields)(int); // creates a new instance of the nodes fields which will get deleted by the scenegraph when the node is removed.
         field::FieldBase* (*get_field)(int,int,PluginNodeFields*);
         bool (*command_exist)(std::string cmd);
         status (*command)(std::string cmd, parameter::ParameterList);
@@ -138,6 +139,17 @@ namespace feather
             }; 
         };
 
+
+    // CREATE FIELDS
+
+    template <int _Id>
+    struct find_create_fields {
+        static PluginNodeFields* exec(int id) { return find_create_fields<_Id-1>::exec(id); };
+    };
+
+    template <> struct find_create_fields<0> { static PluginNodeFields* exec(int id) { return NULL; }; };
+
+
     // COMMANDS 
 
     struct call_command {
@@ -177,6 +189,7 @@ namespace feather
     bool node_exist(int);\
     feather::status add_node(int, feather::PluginNodeFields*);\
     feather::status remove_node(int, feather::PluginNodeFields*);\
+    feather::PluginNodeFields* create_fields(int);\
     feather::field::FieldBase* get_field(int,int);\
     bool command_exist(std::string cmd);\
     feather::status command(std::string cmd, feather::parameter::ParameterList);\
@@ -199,6 +212,9 @@ namespace feather
     \
     feather::status add_node(int id, feather::PluginNodeFields* fields) {\
         return feather::status(FAILED, "function not yet working");\
+    };\
+    feather::PluginNodeFields* create_fields(int id) {\
+        return find_create_fields<MAX_NODE_ID>::exec(id);\
     };\
     feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields) {\
         return find_node_field<startnode,endnode,5>::exec(nid,fid,fields);\

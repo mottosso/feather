@@ -152,7 +152,7 @@ namespace feather
  * This macro will setup the node so that
  * it can be called by the scenegraph.
  */
-NODE_INIT(SHAPE)
+NODE_INIT(SHAPE,ShapeFields)
 
 
 
@@ -202,7 +202,7 @@ namespace feather
 
 } // namespace feather
 
-NODE_INIT(TRANSFORM)
+NODE_INIT(TRANSFORM,TransformFields)
 
 
 /*

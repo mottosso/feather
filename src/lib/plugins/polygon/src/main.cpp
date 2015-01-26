@@ -77,7 +77,7 @@ namespace feather
 
 } // namespace feather
 
-NODE_INIT(POLYGON_SHAPE)
+NODE_INIT(POLYGON_SHAPE,PolygonShapeFields)
 
 
 /*
@@ -113,7 +113,7 @@ namespace feather
 
 } // namespace feather
 
-NODE_INIT(POLYGON_PLANE)
+NODE_INIT(POLYGON_PLANE,PolygonPlaneFields)
 
 
 /*
@@ -149,7 +149,7 @@ namespace feather
 
 } // namespace feather
 
-NODE_INIT(POLYGON_CUBE)
+NODE_INIT(POLYGON_CUBE,PolygonCubeFields)
 
 
 /*
