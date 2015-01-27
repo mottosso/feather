@@ -172,6 +172,7 @@ namespace feather
             status load_plugins();
             status do_it(int node); // this is called by the scenegraph
             void draw_gl(int node); // this is called by the scenegraph
+            PluginNodeFields* create_fields(int node); // this will return a new instance of the node's fields 
             status run_command(std::string cmd, parameter::ParameterList);
 
         private:

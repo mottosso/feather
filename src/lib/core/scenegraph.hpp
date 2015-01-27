@@ -92,11 +92,8 @@ namespace feather
             FNodeDescriptor node = boost::add_vertex(sg);
             sg[node].type = static_cast<feather::node::Type>(t);
             sg[node].id = n;
- 
+            sg[node].fields = plugins.create_fields(n);
             node_selection.push_back(n); 
-
-            // TODO
-            // Add fields to node
 
             // Return the node number
             return static_cast<int>(node);
@@ -237,7 +234,6 @@ namespace feather
                     std::cout << "init vertex " << sg[u].id << std::endl;
                     if(cstate.sgmode==state::DrawGL)
                             plugins.draw_gl(sg[u].id);
- 
                 }
 
             // Start Vertex
@@ -374,6 +370,8 @@ namespace feather
 
         status draw_gl()
         {
+            // Temporarely turn off gl drawing for testing
+            /*
             // set the state node drawing the gl 
             cstate.sgmode = state::DrawGL;
 
@@ -382,11 +380,14 @@ namespace feather
             std::cout << "\n*****DRAW GL START*****\n";
             breadth_first_search(sg, vertex(0, sg), visitor(vis));
             std::cout << "*****DRAW GL COMPLETE*****\n";
+            */
             return status();
         }
 
         status update()
         {
+            // Temporary turn off do_it updating for testing
+            /*
             // set the state node update 
             cstate.sgmode = state::DoIt;
 
@@ -395,16 +396,15 @@ namespace feather
             std::cout << "\n*****GRAPH UPDATE*****\n";
             breadth_first_search(sg, vertex(0, sg), visitor(vis));
             //FNodeDescriptor s = vertex(0, scenegraph);
-            /*
-               dijkstra_shortest_paths(scenegraph, s,
-               predecessor_map(boost::make_iterator_property_map(p.begin(),
-               get(boost::vertex_index, scenegraph))).distance_map(boost::make_iterator_property_map(d.begin(),
-               get(boost::vertex_index, scenegraph))));
-               */
+               
+               //dijkstra_shortest_paths(scenegraph, s,
+               //predecessor_map(boost::make_iterator_property_map(p.begin(),
+               //get(boost::vertex_index, scenegraph))).distance_map(boost::make_iterator_property_map(d.begin(),
+               //get(boost::vertex_index, scenegraph))));
             std::cout << "*****UPDATE COMPLETE*****\n";
 
             draw_gl();
-
+            */
             return status();
         };
 

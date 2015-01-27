@@ -116,6 +116,16 @@ status PluginManager::load_node(PluginInfo &node)
     return status();
 }
 
+PluginNodeFields* PluginManager::create_fields(int node)
+{
+    std::cout << "create field for node " << node << std::endl;
+    for(uint i=0; i < m_plugins.size(); i++) {
+        if(m_plugins[i].node_exist(node))
+            return m_plugins[i].create_fields(node);
+    }
+    return NULL;
+}
+
 status PluginManager::load_command(PluginInfo &command)
 {
     return status(FAILED,"no command to load");
