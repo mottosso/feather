@@ -22,19 +22,9 @@ namespace feather
     namespace field
     {
 
-        /*
-        struct Connection
-        {
-            int node; // unique plugin node id
-            int field; // unique node field id
-            int vertex; // unique sg node id
-        };
-        */
-
         struct FieldBase
         {
             int id;
-            //Connection connection;
         };
 
         template <typename _Type, int _Conn>
@@ -51,7 +41,7 @@ namespace feather
                 In,
                 Out
             };
-        } // namespace Connection
+        } // namespace connection
 
         enum Type {
             N,
