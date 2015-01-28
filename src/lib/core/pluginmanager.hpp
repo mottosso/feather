@@ -34,6 +34,7 @@ namespace feather
         status (*do_it)(int,PluginNodeFields*);
         void (*draw_gl)(int,PluginNodeFields*);
         bool (*node_exist)(int); // is there a node with the given type and id in this plugin
+        int (*node_type)(int);
         status (*add_node)(int,PluginNodeFields*); // not used
         status (*remove_node)(int,PluginNodeFields*); // not used 
         PluginNodeFields* (*create_fields)(int); // creates a new instance of the nodes fields which will get deleted by the scenegraph when the node is removed.
@@ -95,6 +96,17 @@ namespace feather
     };
 
     template <> struct find_nodes<0> { static bool exec(int id) { return false; }; };
+
+
+    // NODE TYPE
+
+    template <int _Id>
+    struct find_node_type {
+        static bool exec(int id) { return find_node_type<_Id-1>::exec(id); };
+    };
+
+    template <> struct find_node_type<0> { static bool exec(int id) { return false; }; };
+
 
 
     // GET FIELD DATA
@@ -188,6 +200,7 @@ namespace feather
     feather::status do_it(int, feather::PluginNodeFields*);\
     void draw_gl(int, feather::PluginNodeFields*);\
     bool node_exist(int);\
+    int node_type(int);\
     feather::status add_node(int, feather::PluginNodeFields*);\
     feather::status remove_node(int, feather::PluginNodeFields*);\
     feather::PluginNodeFields* create_fields(int);\
@@ -209,6 +222,11 @@ namespace feather
     /* see if the node is in the plugin */\
     bool node_exist(int id) {\
         return find_nodes<MAX_NODE_ID>::exec(id);\
+    };\
+    \
+    /* get the node type */\
+    int node_type(int id) {\
+        return find_node_type<MAX_NODE_ID>::exec(id);\
     };\
     \
     feather::status add_node(int id, feather::PluginNodeFields* fields) {\

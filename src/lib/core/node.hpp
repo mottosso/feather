@@ -33,8 +33,13 @@ namespace feather
             Camera,
             Light,
             Texture,
+            Modifier,
+            Deformer,
+            Manipulator,
             Shader,
             Object,
+            Curve,
+            Polygon,
             N
         };
 
@@ -62,49 +67,59 @@ namespace feather
 
 } // namespace feather
 
-#define DO_IT(node_enum)\
-    template <> status node_do_it<node_enum>(PluginNodeFields* fields)
+#define DO_IT(__node_enum)\
+    template <> status node_do_it<__node_enum>(PluginNodeFields* fields)
 
-#define DRAW_GL(node_enum)\
-    template <> void node_draw_gl<node_enum>(PluginNodeFields* fields)
+#define DRAW_GL(__node_enum)\
+    template <> void node_draw_gl<__node_enum>(PluginNodeFields* fields)
 
-#define NODE_INIT(node_enum,field_struct)\
+#define NODE_INIT(__node_enum,__node_type,__field_struct)\
     namespace feather {\
-        template <> struct call_do_its<node_enum> {\
+        template <> struct call_do_its<__node_enum> {\
             static status exec(int id, PluginNodeFields* fields) {\
-                if(id==node_enum){\
-                    return node_do_it<node_enum>(fields);\
+                if(id==__node_enum){\
+                    return node_do_it<__node_enum>(fields);\
                 } else {\
-                    return call_do_its<node_enum-1>::exec(id,fields);\
+                    return call_do_its<__node_enum-1>::exec(id,fields);\
                 }\
             };\
         };\
         \
-        template <> struct call_draw_gls<node_enum> {\
+        template <> struct call_draw_gls<__node_enum> {\
             static void exec(int id, PluginNodeFields* fields) {\
-                if(id==node_enum){\
-                    node_draw_gl<node_enum>(fields);\
+                if(id==__node_enum){\
+                    node_draw_gl<__node_enum>(fields);\
                 } else {\
-                    call_draw_gls<node_enum-1>::exec(id,fields);\
+                    call_draw_gls<__node_enum-1>::exec(id,fields);\
                 }\
             };\
         };\
         \
-        template <> struct find_nodes<node_enum> {\
+        template <> struct find_nodes<__node_enum> {\
             static bool exec(int id) {\
-                if(id==node_enum){\
+                if(id==__node_enum){\
                     return true;\
                 } else {\
-                    return find_nodes<node_enum-1>::exec(id);\
+                    return find_nodes<__node_enum-1>::exec(id);\
                 }\
             };\
         };\
-        template <> struct find_create_fields<node_enum> {\
-            static PluginNodeFields* exec(int id) {\
-                if(id==node_enum){\
-                    return new field_struct();\
+        \
+        template <> struct find_node_type<__node_enum> {\
+            static bool exec(int id) {\
+                if(id==__node_enum){\
+                    return __node_type;\
                 } else {\
-                    return find_create_fields<node_enum-1>::exec(id);\
+                    return find_nodes<__node_enum-1>::exec(id);\
+                }\
+            };\
+        };\
+        template <> struct find_create_fields<__node_enum> {\
+            static PluginNodeFields* exec(int id) {\
+                if(id==__node_enum){\
+                    return new __field_struct();\
+                } else {\
+                    return find_create_fields<__node_enum-1>::exec(id);\
                 }\
             };\
         };\
