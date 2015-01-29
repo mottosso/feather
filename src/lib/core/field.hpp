@@ -36,6 +36,8 @@ namespace feather
             int conn;
         };
 
+        typedef std::vector<FieldBase*> FieldContainer;
+
         namespace connection
         {
             enum Type {

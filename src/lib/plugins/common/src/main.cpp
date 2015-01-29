@@ -60,7 +60,8 @@ using namespace feather;
  * This macro handles some misc bindings
  * between the plugin and the pluginmanager.
  */ 
-PLUGIN_INIT(SHAPE,TRANSFORM)
+//PLUGIN_INIT(SHAPE,TRANSFORM)
+PLUGIN_INIT(SHAPE,SHAPE)
 
 /*
  ***************************************
@@ -110,7 +111,6 @@ namespace feather {
  */
 ADD_FIELD_TO_NODE(SHAPE,ShapeFields,meshIn,1)
 ADD_FIELD_TO_NODE(SHAPE,ShapeFields,meshOut,2)
-//ADD_FIELD_TO_NODE(POLYGON_PLANE,PolygonPlaneFields,subY,2)
 
 
 namespace feather
@@ -133,8 +133,8 @@ namespace feather
 
     DO_IT(SHAPE)
     { 
-        ShapeFields* shape = static_cast<ShapeFields*>(fields);
-        std::cout << "shape: meshIn:" << shape->meshIn << std::endl;
+        //ShapeFields* shape = static_cast<ShapeFields*>(fields);
+        //std::cout << "shape: meshIn:" << shape->meshIn << std::endl;
 
         return status();
     };
@@ -164,6 +164,7 @@ NODE_INIT(SHAPE,node::Object,ShapeFields)
 
 namespace feather
 {
+    /*
     struct TransformFields : public PluginNodeFields
     {
         field::Field<FDouble,field::connection::Out> *tx;
@@ -176,9 +177,10 @@ namespace feather
         field::Field<FDouble,field::connection::Out> *sy;
         field::Field<FDouble,field::connection::Out> *sz;
     };
-
+    */
 } // namespace feather
 
+/*
 ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,tx,1)
 ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,ty,2)
 ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,tz,3)
@@ -188,10 +190,12 @@ ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,rz,6)
 ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,sx,7)
 ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,sy,8)
 ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,sz,9)
+*/
 
 namespace feather
 {
 
+    /*
     // do_it
     DO_IT(TRANSFORM) 
     {
@@ -199,10 +203,11 @@ namespace feather
         std::cout << "xform: tx:" << xform->tx << std::endl;
         return status();
     };
+    */
 
 } // namespace feather
 
-NODE_INIT(TRANSFORM,node::Manipulator,TransformFields)
+//NODE_INIT(TRANSFORM,node::Manipulator,TransformFields)
 
 
 /*
