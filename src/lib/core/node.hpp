@@ -55,15 +55,15 @@ namespace feather
 } // namespace feather
 
 #define DO_IT(__node_enum)\
-    template <> status node_do_it<__node_enum>(PluginNodeFields* fields)
+    template <> status node_do_it<__node_enum>(field::Fields& fields)
 
 #define DRAW_GL(__node_enum)\
-    template <> void node_draw_gl<__node_enum>(PluginNodeFields* fields)
+    template <> void node_draw_gl<__node_enum>(field::Fields& fields)
 
-#define NODE_INIT(__node_enum,__node_type,__field_struct)\
+#define NODE_INIT(__node_enum,__node_type)\
     namespace feather {\
         template <> struct call_do_its<__node_enum> {\
-            static status exec(int id, PluginNodeFields* fields) {\
+            static status exec(int id, field::Fields& fields) {\
                 if(id==__node_enum){\
                     return node_do_it<__node_enum>(fields);\
                 } else {\
@@ -73,7 +73,7 @@ namespace feather
         };\
         \
         template <> struct call_draw_gls<__node_enum> {\
-            static void exec(int id, PluginNodeFields* fields) {\
+            static void exec(int id, field::Fields& fields) {\
                 if(id==__node_enum){\
                     node_draw_gl<__node_enum>(fields);\
                 } else {\
@@ -102,11 +102,12 @@ namespace feather
             };\
         };\
         template <> struct find_create_fields<__node_enum> {\
-            static PluginNodeFields* exec(int id) {\
+            static  status exec(int id, field::Fields& fields) {\
                 if(id==__node_enum){\
-                    return new __field_struct();\
+                    /*call the spec function to push a new FieldBase into fields*/\
+                    return status();\
                 } else {\
-                    return find_create_fields<__node_enum-1>::exec(id);\
+                    return find_create_fields<__node_enum-1>::exec(id,fields);\
                 }\
             };\
         };\

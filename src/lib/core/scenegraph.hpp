@@ -92,7 +92,7 @@ namespace feather
             FNodeDescriptor node = boost::add_vertex(sg);
             sg[node].type = static_cast<feather::node::Type>(t);
             sg[node].id = n;
-            sg[node].fields = plugins.create_fields(n);
+            plugins.create_fields(n,sg[node].fields);
             node_selection.push_back(n); 
 
             // Return the node number

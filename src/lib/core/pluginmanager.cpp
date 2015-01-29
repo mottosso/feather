@@ -93,14 +93,12 @@ status PluginManager::load_node(PluginInfo &node)
         return status(FAILED,"loaded failed to load");
     }
 
-    node.do_it = (status(*)(int,PluginNodeFields*))dlsym(node.handle, "do_it");
-    node.draw_gl = (void(*)(int,PluginNodeFields*))dlsym(node.handle, "draw_gl");
+    node.do_it = (status(*)(int,field::Fields&))dlsym(node.handle, "do_it");
+    node.draw_gl = (void(*)(int,field::Fields&))dlsym(node.handle, "draw_gl");
     node.node_exist = (bool(*)(int))dlsym(node.handle, "node_exist");
     node.node_type = (int(*)(int))dlsym(node.handle, "node_type");
-    node.add_node = (status(*)(int,PluginNodeFields*))dlsym(node.handle, "add_node");
-    node.remove_node = (status(*)(int,PluginNodeFields*))dlsym(node.handle, "remove_node");
-    node.create_fields = (PluginNodeFields*(*)(int))dlsym(node.handle,"create_fields");
-    node.get_field = (field::FieldBase*(*)(int,int,PluginNodeFields*))dlsym(node.handle, "get_field");
+    node.create_fields = (status(*)(int,field::Fields&))dlsym(node.handle,"create_fields");
+    node.get_field = (field::FieldBase*(*)(int,int,field::Fields&))dlsym(node.handle, "get_field");
     node.command_exist = (bool(*)(std::string))dlsym(node.handle, "command_exist");
     node.command = (status(*)(std::string,parameter::ParameterList))dlsym(node.handle, "command");
 
@@ -117,14 +115,14 @@ status PluginManager::load_node(PluginInfo &node)
     return status();
 }
 
-PluginNodeFields* PluginManager::create_fields(int node)
+status PluginManager::create_fields(int node, field::Fields& fields)
 {
     std::cout << "create field for node " << node << std::endl;
     for(uint i=0; i < m_plugins.size(); i++) {
         if(m_plugins[i].node_exist(node))
-            return m_plugins[i].create_fields(node);
+            return m_plugins[i].create_fields(node,fields);
     }
-    return NULL;
+    return status();
 }
 
 status PluginManager::load_command(PluginInfo &command)

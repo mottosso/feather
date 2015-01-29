@@ -36,7 +36,7 @@ namespace feather
             int conn;
         };
 
-        typedef std::vector<FieldBase*> FieldContainer;
+        typedef std::vector<FieldBase*> Fields;
 
         namespace connection
         {
@@ -88,16 +88,16 @@ namespace feather
 
     } // namespace field
 
-#define ADD_FIELD_TO_NODE(node,field_struct,field_attr,field_key)\
+#define ADD_FIELD_TO_NODE(node,field_attr,field_key)\
     namespace feather {\
-        template <> field::FieldBase* field_data<node,field_key>(PluginNodeFields* fields)\
+        template <> field::FieldBase* field_data<node,field_key>(field::Fields& fields)\
         {\
-            field_struct* f = static_cast<field_struct*>(fields);\
-            return f->field_attr;\
+            /* TODO */\
+            return NULL;\
         };\
  \
         template <> struct find_field<node,field_key> {\
-            static field::FieldBase* exec(int fid, PluginNodeFields* fields) {\
+            static status exec(int fid, field::Fields& fields) {\
                 if(fid==field_key)\
                     return field_data<node,field_key>(fields);\
                 else\

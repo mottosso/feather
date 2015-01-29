@@ -122,7 +122,8 @@ namespace feather
     {
         FNode(node::Type t=node::Null) : type(t),parent(NULL) {};
         int id;
-        PluginNodeFields* fields;
+        //PluginNodeFields* fields;
+        field::Fields fields;
         node::Type type;
         DataObject* parent;
         FAttributeArray* attrs;

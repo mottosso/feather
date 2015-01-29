@@ -26,19 +26,17 @@
 namespace feather
 {
 
-    struct PluginNodeFields{};
+    //struct PluginNodeFields{};
 
     struct PluginInfo {
         std::string path;
         void *handle;
-        status (*do_it)(int,PluginNodeFields*);
-        void (*draw_gl)(int,PluginNodeFields*);
+        status (*do_it)(int,field::Fields&);
+        void (*draw_gl)(int,field::Fields&);
         bool (*node_exist)(int); // is there a node with the given type and id in this plugin
         int (*node_type)(int);
-        status (*add_node)(int,PluginNodeFields*); // not used
-        status (*remove_node)(int,PluginNodeFields*); // not used 
-        PluginNodeFields* (*create_fields)(int); // creates a new instance of the nodes fields which will get deleted by the scenegraph when the node is removed.
-        field::FieldBase* (*get_field)(int,int,PluginNodeFields*);
+        status(*create_fields)(int,field::Fields&); // creates a new instance of the nodes fields which will get deleted by the scenegraph when the node is removed.
+        field::FieldBase* (*get_field)(int,int,field::Fields&);
         bool (*command_exist)(std::string cmd);
         status (*command)(std::string cmd, parameter::ParameterList);
     };
@@ -53,13 +51,13 @@ namespace feather
 
     template <int _Id>
     struct call_do_its {
-        static status exec(int id, PluginNodeFields* fields) { return call_do_its<_Id-1>::exec(id,fields); };
+        static status exec(int id, field::Fields& fields) { return call_do_its<_Id-1>::exec(id,fields); };
     };
 
-    template <> struct call_do_its<0> { static status exec(int id, PluginNodeFields* fields) { return status(FAILED,"could not find node"); }; };
+    template <> struct call_do_its<0> { static status exec(int id, field::Fields& fields) { return status(FAILED,"could not find node"); }; };
 
 
-    template <int _Id> status node_do_it(PluginNodeFields* fields) { return status(FAILED,"no node found"); };
+    template <int _Id> status node_do_it(field::Fields& fields) { return status(FAILED,"no node found"); };
     
     struct call_do_it {
         call_do_it(int node){ m_node = node; };
@@ -73,12 +71,12 @@ namespace feather
 
     template <int _Id>
     struct call_draw_gls {
-        static void exec(int id, PluginNodeFields* fields) { call_draw_gls<_Id-1>::exec(id,fields); };
+        static void exec(int id, field::Fields& fields) { call_draw_gls<_Id-1>::exec(id,fields); };
     };
  
-    template <> struct call_draw_gls<0> { static void exec(int id, PluginNodeFields* fields) { }; };
+    template <> struct call_draw_gls<0> { static void exec(int id, field::Fields& fields) { }; };
 
-    template <int _Id> void node_draw_gl(PluginNodeFields* fields) { };
+    template <int _Id> void node_draw_gl(field::Fields& fields) { };
 
     struct call_draw_gl {
         call_draw_gl(int node){ m_node = node; };
@@ -112,26 +110,26 @@ namespace feather
     // GET FIELD DATA
 
     template <int _NodeId, int _FieldId>
-    field::FieldBase* field_data(PluginNodeFields* fields) { return NULL; };  
+    field::FieldBase* field_data(field::Fields& fields) { return NULL; };  
 
     // remember that the StartFieldId has to be the last field id + 1
     template <int _NodeId, int _StartFieldId>
     struct find_field {
-        static field::FieldBase* exec(int fid, PluginNodeFields* fields) {
+        static field::FieldBase* exec(int fid, field::Fields& fields) {
             return find_field<_NodeId,_StartFieldId-1>::exec(fid,fields);
         };
     };
 
     template <int _NodeId>
     struct find_field<_NodeId,0> {
-        static field::FieldBase* exec(int fid, PluginNodeFields* fields) {
+        static field::FieldBase* exec(int fid, field::Fields& fields) {
             return NULL;
         };
     };
 
     template <int _EndNode, int _StartNode, int _StartField>
         struct find_node_field {
-            static field::FieldBase* exec(int nid, int fid, PluginNodeFields* fields) {
+            static field::FieldBase* exec(int nid, int fid, field::Fields& fields) {
                 if(nid==_StartNode)
                     return find_field<_StartNode,_StartField>::exec(fid,fields);
                 else if(_EndNode > _StartNode)
@@ -143,7 +141,7 @@ namespace feather
 
     template <int _StartNode, int _StartField>
         struct find_node_field<_StartNode,_StartNode,_StartField> {
-            static field::FieldBase* exec(int nid, int fid, PluginNodeFields* fields) {
+            static field::FieldBase* exec(int nid, int fid, field::Fields& fields) {
                 if(nid==_StartNode)
                     return find_field<_StartNode,_StartField>::exec(fid,fields);
                 else
@@ -156,10 +154,10 @@ namespace feather
 
     template <int _Id>
     struct find_create_fields {
-        static PluginNodeFields* exec(int id) { return find_create_fields<_Id-1>::exec(id); };
+        static  status exec(int id, field::Fields& fields) { return find_create_fields<_Id-1>::exec(id,fields); };
     };
 
-    template <> struct find_create_fields<0> { static PluginNodeFields* exec(int id) { return NULL; }; };
+    template <> struct find_create_fields<0> { static status exec(int id, field::Fields& fields) { return status(FAILED,"No matching node fould to create fields in"); }; };
 
 
     // COMMANDS 
@@ -184,7 +182,7 @@ namespace feather
             status load_plugins();
             status do_it(int node); // this is called by the scenegraph
             void draw_gl(int node); // this is called by the scenegraph
-            PluginNodeFields* create_fields(int node); // this will return a new instance of the node's fields 
+            status create_fields(int node, field::Fields& fields); // this will return a new instance of the node's fields 
             status run_command(std::string cmd, parameter::ParameterList);
 
         private:
@@ -197,25 +195,23 @@ namespace feather
 } // namespace feather
 
 #define C_PLUGIN_WRAPPER()\
-    feather::status do_it(int, feather::PluginNodeFields*);\
-    void draw_gl(int, feather::PluginNodeFields*);\
+    feather::status do_it(int, feather::field::Fields&);\
+    void draw_gl(int, feather::field::Fields&);\
     bool node_exist(int);\
     int node_type(int);\
-    feather::status add_node(int, feather::PluginNodeFields*);\
-    feather::status remove_node(int, feather::PluginNodeFields*);\
-    feather::PluginNodeFields* create_fields(int);\
+    feather::status create_fields(int, feather::field::Fields&);\
     feather::field::FieldBase* get_field(int,int);\
     bool command_exist(std::string cmd);\
     feather::status command(std::string cmd, feather::parameter::ParameterList);\
 
 #define PLUGIN_INIT(startnode,endnode)\
     /* call node do_it()'s */\
-    feather::status do_it(int id, feather::PluginNodeFields* fields) {\
+    feather::status do_it(int id, feather::field::Fields& fields) {\
         return call_do_its<MAX_NODE_ID>::exec(id,fields);\
     };\
     \
     /* call node draw_gl()'s */\
-    void draw_gl(int id, feather::PluginNodeFields* fields) {\
+    void draw_gl(int id, feather::field::Fields& fields) {\
         call_draw_gls<MAX_NODE_ID>::exec(id,fields);\
     };\
     \
@@ -229,13 +225,10 @@ namespace feather
         return find_node_type<MAX_NODE_ID>::exec(id);\
     };\
     \
-    feather::status add_node(int id, feather::PluginNodeFields* fields) {\
-        return feather::status(FAILED, "function not yet working");\
+    feather::status create_fields(int id,feather::field::Fields& fields) {\
+        return find_create_fields<MAX_NODE_ID>::exec(id,fields);\
     };\
-    feather::PluginNodeFields* create_fields(int id) {\
-        return find_create_fields<MAX_NODE_ID>::exec(id);\
-    };\
-    feather::field::FieldBase* get_field(int nid, int fid, PluginNodeFields* fields) {\
+    feather::field::FieldBase* get_field(int nid, int fid, field::Fields& fields) {\
         return find_node_field<startnode,endnode,5>::exec(nid,fid,fields);\
     };
 

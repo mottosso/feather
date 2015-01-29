@@ -82,11 +82,13 @@ namespace feather {
      * outout fields. These fields will be
      * used to connect nodes together 
      */
+    /* 
     struct ShapeFields : public PluginNodeFields
     {
         field::Field<FMesh,field::connection::In> *meshIn;
         field::Field<FMesh,field::connection::Out> *meshOut;
     };
+    */
 
 } // namespace feather
 
@@ -109,8 +111,8 @@ namespace feather {
  * so that it's value can be used by the
  * node's do_it command.
  */
-ADD_FIELD_TO_NODE(SHAPE,ShapeFields,meshIn,1)
-ADD_FIELD_TO_NODE(SHAPE,ShapeFields,meshOut,2)
+//ADD_FIELD_TO_NODE(SHAPE,ShapeFields,meshIn,1)
+//ADD_FIELD_TO_NODE(SHAPE,ShapeFields,meshOut,2)
 
 
 namespace feather
@@ -152,7 +154,7 @@ namespace feather
  * This macro will setup the node so that
  * it can be called by the scenegraph.
  */
-NODE_INIT(SHAPE,node::Object,ShapeFields)
+NODE_INIT(SHAPE,node::Object)
 
 
 
