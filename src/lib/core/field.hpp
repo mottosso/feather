@@ -92,7 +92,14 @@ namespace feather
     namespace feather {\
         template <> field::FieldBase* field_data<node,field_key>(field::Fields& fields)\
         {\
-            /* TODO */\
+            /*This is a cheap easy way to get FieldBase*\
+            But it's needs to be changed later so we\
+            don't have to scan the field every time\
+            to get the pointer.*/\
+            for(uint i=0; i < field.size(); i++) {\
+                if(field.at(0)->id == field_key)\
+                    return field.at(0);\
+            }\
             return NULL;\
         };\
  \
