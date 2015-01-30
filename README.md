@@ -16,6 +16,7 @@ Here's a list of features that are the goal for version 1.0.
 * QtQuick interface
 * Open/Save feather project files
 * DAG with field connections between different nodes
+* Users can add custom node fields to any node and connect this field to any other field of the same type in another node.
 * Plugin architecture
 * Import/Export obj files
 * Full clone of Wings tools for all components (vertex, edge, face and object)
