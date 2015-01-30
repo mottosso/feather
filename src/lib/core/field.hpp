@@ -97,7 +97,7 @@ namespace feather
         };\
  \
         template <> struct find_field<node,field_key> {\
-            static status exec(int fid, field::Fields& fields) {\
+            static field::FieldBase* exec(int fid, field::Fields& fields) {\
                 if(fid==field_key)\
                     return field_data<node,field_key>(fields);\
                 else\
