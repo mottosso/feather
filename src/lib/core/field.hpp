@@ -88,17 +88,24 @@ namespace feather
 
     } // namespace field
 
-#define ADD_FIELD_TO_NODE(node,field_attr,field_key)\
+#define ADD_FIELD_TO_NODE(node,__type,__connection,field_key)\
     namespace feather {\
+        template <> struct add_fields<node,field_key> {\
+            static status exec(field::Fields& fields) {\
+                fields.push_back(new field::Field<__type,__connection>());\
+                return add_fields<node,field_key-1>::exec(fields);\
+            };\
+        };\
+\
         template <> field::FieldBase* field_data<node,field_key>(field::Fields& fields)\
         {\
             /*This is a cheap easy way to get FieldBase*\
             But it's needs to be changed later so we\
             don't have to scan the field every time\
             to get the pointer.*/\
-            for(uint i=0; i < field.size(); i++) {\
-                if(field.at(0)->id == field_key)\
-                    return field.at(0);\
+            for(uint i=0; i < fields.size(); i++) {\
+                if(fields.at(i)->id == field_key)\
+                    return fields.at(i);\
             }\
             return NULL;\
         };\

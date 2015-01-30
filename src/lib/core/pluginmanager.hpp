@@ -152,6 +152,19 @@ namespace feather
 
     // CREATE FIELDS
 
+    // Add Field is used to setup the Fields vector
+
+    template <int _Node, int _StartKey>
+    struct add_fields {
+        static status exec(field::Fields& fields) {
+            return add_fields<_Node,_StartKey-1>::exec(fields);
+        };
+    };
+
+    template <int _Node> struct add_fields<_Node,0> { static status exec(field::Fields& fields) { return status(); }; };
+
+    // Create Fields is used to get the field into the sg node container
+
     template <int _Id>
     struct find_create_fields {
         static  status exec(int id, field::Fields& fields) { return find_create_fields<_Id-1>::exec(id,fields); };

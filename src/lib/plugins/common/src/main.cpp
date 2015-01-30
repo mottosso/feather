@@ -111,8 +111,8 @@ namespace feather {
  * so that it's value can be used by the
  * node's do_it command.
  */
-//ADD_FIELD_TO_NODE(SHAPE,ShapeFields,meshIn,1)
-//ADD_FIELD_TO_NODE(SHAPE,ShapeFields,meshOut,2)
+ADD_FIELD_TO_NODE(SHAPE,FMesh,field::connection::In,200)
+ADD_FIELD_TO_NODE(SHAPE,FMesh,field::connection::Out,201)
 
 
 namespace feather

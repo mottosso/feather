@@ -104,11 +104,11 @@ namespace feather
         template <> struct find_create_fields<__node_enum> {\
             static  status exec(int id, field::Fields& fields) {\
                 if(id==__node_enum){\
-                    /*call the spec function to push a new FieldBase into fields*/\
-                    return status();\
+                    return add_fields<__node_enum,600>::exec(fields);\
                 } else {\
                     return find_create_fields<__node_enum-1>::exec(id,fields);\
                 }\
+                return status();\
             };\
         };\
     }
