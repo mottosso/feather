@@ -70,7 +70,7 @@ Rectangle {
  
             PropertyChanges {
                 target: valueBox
-                color: "yellow"
+                color: "lightblue"
             }
 
             PropertyChanges {
@@ -85,7 +85,7 @@ Rectangle {
             name: "hover"
             PropertyChanges {
                 target: intField 
-                color: "darkgrey"
+                color: "lightblue"
             }
 
             PropertyChanges {
@@ -96,7 +96,7 @@ Rectangle {
 
             PropertyChanges {
                 target: valueBox
-                color: "black"
+                color: "midnightblue"
             }
 
             PropertyChanges {
@@ -111,7 +111,7 @@ Rectangle {
             name: "pressed"
             PropertyChanges {
                 target: intField 
-                color: "darkgrey"
+                color: "green"
             }
 
             PropertyChanges {
@@ -144,15 +144,15 @@ Rectangle {
         onPressed: {
             if(mouse.button == Qt.RightButton)
                 console.log("rb clicked");
-            state="pressed"
+            intField.state="pressed"
         }
 
         //onPositionChanged: { }
-        onReleased: { state="normal" }
-        //onHover: { state="hover" }
-        //on: { state="normal" }
+        onReleased: { intField.state="normal" }
+        onEntered: { intField.state="hover" }
+        onExited: { intField.state="normal" }
         //onWheel: { }
     }
 
-    Component.onCompleted: { state="normal" }
+    Component.onCompleted: { intField.state="normal" }
 }
