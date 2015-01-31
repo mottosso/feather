@@ -1,16 +1,19 @@
 import QtQuick 2.3
+import feather.scenegraph 1.0
 
 Rectangle {
     id: intField
-    color: "midnightblue"
     height: 18
-    //border.color: "black"
     radius: 4
-    //border.width: 1
-    
-    property int node: 0
-    property int field: 0
+   
+    property int id: 0 // this is a unique of the node 
+    property int node: 0 // this if the node's number assigned by the plugin
+    property int field: 0 // this is the fields number assigned by the plugin
     property alias label: label.text 
+
+
+    SceneGraph { id: sg }
+
 
     // LABEL
 
@@ -23,9 +26,7 @@ Rectangle {
         anchors.margins: 4
         horizontalAlignment: Text.AlignRight
         verticalAlignment: Text.AlignVCenter
-        font.bold: false 
         font.pixelSize: 12
-        color: "lightgrey"
     }    
    
     // VALUE
@@ -38,7 +39,6 @@ Rectangle {
         width: 80
         border.color: "black"
         border.width: 1
-        color: "limegreen"
         radius: 4
 
         Text {
@@ -49,7 +49,110 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
             font.bold: false 
             font.pixelSize: 14
-            color: "black"
         }
     } 
+
+
+    states: [
+        // NORMAL
+        State {
+            name: "normal"
+            PropertyChanges {
+                target: intField 
+                color: "lightgrey"
+            }
+
+            PropertyChanges {
+                target: label 
+                color: "black"
+                font.bold: false
+            }
+ 
+            PropertyChanges {
+                target: valueBox
+                color: "yellow"
+            }
+
+            PropertyChanges {
+                target: valueText
+                color: "black"
+                font.bold: false
+            }
+        },
+
+        // HOVER
+        State {
+            name: "hover"
+            PropertyChanges {
+                target: intField 
+                color: "darkgrey"
+            }
+
+            PropertyChanges {
+                target: label 
+                color: "black"
+                font.bold: true 
+            }
+
+            PropertyChanges {
+                target: valueBox
+                color: "black"
+            }
+
+            PropertyChanges {
+                target: valueText
+                color: "white"
+                 font.bold: true 
+            }
+        },
+
+        // PRESSED  
+        State {
+            name: "pressed"
+            PropertyChanges {
+                target: intField 
+                color: "darkgrey"
+            }
+
+            PropertyChanges {
+                target: label 
+                color: "black"
+                font.bold: true 
+            }
+
+            PropertyChanges {
+                target: valueBox
+                color: "limegreen"
+            }
+
+            PropertyChanges {
+                target: valueText
+                color: "black"
+                font.bold: true 
+            }
+        }
+
+    ]
+
+
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+        hoverEnabled: true 
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+        onPressed: {
+            if(mouse.button == Qt.RightButton)
+                console.log("rb clicked");
+            state="pressed"
+        }
+
+        //onPositionChanged: { }
+        onReleased: { state="normal" }
+        //onHover: { state="hover" }
+        //on: { state="normal" }
+        //onWheel: { }
+    }
+
+    Component.onCompleted: { state="normal" }
 }
