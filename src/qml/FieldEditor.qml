@@ -7,17 +7,22 @@ Window {
     title: "FieldEditor"
     visible: true
     flags: Qt.Tool
-    width: 300
+    width: 200
     height: 500
 
     SceneGraph { id: sg }
 
     Rectangle {
-        id: frame
-        anchors.fill: parent
+        id: nodeFrame
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: parent.height/2
+        anchors.margins: 2
         border.color: "black"
-        border.width: 2
+        border.width: 1
         color: "grey"
+        radius: 4
  
         // Node Title
         Rectangle {
@@ -25,10 +30,10 @@ Window {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 25
+            height: 20
             border.color: "black"
-            border.width: 2
-            radius: 2
+            border.width: 1
+            radius: 4
             color: "lightgrey"
  
             Text {
@@ -37,8 +42,8 @@ Window {
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                font.bold: false 
-                font.pixelSize: 20
+                font.bold: true 
+                font.pixelSize: 16
                 color: "black"
             }
         }
@@ -62,8 +67,55 @@ Window {
                 width: parent.width
                 label: "subY"
             }
+
+            IntField {
+                id: test3
+                width: parent.width
+                label: "subZ"
+            }
         }
+
+
     }
+ 
+    Rectangle {
+        id: baseFrame
+        anchors.top: nodeFrame.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: 2
+        border.color: "black"
+        border.width: 1
+        color: "darkgrey"
+        radius: 4
+
+        // Node Base Title
+        Rectangle {
+            id: nodeBaseTitle
+            anchors.top: parent.top 
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 20
+            border.color: "black"
+            border.width: 1
+            radius: 4
+            color: "slategrey"
+ 
+            Text {
+                id: nodeBaseLabel
+                text: "cube01->Base"
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.bold: true 
+                font.pixelSize: 16
+                color: "black"
+            }
+        }
+
+    }
+        
  
     Component.onCompleted: {
         
