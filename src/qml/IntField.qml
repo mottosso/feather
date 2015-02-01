@@ -6,10 +6,11 @@ Rectangle {
     height: 18
     radius: 4
    
-    property alias uid: field.uid // this is a unique of the node 
-    property alias node: field.node // this if the node's number assigned by the plugin
-    property alias field: field.field // this is the fields number assigned by the plugin
+    property alias uId: field.uid // this is a unique of the node 
+    property alias nodeKey: field.node // this if the node's number assigned by the plugin
+    property alias fieldKey: field.field // this is the fields number assigned by the plugin
     property alias label: label.text 
+    property int value: field.intVal
 
     Field { id: field }
 
@@ -42,7 +43,7 @@ Rectangle {
 
         Text {
             id: valueText
-            text: "4"
+            text: value 
             anchors.fill: parent
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -144,6 +145,7 @@ Rectangle {
             if(mouse.button == Qt.RightButton)
                 console.log("rb clicked");
             intField.state="pressed"
+            intField.update()
         }
 
         //onPositionChanged: { }
@@ -153,5 +155,9 @@ Rectangle {
         //onWheel: { }
     }
 
-    Component.onCompleted: { intField.state="normal" }
+    function update() {
+        field.get_int_val()
+    }
+
+    Component.onCompleted: { intField.state="normal"; intField.update() }
 }

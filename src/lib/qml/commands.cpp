@@ -87,7 +87,7 @@ status qml::command::get_bool_field_val(int uid, int node, int field, bool& val)
 
 status qml::command::get_int_field_val(int uid, int node, int field, int& val)
 {
-    val=0;
+    val=5;
     return status();
 }
 
