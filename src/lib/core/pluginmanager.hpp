@@ -196,6 +196,7 @@ namespace feather
             status do_it(int node); // this is called by the scenegraph
             void draw_gl(int node); // this is called by the scenegraph
             status create_fields(int node, field::Fields& fields); // this will return a new instance of the node's fields 
+            field::FieldBase* get_fieldbase(int uid, int node, int field);
             status run_command(std::string cmd, parameter::ParameterList);
 
         private:

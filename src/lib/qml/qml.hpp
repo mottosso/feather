@@ -73,6 +73,9 @@ class Field: public QObject
         Q_PROPERTY(int uid READ uid WRITE setUid)
         Q_PROPERTY(int node READ node WRITE setNode)
         Q_PROPERTY(int field READ field WRITE setField)
+        Q_PROPERTY(bool boolVal READ boolVal WRITE setBoolVal NOTIFY boolValChanged)
+        Q_PROPERTY(int intVal READ intVal WRITE setIntVal NOTIFY intValChanged)
+        Q_PROPERTY(float floatVal READ floatVal WRITE setFloatVal NOTIFY floatValChanged)
  
     public:
         Field(QObject* parent=0);
@@ -105,6 +108,40 @@ class Field: public QObject
 
         int field() { return m_field; }
 
+        // boolVal 
+        void setBoolVal(bool& v) {
+            if(m_boolVal != v) {
+                m_boolVal = v;
+                emit boolValChanged();
+            }
+        }
+
+        bool boolVal() { return m_boolVal; }
+
+        // intVal 
+        void setIntVal(int& v) {
+            if(m_intVal != v) {
+                m_intVal = v;
+                emit intValChanged();
+            }
+        }
+
+        int intVal() { return m_intVal; }
+
+        // floatVal 
+        void setFloatVal(float& v) {
+            if(m_floatVal != v) {
+                m_floatVal = v;
+                emit floatValChanged();
+            }
+        }
+
+        float floatVal() { return m_floatVal; };
+
+        Q_INVOKABLE void get_bool_val();
+        Q_INVOKABLE void get_int_val();
+        Q_INVOKABLE void get_float_val();
+
         enum Type {
             Bool=field::Bool,
             Int=field::Int,
@@ -123,10 +160,18 @@ class Field: public QObject
             RGBAArray=field::RGBAArray
         };
 
+    signals:
+        void boolValChanged();
+        void intValChanged();
+        void floatValChanged();
+
     private:
         int m_uid; // unique number of the node in the sg
         int m_node; // node key
         int m_field; // field key
+        bool m_boolVal;
+        int m_intVal;
+        float m_floatVal;
 };
 
 

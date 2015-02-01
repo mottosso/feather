@@ -78,3 +78,22 @@ status qml::command::run_command(std::string cmd, feather::parameter::ParameterL
 {
     return plugins.run_command(cmd, params);
 }
+
+status qml::command::get_bool_field_val(int uid, int node, int field, bool& val)
+{
+    val=false;
+    return status();
+}
+
+status qml::command::get_int_field_val(int uid, int node, int field, int& val)
+{
+    val=0;
+    return status();
+}
+
+status qml::command::get_float_field_val(int uid, int node, int field, float& val)
+{
+    val=0.0;
+    return status();
+}
+

@@ -48,6 +48,21 @@ Field::~Field()
 {
 }
 
+void Field::get_bool_val()
+{
+    qml::command::get_bool_field_val(m_uid,m_node,m_field,m_boolVal);
+}
+
+void Field::get_int_val()
+{
+    qml::command::get_int_field_val(m_uid,m_node,m_field,m_intVal);
+}
+
+void Field::get_float_val()
+{
+    qml::command::get_float_field_val(m_uid,m_node,m_field,m_floatVal);
+}
+
 
 // Parameter
 Parameter::Parameter(QObject* parent) : QObject(parent)

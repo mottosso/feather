@@ -6,9 +6,9 @@ Rectangle {
     height: 18
     radius: 4
    
-    property int id: 0 // this is a unique of the node 
-    property int node: 0 // this if the node's number assigned by the plugin
-    property int field: 0 // this is the fields number assigned by the plugin
+    property alias uid: field.uid // this is a unique of the node 
+    property alias node: field.node // this if the node's number assigned by the plugin
+    property alias field: field.field // this is the fields number assigned by the plugin
     property alias label: label.text 
 
     Field { id: field }

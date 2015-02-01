@@ -125,6 +125,11 @@ status PluginManager::create_fields(int node, field::Fields& fields)
     return status();
 }
 
+field::FieldBase* get_fieldBase(int uid, int node, int field)
+{
+    return NULL;
+}
+
 status PluginManager::load_command(PluginInfo &command)
 {
     return status(FAILED,"no command to load");

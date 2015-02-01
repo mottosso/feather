@@ -37,6 +37,9 @@ namespace feather
             status draw_sg(QMatrix4x4& view);
             status load_plugins();
             status run_command(std::string cmd, feather::parameter::ParameterList params);
+            status get_bool_field_val(int uid, int node, int field, bool& val);
+            status get_int_field_val(int uid, int node, int field, int& val);
+            status get_float_field_val(int uid, int node, int field, float& val);
 
         } // namespace command
 
