@@ -138,24 +138,6 @@ NODE_INIT(SHAPE,node::Object)
  ***************************************
 */
 
-namespace feather
-{
-    /*
-    struct TransformFields : public PluginNodeFields
-    {
-        field::Field<FDouble,field::connection::Out> *tx;
-        field::Field<FDouble,field::connection::Out> *ty;
-        field::Field<FDouble,field::connection::Out> *tz;
-        field::Field<FDouble,field::connection::Out> *rx;
-        field::Field<FDouble,field::connection::Out> *ry;
-        field::Field<FDouble,field::connection::Out> *rz;
-        field::Field<FDouble,field::connection::Out> *sx;
-        field::Field<FDouble,field::connection::Out> *sy;
-        field::Field<FDouble,field::connection::Out> *sz;
-    };
-    */
-} // namespace feather
-
 ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,1)
 ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,2)
 ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,3)
