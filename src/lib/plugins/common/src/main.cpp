@@ -60,50 +60,24 @@ using namespace feather;
  * This macro handles some misc bindings
  * between the plugin and the pluginmanager.
  */ 
-//PLUGIN_INIT(SHAPE,TRANSFORM)
-PLUGIN_INIT(SHAPE,SHAPE)
+PLUGIN_INIT(SHAPE,TRANSFORM)
 
 /*
  ***************************************
- *            POLYGON PLANE            *
+ *               SHAPE                 *
  ***************************************
 */
-
-namespace feather {
-
-    /*
-     ***************************************
-     *              NODE FIELDS            *
-     ***************************************
-     *
-     * You need to make a struct that uses
-     * PluginNodeFields as it's base class.
-     * This struct will hold all input and
-     * outout fields. These fields will be
-     * used to connect nodes together 
-     */
-    /* 
-    struct ShapeFields : public PluginNodeFields
-    {
-        field::Field<FMesh,field::connection::In> *meshIn;
-        field::Field<FMesh,field::connection::Out> *meshOut;
-    };
-    */
-
-} // namespace feather
 
 
 /*
  ***************************************
  *          ADD_FIELD_TO_NODE          *
  ***************************************
- * ADD_FIELD_TO_NODE(node,struct,attr,key)
+ * ADD_FIELD_TO_NODE(node,type,connection,key)
  * node = Enum of the node that the field
  *      will be put into.
- * struct = Name of the struct that holds
- *      the fields.
- * attr = Name of the field attr in the
- *      struct.
+ * type = datatype 
+ * connection = connection direction 
  * key = Starting from 1, the number of
  *      the field in the attribute.
  *
@@ -182,34 +156,30 @@ namespace feather
     */
 } // namespace feather
 
-/*
-ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,tx,1)
-ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,ty,2)
-ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,tz,3)
-ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,rx,4)
-ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,ry,5)
-ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,rz,6)
-ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,sx,7)
-ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,sy,8)
-ADD_FIELD_TO_NODE(TRANSFORM,TransformFields,sz,9)
-*/
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,1)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,2)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,3)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,4)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,5)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,6)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,7)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,8)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,9)
 
 namespace feather
 {
 
-    /*
     // do_it
     DO_IT(TRANSFORM) 
     {
-        TransformFields* xform = static_cast<TransformFields*>(fields);
-        std::cout << "xform: tx:" << xform->tx << std::endl;
+        //TransformFields* xform = static_cast<TransformFields*>(fields);
+        //std::cout << "xform: tx:" << xform->tx << std::endl;
         return status();
     };
-    */
 
 } // namespace feather
 
-//NODE_INIT(TRANSFORM,node::Manipulator,TransformFields)
+NODE_INIT(TRANSFORM,node::Manipulator)
 
 
 /*

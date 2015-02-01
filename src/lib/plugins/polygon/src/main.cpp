@@ -44,18 +44,8 @@ PLUGIN_INIT(POLYGON_SHAPE,POLYGON_CUBE)
  ***************************************
 */
 
-namespace feather {
-
-    struct PolygonShapeFields : public PluginNodeFields
-    {
-        field::Field<FMesh,field::connection::In> *meshIn;
-        field::Field<FMesh,field::connection::Out> *meshOut;
-    };
-
-} // namespace feather
-
-ADD_FIELD_TO_NODE(POLYGON_SHAPE,PolygonShapeFields,meshIn,1)
-ADD_FIELD_TO_NODE(POLYGON_SHAPE,PolygonShapeFields,meshOut,2)
+ADD_FIELD_TO_NODE(POLYGON_SHAPE,FMesh,field::connection::In,1)
+ADD_FIELD_TO_NODE(POLYGON_SHAPE,FMesh,field::connection::In,2)
 
 
 namespace feather
@@ -63,21 +53,21 @@ namespace feather
 
     DO_IT(POLYGON_SHAPE)
     { 
-        PolygonShapeFields* shape = static_cast<PolygonShapeFields*>(fields);
-        std::cout << "shape: mesh:" << shape->meshIn << std::endl;
+        //PolygonShapeFields* shape = static_cast<PolygonShapeFields*>(fields);
+        //std::cout << "shape: mesh:" << shape->meshIn << std::endl;
 
         return status();
     };
 
     DRAW_GL(POLYGON_SHAPE)
     { 
-        PolygonShapeFields* plane = static_cast<PolygonShapeFields*>(fields);
-        std::cout << "drawing shape mesh:" << plane->meshIn << std::endl;
+        //PolygonShapeFields* plane = static_cast<PolygonShapeFields*>(fields);
+        //std::cout << "drawing shape mesh:" << plane->meshIn << std::endl;
     };
 
 } // namespace feather
 
-NODE_INIT(POLYGON_SHAPE,node::Polygon,PolygonShapeFields)
+NODE_INIT(POLYGON_SHAPE,node::Polygon)
 
 
 /*
@@ -86,18 +76,8 @@ NODE_INIT(POLYGON_SHAPE,node::Polygon,PolygonShapeFields)
  ***************************************
 */
 
-namespace feather {
-
-    struct PolygonPlaneFields : public PluginNodeFields
-    {
-        field::Field<int,field::connection::In> *subX;
-        field::Field<int,field::connection::In> *subY;
-    };
-
-} // namespace feather
-
-ADD_FIELD_TO_NODE(POLYGON_PLANE,PolygonPlaneFields,subX,1)
-ADD_FIELD_TO_NODE(POLYGON_PLANE,PolygonPlaneFields,subY,2)
+ADD_FIELD_TO_NODE(POLYGON_PLANE,int,field::connection::In,1)
+ADD_FIELD_TO_NODE(POLYGON_PLANE,int,field::connection::In,2)
 
 
 namespace feather
@@ -105,15 +85,15 @@ namespace feather
 
     DO_IT(POLYGON_PLANE)
     { 
-        PolygonPlaneFields* plane = static_cast<PolygonPlaneFields*>(fields);
-        std::cout << "plane: subX:" << plane->subX << std::endl;
+        //PolygonPlaneFields* plane = static_cast<PolygonPlaneFields*>(fields);
+        //std::cout << "plane: subX:" << plane->subX << std::endl;
 
         return status();
     };
 
 } // namespace feather
 
-NODE_INIT(POLYGON_PLANE,node::Polygon,PolygonPlaneFields)
+NODE_INIT(POLYGON_PLANE,node::Polygon)
 
 
 /*
@@ -122,34 +102,23 @@ NODE_INIT(POLYGON_PLANE,node::Polygon,PolygonPlaneFields)
  ***************************************
 */
 
-namespace feather
-{
-    struct PolygonCubeFields : public PluginNodeFields
-    {
-        field::Field<int,field::connection::In> *subX;
-        field::Field<int,field::connection::In> *subY;
-        field::Field<int,field::connection::In> *subZ;
-    };
-
-} // namespace feather
-
-ADD_FIELD_TO_NODE(POLYGON_CUBE,PolygonCubeFields,subX,1)
-ADD_FIELD_TO_NODE(POLYGON_CUBE,PolygonCubeFields,subY,2)
-ADD_FIELD_TO_NODE(POLYGON_CUBE,PolygonCubeFields,subZ,3)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::connection::In,1)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::connection::In,2)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::connection::In,3)
 
 namespace feather
 {
 
     DO_IT(POLYGON_CUBE) 
     {
-        PolygonCubeFields* cube = static_cast<PolygonCubeFields*>(fields);
-        std::cout << "cube: subX:" << cube->subX << std::endl;
+        //PolygonCubeFields* cube = static_cast<PolygonCubeFields*>(fields);
+        //std::cout << "cube: subX:" << cube->subX << std::endl;
         return status();
     };
 
 } // namespace feather
 
-NODE_INIT(POLYGON_CUBE,node::Polygon,PolygonCubeFields)
+NODE_INIT(POLYGON_CUBE,node::Polygon)
 
 
 /*
