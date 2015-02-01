@@ -70,10 +70,40 @@ class Field: public QObject
 {
     Q_OBJECT
         Q_ENUMS(Type)
-
+        Q_PROPERTY(int uid READ uid WRITE setUid)
+        Q_PROPERTY(int node READ node WRITE setNode)
+        Q_PROPERTY(int field READ field WRITE setField)
+ 
     public:
         Field(QObject* parent=0);
         ~Field();
+
+        // uid 
+        void setUid(int& i) {
+            if(m_uid != i) {
+                m_uid=i;
+            }
+        }
+
+        int uid() { return m_uid; }
+
+        // node 
+        void setNode(int& n) {
+            if(m_node != n) {
+                m_node=n;
+            }
+        }
+
+        int node() { return m_node; }
+
+        // field 
+        void setField(int& f) {
+            if(m_field != f) {
+                m_field=f;
+            }
+        }
+
+        int field() { return m_field; }
 
         enum Type {
             Bool=field::Bool,
@@ -94,7 +124,9 @@ class Field: public QObject
         };
 
     private:
-        int m_id;
+        int m_uid; // unique number of the node in the sg
+        int m_node; // node key
+        int m_field; // field key
 };
 
 

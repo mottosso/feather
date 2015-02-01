@@ -1,5 +1,5 @@
 import QtQuick 2.3
-import feather.scenegraph 1.0
+import feather.field 1.0
 
 Rectangle {
     id: intField
@@ -11,8 +11,7 @@ Rectangle {
     property int field: 0 // this is the fields number assigned by the plugin
     property alias label: label.text 
 
-
-    SceneGraph { id: sg }
+    Field { id: field }
 
 
     // LABEL

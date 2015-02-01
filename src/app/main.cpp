@@ -28,8 +28,8 @@ int main(int argc, char **argv)
     qmlRegisterType<ViewportThread>("FeatherViewport", 1, 0, "Viewport");
     qmlRegisterType<SceneGraphEditor>("feather.editors", 1, 0, "SceneGraphEditor");
     qmlRegisterType<SceneGraph>("feather.scenegraph", 1, 0, "SceneGraph");
-    qmlRegisterType<Node>("feather.nodes", 1, 0, "Node");
-    qmlRegisterType<Field>("feather.fields", 1, 0, "Field");
+    qmlRegisterType<Node>("feather.node", 1, 0, "Node");
+    qmlRegisterType<Field>("feather.field", 1, 0, "Field");
     qmlRegisterType<Parameter>("feather.command", 1, 0, "Parameter");
     qmlRegisterType<Command>("feather.command", 1, 0, "Command");
 

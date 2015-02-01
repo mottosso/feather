@@ -2,7 +2,7 @@ import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.0 
 import feather.scenegraph 1.0
-import feather.nodes 1.0
+import feather.node 1.0
 import feather.command 1.0
 
 Menu {

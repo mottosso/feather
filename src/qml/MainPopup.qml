@@ -2,7 +2,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.2
 import feather.scenegraph 1.0
-import feather.nodes 1.0
+import feather.node 1.0
 
 Menu {
     SceneGraph { id: sg }
