@@ -50,19 +50,19 @@ Field::~Field()
 
 void Field::get_bool_val()
 {
-    qml::command::get_bool_field_val(m_uid,m_node,m_field,m_boolVal);
+    qml::command::get_field_val(m_uid,m_node,m_field,m_boolVal);
     emit boolValChanged();
 }
 
 void Field::get_int_val()
 {
-    qml::command::get_int_field_val(m_uid,m_node,m_field,m_intVal);
+    qml::command::get_field_val(m_uid,m_node,m_field,m_intVal);
     emit intValChanged();
 }
 
 void Field::get_float_val()
 {
-    qml::command::get_float_field_val(m_uid,m_node,m_field,m_floatVal);
+    qml::command::get_field_val(m_uid,m_node,m_field,m_floatVal);
     emit floatValChanged();
 }
 
