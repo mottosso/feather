@@ -19,7 +19,7 @@
 #include "deps.hpp"
 #include "types.hpp"
 #include "node.hpp"
-//#include "field.hpp"
+#include "field.hpp"
 #include "singleton.hpp"
 #include "selection.hpp"
 #include "data.hpp"
@@ -98,6 +98,11 @@ namespace feather
             // Return the node number
             return static_cast<int>(node);
         };
+
+        field::FieldBase* get_fieldBase(int uid, int node, int field) {
+            return plugins.get_fieldBase(uid,node,field,sg[uid].fields); 
+        };
+
 
         /* Add Node to SceneGraph
          * This is the recursive function that will keep going till

@@ -14,7 +14,7 @@
 // 
 // =====================================================================================
 #include "commands.hpp"
-//#include "field.hpp"
+#include "field.hpp"
 #include "scenegraph.hpp"
 //#include "root_node.hpp"
 #include "null.hpp"
@@ -88,6 +88,9 @@ status qml::command::get_field_val(int uid, int node, int field, bool& val)
 
 status qml::command::get_field_val(int uid, int node, int field, int& val)
 {
+    field::FieldBase* f = scenegraph::get_fieldBase(uid,node,field);
+    if(!f)
+        std::cout << "NULL FIELD BASE\n";
     val=5;
     return status();
 }
@@ -97,25 +100,4 @@ status qml::command::get_field_val(int uid, int node, int field, float& val)
     val=0.0;
     return status();
 }
-
-/*
-status qml::command::get_bool_field_val(int uid, int node, int field, bool& val)
-{
-    val=false;
-    
-    return status();
-}
-
-status qml::command::get_int_field_val(int uid, int node, int field, int& val)
-{
-    val=5;
-    return status();
-}
-
-status qml::command::get_float_field_val(int uid, int node, int field, float& val)
-{
-    val=0.0;
-    return status();
-}
-*/
 

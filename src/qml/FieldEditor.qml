@@ -59,20 +59,12 @@ Window {
             IntField {
                 id: test1
                 width: parent.width
+                uId: 1
+                nodeKey: 320
+                fieldKey: 1 
                 label: "subX"
             }
 
-            IntField {
-                id: test2
-                width: parent.width
-                label: "subY"
-            }
-
-            IntField {
-                id: test3
-                width: parent.width
-                label: "subZ"
-            }
         }
 
 

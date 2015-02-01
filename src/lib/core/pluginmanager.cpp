@@ -125,8 +125,14 @@ status PluginManager::create_fields(int node, field::Fields& fields)
     return status();
 }
 
-field::FieldBase* get_fieldBase(int uid, int node, int field)
+field::FieldBase* PluginManager::get_fieldBase(int uid, int node, int field, field::Fields& fields)
 {
+    for(uint i=0; i < m_plugins.size(); i++) {
+        if(m_plugins[i].node_exist(node)) {
+            // TODO - I need to verify that the field data actually exists
+            //return m_plugins[i].get_field(node,field,fields);
+        }
+    }
     return NULL;
 }
 
