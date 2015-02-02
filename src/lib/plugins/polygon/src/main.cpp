@@ -44,8 +44,8 @@ PLUGIN_INIT(POLYGON_SHAPE,POLYGON_CUBE)
  ***************************************
 */
 
-ADD_FIELD_TO_NODE(POLYGON_SHAPE,FMesh,field::connection::In,1)
-ADD_FIELD_TO_NODE(POLYGON_SHAPE,FMesh,field::connection::In,2)
+ADD_FIELD_TO_NODE(POLYGON_SHAPE,FMesh,field::connection::In,FMesh(),1)
+ADD_FIELD_TO_NODE(POLYGON_SHAPE,FMesh,field::connection::In,FMesh(),2)
 
 
 namespace feather
@@ -76,8 +76,8 @@ NODE_INIT(POLYGON_SHAPE,node::Polygon)
  ***************************************
 */
 
-ADD_FIELD_TO_NODE(POLYGON_PLANE,int,field::connection::In,1)
-ADD_FIELD_TO_NODE(POLYGON_PLANE,int,field::connection::In,2)
+ADD_FIELD_TO_NODE(POLYGON_PLANE,int,field::connection::In,2,1)
+ADD_FIELD_TO_NODE(POLYGON_PLANE,int,field::connection::In,2,2)
 
 
 namespace feather
@@ -102,9 +102,9 @@ NODE_INIT(POLYGON_PLANE,node::Polygon)
  ***************************************
 */
 
-ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::connection::In,1)
-ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::connection::In,2)
-ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::connection::In,3)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::connection::In,2,1)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::connection::In,2,2)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::connection::In,2,3)
 
 namespace feather
 {

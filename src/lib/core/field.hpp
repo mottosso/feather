@@ -34,6 +34,7 @@ namespace feather
             Field():conn(_Conn){ update=true; };
             typedef _Type type;
             int conn;
+            _Type value;
         };
 
         typedef std::vector<FieldBase*> Fields;
@@ -88,34 +89,44 @@ namespace feather
 
     } // namespace field
 
-#define ADD_FIELD_TO_NODE(node,__type,__connection,field_key)\
+#define ADD_FIELD_TO_NODE(__node,__type,__connection,__default_value,__field_key)\
     namespace feather {\
-        template <> struct add_fields<node,field_key> {\
+        template <> struct add_fields<__node,__field_key> {\
             static status exec(field::Fields& fields) {\
-                fields.push_back(new field::Field<__type,__connection>());\
-                return add_fields<node,field_key-1>::exec(fields);\
+                 field::Field<__type,__connection>* f = new field::Field<__type,__connection>();\
+                f->id=__field_key;\
+                f->value=__default_value;\
+                fields.push_back(f);\
+                return add_fields<__node,__field_key-1>::exec(fields);\
             };\
         };\
 \
-        template <> field::FieldBase* field_data<node,field_key>(field::Fields& fields)\
+        template <> field::FieldBase* field_data<__node,__field_key>(field::Fields& fields)\
         {\
             /*This is a cheap easy way to get FieldBase*\
             But it's needs to be changed later so we\
             don't have to scan the field every time\
             to get the pointer.*/\
+            std::cout << "field_data size:" << fields.size() << std::endl;\
             for(uint i=0; i < fields.size(); i++) {\
-                if(fields.at(i)->id == field_key)\
+                std::cout << "id:" << fields.at(i)->id << ", key:__field_key\n";\
+                if(fields.at(i)->id == __field_key){\
+                    std::cout << "found key " << fields.at(i) << "\n";\
                     return fields.at(i);\
+                }\
             }\
+            std::cout << "never found matching key in field_data\n";\
             return NULL;\
         };\
  \
-        template <> struct find_field<node,field_key> {\
+        template <> struct find_field<__node,__field_key> {\
             static field::FieldBase* exec(int fid, field::Fields& fields) {\
-                if(fid==field_key)\
-                    return field_data<node,field_key>(fields);\
-                else\
-                    return field_data<node,field_key-1>(fields);\
+                std::cout << "find field - node:" << __node << ", fid:" << fid << ", field:" << __field_key << std::endl;\
+                if(fid==__field_key){\
+                    std::cout << "found field " << fid << std::endl;\
+                    return field_data<__node,__field_key>(fields);\
+                }else\
+                    return find_field<__node,__field_key-1>::exec(fid,fields);\
             };\
         };\
     }

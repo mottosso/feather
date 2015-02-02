@@ -85,8 +85,8 @@ PLUGIN_INIT(SHAPE,TRANSFORM)
  * so that it's value can be used by the
  * node's do_it command.
  */
-ADD_FIELD_TO_NODE(SHAPE,FMesh,field::connection::In,200)
-ADD_FIELD_TO_NODE(SHAPE,FMesh,field::connection::Out,201)
+ADD_FIELD_TO_NODE(SHAPE,FMesh,field::connection::In,FMesh(),200)
+ADD_FIELD_TO_NODE(SHAPE,FMesh,field::connection::Out,FMesh(),201)
 
 
 namespace feather
@@ -138,15 +138,15 @@ NODE_INIT(SHAPE,node::Object)
  ***************************************
 */
 
-ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,1)
-ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,2)
-ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,3)
-ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,4)
-ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,5)
-ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,6)
-ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,7)
-ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,8)
-ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,9)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,0.0,1)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,0.0,2)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,0.0,3)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,0.0,4)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,0.0,5)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,0.0,6)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,0.0,7)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,0.0,8)
+ADD_FIELD_TO_NODE(TRANSFORM,FDouble,field::connection::Out,0.0,9)
 
 namespace feather
 {

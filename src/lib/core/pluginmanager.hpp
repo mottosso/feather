@@ -130,10 +130,10 @@ namespace feather
     template <int _EndNode, int _StartNode, int _StartField>
         struct find_node_field {
             static field::FieldBase* exec(int nid, int fid, field::Fields& fields) {
-                if(nid==_StartNode)
+                if(nid==_StartNode) {
+                    std::cout << "returning fieldBase at find_node_field\n";
                     return find_field<_StartNode,_StartField>::exec(fid,fields);
-                else if(_EndNode > _StartNode)
-                    return NULL;
+                }
                 else
                     return find_node_field<_EndNode,_StartNode-1,_StartField>::exec(nid,fid,fields);
             };
@@ -144,8 +144,10 @@ namespace feather
             static field::FieldBase* exec(int nid, int fid, field::Fields& fields) {
                 if(nid==_StartNode)
                     return find_field<_StartNode,_StartField>::exec(fid,fields);
-                else
+                else {
+                    std::cout << "find_node_field returning null\n";
                     return NULL;
+                }
             }; 
         };
 
@@ -214,7 +216,7 @@ namespace feather
     bool node_exist(int);\
     int node_type(int);\
     feather::status create_fields(int, feather::field::Fields&);\
-    feather::field::FieldBase* get_field(int,int);\
+    feather::field::FieldBase* get_field(int,int,feather::field::Fields&);\
     bool command_exist(std::string cmd);\
     feather::status command(std::string cmd, feather::parameter::ParameterList);\
 
@@ -239,9 +241,12 @@ namespace feather
         return find_node_type<MAX_NODE_ID>::exec(id);\
     };\
     \
+    /* create a node field */\
     feather::status create_fields(int id,feather::field::Fields& fields) {\
         return find_create_fields<MAX_NODE_ID>::exec(id,fields);\
     };\
+    \
+    /* find the node's field */\
     feather::field::FieldBase* get_field(int nid, int fid, field::Fields& fields) {\
         return find_node_field<startnode,endnode,5>::exec(nid,fid,fields);\
     };

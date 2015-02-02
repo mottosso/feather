@@ -130,9 +130,11 @@ field::FieldBase* PluginManager::get_fieldBase(int uid, int node, int field, fie
     for(uint i=0; i < m_plugins.size(); i++) {
         if(m_plugins[i].node_exist(node)) {
             // TODO - I need to verify that the field data actually exists
-            //return m_plugins[i].get_field(node,field,fields);
+            std::cout << "PluginManager::get_fieldBase(" << uid << "," << node << "," << field << "," << &fields << ")\n";
+            return m_plugins[i].get_field(node,field,fields);
         }
     }
+    std::cout << "Did not find fieldBase\n";
     return NULL;
 }
 

@@ -59,8 +59,11 @@ Window {
             IntField {
                 id: test1
                 width: parent.width
-                uId: 1
-                nodeKey: 320
+                // Ok, this is dangerous because the program will seq fault.
+                // This will need to be verified by the scenegraph
+                // BUT.... for the time being this will do for testing
+                uId: 0
+                nodeKey: 322
                 fieldKey: 1 
                 label: "subX"
             }

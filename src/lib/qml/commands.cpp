@@ -26,7 +26,8 @@ static PluginManager plugins;
 
 status qml::command::init() {
     load_plugins();
-    add_node(node::Null,null::Root);
+    //add_node(node::Null,null::Root);
+    add_node(node::Polygon,322);
     // just testing the do_it plugin calls
     scenegraph::update();
     return status();
@@ -88,10 +89,17 @@ status qml::command::get_field_val(int uid, int node, int field, bool& val)
 
 status qml::command::get_field_val(int uid, int node, int field, int& val)
 {
-    field::FieldBase* f = scenegraph::get_fieldBase(uid,node,field);
-    if(!f)
+    field::FieldBase* base = scenegraph::get_fieldBase(uid,node,field);
+    if(!base)
         std::cout << "NULL FIELD BASE\n";
-    val=5;
+    else
+        std::cout << "BASE OK\n";
+    typedef field::Field<int,field::connection::In>* fielddata;
+    fielddata f = static_cast<fielddata>(base);
+    if(!f)
+        std::cout << "NULL FIELD\n";
+    else  
+        val=f->value;
     return status();
 }
 
