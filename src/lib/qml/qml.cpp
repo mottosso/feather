@@ -48,23 +48,40 @@ Field::~Field()
 {
 }
 
+// GET FIELD VALUES
+
 void Field::get_bool_val()
 {
     qml::command::get_field_val(m_uid,m_node,m_field,m_boolVal);
-    emit boolValChanged();
 }
 
 void Field::get_int_val()
 {
     qml::command::get_field_val(m_uid,m_node,m_field,m_intVal);
-    emit intValChanged();
 }
 
 void Field::get_float_val()
 {
     qml::command::get_field_val(m_uid,m_node,m_field,m_floatVal);
-    emit floatValChanged();
 }
+
+// SET FEILD VALUES
+
+void Field::set_bool_val()
+{
+    qml::command::set_field_val(m_uid,m_node,m_field,m_boolVal);
+}
+
+void Field::set_int_val()
+{
+    qml::command::set_field_val(m_uid,m_node,m_field,m_intVal);
+}
+
+void Field::set_float_val()
+{
+    qml::command::set_field_val(m_uid,m_node,m_field,m_floatVal);
+}
+
 
 
 // Parameter

@@ -80,6 +80,8 @@ status qml::command::run_command(std::string cmd, feather::parameter::ParameterL
     return plugins.run_command(cmd, params);
 }
 
+// GET FIELD VALUE
+
 status qml::command::get_field_val(int uid, int node, int field, bool& val)
 {
     val=false;
@@ -89,13 +91,6 @@ status qml::command::get_field_val(int uid, int node, int field, bool& val)
 
 status qml::command::get_field_val(int uid, int node, int field, int& val)
 {
-/*
-    field::FieldBase* base = scenegraph::get_fieldBase(uid,node,field);
-    if(!base)
-        std::cout << "NULL FIELD BASE\n";
-    else
-        std::cout << "BASE OK\n";
-*/
     typedef field::Field<int,field::connection::In>* fielddata;
     fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
     if(!f)
@@ -108,6 +103,29 @@ status qml::command::get_field_val(int uid, int node, int field, int& val)
 status qml::command::get_field_val(int uid, int node, int field, float& val)
 {
     val=0.0;
+    return status();
+}
+
+// SET FIELD VALUE
+
+status qml::command::set_field_val(int uid, int node, int field, bool& val)
+{
+    return status();
+}
+
+status qml::command::set_field_val(int uid, int node, int field, int& val)
+{
+    typedef field::Field<int,field::connection::In>* fielddata;
+    fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
+    if(!f)
+        std::cout << "NULL FIELD\n";
+    else  
+        f->value=val;
+    return status();
+}
+
+status qml::command::set_field_val(int uid, int node, int field, float& val)
+{
     return status();
 }
 

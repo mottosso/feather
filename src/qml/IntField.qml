@@ -152,12 +152,8 @@ Rectangle {
         onReleased: { intField.state="normal" }
         onEntered: { intField.state="hover" }
         onExited: { intField.state="normal" }
-        //onWheel: { }
+        onWheel: { field.intVal = field.intVal+1 }
     }
 
-    function update() {
-        field.get_int_val()
-    }
-
-    Component.onCompleted: { intField.state="normal"; intField.update() }
+    Component.onCompleted: { intField.state="normal" }
 }

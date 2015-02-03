@@ -122,11 +122,12 @@ class Field: public QObject
         void setIntVal(int& v) {
             if(m_intVal != v) {
                 m_intVal = v;
+                set_int_val(); 
                 emit intValChanged();
             }
         }
 
-        int intVal() { return m_intVal; }
+        int intVal() { get_int_val(); return m_intVal; }
 
         // floatVal 
         void setFloatVal(float& v) {
@@ -137,10 +138,6 @@ class Field: public QObject
         }
 
         float floatVal() { return m_floatVal; };
-
-        Q_INVOKABLE void get_bool_val();
-        Q_INVOKABLE void get_int_val();
-        Q_INVOKABLE void get_float_val();
 
         enum Type {
             Bool=field::Bool,
@@ -166,6 +163,15 @@ class Field: public QObject
         void floatValChanged();
 
     private:
+        // get field value
+        void get_bool_val();
+        void get_int_val();
+        void get_float_val();
+        // set feild value
+        void set_bool_val();
+        void set_int_val();
+        void set_float_val();
+
         int m_uid; // unique number of the node in the sg
         int m_node; // node key
         int m_field; // field key
