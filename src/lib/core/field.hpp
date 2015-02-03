@@ -107,23 +107,19 @@ namespace feather
             But it's needs to be changed later so we\
             don't have to scan the field every time\
             to get the pointer.*/\
-            std::cout << "field_data size:" << fields.size() << std::endl;\
             for(uint i=0; i < fields.size(); i++) {\
-                std::cout << "id:" << fields.at(i)->id << ", key:__field_key\n";\
                 if(fields.at(i)->id == __field_key){\
-                    std::cout << "found key " << fields.at(i) << "\n";\
                     return fields.at(i);\
                 }\
             }\
-            std::cout << "never found matching key in field_data\n";\
+            /*std::cout << "never found matching key in field_data\n";*/\
             return NULL;\
         };\
  \
         template <> struct find_field<__node,__field_key> {\
             static field::FieldBase* exec(int fid, field::Fields& fields) {\
-                std::cout << "find field - node:" << __node << ", fid:" << fid << ", field:" << __field_key << std::endl;\
+                /*std::cout << "find field - node:" << __node << ", fid:" << fid << ", field:" << __field_key << std::endl;*/\
                 if(fid==__field_key){\
-                    std::cout << "found field " << fid << std::endl;\
                     return field_data<__node,__field_key>(fields);\
                 }else\
                     return find_field<__node,__field_key-1>::exec(fid,fields);\

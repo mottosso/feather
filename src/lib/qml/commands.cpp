@@ -89,13 +89,15 @@ status qml::command::get_field_val(int uid, int node, int field, bool& val)
 
 status qml::command::get_field_val(int uid, int node, int field, int& val)
 {
+/*
     field::FieldBase* base = scenegraph::get_fieldBase(uid,node,field);
     if(!base)
         std::cout << "NULL FIELD BASE\n";
     else
         std::cout << "BASE OK\n";
+*/
     typedef field::Field<int,field::connection::In>* fielddata;
-    fielddata f = static_cast<fielddata>(base);
+    fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
     if(!f)
         std::cout << "NULL FIELD\n";
     else  

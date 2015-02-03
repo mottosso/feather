@@ -131,7 +131,6 @@ namespace feather
         struct find_node_field {
             static field::FieldBase* exec(int nid, int fid, field::Fields& fields) {
                 if(nid==_StartNode) {
-                    std::cout << "returning fieldBase at find_node_field\n";
                     return find_field<_StartNode,_StartField>::exec(fid,fields);
                 }
                 else
@@ -144,10 +143,8 @@ namespace feather
             static field::FieldBase* exec(int nid, int fid, field::Fields& fields) {
                 if(nid==_StartNode)
                     return find_field<_StartNode,_StartField>::exec(fid,fields);
-                else {
-                    std::cout << "find_node_field returning null\n";
+                else 
                     return NULL;
-                }
             }; 
         };
 
