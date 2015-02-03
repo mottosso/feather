@@ -14,6 +14,7 @@ Rectangle {
 
     Field { id: field }
 
+    FieldPopup { id: popup }
 
     // LABEL
 
@@ -143,7 +144,8 @@ Rectangle {
 
         onPressed: {
             if(mouse.button == Qt.RightButton)
-                console.log("rb clicked");
+                popup.popup()
+
             intField.state="pressed"
             intField.update()
         }
