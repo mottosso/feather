@@ -28,6 +28,8 @@ status qml::command::init() {
     load_plugins();
     //add_node(node::Null,null::Root);
     add_node(node::Polygon,322);
+    add_node(node::Polygon,320);
+    scenegraph::connect(0,4,1,2);
     // just testing the do_it plugin calls
     scenegraph::update();
     return status();
