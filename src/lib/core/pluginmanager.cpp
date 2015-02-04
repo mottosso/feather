@@ -69,10 +69,10 @@ status PluginManager::load_plugins()
     return status();
 }
 
-status PluginManager::do_it(int node)
+status PluginManager::do_it(int node, field::Fields&  fields)
 {
     std::cout << "call node " << node << std::endl;
-    std::for_each(m_plugins.begin(),m_plugins.end(), call_do_it(node) );
+    std::for_each(m_plugins.begin(),m_plugins.end(), call_do_it(node,fields) );
     return status();
 }
 

@@ -65,7 +65,7 @@ Window {
                 uId: 1
                 nodeKey: 320
                 fieldKey: 2 
-                label: "subX"
+                label: "target"
             }
 
         }

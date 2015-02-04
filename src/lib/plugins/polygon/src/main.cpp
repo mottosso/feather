@@ -56,7 +56,10 @@ namespace feather
     DO_IT(POLYGON_SHAPE)
     { 
         //PolygonShapeFields* shape = static_cast<PolygonShapeFields*>(fields);
-        //std::cout << "shape: mesh:" << shape->meshIn << std::endl;
+        typedef field::Field<int,field::connection::In>* fielddata;
+    fielddata f = static_cast<fielddata>(fields.at(0));
+  
+        std::cout << "value from polycube field:" << f->value << std::endl;
 
         return status();
     };

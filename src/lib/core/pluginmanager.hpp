@@ -60,10 +60,11 @@ namespace feather
     template <int _Id> status node_do_it(field::Fields& fields) { return status(FAILED,"no node found"); };
     
     struct call_do_it {
-        call_do_it(int node){ m_node = node; };
-        void operator()(PluginInfo n) { if(n.node_exist(m_node)) { std::cout << "found node " << m_node << std::endl; } };
+        call_do_it(int node,field::Fields& fields): m_node(node), m_fields(fields){};
+        void operator()(PluginInfo n) { if(n.node_exist(m_node)) { std::cout << "found node " << m_node << std::endl; n.do_it(m_node,m_fields); } };
         private:
             int m_node;
+            field::Fields& m_fields;
     };
 
    
@@ -192,7 +193,7 @@ namespace feather
             PluginManager();
             ~PluginManager();
             status load_plugins();
-            status do_it(int node); // this is called by the scenegraph
+            status do_it(int node,field::Fields& fields); // this is called by the scenegraph
             void draw_gl(int node); // this is called by the scenegraph
             status create_fields(int node, field::Fields& fields); // this will return a new instance of the node's fields 
             field::FieldBase* get_fieldBase(int uid, int node, int field, field::Fields& fields);

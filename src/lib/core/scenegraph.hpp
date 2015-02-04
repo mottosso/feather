@@ -263,7 +263,7 @@ namespace feather
 
                     if(cstate.sgmode==state::DoIt)
                     {
-                        status p = plugins.do_it(sg[u].id);
+                        status p = plugins.do_it(sg[u].id,sg[u].fields);
                         if(!p.state)
                             std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
                     }
@@ -392,7 +392,6 @@ namespace feather
         status update()
         {
             // Temporary turn off do_it updating for testing
-            /*
             // set the state node update 
             cstate.sgmode = state::DoIt;
 
@@ -409,7 +408,7 @@ namespace feather
             std::cout << "*****UPDATE COMPLETE*****\n";
 
             draw_gl();
-            */
+
             return status();
         };
 
