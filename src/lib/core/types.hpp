@@ -121,12 +121,12 @@ namespace feather
     struct FNode
     {
         FNode(node::Type t=node::Null) : type(t),parent(NULL) {};
-        int id;
-        //PluginNodeFields* fields;
-        field::Fields fields;
-        node::Type type;
-        DataObject* parent;
-        FAttributeArray* attrs;
+        int uid; // unique id number
+        int node; // node type enum
+        field::Fields fields; // this holds the field data
+        node::Type type; // this is the node group type
+        DataObject* parent; // ??still used??
+        FAttributeArray* attrs; // ??still used??
     };
 
     typedef std::vector<FNode*> FNodeArray;

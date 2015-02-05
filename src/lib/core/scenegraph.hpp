@@ -89,14 +89,15 @@ namespace feather
             // TODO
             // Here I need to ask the plugin manager if the node exists
  
-            FNodeDescriptor node = boost::add_vertex(sg);
-            sg[node].type = static_cast<feather::node::Type>(t);
-            sg[node].id = n;
-            plugins.create_fields(n,sg[node].fields);
+            FNodeDescriptor uid = boost::add_vertex(sg);
+            sg[uid].type = static_cast<feather::node::Type>(t);
+            sg[uid].uid = uid;
+            sg[uid].node = n;
+            plugins.create_fields(n,sg[uid].fields);
             node_selection.push_back(n); 
 
             // Return the node number
-            return static_cast<int>(node);
+            return static_cast<int>(uid);
         };
 
         field::FieldBase* get_fieldBase(int uid, int node, int field) {
@@ -236,9 +237,9 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void initialize_vertex(Vertex u, const Graph & g) const
                 {
-                    std::cout << "init vertex " << sg[u].id << std::endl;
+                    std::cout << "init node " << sg[u].node << std::endl;
                     if(cstate.sgmode==state::DrawGL)
-                            plugins.draw_gl(sg[u].id);
+                            plugins.draw_gl(sg[u].node);
                 }
 
             // Start Vertex
@@ -248,7 +249,7 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void start_vertex(Vertex u, const Graph & g) const
                 {
-                    std::cout << "start vertex " << sg[u].id << std::endl;
+                    std::cout << "start node " << sg[u].node << std::endl;
                 }
 
             // Discover Vertex
@@ -258,12 +259,12 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void discover_vertex(Vertex u, const Graph & g) const
                 {
-                    std::cout << "discover vertex:" << u << " id:" << sg[u].id << std::endl;
+                    std::cout << "discover vertex:" << u << " node:" << sg[u].node << std::endl;
                     //scenegraph::do_it<node::N>::exec(u);
 
                     if(cstate.sgmode==state::DoIt)
                     {
-                        status p = plugins.do_it(sg[u].id,sg[u].fields);
+                        status p = plugins.do_it(sg[u].node,sg[u].fields);
                         if(!p.state)
                             std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
                     }
@@ -271,14 +272,14 @@ namespace feather
                     /* 
                     switch(cstate.sgmode) {
                         case state::DoIt:
-                            plugins.do_it(sg[u].id);
-                            //status p = plugins.do_it(sg[u].id);
+                            plugins.do_it(sg[u].node);
+                            //status p = plugins.do_it(sg[u].node);
                             //if(!p.state)
                             //    std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
                             break;
                         case state::DrawGL:
-                            std::cout << "draw_gl " << sg[u].id << std::endl;
-                            plugins.draw_gl(sg[u].id);
+                            std::cout << "draw_gl " << sg[u].node << std::endl;
+                            plugins.draw_gl(sg[u].node);
                             break;
                         default:
                             break;
@@ -320,7 +321,7 @@ namespace feather
             template < typename Vertex, typename Graph >
                 void finish_vertex(Vertex u, const Graph & g) const
                 {
-                    std::cout << "finish vertex " << sg[u].id << std::endl;
+                    std::cout << "finish vertex " << sg[u].node << std::endl;
                 }
 
             // EDGES
@@ -363,7 +364,7 @@ namespace feather
             template < typename Edge, typename Graph >
                 void forward_or_cross_edge(Edge u, const Graph & g) const
                 {
-                    std::cout << "forward or cross edge " << sg[u].id << std::endl;
+                    std::cout << "forward or cross edge " << sg[u].node << std::endl;
                 }
 
 
@@ -415,7 +416,10 @@ namespace feather
 
         status connect(FNodeDescriptor n1, int f1, FNodeDescriptor n2, int f2)
         {
-            // verify that the two fields have types that can be connected.
+            // first we are going to see if the two types can be connected
+            int src_node = sg[n1].node;
+            int tgt_node = sg[n2].node;
+
             FFieldConnection connection = boost::add_edge(n1, n2, sg);
             sg[connection.first].n1 = n1;
             sg[connection.first].f1 = f1;
