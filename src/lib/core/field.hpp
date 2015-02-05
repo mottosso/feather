@@ -31,13 +31,14 @@ namespace feather
         template <typename _Type, int _Conn>
         struct Field : public FieldBase
         {
-            Field():conn(_Conn),update(false),puid(0),pf(0) { update=true; };
+            Field():conn(_Conn),update(false),connected(false),puid(0),pf(0) { update=true; };
             typedef _Type type;
             int conn;
             _Type value; // this is the field's value if nothing is connected to it
             bool update; // this helps the sg know if to update do_it
             // Connections
             // If nothing is connected to this field, both puid and pf are 0
+            bool connected; // is the field connected
             int puid; // this will hold the uid of the node that has the field connected to this field
             int pf; // this is the field key of that node which is connected to this field
         };

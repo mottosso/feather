@@ -416,8 +416,6 @@ namespace feather
         status connect(FNodeDescriptor n1, int f1, FNodeDescriptor n2, int f2)
         {
             // verify that the two fields have types that can be connected.
-            
-            
             FFieldConnection connection = boost::add_edge(n1, n2, sg);
             sg[connection.first].n1 = n1;
             sg[connection.first].f1 = f1;
