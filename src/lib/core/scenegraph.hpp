@@ -393,6 +393,7 @@ namespace feather
         status update()
         {
             // Temporary turn off do_it updating for testing
+            /*
             // set the state node update 
             cstate.sgmode = state::DoIt;
 
@@ -409,7 +410,7 @@ namespace feather
             std::cout << "*****UPDATE COMPLETE*****\n";
 
             draw_gl();
-
+            */
             return status();
         };
 
@@ -419,7 +420,9 @@ namespace feather
             // first we are going to see if the two types can be connected
             int src_node = sg[n1].node;
             int tgt_node = sg[n2].node;
-
+            field::FieldBase* sfield = get_fieldBase(n1,src_node,f1);
+            field::FieldBase* tfield = get_fieldBase(n2,tgt_node,f2);
+            std::cout << "sn=" << src_node << " sfield=" << sfield << ", tn=" << tgt_node << " tfield=" << tfield << std::endl;
             FFieldConnection connection = boost::add_edge(n1, n2, sg);
             sg[connection.first].n1 = n1;
             sg[connection.first].f1 = f1;
