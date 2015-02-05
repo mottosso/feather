@@ -140,6 +140,8 @@ namespace feather
         field::Type t2; // target type
         FNodeDescriptor n2; // target node 
         int f2; // target field
+        field::FieldBase* sfield; // source field
+        field::FieldBase* tfield; // target field
         //field::Connection::Type conn_type;
         //FField* pfield; // parent field
         //FNode* pnode; // parent node
