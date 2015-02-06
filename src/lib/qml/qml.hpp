@@ -76,6 +76,7 @@ class Field: public QObject
         Q_PROPERTY(bool boolVal READ boolVal WRITE setBoolVal NOTIFY boolValChanged)
         Q_PROPERTY(int intVal READ intVal WRITE setIntVal NOTIFY intValChanged)
         Q_PROPERTY(float floatVal READ floatVal WRITE setFloatVal NOTIFY floatValChanged)
+        Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
  
     public:
         Field(QObject* parent=0);
@@ -123,7 +124,9 @@ class Field: public QObject
             if(m_intVal != v) {
                 m_intVal = v;
                 set_int_val(); 
+                get_connected();
                 emit intValChanged();
+                emit connectedChanged();
             }
         }
 
@@ -138,6 +141,8 @@ class Field: public QObject
         }
 
         float floatVal() { return m_floatVal; };
+
+        bool connected() { return m_connected; };
 
         enum Type {
             Bool=field::Bool,
@@ -161,6 +166,7 @@ class Field: public QObject
         void boolValChanged();
         void intValChanged();
         void floatValChanged();
+        void connectedChanged();
 
     private:
         // get field value
@@ -172,12 +178,15 @@ class Field: public QObject
         void set_int_val();
         void set_float_val();
 
+        void get_connected();
+
         int m_uid; // unique number of the node in the sg
         int m_node; // node key
         int m_field; // field key
         bool m_boolVal;
         int m_intVal;
         float m_floatVal;
+        bool m_connected;
 };
 
 

@@ -131,3 +131,9 @@ status qml::command::set_field_val(int uid, int node, int field, float& val)
     return status();
 }
 
+status qml::command::get_field_connection_status(int uid, int node, int field, bool& val)
+{
+    field::FieldBase* f = scenegraph::get_fieldBase(uid,node,field);
+    val = f->connected;
+    return status();
+}

@@ -40,7 +40,7 @@ Node::~Node()
 
 
 // Field
-Field::Field(QObject* parent): m_uid(0),m_node(0),m_field(0),m_boolVal(false),m_intVal(0),m_floatVal(0.0)
+Field::Field(QObject* parent): m_uid(0),m_node(0),m_field(0),m_boolVal(false),m_intVal(0),m_floatVal(0.0),m_connected(false)
 {
 }
 
@@ -82,6 +82,12 @@ void Field::set_float_val()
     qml::command::set_field_val(m_uid,m_node,m_field,m_floatVal);
 }
 
+// GET CONNECTED
+
+void Field::get_connected()
+{
+    qml::command::get_field_connection_status(m_uid,m_node,m_field,m_connected);
+}
 
 
 // Parameter
