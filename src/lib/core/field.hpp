@@ -21,30 +21,6 @@ namespace feather
   
     namespace field
     {
-
-        struct FieldBase
-        {
-            FieldBase():update(false),connected(false),puid(0),pf(0){};
-            int id;
-            bool update; // this is used to optimize the scenegraph update process - the sg won't call a node's do_it unless one of it's input's fields update flags are set to true.
-            // Connections
-            // If nothing is connected to this field, both puid and pf are 0
-            bool connected; // is the field connected
-            int puid; // this will hold the uid of the node that has the field connected to this field
-            int pf; // this is the field key of that node which is connected to this field
-        };
-
-        template <typename _Type, int _Conn>
-        struct Field : public FieldBase
-        {
-            Field():conn(_Conn){};
-            typedef _Type type;
-            int conn;
-            _Type value; // this is the field's value if nothing is connected to it
-        };
-
-        typedef std::vector<FieldBase*> Fields;
-
         namespace connection
         {
             enum Type {
@@ -58,6 +34,7 @@ namespace feather
             Bool,
             Int,
             Float,
+            Double,
             Vertex,
             Vector,
             Mesh,
@@ -73,10 +50,43 @@ namespace feather
             START
         };
 
+        struct FieldBase
+        {
+            FieldBase():update(false),connected(false),puid(0),pf(0),type(0){};
+            int id;
+            bool update; // this is used to optimize the scenegraph update process - the sg won't call a node's do_it unless one of it's input's fields update flags are set to true.
+            // Connections
+            // If nothing is connected to this field, both puid and pf are 0
+            bool connected; // is the field connected
+            int puid; // this will hold the uid of the node that has the field connected to this field
+            int pf; // this is the field key of that node which is connected to this field
+            int type;
+        };
+
+        template <typename _Type, int _Conn>
+        struct Field : public FieldBase
+        {
+            Field(int _type=0):conn(_Conn){ };
+            //typedef _Type type;
+            int conn;
+            _Type value; // this is the field's value if nothing is connected to it
+        };
+
+
+        typedef std::vector<FieldBase*> Fields;
+
+
+        // CHECK CONNECTION
+
 
         template <int _Type1, int _Type2>
-        bool can_connect() { return false; };
+        static bool can_connect() { return false; };
 
+        template <> bool can_connect<Bool,Bool>() { return true; };
+        template <> bool can_connect<Int,Int>() { return true; };
+        template <> bool can_connect<Float,Float>() { return true; };
+
+       
         template <int _Type1, int _Type2>
         struct can_types_connect {
             static bool exec(int t1, int t2) {
@@ -95,13 +105,14 @@ namespace feather
 
     } // namespace field
 
-#define ADD_FIELD_TO_NODE(__node,__type,__connection,__default_value,__field_key)\
+#define ADD_FIELD_TO_NODE(__node,__type,__type_enum,__connection,__default_value,__field_key)\
     namespace feather {\
         template <> struct add_fields<__node,__field_key> {\
             static status exec(field::Fields& fields) {\
                  field::Field<__type,__connection>* f = new field::Field<__type,__connection>();\
                 f->id=__field_key;\
                 f->value=__default_value;\
+                f->type=__type_enum;\
                 fields.push_back(f);\
                 return add_fields<__node,__field_key-1>::exec(fields);\
             };\
