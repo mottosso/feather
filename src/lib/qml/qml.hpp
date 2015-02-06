@@ -124,9 +124,7 @@ class Field: public QObject
             if(m_intVal != v) {
                 m_intVal = v;
                 set_int_val(); 
-                get_connected();
                 emit intValChanged();
-                emit connectedChanged();
             }
         }
 
@@ -142,7 +140,7 @@ class Field: public QObject
 
         float floatVal() { return m_floatVal; };
 
-        bool connected() { return m_connected; };
+        bool connected() { get_connected(); return m_connected; };
 
         enum Type {
             Bool=field::Bool,

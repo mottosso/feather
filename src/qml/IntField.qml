@@ -71,7 +71,7 @@ Rectangle {
  
             PropertyChanges {
                 target: valueBox
-                color: (field.connected) ? "pink" : "lightblue"
+                color: (!field.connected) ? "pink" : "lightblue"
             }
 
             PropertyChanges {
@@ -157,5 +157,5 @@ Rectangle {
         onWheel: { field.intVal = field.intVal+1 }
     }
 
-    Component.onCompleted: { intField.state="normal"; valueBox.color=(field.connected) ? "pink" : "lightblue"}
+    Component.onCompleted: { intField.state="normal" }
 }
