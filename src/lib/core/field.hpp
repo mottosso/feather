@@ -67,7 +67,7 @@ namespace feather
             IntArray,
             FloatArray,
             VertexArray,
-            VectoryArray,
+            VectorArray,
             RGBArray,
             RGBAArray,
             START

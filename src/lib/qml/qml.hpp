@@ -152,7 +152,7 @@ class Field: public QObject
             IntArray=field::IntArray,
             FloatArray=field::FloatArray,
             VertexArray=field::VertexArray,
-            VectoryArray=field::VectoryArray,
+            VectorArray=field::VectorArray,
             RGBArray=field::RGBArray,
             RGBAArray=field::RGBAArray
         };
