@@ -92,14 +92,20 @@ namespace feather
             static bool exec(int t1, int t2) {
                 if(t1==_Type1 && t2==_Type2)
                     return can_connect<_Type1,_Type2>();
-                else if(_Type2 == N)
-                    return can_types_connect<_Type1-1,START>::exec(t1,t2);
-                else 
-                    return can_types_connect<_Type1,_Type2-1>::exec(t1,t2);
+                else {
+                    if(t2==_Type2) 
+                        return can_types_connect<_Type1-1,_Type2>::exec(t1,t2);
+                    else
+                        return can_types_connect<_Type1,_Type2-1>::exec(t1,t2);
+                }
             };
         };
    
-        template <> struct can_types_connect<N,N> {
+        template <int _Type> struct can_types_connect<_Type,N> {
+            static bool exec(int t1, int t2) { return false; };
+        };
+ 
+        template <int _Type> struct can_types_connect<N,_Type> {
             static bool exec(int t1, int t2) { return false; };
         };
 

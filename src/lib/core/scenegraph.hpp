@@ -431,13 +431,17 @@ namespace feather
                 << ", tfieldtype=" << tfield->type
                 << std::endl;
 
-            FFieldConnection connection = boost::add_edge(n1, n2, sg);
-            sg[connection.first].n1 = n1;
-            sg[connection.first].f1 = f1;
-            sg[connection.first].n2 = n2;
-            sg[connection.first].f2 = f2;
-            sg[connection.first].sfield = sfield;
-            sg[connection.first].tfield = tfield;
+            if(field::can_types_connect<field::START,field::START>::exec(sfield->type,tfield->type)) {
+                FFieldConnection connection = boost::add_edge(n1, n2, sg);
+                sg[connection.first].n1 = n1;
+                sg[connection.first].f1 = f1;
+                sg[connection.first].n2 = n2;
+                sg[connection.first].f2 = f2;
+                sg[connection.first].sfield = sfield;
+                sg[connection.first].tfield = tfield;
+            } else {
+                return status(FAILED,"field types can not be connected");
+            }
 
             return status();
         };
