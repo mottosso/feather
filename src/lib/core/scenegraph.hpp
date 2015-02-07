@@ -441,7 +441,8 @@ namespace feather
                 sg[connection.first].sfield = sfield;
                 sg[connection.first].tfield = tfield;
                 tfield->connected = true;
-
+                tfield->puid = n1;
+                tfield->pf = f1;
             } else {
                 return status(FAILED,"field types can not be connected");
             }

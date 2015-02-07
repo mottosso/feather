@@ -58,8 +58,9 @@ namespace feather
             // Connections
             // If nothing is connected to this field, both puid and pf are 0
             bool connected; // is the field connected
-            int puid; // this will hold the uid of the node that has the field connected to this field
-            int pf; // this is the field key of that node which is connected to this field
+            int puid; // uid of the node connected to this field
+            int pn; // node key of the connected field
+            int pf; // field key of connected node
             int type;
         };
 
