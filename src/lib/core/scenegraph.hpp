@@ -101,7 +101,14 @@ namespace feather
         };
 
         field::FieldBase* get_fieldBase(int uid, int node, int field) {
-            return plugins.get_fieldBase(uid,node,field,sg[uid].fields); 
+            field::FieldBase* f = plugins.get_fieldBase(uid,node,field,sg[uid].fields); 
+            if(f->connected){
+                //std::cout << "field is connected to uid:" << f->puid << ", node:" << f->pn << ", field " << f->pf << std::endl;
+                return get_fieldBase(f->puid,f->pn,f->pf);
+            } else {
+                //std::cout << "field is not connected, returning the default field\n";
+                return f;
+            }
         };
 
 
@@ -442,6 +449,7 @@ namespace feather
                 sg[connection.first].tfield = tfield;
                 tfield->connected = true;
                 tfield->puid = n1;
+                tfield->pn = src_node;
                 tfield->pf = f1;
             } else {
                 return status(FAILED,"field types can not be connected");
