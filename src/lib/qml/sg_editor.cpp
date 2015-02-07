@@ -15,7 +15,7 @@
 // =====================================================================================
 #include "sg_editor.hpp"
 
-SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(parent), m_scale(100), m_nodeWidth(100), m_nodeHeight(50)
+SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(parent), m_scale(100), m_nodeWidth(80), m_nodeHeight(30)
 {
 
 }
@@ -33,7 +33,7 @@ void SceneGraphEditor::paint(QPainter* painter)
     drawConnection(snode,tnode,feather::field::Int,painter);
     drawNode(snode,painter);
     drawNode(tnode,painter);
-    setFillColor(QColor(125,125,125));
+    setFillColor(QColor("#4682B4"));
 }
 
 void SceneGraphEditor::drawNode(QPoint& point, QPainter* painter)
@@ -44,10 +44,10 @@ void SceneGraphEditor::drawNode(QPoint& point, QPainter* painter)
     int y = point.y();
 
     QPen trimPen = QPen(QColor(0,0,0),2);
-    QPen textPen = QPen(QColor(0,0,155),2);
-    QBrush nodeFillBrush = QBrush(QColor(175,175,175));
-    QBrush connInFillBrush = QBrush(QColor(175,175,0));
-    QBrush connOutFillBrush = QBrush(QColor(0,175,175));
+    QPen textPen = QPen(QColor("#FFFAFA"),2);
+    QBrush nodeFillBrush = QBrush(QColor("#6A5ACD"));
+    QBrush connInFillBrush = QBrush(QColor("#FF4500"));
+    QBrush connOutFillBrush = QBrush(QColor("#DA70D6"));
 
     // draw the node box
     painter->setPen(trimPen);
@@ -60,9 +60,9 @@ void SceneGraphEditor::drawNode(QPoint& point, QPainter* painter)
     getConnectionPoint(feather::field::connection::In,point,sConnPoint);
     getConnectionPoint(feather::field::connection::Out,point,tConnPoint);
     painter->setBrush(connInFillBrush);
-    painter->drawEllipse(sConnPoint,10,10);
+    painter->drawEllipse(sConnPoint,6,6);
     painter->setBrush(connOutFillBrush);
-    painter->drawEllipse(tConnPoint,10,10);
+    painter->drawEllipse(tConnPoint,6,6);
 
     // draw the node's name
     painter->setPen(textPen);
@@ -81,7 +81,7 @@ void SceneGraphEditor::drawConnection(QPoint& snode, QPoint& tnode, feather::fie
     getConnectionPoint(feather::field::connection::Out,snode,sPoint);
     getConnectionPoint(feather::field::connection::In,tnode,tPoint);
 
-    QPen pathPen = QPen(QColor(255,255,0),2);
+    QPen pathPen = QPen(QColor("#9ACD32"),2);
     path.moveTo(sPoint.x(),sPoint.y());
     path.cubicTo(tPoint.x(),sPoint.y(),sPoint.x(),tPoint.y(),tPoint.x(),tPoint.y());
     painter->setPen(pathPen);
