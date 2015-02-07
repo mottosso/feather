@@ -71,7 +71,7 @@ Rectangle {
  
             PropertyChanges {
                 target: valueBox
-                color: (!field.connected) ? "pink" : "lightblue"
+                color: (field.connected) ? "deeppink" : "lightblue"
             }
 
             PropertyChanges {

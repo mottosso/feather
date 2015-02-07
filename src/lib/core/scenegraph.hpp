@@ -431,6 +431,7 @@ namespace feather
                 << ", tfieldtype=" << tfield->type
                 << std::endl;
 
+            // you show also check to see if another field is already connected
             if(field::can_types_connect<field::START,field::START>::exec(sfield->type,tfield->type)) {
                 FFieldConnection connection = boost::add_edge(n1, n2, sg);
                 sg[connection.first].n1 = n1;
@@ -439,6 +440,8 @@ namespace feather
                 sg[connection.first].f2 = f2;
                 sg[connection.first].sfield = sfield;
                 sg[connection.first].tfield = tfield;
+                tfield->connected = true;
+
             } else {
                 return status(FAILED,"field types can not be connected");
             }
