@@ -20,9 +20,42 @@
 #include "qml_deps.hpp"
 #include "field.hpp"
 
+#define NODE_WIDTH 100
+#define NODE_HEIGHT 30
+
+class SceneGraphNode : public QQuickPaintedItem
+{
+    Q_OBJECT
+
+    public:
+        SceneGraphNode(int _uid, int _node, QQuickItem* parent=0);
+        ~SceneGraphNode();
+        void paint(QPainter* painter);
+
+    private:
+        void getConnectionPoint(feather::field::connection::Type conn, QPoint& npoint, QPoint& cpoint);
+        int m_uid;
+        int m_node;
+};
+
+class SceneGraphConnection : public QQuickPaintedItem
+{
+    Q_OBJECT
+
+    public:
+        SceneGraphConnection(int _srcUid, int _srcField, int _tgtUid, int _tgtField, QQuickItem* parent=0);
+        ~SceneGraphConnection();
+        void paint(QPainter* painter);
+
+    private:
+        int m_srcUid;
+        int m_srcField;
+        int m_tgtUid;
+        int m_tgtField;
+};
+
 class SceneGraphEditor : public QQuickPaintedItem
 {
-
     Q_OBJECT
 
     public:
@@ -40,6 +73,9 @@ class SceneGraphEditor : public QQuickPaintedItem
         int m_scale;
         int m_nodeWidth;
         int m_nodeHeight;
+
+        std::vector<SceneGraphNode*> m_nodes;
+        std::vector<SceneGraphConnection*> m_connections;
 };
 
 #endif
