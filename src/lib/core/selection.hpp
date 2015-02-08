@@ -30,24 +30,11 @@ namespace feather
      */
 
 
-    // Selection Group
-    struct SelectionGroup {
-        int start_indic;
-        int end_indic;
-    };
-
-
     // Selection State
-    class SelectionState {
-        public:
-            SelectionState(){};
-            ~SelectionState() {};
-            void clear() {};
-            int count() { return m_SelectionGroups.size(); }; 
-        private:
-            int m_Node;
-            int m_Component;
-            std::vector<SelectionGroup> m_SelectionGroups;
+    struct SelectionState {
+        SelectionState(int _uid, int _field=0) : uid(_uid), field(_field) { };
+        int uid;
+        int field;
     };
 
 
@@ -57,9 +44,11 @@ namespace feather
             SelectionManager(){};
             ~SelectionManager(){};
             void clear() {};
-            int count() { return m_SelectionStates.size(); };
+            int count() { return m_aStates.size(); };
+            void add_state(int _uid, int _field) { m_aStates.push_back(SelectionState(_uid,_field)); };
+            SelectionState& get_state(int _i) { return m_aStates.at(_i); };
         private:
-            std::vector<SelectionState> m_SelectionStates;
+            std::vector<SelectionState> m_aStates;
     };
 
     // Singleton
