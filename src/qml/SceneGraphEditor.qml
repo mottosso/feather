@@ -62,6 +62,14 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: 2
+
+        MouseArea {
+            id: mouseArea
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+
+            onClicked: { /*console.log("qml sg select")*/ }
+        }
     }    
 
     Component.onCompleted: {

@@ -32,10 +32,16 @@ class SceneGraphNode : public QQuickPaintedItem
         ~SceneGraphNode();
         void paint(QPainter* painter);
 
+    protected:
+        void mousePressEvent(QMouseEvent* event);
+        void mouseMoveEvent(QMouseEvent* event);
+
     private:
         void getConnectionPoint(feather::field::connection::Type conn, QPoint& npoint, QPoint& cpoint);
         int m_uid;
         int m_node;
+        int m_x;
+        int m_y;
 };
 
 class SceneGraphConnection : public QQuickPaintedItem
@@ -64,6 +70,11 @@ class SceneGraphEditor : public QQuickPaintedItem
 
         void paint(QPainter* painter);
         Q_INVOKABLE void update_sg() { update(); }; 
+
+/*
+    protected:
+        bool event(QMouseEvent* event);
+*/
 
     private:
         void drawNode(QPoint& point, QPainter* painter);
