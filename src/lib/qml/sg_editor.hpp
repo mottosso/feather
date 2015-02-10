@@ -76,6 +76,9 @@ class SceneGraphEditor : public QQuickPaintedItem
         bool event(QMouseEvent* event);
 */
 
+    signals:
+        void sgUpdated();
+
     private:
         void drawNode(QPoint& point, QPainter* painter);
         void drawConnection(QPoint& snode, QPoint& tnode, feather::field::Type type, QPainter* painter);

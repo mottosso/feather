@@ -18,10 +18,8 @@
 // Node
 SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) : QQuickPaintedItem(parent), m_uid(_uid), m_node(_node), m_x(0), m_y(0)
 {
-    //setX(0);
-    //setY(0);
-    setWidth(NODE_WIDTH);
-    setHeight(NODE_HEIGHT);
+    setWidth(NODE_WIDTH+10);
+    setHeight(NODE_HEIGHT+10);
     setAcceptedMouseButtons(Qt::AllButtons);
 }
 
@@ -32,12 +30,6 @@ SceneGraphNode::~SceneGraphNode()
 
 void SceneGraphNode::paint(QPainter* painter)
 {
-    /*
-    int w = m_nodeWidth;
-    int h = m_nodeHeight;
-    int x = point.x();
-    int y = point.y();
-    */
     QPen trimPen = QPen(QColor(0,0,0),2);
     QPen textPen = QPen(QColor("#FFFAFA"),2);
     QBrush nodeFillBrush = QBrush(QColor("#6A5ACD"));
@@ -47,7 +39,7 @@ void SceneGraphNode::paint(QPainter* painter)
     // draw the node box
     painter->setPen(trimPen);
     painter->setBrush(nodeFillBrush);
-    painter->drawRoundedRect(QRect(0,0,NODE_WIDTH,NODE_HEIGHT),5,5);
+    painter->drawRoundedRect(QRect(5,5,NODE_WIDTH+5,NODE_HEIGHT+5),5,5);
 
     // draw the input and output connectors
     QPoint sConnPoint;
@@ -62,9 +54,9 @@ void SceneGraphNode::paint(QPainter* painter)
 
     // draw the node's name
     painter->setPen(textPen);
-    painter->drawText(QRect(0,0,NODE_WIDTH,NODE_HEIGHT),Qt::AlignCenter,"TestNode");
-
-    painter->translate(m_x,m_y);
+    painter->drawText(QRect(5,5,NODE_WIDTH+5,NODE_HEIGHT+5),Qt::AlignCenter,"TestNode");
+    //setX(m_x);
+    //setY(m_y);
 }
 
 void SceneGraphNode::mousePressEvent(QMouseEvent* event)
@@ -76,12 +68,10 @@ void SceneGraphNode::mousePressEvent(QMouseEvent* event)
 void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
 {
     std::cout << "node move " << event->x() << "," << event->y() << std::endl;
-    m_x = m_x + event->x();
-    m_y = m_y + event->y();
+    m_x = x() + event->x();
+    m_y = y() + event->y();
     setX(m_x);
     setY(m_y);
-    //QQuickItem::update();
-    //QQuickItem::mouseMoveEvent(event);
 }
 
 
@@ -89,14 +79,14 @@ void SceneGraphNode::getConnectionPoint(feather::field::connection::Type conn, Q
 {
     if(conn == feather::field::connection::In)
     {
-        cpoint.setX(npoint.x());
-        cpoint.setY(npoint.y()+(NODE_HEIGHT/2));
+        cpoint.setX(npoint.x()+5);
+        cpoint.setY((npoint.y()+5)+((NODE_HEIGHT+5)/2));
  
     }
     else
     {
-        cpoint.setX(npoint.x()+(NODE_WIDTH));
-        cpoint.setY(npoint.y()+(NODE_HEIGHT/2));
+        cpoint.setX((npoint.x()+5)+(NODE_WIDTH+5));
+        cpoint.setY((npoint.y()+5)+((NODE_HEIGHT+5)/2));
     }
 }
 
@@ -132,17 +122,8 @@ SceneGraphEditor::~SceneGraphEditor()
 
 void SceneGraphEditor::paint(QPainter* painter)
 {
-    //setFillColor(QColor("#4682B4"));
-    painter->setRenderHints(QPainter::Antialiasing, true);
-    for(uint i=0; i < m_nodes.size(); i++) {
-        m_nodes.at(i)->paint(painter);
-    }
-    //QPoint snode = QPoint(20,20);
-    //QPoint tnode = QPoint(200,300);
-    //drawConnection(snode,tnode,feather::field::Int,painter);
-    //drawNode(snode,painter);
-    //drawNode(tnode,painter);
     setFillColor(QColor("#4682B4"));
+    painter->setRenderHints(QPainter::Antialiasing, true);
 }
 
 void SceneGraphEditor::drawNode(QPoint& point, QPainter* painter)
