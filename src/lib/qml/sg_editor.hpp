@@ -34,6 +34,7 @@ class SceneGraphNode : public QQuickPaintedItem
 
     protected:
         void mousePressEvent(QMouseEvent* event);
+        void mouseReleaseEvent(QMouseEvent* event);
         void mouseMoveEvent(QMouseEvent* event);
 
     private:
@@ -42,6 +43,7 @@ class SceneGraphNode : public QQuickPaintedItem
         int m_node;
         int m_x;
         int m_y;
+        bool m_initPos;
 };
 
 class SceneGraphConnection : public QQuickPaintedItem

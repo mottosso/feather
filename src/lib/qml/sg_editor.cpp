@@ -16,10 +16,10 @@
 #include "sg_editor.hpp"
 
 // Node
-SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) : QQuickPaintedItem(parent), m_uid(_uid), m_node(_node), m_x(0), m_y(0)
+SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) : QQuickPaintedItem(parent), m_uid(_uid), m_node(_node), m_x(0), m_y(0), m_initPos(false)
 {
-    setWidth(NODE_WIDTH+10);
-    setHeight(NODE_HEIGHT+10);
+    setWidth(NODE_WIDTH+2);
+    setHeight(NODE_HEIGHT+2);
     setAcceptedMouseButtons(Qt::AllButtons);
 }
 
@@ -30,6 +30,8 @@ SceneGraphNode::~SceneGraphNode()
 
 void SceneGraphNode::paint(QPainter* painter)
 {
+    painter->setRenderHints(QPainter::Antialiasing, true);
+
     QPen trimPen = QPen(QColor(0,0,0),2);
     QPen textPen = QPen(QColor("#FFFAFA"),2);
     QBrush nodeFillBrush = QBrush(QColor("#6A5ACD"));
@@ -39,39 +41,50 @@ void SceneGraphNode::paint(QPainter* painter)
     // draw the node box
     painter->setPen(trimPen);
     painter->setBrush(nodeFillBrush);
-    painter->drawRoundedRect(QRect(5,5,NODE_WIDTH+5,NODE_HEIGHT+5),5,5);
+    painter->drawRoundedRect(QRect(1,1,NODE_WIDTH,NODE_HEIGHT),5,5);
 
     // draw the input and output connectors
-    QPoint sConnPoint;
-    QPoint tConnPoint;
-    QPoint point; 
-    getConnectionPoint(feather::field::connection::In,point,sConnPoint);
-    getConnectionPoint(feather::field::connection::Out,point,tConnPoint);
-    painter->setBrush(connInFillBrush);
-    painter->drawEllipse(sConnPoint,6,6);
-    painter->setBrush(connOutFillBrush);
-    painter->drawEllipse(tConnPoint,6,6);
+    //QPoint sConnPoint;
+    //QPoint tConnPoint;
+    //QPoint point; 
+    //getConnectionPoint(feather::field::connection::In,point,sConnPoint);
+    //getConnectionPoint(feather::field::connection::Out,point,tConnPoint);
+    //painter->setBrush(connInFillBrush);
+    //painter->drawEllipse(sConnPoint,6,6);
+    //painter->setBrush(connOutFillBrush);
+    //painter->drawEllipse(tConnPoint,6,6);
 
     // draw the node's name
     painter->setPen(textPen);
-    painter->drawText(QRect(5,5,NODE_WIDTH+5,NODE_HEIGHT+5),Qt::AlignCenter,"TestNode");
+    painter->drawText(QRect(1,1,NODE_WIDTH,NODE_HEIGHT),Qt::AlignCenter,"TestNode");
     //setX(m_x);
     //setY(m_y);
 }
 
 void SceneGraphNode::mousePressEvent(QMouseEvent* event)
 {
-    std::cout << "node selected\n";
+    //QQuickItem::mousePressEvent(event);
+    m_initPos = true;
+}
+
+void SceneGraphNode::mouseReleaseEvent(QMouseEvent* event)
+{
+    m_initPos = false;
     //QQuickItem::mousePressEvent(event);
 }
 
 void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
 {
-    std::cout << "node move " << event->x() << "," << event->y() << std::endl;
-    m_x = x() + event->x();
-    m_y = y() + event->y();
-    setX(m_x);
-    setY(m_y);
+    if(m_initPos) {
+        m_x = event->screenPos().x();
+        m_y = event->screenPos().y();
+        m_initPos = false;
+    } else {
+        setX(x() + (event->screenPos().x() - m_x));
+        setY(y() + (event->screenPos().y() - m_y));
+        m_x = event->screenPos().x();
+        m_y = event->screenPos().y();
+    }
 }
 
 
@@ -124,6 +137,7 @@ void SceneGraphEditor::paint(QPainter* painter)
 {
     setFillColor(QColor("#4682B4"));
     painter->setRenderHints(QPainter::Antialiasing, true);
+
 }
 
 void SceneGraphEditor::drawNode(QPoint& point, QPainter* painter)
