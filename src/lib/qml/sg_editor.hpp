@@ -22,6 +22,33 @@
 
 #define NODE_WIDTH 100
 #define NODE_HEIGHT 30
+#define CONNECTION_WIDTH 10
+#define CONNECTION_HEIGHT 10 
+
+
+class SceneGraphConnection : public QQuickPaintedItem
+{
+    Q_OBJECT
+
+    public:
+        SceneGraphConnection(QQuickItem* parent=0);
+        ~SceneGraphConnection();
+        void paint(QPainter* painter);
+
+    protected:
+        void mousePressEvent(QMouseEvent* event);
+        void mouseReleaseEvent(QMouseEvent* event);
+        void hoverEnterEvent(QHoverEvent* event);
+        void hoverLeaveEvent(QHoverEvent* event);
+        void mouseMoveEvent(QMouseEvent* event);
+
+    private:
+        int m_srcUid;
+        int m_srcField;
+        int m_tgtUid;
+        int m_tgtField;
+        QBrush m_connFillBrush;
+};
 
 class SceneGraphNode : public QQuickPaintedItem
 {
@@ -46,22 +73,8 @@ class SceneGraphNode : public QQuickPaintedItem
         int m_x;
         int m_y;
         QBrush m_nodeFillBrush;
-};
-
-class SceneGraphConnection : public QQuickPaintedItem
-{
-    Q_OBJECT
-
-    public:
-        SceneGraphConnection(int _srcUid, int _srcField, int _tgtUid, int _tgtField, QQuickItem* parent=0);
-        ~SceneGraphConnection();
-        void paint(QPainter* painter);
-
-    private:
-        int m_srcUid;
-        int m_srcField;
-        int m_tgtUid;
-        int m_tgtField;
+        SceneGraphConnection* m_pInConn;
+        SceneGraphConnection* m_pOutConn;
 };
 
 class SceneGraphEditor : public QQuickPaintedItem

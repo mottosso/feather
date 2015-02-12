@@ -15,17 +15,72 @@
 // =====================================================================================
 #include "sg_editor.hpp"
 
+// Connection
+SceneGraphConnection::SceneGraphConnection(QQuickItem* parent) :
+    QQuickPaintedItem(parent),
+    m_connFillBrush(QBrush(QColor("#DA70D6")))
+{
+    setWidth(CONNECTION_WIDTH);
+    setHeight(CONNECTION_HEIGHT);
+    setAcceptedMouseButtons(Qt::AllButtons);
+    setAcceptHoverEvents(true);
+}
+
+SceneGraphConnection::~SceneGraphConnection()
+{
+
+}
+
+void SceneGraphConnection::paint(QPainter* painter)
+{
+    painter->setRenderHints(QPainter::Antialiasing, true);
+
+    painter->setBrush(m_connFillBrush);
+    painter->drawEllipse(QPoint(5,5),CONNECTION_WIDTH/2,CONNECTION_HEIGHT/2);
+}
+
+void SceneGraphConnection::mousePressEvent(QMouseEvent* event)
+{
+}
+
+void SceneGraphConnection::mouseReleaseEvent(QMouseEvent* event)
+{
+}
+
+void SceneGraphConnection::hoverEnterEvent(QHoverEvent* event)
+{
+    m_connFillBrush.setColor(QColor("#FFBF00"));
+    update();
+}
+
+void SceneGraphConnection::hoverLeaveEvent(QHoverEvent* event)
+{
+    m_connFillBrush.setColor(QColor("#DA70D6"));
+    update();
+}
+
+void SceneGraphConnection::mouseMoveEvent(QMouseEvent* event)
+{
+}
+
+
 // Node
 SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) : 
-QQuickPaintedItem(parent),
-m_uid(_uid),
-m_node(_node),
-m_x(0),
-m_y(0),
-m_nodeFillBrush(QBrush(QColor("#6A5ACD")))
+    QQuickPaintedItem(parent),
+    m_uid(_uid),
+    m_node(_node),
+    m_x(0),
+    m_y(0),
+    m_nodeFillBrush(QBrush(QColor("#6A5ACD"))),
+    m_pInConn(new SceneGraphConnection(this)),
+    m_pOutConn(new SceneGraphConnection(this))
 {
     setWidth(NODE_WIDTH+4);
     setHeight(NODE_HEIGHT+4);
+    m_pInConn->setX(NODE_WIDTH-2);
+    m_pInConn->setY((NODE_HEIGHT/2)-2);
+    m_pOutConn->setX(-2);
+    m_pOutConn->setY((NODE_HEIGHT/2)-2);
     setAcceptedMouseButtons(Qt::AllButtons);
     setAcceptHoverEvents(true);
 }
@@ -116,22 +171,6 @@ void SceneGraphNode::getConnectionPoint(feather::field::connection::Type conn, Q
     }
 }
 
-
-// Connection
-SceneGraphConnection::SceneGraphConnection(int _srcUid, int _srcField, int _tgtUid, int _tgtField, QQuickItem* parent) : QQuickPaintedItem(parent), m_srcUid(_srcUid), m_srcField(_srcField), m_tgtUid(_tgtUid), m_tgtField(_tgtField)
-{
-
-}
-
-SceneGraphConnection::~SceneGraphConnection()
-{
-
-}
-
-void SceneGraphConnection::paint(QPainter* painter)
-{
-
-}
 
 // Editor
 SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(parent), m_scale(100), m_nodeWidth(80), m_nodeHeight(30)
