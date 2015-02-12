@@ -16,11 +16,18 @@
 #include "sg_editor.hpp"
 
 // Node
-SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) : QQuickPaintedItem(parent), m_uid(_uid), m_node(_node), m_x(0), m_y(0), m_initPos(false)
+SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) : 
+QQuickPaintedItem(parent),
+m_uid(_uid),
+m_node(_node),
+m_x(0),
+m_y(0),
+m_nodeFillBrush(QBrush(QColor("#6A5ACD")))
 {
     setWidth(NODE_WIDTH+4);
     setHeight(NODE_HEIGHT+4);
     setAcceptedMouseButtons(Qt::AllButtons);
+    setAcceptHoverEvents(true);
 }
 
 SceneGraphNode::~SceneGraphNode()
@@ -34,13 +41,12 @@ void SceneGraphNode::paint(QPainter* painter)
 
     QPen trimPen = QPen(QColor(0,0,0),2);
     QPen textPen = QPen(QColor("#FFFAFA"),2);
-    QBrush nodeFillBrush = QBrush(QColor("#6A5ACD"));
-    QBrush connInFillBrush = QBrush(QColor("#FF4500"));
-    QBrush connOutFillBrush = QBrush(QColor("#DA70D6"));
+    //QBrush connInFillBrush = QBrush(QColor("#FF4500"));
+    //QBrush connOutFillBrush = QBrush(QColor("#DA70D6"));
 
     // draw the node box
     painter->setPen(trimPen);
-    painter->setBrush(nodeFillBrush);
+    painter->setBrush(m_nodeFillBrush);
     painter->drawRoundedRect(QRect(2,2,NODE_WIDTH,NODE_HEIGHT),5,5);
 
     // draw the input and output connectors
@@ -63,28 +69,35 @@ void SceneGraphNode::paint(QPainter* painter)
 
 void SceneGraphNode::mousePressEvent(QMouseEvent* event)
 {
+    m_x = event->screenPos().x();
+    m_y = event->screenPos().y();
+
     //QQuickItem::mousePressEvent(event);
-    m_initPos = true;
 }
 
 void SceneGraphNode::mouseReleaseEvent(QMouseEvent* event)
 {
-    m_initPos = false;
-    //QQuickItem::mousePressEvent(event);
+
+}
+
+void SceneGraphNode::hoverEnterEvent(QHoverEvent* event)
+{
+    m_nodeFillBrush.setColor(QColor("#318CE7"));
+    update();
+}
+
+void SceneGraphNode::hoverLeaveEvent(QHoverEvent* event)
+{
+    m_nodeFillBrush.setColor(QColor("#6A5ACD"));
+    update();
 }
 
 void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
 {
-    if(m_initPos) {
-        m_x = event->screenPos().x();
-        m_y = event->screenPos().y();
-        m_initPos = false;
-    } else {
-        setX(x() + (event->screenPos().x() - m_x));
-        setY(y() + (event->screenPos().y() - m_y));
-        m_x = event->screenPos().x();
-        m_y = event->screenPos().y();
-    }
+    setX(x() + (event->screenPos().x() - m_x));
+    setY(y() + (event->screenPos().y() - m_y));
+    m_x = event->screenPos().x();
+    m_y = event->screenPos().y();
 }
 
 
@@ -126,6 +139,7 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
     setAcceptedMouseButtons(Qt::AllButtons);
     m_nodes.push_back(new SceneGraphNode(0,320,this));
     //m_nodes.push_back(new SceneGraphNode(1,322));
+    //setAcceptHoverEvents(true);
 }
 
 SceneGraphEditor::~SceneGraphEditor()
