@@ -18,8 +18,8 @@
 // Node
 SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) : QQuickPaintedItem(parent), m_uid(_uid), m_node(_node), m_x(0), m_y(0), m_initPos(false)
 {
-    setWidth(NODE_WIDTH+2);
-    setHeight(NODE_HEIGHT+2);
+    setWidth(NODE_WIDTH+4);
+    setHeight(NODE_HEIGHT+4);
     setAcceptedMouseButtons(Qt::AllButtons);
 }
 
@@ -41,7 +41,7 @@ void SceneGraphNode::paint(QPainter* painter)
     // draw the node box
     painter->setPen(trimPen);
     painter->setBrush(nodeFillBrush);
-    painter->drawRoundedRect(QRect(1,1,NODE_WIDTH,NODE_HEIGHT),5,5);
+    painter->drawRoundedRect(QRect(2,2,NODE_WIDTH,NODE_HEIGHT),5,5);
 
     // draw the input and output connectors
     //QPoint sConnPoint;
@@ -56,7 +56,7 @@ void SceneGraphNode::paint(QPainter* painter)
 
     // draw the node's name
     painter->setPen(textPen);
-    painter->drawText(QRect(1,1,NODE_WIDTH,NODE_HEIGHT),Qt::AlignCenter,"TestNode");
+    painter->drawText(QRect(2,2,NODE_WIDTH,NODE_HEIGHT),Qt::AlignCenter,"TestNode");
     //setX(m_x);
     //setY(m_y);
 }
