@@ -27,17 +27,17 @@ static PluginManager plugins;
 status qml::command::init() {
     load_plugins();
     //add_node(node::Null,null::Root);
-    add_node(node::Polygon,322); // PolyCube
-    add_node(node::Polygon,320); // PolyShape
+    add_node(node::Polygon,322,"Cube01"); // PolyCube
+    add_node(node::Polygon,320,"CubeShape"); // PolyShape
     scenegraph::connect(0,4,1,2); // connect PolyCube.out to PolyShape.in
     // just testing the do_it plugin calls
     scenegraph::update();
     return status();
 }
 
-int qml::command::add_node(int type, int node)
+int qml::command::add_node(int type, int node, std::string name)
 {
-    return scenegraph::add_node(type,node);
+    return scenegraph::add_node(type,node,name);
     /*
     switch(type)
     {

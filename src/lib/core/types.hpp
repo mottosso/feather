@@ -124,6 +124,7 @@ namespace feather
         int uid; // unique id number
         int node; // node type enum
         field::Fields fields; // this holds the field data
+        std::string name;
         node::Type type; // this is the node group type
         DataObject* parent; // ??still used??
         FAttributeArray* attrs; // ??still used??

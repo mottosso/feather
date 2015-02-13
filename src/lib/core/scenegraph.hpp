@@ -83,7 +83,7 @@ namespace feather
         static status add_node(int id) { return status(FAILED,"no matching node for add_node"); };
         */
 
-        int add_node(int t, int n) {
+        int add_node(int t, int n, std::string name) {
             std::cout << "add node: " << n << ", type: " << t << std::endl;
 
             // TODO
@@ -93,6 +93,7 @@ namespace feather
             sg[uid].type = static_cast<feather::node::Type>(t);
             sg[uid].uid = uid;
             sg[uid].node = n;
+            sg[uid].name = name;
             plugins.create_fields(n,sg[uid].fields);
             node_selection.push_back(n); 
 
