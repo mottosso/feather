@@ -61,6 +61,7 @@ void SceneGraphConnection::hoverLeaveEvent(QHoverEvent* event)
 
 void SceneGraphConnection::mouseMoveEvent(QMouseEvent* event)
 {
+
 }
 
 
@@ -77,10 +78,10 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
 {
     setWidth(NODE_WIDTH+4);
     setHeight(NODE_HEIGHT+4);
-    m_pInConn->setX(NODE_WIDTH-2);
-    m_pInConn->setY((NODE_HEIGHT/2)-2);
-    m_pOutConn->setX(-2);
+    m_pOutConn->setX(NODE_WIDTH-2);
     m_pOutConn->setY((NODE_HEIGHT/2)-2);
+    m_pInConn->setX(-2);
+    m_pInConn->setY((NODE_HEIGHT/2)-2);
     setAcceptedMouseButtons(Qt::AllButtons);
     setAcceptHoverEvents(true);
 }
@@ -126,8 +127,6 @@ void SceneGraphNode::mousePressEvent(QMouseEvent* event)
 {
     m_x = event->screenPos().x();
     m_y = event->screenPos().y();
-
-    //QQuickItem::mousePressEvent(event);
 }
 
 void SceneGraphNode::mouseReleaseEvent(QMouseEvent* event)
@@ -153,6 +152,17 @@ void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
     setY(y() + (event->screenPos().y() - m_y));
     m_x = event->screenPos().x();
     m_y = event->screenPos().y();
+    parentItem()->update();
+}
+
+void SceneGraphNode::inConnectionPoint(QPointF& point)
+{
+    point = mapToItem(parentItem(),QPoint(m_pInConn->x(),m_pInConn->y()));
+}
+
+void SceneGraphNode::outConnectionPoint(QPointF& point)
+{
+    point = mapToItem(parentItem(),QPoint(m_pOutConn->x(),m_pOutConn->y()));
 }
 
 
@@ -177,7 +187,11 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
 {
     setAcceptedMouseButtons(Qt::AllButtons);
     m_nodes.push_back(new SceneGraphNode(0,320,this));
-    //m_nodes.push_back(new SceneGraphNode(1,322));
+    m_nodes.at(0)->setX(50);
+    m_nodes.at(0)->setY(50);
+    m_nodes.push_back(new SceneGraphNode(1,322,this));
+    m_nodes.at(1)->setX(250);
+    m_nodes.at(1)->setY(250);
     //setAcceptHoverEvents(true);
 }
 
@@ -190,7 +204,11 @@ void SceneGraphEditor::paint(QPainter* painter)
 {
     setFillColor(QColor("#4682B4"));
     painter->setRenderHints(QPainter::Antialiasing, true);
-
+    QPointF n1;
+    QPointF n2;
+    m_nodes.at(0)->outConnectionPoint(n1);
+    m_nodes.at(1)->inConnectionPoint(n2);
+    drawConnection(n2,n1,feather::field::Double,painter);
 }
 
 void SceneGraphEditor::drawNode(QPoint& point, QPainter* painter)
@@ -227,20 +245,16 @@ void SceneGraphEditor::drawNode(QPoint& point, QPainter* painter)
  
 }
 
-void SceneGraphEditor::drawConnection(QPoint& snode, QPoint& tnode, feather::field::Type type, QPainter* painter)
+void SceneGraphEditor::drawConnection(QPointF& snode, QPointF& tnode, feather::field::Type type, QPainter* painter)
 {
     QPainterPath path;
-    QPoint sPoint;
-    QPoint tPoint;
     QBrush brush = painter->brush();
     brush.setStyle(Qt::NoBrush);
 
-    getConnectionPoint(feather::field::connection::Out,snode,sPoint);
-    getConnectionPoint(feather::field::connection::In,tnode,tPoint);
-
+    //std::cout << "snode x:" << snode.x() << ", y:" << snode.y() << ", tnode x: " << tnode.x() << ", y:" << tnode.y() << std::endl;
     QPen pathPen = QPen(QColor("#9ACD32"),2);
-    path.moveTo(sPoint.x(),sPoint.y());
-    path.cubicTo(tPoint.x(),sPoint.y(),sPoint.x(),tPoint.y(),tPoint.x(),tPoint.y());
+    path.moveTo(snode.x()+2,snode.y()+2);
+    path.cubicTo(tnode.x(),snode.y(),snode.x(),tnode.y(),tnode.x()-2,tnode.y()+2);
     painter->setPen(pathPen);
     painter->drawPath(path);
 }
@@ -260,9 +274,8 @@ void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn,
     }
 }
 
-/*
-bool SceneGraphEditor::event(QMouseEvent* event)
-{
-    return QQuickItem::event(event);
-}
-*/
+void SceneGraphEditor::mousePressEvent(QMouseEvent* event){};
+void SceneGraphEditor::mouseReleaseEvent(QMouseEvent* event){};
+void SceneGraphEditor::hoverEnterEvent(QHoverEvent* event){};
+void SceneGraphEditor::hoverLeaveEvent(QHoverEvent* event){};
+void SceneGraphEditor::mouseMoveEvent(QMouseEvent* event){};

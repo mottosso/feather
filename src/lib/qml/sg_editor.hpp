@@ -58,7 +58,9 @@ class SceneGraphNode : public QQuickPaintedItem
         SceneGraphNode(int _uid, int _node, QQuickItem* parent=0);
         ~SceneGraphNode();
         void paint(QPainter* painter);
-
+        void inConnectionPoint(QPointF& point);
+        void outConnectionPoint(QPointF& point);
+ 
     protected:
         void mousePressEvent(QMouseEvent* event);
         void mouseReleaseEvent(QMouseEvent* event);
@@ -88,17 +90,19 @@ class SceneGraphEditor : public QQuickPaintedItem
         void paint(QPainter* painter);
         Q_INVOKABLE void update_sg() { update(); }; 
 
-/*
     protected:
-        bool event(QMouseEvent* event);
-*/
+        void mousePressEvent(QMouseEvent* event);
+        void mouseReleaseEvent(QMouseEvent* event);
+        void hoverEnterEvent(QHoverEvent* event);
+        void hoverLeaveEvent(QHoverEvent* event);
+        void mouseMoveEvent(QMouseEvent* event);
 
     signals:
         void sgUpdated();
 
     private:
         void drawNode(QPoint& point, QPainter* painter);
-        void drawConnection(QPoint& snode, QPoint& tnode, feather::field::Type type, QPainter* painter);
+        void drawConnection(QPointF& snode, QPointF& tnode, feather::field::Type type, QPainter* painter);
         void getConnectionPoint(feather::field::connection::Type conn, QPoint& npoint, QPoint& cpoint);
 
         int m_scale;

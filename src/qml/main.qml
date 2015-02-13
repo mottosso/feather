@@ -18,28 +18,14 @@ ApplicationWindow {
         RowLayout { BusyIndicator { implicitWidth: 10; implicitHeight: 10; running: true } Label { text: "Feather 0.1" } }
     }
 
-
-    //Outliner {}
-
-
-    SplitView {
-        id: splitView
+    Viewport3D {
+        id: vp3d
         anchors.fill: parent
-        orientation: Qt.Horizontal
-
-        Viewport3D {
-            id: vp3d
-            Layout.fillWidth: true
-        }
-
-        SceneGraphEditor {
-            id: sgEditor
-            width: 300
-        }
-
     }
 
+    SceneGraphDialog { id: sgEditor }
     FieldEditor { id: fieldEditor }
 
+    //Outliner {}
     //Material {}
 }
