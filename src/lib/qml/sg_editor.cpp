@@ -14,6 +14,7 @@
 // 
 // =====================================================================================
 #include "sg_editor.hpp"
+#include "commands.hpp"
 
 // Connection
 SceneGraphConnection::SceneGraphConnection(QQuickItem* parent) :
@@ -24,6 +25,13 @@ SceneGraphConnection::SceneGraphConnection(QQuickItem* parent) :
     setHeight(CONNECTION_HEIGHT);
     setAcceptedMouseButtons(Qt::AllButtons);
     setAcceptHoverEvents(true);
+
+    std::vector<int> edges;
+    feather::qml::command::get_node_connections(0,edges);
+    //feather::FNodeDescriptor n = 0;
+    //feather::FFieldConnection connection = boost::edge(n);
+    //std::cout << "EDGE for node 0 is " << feather::sg[connection.first].n1 << "=>" << feather::sg[connection.first].n2 << std::endl;
+ 
 }
 
 SceneGraphConnection::~SceneGraphConnection()
@@ -33,6 +41,7 @@ SceneGraphConnection::~SceneGraphConnection()
 
 void SceneGraphConnection::paint(QPainter* painter)
 {
+    
     painter->setRenderHints(QPainter::Antialiasing, true);
 
     painter->setBrush(m_connFillBrush);

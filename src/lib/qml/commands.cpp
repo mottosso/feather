@@ -137,3 +137,12 @@ status qml::command::get_field_connection_status(int uid, int node, int field, b
     val = f->connected;
     return status();
 }
+
+void qml::command::get_node_connections(int uid, std::vector<int>& nodes)
+{
+    typedef typename boost::graph_traits<FSceneGraph>::edge_iterator se;
+
+    std::pair<se,se> e;
+    e = boost::edges(sg);
+    std::cout << "number of connections: " <<  boost::num_edges(sg) << std::endl;
+}

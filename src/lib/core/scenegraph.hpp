@@ -101,6 +101,14 @@ namespace feather
             return static_cast<int>(uid);
         };
 
+        /*  Get Node Connections 
+         *  will add all the nodes connected to the
+         *  uid to the nodes reference
+         */
+        void get_node_connections(int uid, std::vector<int>& nodes) {
+            boost::edges(sg);    
+        };
+
         field::FieldBase* get_fieldBase(int uid, int node, int field) {
             field::FieldBase* f = plugins.get_fieldBase(uid,node,field,sg[uid].fields); 
             if(f->connected){
@@ -178,7 +186,7 @@ namespace feather
              *      init vertex C
              *      init vertex D
              *      discover vertex A // discover will call the parent and it's children nodes
-             *      examine edge A->B // send the field value to the target node's fields - this will probably not be needed send the target will just hold a pointer to the source field  
+             *      examine edge A->B // send the field value to the target node's fields - this will probably not be needed since the target will just hold a pointer to the source field  
              *      tree edge A->B
              *      discover vertex B
              *      examine edge A->C
