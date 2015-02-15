@@ -145,3 +145,8 @@ void qml::command::get_node_connections(int uid, std::vector<int>& nodes)
     boost::graph_traits<FSceneGraph>::edge_descriptor c = *out.first;
     nodes.push_back(sg[boost::target(c,sg)].uid);
 }
+
+std::string qml::command::get_node_name(int uid)
+{
+    return sg[uid].name;
+}

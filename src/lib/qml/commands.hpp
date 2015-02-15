@@ -48,6 +48,8 @@ namespace feather
             status get_field_connection_status(int uid, int node, int field, bool& val);
             // SG EDITOR
             void get_node_connections(int uid, std::vector<int>& nodes);
+            std::string get_node_name(int uid);
+
 
 
         } // namespace command
