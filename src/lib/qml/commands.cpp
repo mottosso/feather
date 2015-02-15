@@ -144,5 +144,10 @@ void qml::command::get_node_connections(int uid, std::vector<int>& nodes)
 
     std::pair<se,se> e;
     e = boost::edges(sg);
-    std::cout << "number of connections: " <<  boost::num_edges(sg) << std::endl;
+    FFieldConnection field = boost::edge(0,1,sg);
+    std::cout
+        << "number of connections: " <<  boost::num_edges(sg)
+        << ", out field: " << sg[field.first].f1
+        << ", in field: " << sg[field.first].f2
+        << std::endl;
 }
