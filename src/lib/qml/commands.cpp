@@ -140,26 +140,8 @@ status qml::command::get_field_connection_status(int uid, int node, int field, b
 
 void qml::command::get_node_connections(int uid, std::vector<int>& nodes)
 {
-    typedef typename boost::graph_traits<FSceneGraph>::edge_iterator se;
-
-    std::pair<se,se> e;
-    e = boost::edges(sg);
-    FFieldConnection c = boost::edge(0,1,sg);
-    std::cout
-        << "number of connections: " <<  boost::num_edges(sg)
-        << ", out field: " << sg[c.first].f1
-        << ", in field: " << sg[c.first].f2
-        << std::endl;
-
-    std::cout
-        << "the source node is: " << sg[boost::source(c.first,sg)].node
-        << ", the target node is: " << sg[boost::target(c.first,sg)].node
-        << std::endl;
-
-    typedef boost::graph_traits<FSceneGraph>::out_edge_iterator OutEdge;
-    std::pair<OutEdge,OutEdge> out_edges;
-
-    std::cout
-        << "the out edge of node 0 is: " << sg[boost::target(c.first,sg)].node
-        << std::endl;
+    typedef boost::graph_traits<FSceneGraph>::out_edge_iterator OutConn;
+    std::pair<OutConn,OutConn> out = boost::out_edges(uid,sg);
+    boost::graph_traits<FSceneGraph>::edge_descriptor c = *out.first;
+    nodes.push_back(sg[boost::target(c,sg)].uid);
 }
