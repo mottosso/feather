@@ -144,10 +144,22 @@ void qml::command::get_node_connections(int uid, std::vector<int>& nodes)
 
     std::pair<se,se> e;
     e = boost::edges(sg);
-    FFieldConnection field = boost::edge(0,1,sg);
+    FFieldConnection c = boost::edge(0,1,sg);
     std::cout
         << "number of connections: " <<  boost::num_edges(sg)
-        << ", out field: " << sg[field.first].f1
-        << ", in field: " << sg[field.first].f2
+        << ", out field: " << sg[c.first].f1
+        << ", in field: " << sg[c.first].f2
+        << std::endl;
+
+    std::cout
+        << "the source node is: " << sg[boost::source(c.first,sg)].node
+        << ", the target node is: " << sg[boost::target(c.first,sg)].node
+        << std::endl;
+
+    typedef boost::graph_traits<FSceneGraph>::out_edge_iterator OutEdge;
+    std::pair<OutEdge,OutEdge> out_edges;
+
+    std::cout
+        << "the out edge of node 0 is: " << sg[boost::target(c.first,sg)].node
         << std::endl;
 }
