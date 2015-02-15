@@ -127,7 +127,7 @@ void SceneGraphNode::paint(QPainter* painter)
 
     // draw the node's name
     painter->setPen(textPen);
-    painter->drawText(QRect(2,2,NODE_WIDTH,NODE_HEIGHT),Qt::AlignCenter,"TestNode");
+    painter->drawText(QRect(2,2,NODE_WIDTH,NODE_HEIGHT),Qt::AlignCenter,feather::qml::command::get_node_name(m_uid).c_str());
     //setX(m_x);
     //setY(m_y);
 }
