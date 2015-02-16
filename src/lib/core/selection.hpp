@@ -30,29 +30,45 @@ namespace feather
      */
 
 
-    // Selection State
-    struct SelectionState {
-        SelectionState(int _uid, int _field=0) : uid(_uid), field(_field) { };
-        int uid;
-        int field;
-    };
+    namespace selection {
+
+        enum Type { Node, Field, Component };
+
+        // Selection State
+        struct SelectionState {
+            SelectionState(Type _type, int _uid, int _field=0) : type(_type), uid(_uid), field(_field) { };
+
+            Type type;
+            int uid;
+            int field;
+        };
+
+        // Selection Manager
+        class SelectionManager {
+            public:
+                SelectionManager(){};
+                ~SelectionManager(){};
+                void clear() {};
+                int count() { return m_aStates.size(); };
+                void add_state(Type _type, int _uid, int _field) { m_aStates.push_back(SelectionState(_type,_uid,_field)); };
+                SelectionState& get_state(int _i) { return m_aStates.at(_i); };
+                bool selected(int _uid) {
+                    for(SelectionState i: m_aStates){
+                        if(i.uid==_uid)
+                            return true;
+                    }
+                    return false;
+                };
+            private:
+                std::vector<SelectionState> m_aStates;
+        };
+
+    } // namespace selection
 
 
-    // Selection Manager
-    class SelectionManager {
-        public:
-            SelectionManager(){};
-            ~SelectionManager(){};
-            void clear() {};
-            int count() { return m_aStates.size(); };
-            void add_state(int _uid, int _field) { m_aStates.push_back(SelectionState(_uid,_field)); };
-            SelectionState& get_state(int _i) { return m_aStates.at(_i); };
-        private:
-            std::vector<SelectionState> m_aStates;
-    };
-
+    //static selection::SelectionManager smg;
     // Singleton
-    typedef Singleton<SelectionManager> SelectionManagerSingleton;
+    typedef Singleton<selection::SelectionManager> smg;
 
 } // namespace feather
 

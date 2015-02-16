@@ -15,6 +15,7 @@
 // =====================================================================================
 #include "sg_editor.hpp"
 #include "commands.hpp"
+#include "selection.hpp"
 
 // Connection
 SceneGraphConnection::SceneGraphConnection(QQuickItem* parent) :
@@ -85,6 +86,10 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
     m_pInConn(new SceneGraphConnection(this)),
     m_pOutConn(new SceneGraphConnection(this))
 {
+    if(feather::smg::Instance()->selected(m_uid)){
+        m_nodeFillBrush.setColor(QColor("#FF007F"));
+        update();
+    }
     setWidth(NODE_WIDTH+4);
     setHeight(NODE_HEIGHT+4);
     m_pOutConn->setX(NODE_WIDTH-2);
@@ -140,7 +145,13 @@ void SceneGraphNode::mousePressEvent(QMouseEvent* event)
 
 void SceneGraphNode::mouseReleaseEvent(QMouseEvent* event)
 {
-
+    if(feather::smg::Instance()->selected(m_uid)){
+        m_nodeFillBrush.setColor(QColor("#FF007F"));
+        update();
+    } else {
+        m_nodeFillBrush.setColor(QColor("#6A5ACD"));
+        update();
+    }
 }
 
 void SceneGraphNode::hoverEnterEvent(QHoverEvent* event)
@@ -151,8 +162,14 @@ void SceneGraphNode::hoverEnterEvent(QHoverEvent* event)
 
 void SceneGraphNode::hoverLeaveEvent(QHoverEvent* event)
 {
-    m_nodeFillBrush.setColor(QColor("#6A5ACD"));
-    update();
+    if(feather::smg::Instance()->selected(m_uid)){
+        m_nodeFillBrush.setColor(QColor("#FF007F"));
+        update();
+    } else {
+        m_nodeFillBrush.setColor(QColor("#6A5ACD"));
+        update();
+    }
+   update();
 }
 
 void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
@@ -195,10 +212,10 @@ void SceneGraphNode::getConnectionPoint(feather::field::connection::Type conn, Q
 SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(parent), m_scale(100), m_nodeWidth(80), m_nodeHeight(30)
 {
     setAcceptedMouseButtons(Qt::AllButtons);
-    m_nodes.push_back(new SceneGraphNode(0,320,this));
+    m_nodes.push_back(new SceneGraphNode(0,322,this));
     m_nodes.at(0)->setX(50);
     m_nodes.at(0)->setY(50);
-    m_nodes.push_back(new SceneGraphNode(1,322,this));
+    m_nodes.push_back(new SceneGraphNode(1,320,this));
     m_nodes.at(1)->setX(250);
     m_nodes.at(1)->setY(250);
     //setAcceptHoverEvents(true);

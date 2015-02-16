@@ -17,8 +17,9 @@
 #include "field.hpp"
 #include "scenegraph.hpp"
 //#include "root_node.hpp"
-#include "null.hpp"
-#include "object.hpp"
+//#include "null.hpp"
+//#include "object.hpp"
+#include "selection.hpp"
 
 using namespace feather;
 
@@ -30,6 +31,9 @@ status qml::command::init() {
     add_node(node::Polygon,322,"Cube01"); // PolyCube
     add_node(node::Polygon,320,"CubeShape"); // PolyShape
     scenegraph::connect(0,4,1,2); // connect PolyCube.out to PolyShape.in
+
+    smg::Instance()->add_state(selection::Node,0,0);
+ 
     // just testing the do_it plugin calls
     scenegraph::update();
     return status();
