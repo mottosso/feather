@@ -18,6 +18,45 @@
 
 #include "deps.hpp"
 #include "qml_deps.hpp"
+#include "types.hpp"
+
+class Camera
+{
+    public:
+        Camera();
+        ~Camera();
+
+        void init();
+        void translate();
+        void rotate(int x, int y);
+        void zoom(int z);
+
+
+    private:
+        float m_camPitchAngle;
+        float m_camTiltAngle;
+        float m_camZoom;
+        float m_fScale;
+        QMatrix4x4 pview;
+};
+
+class Mesh
+{
+    public:
+        Mesh();
+        ~Mesh();
+
+        void init();
+        void draw();
+
+    private:
+        QOpenGLShaderProgram m_Program;
+        QOpenGLShader* m_pShader;
+        int m_vertex;
+        int m_matrix;
+        int m_normal;
+        std::vector<feather::FVector3D>* m_apBuffer;
+};
 
 class Viewport
 {
