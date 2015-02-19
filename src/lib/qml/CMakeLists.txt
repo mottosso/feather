@@ -20,6 +20,7 @@ SET(QT_USE_QTOPENGL TRUE)
 SET(feather_qml_SRCS
     commands.cpp
     sg_editor.cpp
+    gl_scene.cpp
     viewport.cpp
     viewportthread.cpp
     qml.cpp

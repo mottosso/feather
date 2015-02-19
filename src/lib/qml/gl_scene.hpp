@@ -18,6 +18,7 @@
 
 #include "deps.hpp"
 #include "qml_deps.hpp"
+#include "types.hpp"
 
 namespace feather
 {
@@ -32,17 +33,17 @@ namespace feather
                 ~glCamera();
 
                 void init();
-                void translate();
+                void draw(int width, int height);
                 void rotate(int x, int y);
                 void zoom(int z);
-
+                QMatrix4x4& view() { return m_View; };
 
             private:
                 float m_camPitchAngle;
                 float m_camTiltAngle;
                 float m_camZoom;
                 float m_fScale;
-                QMatrix4x4 pview;
+                QMatrix4x4 m_View;
         };
 
         class glMesh
@@ -60,7 +61,7 @@ namespace feather
                 int m_vertex;
                 int m_matrix;
                 int m_normal;
-                std::vector<feather::FVector3D>* m_apBuffer;
+                std::vector<FVector3D>* m_paBuffer;
         };
 
         class glScene
@@ -71,10 +72,18 @@ namespace feather
 
                 void init();
                 void draw();
+                glCamera* camera(int camera) { return m_apCameras.at(camera); };
 
             private:
                 std::vector<glCamera*> m_apCameras;
                 std::vector<glMesh*> m_apMeshes;
+                QOpenGLShaderProgram gridProgram;
+                QOpenGLShaderProgram axisProgram;
+                QOpenGLShader* gridShader;
+                QOpenGLShader* gridFragShader;
+                QOpenGLShader* axisVShader;
+                int m_gridVAttr;
+                int m_gridMAttr;
         };
 
     } // namespace gl

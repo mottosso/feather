@@ -35,10 +35,13 @@ std::vector<Vector3D> axis;
 
 Viewport::Viewport() : m_camPitchAngle(0),m_camTiltAngle(0),m_camZoom(-6.0),m_fScale(1),r(0)
 {
+    m_pScene = new feather::gl::glScene();
+    m_CurrentCamera = 0;
 }
 
 Viewport::~Viewport()
 {
+    delete m_pScene;
     delete meshShader;
     delete gridShader;
     delete gridFragShader;
@@ -60,6 +63,8 @@ void Viewport::initialize(int width, int height)
     program1.addShader(fshader1);
     program1.link();
     */
+
+    m_pScene->init();
 
     // Grid
     gridShader = new QOpenGLShader(QOpenGLShader::Vertex, &gridProgram);
@@ -134,9 +139,7 @@ void Viewport::initialize(int width, int height)
 void Viewport::render(int width, int height)
 {
 
-    const qreal fov=25.0,near=0.1, far=60.0;
-    qreal aspect=(float)width/(float)height;
-
+    /*
     pview.setToIdentity();
     pview.perspective(fov,aspect,near,far); 
     //pview.ortho(-1.0/aspect,1.0/aspect,-1.0*aspect,1.0*aspect,1.0,20.0);
@@ -144,6 +147,7 @@ void Viewport::render(int width, int height)
     pview.rotate(m_camTiltAngle,1.0,0.0,0.0);
     pview.rotate(m_camPitchAngle,0.0,1.0,0.0);
     pview.rotate(0,0.0,0.0,1.0);
+    */
 
     r=r+0.1; 
 
@@ -271,11 +275,10 @@ void Viewport::initTextures()
 
 void Viewport::rotateCamera(int x, int y)
 {
-    m_camPitchAngle += x;
-    m_camTiltAngle -= y;
+    m_pScene->camera(m_CurrentCamera)->rotate(x,y);
 }
 
 void Viewport::zoomCamera(int z)
 {
-    m_camZoom += (float)z/240.0;
+    m_pScene->camera(m_CurrentCamera)->zoom(z);
 }

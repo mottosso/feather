@@ -65,8 +65,9 @@ class Viewport
         QOpenGLShader* gridFragShader;
         QOpenGLShader* greenShader;
         QOpenGLShader* axisVShader;
-    
+        feather::gl::glScene* m_pScene;    
         float r;
+        int m_CurrentCamera;
 };
 
 
