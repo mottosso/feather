@@ -30,61 +30,6 @@ std::vector<Vector3D> axis;
 //std::vector<Vector3D> axisZ;
 
 
-// GL CAMERA
-
-Camera::Camera()
-{
-
-}
-
-Camera::~Camera()
-{
-
-}
-
-void Camera::init()
-{
-
-}
-
-void Camera::translate()
-{
-
-}
-
-void Camera::rotate(int x, int y)
-{
-
-}
-
-void Camera::zoom(int z)
-{
-
-}
-
-
-// GL MESH
-
-Mesh::Mesh()
-{
-
-}
-
-Mesh::~Mesh()
-{
-
-}
-
-void Mesh::init()
-{
-
-}
-
-void Mesh::draw()
-{
-
-}
-
 
 // MAIN VIEWPORT
 
