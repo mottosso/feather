@@ -39,10 +39,10 @@ namespace feather
                 QMatrix4x4& view() { return m_View; };
 
             private:
-                float m_camPitchAngle;
-                float m_camTiltAngle;
-                float m_camZoom;
-                float m_fScale;
+                float m_CamPitchAngle;
+                float m_CamTiltAngle;
+                float m_CamZoom;
+                float m_Scale;
                 QMatrix4x4 m_View;
         };
 
@@ -58,10 +58,10 @@ namespace feather
             private:
                 QOpenGLShaderProgram m_Program;
                 QOpenGLShader* m_pShader;
-                int m_vertex;
-                int m_matrix;
-                int m_normal;
-                std::vector<FVector3D>* m_paBuffer;
+                int m_Vertex;
+                int m_Matrix;
+                int m_Normal;
+                std::vector<FVertex3D>* m_apBuffer;
         };
 
         class glScene
@@ -71,19 +71,27 @@ namespace feather
                 ~glScene();
 
                 void init();
-                void draw();
+                void draw(int width, int height);
+                void draw_grid();
+                void make_grid();
+                void draw_axis();
                 glCamera* camera(int camera) { return m_apCameras.at(camera); };
 
             private:
                 std::vector<glCamera*> m_apCameras;
                 std::vector<glMesh*> m_apMeshes;
-                QOpenGLShaderProgram gridProgram;
-                QOpenGLShaderProgram axisProgram;
-                QOpenGLShader* gridShader;
-                QOpenGLShader* gridFragShader;
-                QOpenGLShader* axisVShader;
-                int m_gridVAttr;
-                int m_gridMAttr;
+                QOpenGLShaderProgram m_GridProgram;
+                QOpenGLShaderProgram m_AxisProgram;
+                QOpenGLShader* m_pGridShader;
+                QOpenGLShader* m_pGridFragShader;
+                QOpenGLShader* m_pAxisVShader;
+                int m_AxisVAttr;
+                int m_AxisMAttr;
+                int m_GridVAttr;
+                int m_GridMAttr;
+                //double m_R;
+                std::vector<FVertex3D> m_aGrid;
+                std::vector<FVertex3D> m_aAxis;
         };
 
     } // namespace gl
