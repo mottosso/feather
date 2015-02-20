@@ -99,21 +99,34 @@ gl::glScene::~glScene()
 
 void gl::glScene::init()
 {
-    m_pGridShader = new QOpenGLShader(QOpenGLShader::Vertex, &m_GridProgram);
-    m_pGridShader->compileSourceFile("grid.glsl");
- 
-    m_pGridFragShader = new QOpenGLShader(QOpenGLShader::Fragment, &m_GridProgram);
-    m_pGridFragShader->compileSourceFile("grid_frag.glsl");
+    m_GridProgram.addShaderFromSourceCode(QOpenGLShader::Vertex,
+            "attribute highp vec4 vertex;\n"
+            "uniform mediump mat4 matrix;\n"
+            "varying mediump vec4 color;\n"
+            "void main(void)\n"
+            "{\n"
+            "gl_Position = matrix * vertex;\n"
+            "}");
 
-    m_GridProgram.addShader(m_pGridShader);
-    m_GridProgram.addShader(m_pGridFragShader);
+    m_GridProgram.addShaderFromSourceCode(QOpenGLShader::Fragment,
+            "varying mediump vec4 color;\n"
+            "void main(void)\n"
+            "{\n"
+            "gl_FragColor = vec4(0.0,0.0,0.0,1.0);\n"
+            "}");
+
     m_GridProgram.link();
 
     // Axis 
-    m_pAxisVShader = new QOpenGLShader(QOpenGLShader::Vertex, &m_AxisProgram);
-    m_pAxisVShader->compileSourceFile("axis.glsl"); 
+    m_AxisProgram.addShaderFromSourceCode(QOpenGLShader::Vertex,
+            "attribute highp vec4 vertex;\n"
+            "uniform mediump mat4 matrix;\n"
+            "varying mediump vec4 color;\n"
+            "void main(void)\n"
+            "{\n"
+            "gl_Position = matrix * vertex;\n"
+            "}");
 
-    m_AxisProgram.addShader(m_pAxisVShader);
     m_AxisProgram.link();
 
     m_GridVAttr = m_GridProgram.attributeLocation("vertex");

@@ -83,6 +83,6 @@ SET_TARGET_PROPERTIES(feather_qml
 INSTALL(TARGETS feather_qml
     LIBRARY DESTINATION /usr/lib64/feather)
 
-FILE(GLOB GLSL_FILES "*.vert" "*.frag" "*.glsl")
+#FILE(GLOB GLSL_FILES "*.vert" "*.frag" "*.glsl")
 
-INSTALL(FILES ${GLSL_FILES} DESTINATION /usr/local/feather)
+#INSTALL(FILES ${GLSL_FILES} DESTINATION /usr/local/feather)
