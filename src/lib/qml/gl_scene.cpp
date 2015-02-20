@@ -76,7 +76,31 @@ gl::glMesh::~glMesh()
 
 void gl::glMesh::init()
 {
+    m_Program.addShaderFromSourceCode(QOpenGLShader::Vertex,
+            "attribute highp vec4 vertex;\n"
+            "uniform mediump mat4 matrix;\n"
+            "varying mediump vec4 color;\n"
+            "void main(void)\n"
+            "{\n"
+            "gl_Position = matrix * vertex;\n"
+            "}");
 
+    m_Program.addShaderFromSourceCode(QOpenGLShader::Fragment,
+            "varying mediump vec4 color;\n"
+            "void main(void)\n"
+            "{\n"
+            "gl_FragColor = vec4(0.2,0.2,0.2,1.0);\n"
+            "}");
+
+    m_Program.link();
+
+    m_Vertex = m_GridProgram.attributeLocation("vertex");
+    m_Matrix = m_GridProgram.uniformLocation("matrix");
+
+    m_apBuffer.push_back(new FVertex3D(1.0,1.0,0.0));
+    m_apBuffer.push_back(new FVertex3D(-1.0,1.0,0.0));
+    m_apBuffer.push_back(new FVertex3D(-1.0,-1.0,0.0));
+    m_apBuffer.push_back(new FVertex3D(1.0,-1.0,0.0));
 }
 
 void gl::glMesh::draw()
