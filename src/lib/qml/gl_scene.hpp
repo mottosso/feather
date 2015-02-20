@@ -53,15 +53,16 @@ namespace feather
                 ~glMesh();
 
                 void init();
-                void draw();
+                void draw(QMatrix4x4& view);
 
             private:
                 QOpenGLShaderProgram m_Program;
-                QOpenGLShader* m_pShader;
+                QOpenGLShader* m_pFillShader;
+                QOpenGLShader* m_pEdgeShader;
                 int m_Vertex;
                 int m_Matrix;
                 int m_Normal;
-                std::vector<FVertex3D>* m_apBuffer;
+                std::vector<FVertex3D> m_apBuffer;
         };
 
         class glScene

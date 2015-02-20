@@ -65,8 +65,9 @@ void gl::glCamera::zoom(int z)
 
 gl::glMesh::glMesh()
 {
-
-
+    //m_apBuffer = new std::vector<FVertex3D>();
+    m_pFillShader = new QOpenGLShader(QOpenGLShader::Fragment);
+    m_pEdgeShader = new QOpenGLShader(QOpenGLShader::Fragment);
 }
 
 gl::glMesh::~glMesh()
@@ -76,6 +77,19 @@ gl::glMesh::~glMesh()
 
 void gl::glMesh::init()
 {
+    m_pFillShader->compileSourceCode("varying mediump vec4 color;\n"
+            "void main(void)\n"
+            "{\n"
+            "gl_FragColor = vec4(0.4,0.4,0.4,1.0);\n"
+            "}");
+
+    m_pEdgeShader->compileSourceCode("varying mediump vec4 color;\n"
+            "void main(void)\n"
+            "{\n"
+            "gl_FragColor = vec4(1.0,0.0,0.0,1.0);\n"
+            "}");
+
+
     m_Program.addShaderFromSourceCode(QOpenGLShader::Vertex,
             "attribute highp vec4 vertex;\n"
             "uniform mediump mat4 matrix;\n"
@@ -85,27 +99,56 @@ void gl::glMesh::init()
             "gl_Position = matrix * vertex;\n"
             "}");
 
+    m_Program.addShader(m_pEdgeShader);
+
+    /*
     m_Program.addShaderFromSourceCode(QOpenGLShader::Fragment,
             "varying mediump vec4 color;\n"
             "void main(void)\n"
             "{\n"
             "gl_FragColor = vec4(0.2,0.2,0.2,1.0);\n"
             "}");
+    */
 
     m_Program.link();
 
-    m_Vertex = m_GridProgram.attributeLocation("vertex");
-    m_Matrix = m_GridProgram.uniformLocation("matrix");
+    m_Vertex = m_Program.attributeLocation("vertex");
+    m_Matrix = m_Program.uniformLocation("matrix");
 
-    m_apBuffer.push_back(new FVertex3D(1.0,1.0,0.0));
-    m_apBuffer.push_back(new FVertex3D(-1.0,1.0,0.0));
-    m_apBuffer.push_back(new FVertex3D(-1.0,-1.0,0.0));
-    m_apBuffer.push_back(new FVertex3D(1.0,-1.0,0.0));
+    m_apBuffer.push_back(FVertex3D(1.0,1.0,0.0));
+    m_apBuffer.push_back(FVertex3D(-1.0,1.0,0.0));
+    m_apBuffer.push_back(FVertex3D(1.0,-1.0,0.0));
+    m_apBuffer.push_back(FVertex3D(-1.0,-1.0,0.0));
 }
 
-void gl::glMesh::draw()
+void gl::glMesh::draw(QMatrix4x4& view)
 {
+    m_Program.removeShader(m_pEdgeShader);
+    m_Program.addShader(m_pFillShader);
+    
+    m_Program.bind();
+    m_Program.setUniformValue(m_Matrix, view);
+    //program1.enableAttributeArray(normalAttr1);
+    m_Program.enableAttributeArray(m_Vertex);
+    m_Program.setAttributeArray(m_Vertex, GL_FLOAT, &m_apBuffer[0], 3);
+    //m_Program.setAttributeArray(normalAttr1, normals.constData());
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
+    m_Program.removeShader(m_pFillShader);
+    m_Program.addShader(m_pEdgeShader);
+ 
+    m_Program.bind();
+    m_Program.setUniformValue(m_Matrix, view);
+    //program1.enableAttributeArray(normalAttr1);
+    m_Program.enableAttributeArray(m_Vertex);
+    //m_Program.setAttributeArray(normalAttr1, normals.constData());
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glLineWidth(2.25);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    //m_Program.disableAttributeArray(normalAttr1);
+    m_Program.disableAttributeArray(m_Vertex);
+    m_Program.release();
 }
 
 
@@ -114,6 +157,7 @@ void gl::glMesh::draw()
 gl::glScene::glScene()
 {
     m_apCameras.push_back(new gl::glCamera());
+    m_apMeshes.push_back(new gl::glMesh());
 }
 
 gl::glScene::~glScene()
@@ -170,6 +214,9 @@ void gl::glScene::init()
 
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+    m_apMeshes.at(0)->init();
+
 }
 
 void gl::glScene::draw(int width, int height)
@@ -202,6 +249,8 @@ void gl::glScene::draw(int width, int height)
     m_GridProgram.setUniformValue(m_GridMAttr, m_apCameras.at(0)->view());
     draw_grid();
     m_GridProgram.release();
+
+    m_apMeshes.at(0)->draw(m_apCameras.at(0)->view());
 
     // draw each node
     feather::qml::command::draw_sg(m_apCameras.at(0)->view());
