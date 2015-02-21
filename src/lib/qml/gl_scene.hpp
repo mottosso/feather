@@ -46,6 +46,20 @@ namespace feather
                 QMatrix4x4 m_View;
         };
 
+        class glLight
+        {
+            public:
+                glLight();
+                ~glLight();
+
+                void init();
+                void draw();
+
+            private:
+                FVertex3D m_Position;
+        };
+
+
         class glMesh
         {
             public:
@@ -82,6 +96,7 @@ namespace feather
             private:
                 std::vector<glCamera*> m_apCameras;
                 std::vector<glMesh*> m_apMeshes;
+                std::vector<glLight*> m_apLights;
                 QOpenGLShaderProgram m_GridProgram;
                 QOpenGLShaderProgram m_AxisProgram;
                 QOpenGLShader* m_pGridShader;

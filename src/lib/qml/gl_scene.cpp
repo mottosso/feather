@@ -60,6 +60,27 @@ void gl::glCamera::zoom(int z)
     m_CamZoom += (float)z/240.0;
 }
 
+// GL LIGHT
+
+gl::glLight::glLight()
+{
+
+}
+
+gl::glLight::~glLight()
+{
+
+}
+
+void gl::glLight::init()
+{
+
+}
+
+void gl::glLight::draw()
+{
+
+}
 
 // GL MESH
 
@@ -177,6 +198,7 @@ gl::glScene::glScene()
 {
     m_apCameras.push_back(new gl::glCamera());
     m_apMeshes.push_back(new gl::glMesh());
+    m_apLights.push_back(new gl::glLight());
 }
 
 gl::glScene::~glScene()
