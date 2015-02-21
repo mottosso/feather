@@ -62,7 +62,8 @@ namespace feather
                 int m_Vertex;
                 int m_Matrix;
                 int m_Normal;
-                std::vector<FVertex3D> m_apBuffer;
+                std::vector<FVertex3D> m_apV;
+                std::vector<FVertex3D> m_apVn;
         };
 
         class glScene

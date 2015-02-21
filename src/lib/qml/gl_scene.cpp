@@ -114,11 +114,29 @@ void gl::glMesh::init()
 
     m_Vertex = m_Program.attributeLocation("vertex");
     m_Matrix = m_Program.uniformLocation("matrix");
+    m_Normal = m_Program.attributeLocation("normal");
 
-    m_apBuffer.push_back(FVertex3D(1.0,1.0,0.0));
-    m_apBuffer.push_back(FVertex3D(-1.0,1.0,0.0));
-    m_apBuffer.push_back(FVertex3D(1.0,-1.0,0.0));
-    m_apBuffer.push_back(FVertex3D(-1.0,-1.0,0.0));
+
+    // test vertex
+    m_apV.push_back(FVertex3D(1.0,1.0,0.0));
+    m_apV.push_back(FVertex3D(-1.0,1.0,0.0));
+    m_apV.push_back(FVertex3D(-1.0,-1.0,0.0));
+    m_apV.push_back(FVertex3D(1.0,-1.0,0.0));
+    m_apV.push_back(FVertex3D(1.0,1.0,0.0));
+    m_apV.push_back(FVertex3D(1.0,1.0,2.0));
+    m_apV.push_back(FVertex3D(1.0,-1.0,2.0));
+    m_apV.push_back(FVertex3D(1.0,-1.0,0.0));
+
+
+    // test vertex
+    m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
+    m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
+    m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
+    m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
+    m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
+    m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
+    m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
+    m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
 }
 
 void gl::glMesh::draw(QMatrix4x4& view)
@@ -128,16 +146,16 @@ void gl::glMesh::draw(QMatrix4x4& view)
     
     m_Program.bind();
     m_Program.setUniformValue(m_Matrix, view);
-    //program1.enableAttributeArray(normalAttr1);
+    m_Program.enableAttributeArray(m_Normal);
     m_Program.enableAttributeArray(m_Vertex);
-    m_Program.setAttributeArray(m_Vertex, GL_FLOAT, &m_apBuffer[0], 3);
-    //m_Program.setAttributeArray(normalAttr1, normals.constData());
+    m_Program.setAttributeArray(m_Vertex, GL_FLOAT, &m_apV[0], 3);
+    m_Program.setAttributeArray(m_Normal, GL_FLOAT, &m_apVn[0],3);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glDrawArrays(GL_POLYGON, 0, m_apV.size());
 
     m_Program.removeShader(m_pFillShader);
     m_Program.addShader(m_pEdgeShader);
- 
+
     m_Program.bind();
     m_Program.setUniformValue(m_Matrix, view);
     //program1.enableAttributeArray(normalAttr1);
@@ -145,10 +163,11 @@ void gl::glMesh::draw(QMatrix4x4& view)
     //m_Program.setAttributeArray(normalAttr1, normals.constData());
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glLineWidth(2.25);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glDrawArrays(GL_POLYGON, 0, m_apV.size());
     //m_Program.disableAttributeArray(normalAttr1);
     m_Program.disableAttributeArray(m_Vertex);
     m_Program.release();
+
 }
 
 
