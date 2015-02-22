@@ -86,3 +86,5 @@ INSTALL(TARGETS feather_qml
 #FILE(GLOB GLSL_FILES "*.vert" "*.frag" "*.glsl")
 
 #INSTALL(FILES ${GLSL_FILES} DESTINATION /usr/local/feather)
+
+add_subdirectory(shaders)

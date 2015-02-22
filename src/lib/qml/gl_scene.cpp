@@ -98,41 +98,11 @@ gl::glMesh::~glMesh()
 
 void gl::glMesh::init()
 {
-    m_pFillShader->compileSourceCode("varying mediump vec4 color;\n"
-            "void main(void)\n"
-            "{\n"
-"vec3 normal,lightDir;\n"
-"float NdotL;\n"
-"normal = normalize(gl_NormalMatrix * gl_Normal);\n"
-            "gl_FragColor = vec4(0.4,0.4,0.4,1.0);\n"
-            "}");
+    m_pFillShader->compileSourceFile("shaders/frag/lambert.glsl");
 
-    m_pEdgeShader->compileSourceCode("varying mediump vec4 color;\n"
-            "void main(void)\n"
-            "{\n"
-            "gl_FragColor = vec4(1.0,0.0,0.0,1.0);\n"
-            "}");
+    m_Program.addShaderFromSourceFile(QOpenGLShader::Vertex,"shaders/vert/mesh.glsl");
 
-
-    m_Program.addShaderFromSourceCode(QOpenGLShader::Vertex,
-            "attribute highp vec4 vertex;\n"
-            "uniform mediump mat4 matrix;\n"
-            "varying mediump vec4 color;\n"
-            "void main(void)\n"
-            "{\n"
-            "gl_Position = matrix * vertex;\n"
-            "}");
-
-    m_Program.addShader(m_pEdgeShader);
-
-    /*
-    m_Program.addShaderFromSourceCode(QOpenGLShader::Fragment,
-            "varying mediump vec4 color;\n"
-            "void main(void)\n"
-            "{\n"
-            "gl_FragColor = vec4(0.2,0.2,0.2,1.0);\n"
-            "}");
-    */
+    m_Program.addShader(m_pFillShader);
 
     m_Program.link();
 
@@ -165,9 +135,6 @@ void gl::glMesh::init()
 
 void gl::glMesh::draw(QMatrix4x4& view)
 {
-    m_Program.removeShader(m_pEdgeShader);
-    m_Program.addShader(m_pFillShader);
-    
     m_Program.bind();
     m_Program.setUniformValue(m_Matrix, view);
     m_Program.enableAttributeArray(m_Normal);
@@ -176,22 +143,9 @@ void gl::glMesh::draw(QMatrix4x4& view)
     m_Program.setAttributeArray(m_Normal, GL_FLOAT, &m_apVn[0],3);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glDrawArrays(GL_POLYGON, 0, m_apV.size());
-
-    m_Program.removeShader(m_pFillShader);
-    m_Program.addShader(m_pEdgeShader);
-
-    m_Program.bind();
-    m_Program.setUniformValue(m_Matrix, view);
-    //program1.enableAttributeArray(normalAttr1);
-    m_Program.enableAttributeArray(m_Vertex);
-    //m_Program.setAttributeArray(normalAttr1, normals.constData());
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glLineWidth(2.25);
-    glDrawArrays(GL_POLYGON, 0, m_apV.size());
-    //m_Program.disableAttributeArray(normalAttr1);
+    m_Program.disableAttributeArray(m_Normal);
     m_Program.disableAttributeArray(m_Vertex);
     m_Program.release();
-
 }
 
 
@@ -279,7 +233,7 @@ void gl::glScene::draw(int width, int height)
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
 
     // draw the axis 
