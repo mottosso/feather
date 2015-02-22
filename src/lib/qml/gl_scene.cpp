@@ -101,6 +101,9 @@ void gl::glMesh::init()
     m_pFillShader->compileSourceCode("varying mediump vec4 color;\n"
             "void main(void)\n"
             "{\n"
+"vec3 normal,lightDir;\n"
+"float NdotL;\n"
+"normal = normalize(gl_NormalMatrix * gl_Normal);\n"
             "gl_FragColor = vec4(0.4,0.4,0.4,1.0);\n"
             "}");
 
