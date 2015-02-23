@@ -57,15 +57,33 @@ Window {
             anchors.margins: 2
 
             IntField {
-                id: test1
+                id: subX 
                 width: parent.width
                 // Ok, this is dangerous because the program will seq fault.
                 // This will need to be verified by the scenegraph
                 // BUT.... for the time being this will do for testing
-                uId: 1
-                nodeKey: 320
+                uId: 0
+                nodeKey: 322
+                fieldKey: 1 
+                label: "SubX"
+            }
+
+            IntField {
+                id: subY 
+                width: parent.width
+                uId: 0
+                nodeKey: 322
                 fieldKey: 2 
-                label: "target"
+                label: "SubY"
+            }
+
+            IntField {
+                id: subZ 
+                width: parent.width
+                uId: 0
+                nodeKey: 322
+                fieldKey: 3 
+                label: "SubZ"
             }
 
         }

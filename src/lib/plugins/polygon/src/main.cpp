@@ -108,9 +108,9 @@ NODE_INIT(POLYGON_PLANE,node::Polygon)
  ***************************************
 */
 
-ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,2,1)
-ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,2,2)
-ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,2,3)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,0,1)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,0,2)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,0,3)
 ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::Out,5,4)
 
 namespace feather
