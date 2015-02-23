@@ -64,22 +64,70 @@ void gl::glCamera::zoom(int z)
 
 gl::glLight::glLight()
 {
-
+    m_pFragShader = new QOpenGLShader(QOpenGLShader::Fragment);
+    m_pVertShader = new QOpenGLShader(QOpenGLShader::Vertex);
 }
 
 gl::glLight::~glLight()
 {
-
+    delete m_pFragShader;
+    delete m_pVertShader;
 }
 
 void gl::glLight::init()
 {
+    m_pFragShader->compileSourceFile("shaders/frag/wireframe.glsl");
 
+    m_pVertShader->compileSourceFile("shaders/vert/light.glsl");
+
+    m_Program.addShader(m_pFragShader);
+    m_Program.addShader(m_pVertShader);
+
+    m_Program.link();
+
+    m_Vertex = m_Program.attributeLocation("vertex");
+    m_Matrix = m_Program.uniformLocation("matrix");
+
+    // Point Mesh 
+    m_aModel.push_back(FVertex3D(0.0,1.0,0.0));
+    m_aModel.push_back(FVertex3D(0.0,-1.0,0.0));
+    m_aModel.push_back(FVertex3D(1.0,0.0,0.0));
+    m_aModel.push_back(FVertex3D(-1.0,0.0,0.0));
+    m_aModel.push_back(FVertex3D(0.0,0.0,1.0));
+    m_aModel.push_back(FVertex3D(0.0,0.0,-1.0));
+    m_aModel.push_back(FVertex3D(0.75,0.0,-0.75));
+    m_aModel.push_back(FVertex3D(-0.75,0.0,0.75));
+    m_aModel.push_back(FVertex3D(-0.75,0.0,0.75));
+    m_aModel.push_back(FVertex3D(0.75,0.0,-0.75));
+    m_aModel.push_back(FVertex3D(0.75,0.75,0.0));
+    m_aModel.push_back(FVertex3D(-0.75,-0.75,0.0));
+    m_aModel.push_back(FVertex3D(0.0,0.75,0.75));
+    m_aModel.push_back(FVertex3D(0.0,-0.75,-0.75));
+    m_aModel.push_back(FVertex3D(-0.75,0.75,0.0));
+    m_aModel.push_back(FVertex3D(0.75,-0.75,0.0));
+    m_aModel.push_back(FVertex3D(0.0,0.75,-0.75));
+    m_aModel.push_back(FVertex3D(0.0,-0.75,0.75));
+    m_aModel.push_back(FVertex3D(0.75,0.75,0.75));
+    m_aModel.push_back(FVertex3D(-0.75,-0.75,-0.75));
+    m_aModel.push_back(FVertex3D(-0.75,0.75,-0.75));
+    m_aModel.push_back(FVertex3D(0.75,-0.75,0.75));
+    m_aModel.push_back(FVertex3D(0.75,0.75,-0.75));
+    m_aModel.push_back(FVertex3D(-0.75,-0.75,0.75));
+    m_aModel.push_back(FVertex3D(-0.75,0.75,0.75));
+    m_aModel.push_back(FVertex3D(0.75,-0.75,-0.75));
 }
 
-void gl::glLight::draw()
+void gl::glLight::draw(QMatrix4x4& view)
 {
-
+    m_Program.bind();
+    m_Program.setUniformValue(m_Matrix, view);
+    m_Program.enableAttributeArray(m_Vertex);
+    m_Program.setAttributeArray(m_Vertex, GL_FLOAT, &m_aModel[0], 3);
+    glLineWidth(2);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDrawArrays(GL_LINES, 0, m_aModel.size());
+    m_Program.disableAttributeArray(m_Vertex);
+    m_Program.release();
 }
 
 // GL MESH
@@ -88,6 +136,7 @@ gl::glMesh::glMesh()
 {
     m_pFillShader = new QOpenGLShader(QOpenGLShader::Fragment);
     m_pEdgeShader = new QOpenGLShader(QOpenGLShader::Fragment);
+    m_pVertShader = new QOpenGLShader(QOpenGLShader::Vertex);
     m_ShaderDiffuse = QColor(175,175,175);
 }
 
@@ -100,9 +149,10 @@ void gl::glMesh::init()
 {
     m_pFillShader->compileSourceFile("shaders/frag/lambert.glsl");
 
-    m_Program.addShaderFromSourceFile(QOpenGLShader::Vertex,"shaders/vert/mesh.glsl");
+    m_pVertShader->compileSourceFile("shaders/vert/mesh.glsl");
 
     m_Program.addShader(m_pFillShader);
+    m_Program.addShader(m_pVertShader);
 
     m_Program.link();
 
@@ -270,8 +320,8 @@ void gl::glScene::init()
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
+    m_apLights.at(0)->init();
     m_apMeshes.at(0)->init();
-
 }
 
 void gl::glScene::draw(int width, int height)
@@ -294,6 +344,8 @@ void gl::glScene::draw(int width, int height)
     glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
 
     m_apMeshes.at(0)->draw(m_apCameras.at(0)->view());
+
+    m_apLights.at(0)->draw(m_apCameras.at(0)->view());
 
     // draw the axis 
     m_AxisProgram.bind();

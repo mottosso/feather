@@ -26,6 +26,8 @@ namespace feather
     namespace gl
     {
 
+        enum CameraType { Orthographic, Perspective };
+
         class glCamera
         {
             public:
@@ -46,17 +48,26 @@ namespace feather
                 QMatrix4x4 m_View;
         };
 
+
+        enum LightType { Ambient, Point, Spot, Direct };
+
         class glLight
         {
             public:
                 glLight();
                 ~glLight();
-
                 void init();
-                void draw();
+                void draw(QMatrix4x4& view);
 
             private:
+                QOpenGLShader* m_pFragShader;
+                QOpenGLShader* m_pVertShader;
+                QOpenGLShaderProgram m_Program;
                 FVertex3D m_Position;
+                std::vector<FVertex3D> m_aModel;
+                LightType m_Type;
+                int m_Vertex;
+                int m_Matrix;
         };
 
 
@@ -73,6 +84,7 @@ namespace feather
                 QOpenGLShaderProgram m_Program;
                 QOpenGLShader* m_pFillShader;
                 QOpenGLShader* m_pEdgeShader;
+                QOpenGLShader* m_pVertShader;
                 int m_Vertex;
                 int m_Matrix;
                 int m_Normal;
