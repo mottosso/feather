@@ -86,9 +86,9 @@ void gl::glLight::draw()
 
 gl::glMesh::glMesh()
 {
-    //m_apBuffer = new std::vector<FVertex3D>();
     m_pFillShader = new QOpenGLShader(QOpenGLShader::Fragment);
     m_pEdgeShader = new QOpenGLShader(QOpenGLShader::Fragment);
+    m_ShaderDiffuse = QColor(175,175,175);
 }
 
 gl::glMesh::~glMesh()
@@ -109,40 +109,97 @@ void gl::glMesh::init()
     m_Vertex = m_Program.attributeLocation("vertex");
     m_Matrix = m_Program.uniformLocation("matrix");
     m_Normal = m_Program.attributeLocation("normal");
+    m_ShaderDiffuseId = m_Program.attributeLocation("shader_diffuse");
 
 
-    // test vertex
-    m_apV.push_back(FVertex3D(1.0,1.0,0.0));
-    m_apV.push_back(FVertex3D(-1.0,1.0,0.0));
-    m_apV.push_back(FVertex3D(-1.0,-1.0,0.0));
-    m_apV.push_back(FVertex3D(1.0,-1.0,0.0));
-    m_apV.push_back(FVertex3D(1.0,1.0,0.0));
-    m_apV.push_back(FVertex3D(1.0,1.0,2.0));
-    m_apV.push_back(FVertex3D(1.0,-1.0,2.0));
-    m_apV.push_back(FVertex3D(1.0,-1.0,0.0));
+    // test Cube Vertex
+    // Front 
+    m_apV.push_back(FVertex3D(1.0,1.0,1.0));
+    m_apV.push_back(FVertex3D(1.0,-1.0,1.0));
+    m_apV.push_back(FVertex3D(-1.0,-1.0,1.0));
+    m_apV.push_back(FVertex3D(-1.0,1.0,1.0));
+    // R Side
+    m_apV.push_back(FVertex3D(1.0,1.0,1.0));
+    m_apV.push_back(FVertex3D(1.0,1.0,-1.0));
+    m_apV.push_back(FVertex3D(1.0,-1.0,-1.0));
+    m_apV.push_back(FVertex3D(1.0,-1.0,1.0));
+    // L Side
+    m_apV.push_back(FVertex3D(-1.0,1.0,1.0));
+    m_apV.push_back(FVertex3D(-1.0,-1.0,1.0));
+    m_apV.push_back(FVertex3D(-1.0,-1.0,-1.0));
+    m_apV.push_back(FVertex3D(-1.0,1.0,-1.0));
+    // Back 
+    m_apV.push_back(FVertex3D(1.0,1.0,-1.0));
+    m_apV.push_back(FVertex3D(-1.0,1.0,-1.0));
+    m_apV.push_back(FVertex3D(-1.0,-1.0,-1.0));
+    m_apV.push_back(FVertex3D(1.0,-1.0,-1.0));
+    // Top
+    m_apV.push_back(FVertex3D(1.0,1.0,1.0));
+    m_apV.push_back(FVertex3D(-1.0,1.0,1.0));
+    m_apV.push_back(FVertex3D(-1.0,1.0,-1.0));
+    m_apV.push_back(FVertex3D(1.0,1.0,-1.0));
+    // Bottom 
+    m_apV.push_back(FVertex3D(1.0,-1.0,1.0));
+    m_apV.push_back(FVertex3D(1.0,-1.0,-1.0));
+    m_apV.push_back(FVertex3D(-1.0,-1.0,-1.0));
+    m_apV.push_back(FVertex3D(-1.0,-1.0,1.0));
 
 
-    // test vertex
+
+    // test Cube Normals
+    // Front
     m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
     m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
     m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
     m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
+    // Left
+    m_apVn.push_back(FVertex3D(-1.0,0.0,0.0));
+    m_apVn.push_back(FVertex3D(-1.0,0.0,0.0));
+    m_apVn.push_back(FVertex3D(-1.0,0.0,0.0));
+    m_apVn.push_back(FVertex3D(-1.0,0.0,0.0));
+    // Right 
     m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
     m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
     m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
     m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
+    // Back 
+    m_apVn.push_back(FVertex3D(0.0,0.0,-1.0));
+    m_apVn.push_back(FVertex3D(0.0,0.0,-1.0));
+    m_apVn.push_back(FVertex3D(0.0,0.0,-1.0));
+    m_apVn.push_back(FVertex3D(0.0,0.0,-1.0));
+    // Top 
+    m_apVn.push_back(FVertex3D(0.0,1.0,0.0));
+    m_apVn.push_back(FVertex3D(0.0,1.0,0.0));
+    m_apVn.push_back(FVertex3D(0.0,1.0,0.0));
+    m_apVn.push_back(FVertex3D(0.0,1.0,0.0));
+    // Bottom 
+    m_apVn.push_back(FVertex3D(0.0,-1.0,0.0));
+    m_apVn.push_back(FVertex3D(0.0,-1.0,0.0));
+    m_apVn.push_back(FVertex3D(0.0,-1.0,0.0));
+    m_apVn.push_back(FVertex3D(0.0,-1.0,0.0));
 }
 
 void gl::glMesh::draw(QMatrix4x4& view)
 {
     m_Program.bind();
     m_Program.setUniformValue(m_Matrix, view);
-    m_Program.enableAttributeArray(m_Normal);
     m_Program.enableAttributeArray(m_Vertex);
+    m_Program.enableAttributeArray(m_Normal);
     m_Program.setAttributeArray(m_Vertex, GL_FLOAT, &m_apV[0], 3);
     m_Program.setAttributeArray(m_Normal, GL_FLOAT, &m_apVn[0],3);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glDrawArrays(GL_POLYGON, 0, m_apV.size());
+
+    m_ShaderDiffuse.setRgb(100,100,100);
+    m_Program.setAttributeValue(m_ShaderDiffuseId, m_ShaderDiffuse);
+    glPolygonMode(GL_FRONT, GL_FILL);
+    glPolygonMode(GL_BACK, GL_LINE);
+    glDrawArrays(GL_QUADS, 0, m_apV.size());
+
+    m_ShaderDiffuse.setRgb(0,0,0);
+    m_Program.setAttributeValue(m_ShaderDiffuseId, m_ShaderDiffuse);
+    glLineWidth(4.5);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDrawArrays(GL_QUADS, 0, m_apV.size());
+
     m_Program.disableAttributeArray(m_Normal);
     m_Program.disableAttributeArray(m_Vertex);
     m_Program.release();
@@ -233,8 +290,10 @@ void gl::glScene::draw(int width, int height)
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_BLEND);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
+
+    m_apMeshes.at(0)->draw(m_apCameras.at(0)->view());
 
     // draw the axis 
     m_AxisProgram.bind();
@@ -247,8 +306,6 @@ void gl::glScene::draw(int width, int height)
     m_GridProgram.setUniformValue(m_GridMAttr, m_apCameras.at(0)->view());
     draw_grid();
     m_GridProgram.release();
-
-    m_apMeshes.at(0)->draw(m_apCameras.at(0)->view());
 
     // draw each node
     feather::qml::command::draw_sg(m_apCameras.at(0)->view());

@@ -1,10 +1,11 @@
 // Mesh Shader
 attribute highp vec4 vertex;
 attribute highp vec3 normal;
+attribute highp vec4 shader_diffuse;
 uniform mediump mat4 matrix;
 
 uniform mat3 m_3x3_inv_transp;
-varying vec4 color;
+varying vec4 c;
 varying vec3 n;
 
 /*
@@ -33,7 +34,7 @@ struct lightSource
 };
 
 lightSource light0 = lightSource(
-    vec4(1.0, 0.0, 1.0, 0.0),
+    vec4(1.0, 10.0, 1.0, 0.0),
     vec4(1.0, 1.0, 1.0, 1.0)
 );
 
@@ -42,11 +43,11 @@ struct material
     vec4 diffuse;
 };
 
-material mymaterial = material(vec4(0.5, 0.2, 0.8, 1.0));
+material mymaterial = material(shader_diffuse);
 
 void main(void)
 {
-    vec3 lightDirection = vec3(1.0,0,0.5);
+    vec3 lightDirection = vec3(1.0,1.2,0.5);
 
     n = normalize(gl_NormalMatrix * gl_Normal); 
     float ndot;
@@ -57,7 +58,7 @@ void main(void)
     vec3 diffuseReflection
         = vec3(light0.diffuse) * vec3(mymaterial.diffuse) * ndot;
 
-    color = vec4(diffuseReflection, 1.0);
+    c = vec4(diffuseReflection, 1.0);
 
     gl_Position = matrix * vertex;
 }

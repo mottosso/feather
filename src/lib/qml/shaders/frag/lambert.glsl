@@ -1,7 +1,7 @@
 // Lambert Shader
 
-varying vec4 color;
+varying vec4 c;
  
 void main(void) {
-  gl_FragColor = color;
+  gl_FragColor = c;
 }
