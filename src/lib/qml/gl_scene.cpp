@@ -64,6 +64,10 @@ void gl::glCamera::zoom(int z)
 
 gl::glLight::glLight()
 {
+    m_Position.setX(4);
+    m_Position.setY(4);
+    m_Position.setZ(4);
+
     m_pFragShader = new QOpenGLShader(QOpenGLShader::Fragment);
     m_pVertShader = new QOpenGLShader(QOpenGLShader::Vertex);
 }
@@ -77,7 +81,6 @@ gl::glLight::~glLight()
 void gl::glLight::init()
 {
     m_pFragShader->compileSourceFile("shaders/frag/wireframe.glsl");
-
     m_pVertShader->compileSourceFile("shaders/vert/light.glsl");
 
     m_Program.addShader(m_pFragShader);
@@ -87,7 +90,8 @@ void gl::glLight::init()
 
     m_Vertex = m_Program.attributeLocation("vertex");
     m_Matrix = m_Program.uniformLocation("matrix");
-
+    m_PositionId = m_Program.attributeLocation("position");
+ 
     // Point Mesh 
     m_aModel.push_back(FVertex3D(0.0,1.0,0.0));
     m_aModel.push_back(FVertex3D(0.0,-1.0,0.0));
@@ -120,6 +124,7 @@ void gl::glLight::init()
 void gl::glLight::draw(QMatrix4x4& view)
 {
     m_Program.bind();
+    m_Program.setAttributeValue(m_PositionId, m_Position);
     m_Program.setUniformValue(m_Matrix, view);
     m_Program.enableAttributeArray(m_Vertex);
     m_Program.setAttributeArray(m_Vertex, GL_FLOAT, &m_aModel[0], 3);
@@ -132,8 +137,9 @@ void gl::glLight::draw(QMatrix4x4& view)
 
 // GL MESH
 
-gl::glMesh::glMesh()
+gl::glMesh::glMesh(glLight* light)
 {
+    m_pLight = light;
     m_pFillShader = new QOpenGLShader(QOpenGLShader::Fragment);
     m_pEdgeShader = new QOpenGLShader(QOpenGLShader::Fragment);
     m_pVertShader = new QOpenGLShader(QOpenGLShader::Vertex);
@@ -148,7 +154,6 @@ gl::glMesh::~glMesh()
 void gl::glMesh::init()
 {
     m_pFillShader->compileSourceFile("shaders/frag/lambert.glsl");
-
     m_pVertShader->compileSourceFile("shaders/vert/mesh.glsl");
 
     m_Program.addShader(m_pFillShader);
@@ -159,8 +164,8 @@ void gl::glMesh::init()
     m_Vertex = m_Program.attributeLocation("vertex");
     m_Matrix = m_Program.uniformLocation("matrix");
     m_Normal = m_Program.attributeLocation("normal");
+    m_LightPositionId = m_Program.attributeLocation("lightposition");
     m_ShaderDiffuseId = m_Program.attributeLocation("shader_diffuse");
-
 
     // test Cube Vertex
     // Front 
@@ -193,8 +198,6 @@ void gl::glMesh::init()
     m_apV.push_back(FVertex3D(1.0,-1.0,-1.0));
     m_apV.push_back(FVertex3D(-1.0,-1.0,-1.0));
     m_apV.push_back(FVertex3D(-1.0,-1.0,1.0));
-
-
 
     // test Cube Normals
     // Front
@@ -232,6 +235,8 @@ void gl::glMesh::init()
 void gl::glMesh::draw(QMatrix4x4& view)
 {
     m_Program.bind();
+    m_Program.setAttributeValue(m_LightPositionId, m_pLight->position());
+ 
     m_Program.setUniformValue(m_Matrix, view);
     m_Program.enableAttributeArray(m_Vertex);
     m_Program.enableAttributeArray(m_Normal);
@@ -261,8 +266,8 @@ void gl::glMesh::draw(QMatrix4x4& view)
 gl::glScene::glScene()
 {
     m_apCameras.push_back(new gl::glCamera());
-    m_apMeshes.push_back(new gl::glMesh());
     m_apLights.push_back(new gl::glLight());
+    m_apMeshes.push_back(new gl::glMesh(m_apLights.at(0)));
 }
 
 gl::glScene::~glScene()

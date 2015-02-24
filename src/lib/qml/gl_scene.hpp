@@ -33,7 +33,6 @@ namespace feather
             public:
                 glCamera();
                 ~glCamera();
-
                 void init();
                 void draw(int width, int height);
                 void rotate(int x, int y);
@@ -48,7 +47,6 @@ namespace feather
                 QMatrix4x4 m_View;
         };
 
-
         enum LightType { Ambient, Point, Spot, Direct };
 
         class glLight
@@ -58,25 +56,25 @@ namespace feather
                 ~glLight();
                 void init();
                 void draw(QMatrix4x4& view);
+                QVector3D& position() { return m_Position; };
 
             private:
                 QOpenGLShader* m_pFragShader;
                 QOpenGLShader* m_pVertShader;
                 QOpenGLShaderProgram m_Program;
-                FVertex3D m_Position;
+                QVector3D m_Position;
                 std::vector<FVertex3D> m_aModel;
                 LightType m_Type;
                 int m_Vertex;
                 int m_Matrix;
+                int m_PositionId;
         };
-
 
         class glMesh
         {
             public:
-                glMesh();
+                glMesh(glLight* light);
                 ~glMesh();
-
                 void init();
                 void draw(QMatrix4x4& view);
 
@@ -88,10 +86,12 @@ namespace feather
                 int m_Vertex;
                 int m_Matrix;
                 int m_Normal;
+                int m_LightPositionId;
                 int m_ShaderDiffuseId; 
                 std::vector<FVertex3D> m_apV;
                 std::vector<FVertex3D> m_apVn;
                 QColor m_ShaderDiffuse;
+                glLight* m_pLight;
         };
 
         class glScene
@@ -99,7 +99,6 @@ namespace feather
             public:
                 glScene();
                 ~glScene();
-
                 void init();
                 void draw(int width, int height);
                 void draw_grid();
@@ -120,7 +119,6 @@ namespace feather
                 int m_AxisMAttr;
                 int m_GridVAttr;
                 int m_GridMAttr;
-                //double m_R;
                 std::vector<FVertex3D> m_aGrid;
                 std::vector<FVertex3D> m_aAxis;
         };

@@ -1,6 +1,7 @@
 // Mesh Shader
 attribute highp vec4 vertex;
 attribute highp vec3 normal;
+attribute highp vec4 lightposition;
 attribute highp vec4 shader_diffuse;
 uniform mediump mat4 matrix;
 
@@ -34,7 +35,7 @@ struct lightSource
 };
 
 lightSource light0 = lightSource(
-    vec4(1.0, 10.0, 1.0, 0.0),
+    lightposition,
     vec4(1.0, 1.0, 1.0, 1.0)
 );
 
@@ -47,11 +48,11 @@ material mymaterial = material(shader_diffuse);
 
 void main(void)
 {
-    vec3 lightDirection = vec3(1.0,1.2,0.5);
+    //vec4 lightDirection = lightposition;
 
     n = normalize(gl_NormalMatrix * gl_Normal); 
     float ndot;
-    ndot = max(dot(normal,lightDirection),0.0);
+    ndot = max(dot(normal,vec3(lightposition)),0.0);
 
     vec3 normalDirection = normalize(m_3x3_inv_transp * gl_Normal);
 
