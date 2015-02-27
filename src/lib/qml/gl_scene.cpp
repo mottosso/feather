@@ -14,7 +14,7 @@
 // 
 // =====================================================================================
 #include "gl_scene.hpp"
-#include "commands.hpp"
+//#include "commands.hpp"
 
 // GL CAMERA
 
@@ -37,7 +37,7 @@ void gl::glCamera::init()
 
 void gl::glCamera::draw(int width, int height)
 {
-    const qreal fov=25.0,near=0.1, far=60.0;
+    const qreal fov=25.0,near=0.5, far=30.0;
     qreal aspect=(float)width/(float)height;
 
     m_View.setToIdentity();
@@ -128,7 +128,7 @@ void gl::glLight::draw(QMatrix4x4& view)
     m_Program.setUniformValue(m_Matrix, view);
     m_Program.enableAttributeArray(m_Vertex);
     m_Program.setAttributeArray(m_Vertex, GL_FLOAT, &m_aModel[0], 3);
-    glLineWidth(2);
+    glLineWidth(1.5);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDrawArrays(GL_LINES, 0, m_aModel.size());
     m_Program.disableAttributeArray(m_Vertex);
@@ -366,9 +366,11 @@ void gl::glScene::draw(int width, int height)
 
     // draw each node
     feather::qml::command::draw_sg(m_apCameras.at(0)->view());
-     
+ 
+    glDisable(GL_BLEND);
+    glDisable(GL_LINE_SMOOTH);
     glDisable(GL_DEPTH_TEST);
-    glDisable(GL_CULL_FACE);
+    //glDisable(GL_CULL_FACE);
 
     m_apCameras.at(0)->draw(width,height);
 }
@@ -422,3 +424,7 @@ void gl::glScene::make_grid() {
  
 }
 
+void gl::glScene::update_scene()
+{
+    qml::command::get_gl_node_list(m_aNodes);        
+}

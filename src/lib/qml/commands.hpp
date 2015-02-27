@@ -28,6 +28,11 @@ namespace feather
     namespace qml
     {
 
+        struct gl_node {
+            int uid;
+            int type;
+        };
+
         namespace command
         {
 
@@ -49,7 +54,7 @@ namespace feather
             // SG EDITOR
             void get_node_connections(int uid, std::vector<int>& nodes);
             std::string get_node_name(int uid);
-
+            void get_gl_node_list(std::vector<gl_node>& nodes);
 
 
         } // namespace command

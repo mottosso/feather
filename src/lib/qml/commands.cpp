@@ -154,3 +154,9 @@ std::string qml::command::get_node_name(int uid)
 {
     return sg[uid].name;
 }
+
+
+void qml::command::get_gl_node_list(std::vector<gl_node>& nodes)
+{
+
+}

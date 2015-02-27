@@ -36,7 +36,7 @@ struct lightSource
 
 lightSource light0 = lightSource(
     lightposition,
-    vec4(1.0, 1.0, 1.0, 1.0)
+    vec4(0.5, 0.5, 0.5, 1.0)
 );
 
 struct material
@@ -48,13 +48,13 @@ material mymaterial = material(shader_diffuse);
 
 void main(void)
 {
-    //vec4 lightDirection = lightposition;
+    //vec4 lightDirection = vec4(10.0, 10.0, 10.0, 1.0);
 
     n = normalize(gl_NormalMatrix * gl_Normal); 
     float ndot;
-    ndot = max(dot(normal,vec3(lightposition)),0.0);
+    ndot = max(dot(normal,vec3(light0.position)),0.0);
 
-    vec3 normalDirection = normalize(m_3x3_inv_transp * gl_Normal);
+    //vec3 normalDirection = normalize(m_3x3_inv_transp * gl_Normal);
 
     vec3 diffuseReflection
         = vec3(light0.diffuse) * vec3(mymaterial.diffuse) * ndot;
