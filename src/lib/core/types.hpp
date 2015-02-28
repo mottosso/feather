@@ -149,6 +149,13 @@ namespace feather
         //int field;
     };
 
+    struct FGlInfo
+    {
+        int uid;
+        std::vector<FVector3D>* mesh;
+        FTransform position;
+    };
+
 } // namespace feather
 
 #endif

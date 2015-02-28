@@ -14,7 +14,7 @@
 // 
 // =====================================================================================
 #include "gl_scene.hpp"
-//#include "commands.hpp"
+#include "commands.hpp"
 
 // GL CAMERA
 
@@ -348,9 +348,22 @@ void gl::glScene::draw(int width, int height)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
 
-    m_apMeshes.at(0)->draw(m_apCameras.at(0)->view());
+    int minUid = qml::command::get_min_uid();
+    int maxUid = qml::command::get_max_uid();
 
+    feather::FGlInfo info;
+    std::cout << "minUid = " << minUid << " maxUid = " << maxUid << std::endl;
+    /*
+    while(maxUid > minUid) {
+        qml::command::get_gl_node_info(maxUid,info);
+        --maxUid;
+    }
+    */
+ 
+    /*
+    m_apMeshes.at(0)->draw(m_apCameras.at(0)->view());
     m_apLights.at(0)->draw(m_apCameras.at(0)->view());
+    */
 
     // draw the axis 
     m_AxisProgram.bind();
@@ -365,14 +378,14 @@ void gl::glScene::draw(int width, int height)
     m_GridProgram.release();
 
     // draw each node
-    feather::qml::command::draw_sg(m_apCameras.at(0)->view());
+    //feather::qml::command::draw_sg(m_apCameras.at(0)->view());
  
     glDisable(GL_BLEND);
     glDisable(GL_LINE_SMOOTH);
     glDisable(GL_DEPTH_TEST);
     //glDisable(GL_CULL_FACE);
 
-    m_apCameras.at(0)->draw(width,height);
+    //m_apCameras.at(0)->draw(width,height);
 }
 
 void gl::glScene::draw_grid()
@@ -424,7 +437,3 @@ void gl::glScene::make_grid() {
  
 }
 
-void gl::glScene::update_scene()
-{
-    qml::command::get_gl_node_list(m_aNodes);        
-}

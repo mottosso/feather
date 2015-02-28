@@ -26,10 +26,16 @@ namespace feather
     {
 
         enum SGMode { None, DoIt, DrawGL, DrawSelection };
+        
+        struct FSgState {
+            int minUid;
+            int maxUid;
+        };
 
         struct FState {
-            FState() : sgmode(None) { };
-            SGMode sgmode;
+            FState() : sgMode(None) { };
+            SGMode sgMode;
+            FSgState sgState;
         };
 
     } // namespace state

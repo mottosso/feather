@@ -147,3 +147,13 @@ status PluginManager::run_command(std::string cmd, parameter::ParameterList para
     std::for_each(m_plugins.begin(),m_plugins.end(), call_command(cmd,params) );
     return status();
 }
+
+int PluginManager::min_uid()
+{
+    return 0;
+}
+
+int PluginManager::max_uid()
+{
+    return 2;
+}

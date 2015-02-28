@@ -16,9 +16,6 @@
 #include "commands.hpp"
 #include "field.hpp"
 #include "scenegraph.hpp"
-//#include "root_node.hpp"
-//#include "null.hpp"
-//#include "object.hpp"
 #include "selection.hpp"
 
 using namespace feather;
@@ -27,6 +24,8 @@ static PluginManager plugins;
 
 status qml::command::init() {
     load_plugins();
+    cstate.sgState.minUid=0;
+    cstate.sgState.maxUid=0;
     //add_node(node::Null,null::Root);
     add_node(node::Polygon,322,"Cube01"); // PolyCube
     add_node(node::Polygon,320,"CubeShape"); // PolyShape
@@ -41,7 +40,9 @@ status qml::command::init() {
 
 int qml::command::add_node(int type, int node, std::string name)
 {
-    return scenegraph::add_node(type,node,name);
+    int uid =  scenegraph::add_node(type,node,name);
+    cstate.sgState.maxUid = uid;
+    return uid;
     /*
     switch(type)
     {
@@ -155,8 +156,18 @@ std::string qml::command::get_node_name(int uid)
     return sg[uid].name;
 }
 
-
-void qml::command::get_gl_node_list(std::vector<gl_node>& nodes)
+void qml::command::get_gl_node_info(int uid, FGlInfo& info)
 {
 
 }
+
+int qml::command::get_min_uid()
+{
+    return cstate.sgState.minUid; 
+}
+
+int qml::command::get_max_uid()
+{
+    return cstate.sgState.maxUid; 
+}
+

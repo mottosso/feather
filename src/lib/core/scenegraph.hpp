@@ -69,6 +69,17 @@ namespace feather
 
     namespace scenegraph
     {
+
+        int get_min_uid() { return plugins.min_uid(); };
+        int get_max_uid() { return plugins.max_uid(); };
+
+        void get_gl_node_init(int uid) {
+            
+        };
+        void get_gl_node_draw(int uid, FGlInfo& info) {
+            
+        };
+
         status load_plugins() {
             return plugins.load_plugins();
         };
@@ -254,7 +265,7 @@ namespace feather
                 void initialize_vertex(Vertex u, const Graph & g) const
                 {
                     std::cout << "init node " << sg[u].node << std::endl;
-                    if(cstate.sgmode==state::DrawGL)
+                    if(cstate.sgMode==state::DrawGL)
                             plugins.draw_gl(sg[u].node);
                 }
 
@@ -278,7 +289,7 @@ namespace feather
                     std::cout << "discover vertex:" << u << " node:" << sg[u].node << std::endl;
                     //scenegraph::do_it<node::N>::exec(u);
 
-                    if(cstate.sgmode==state::DoIt)
+                    if(cstate.sgMode==state::DoIt)
                     {
                         status p = plugins.do_it(sg[u].node,sg[u].fields);
                         if(!p.state)
@@ -286,7 +297,7 @@ namespace feather
                     }
                    
                     /* 
-                    switch(cstate.sgmode) {
+                    switch(cstate.sgMode) {
                         case state::DoIt:
                             plugins.do_it(sg[u].node);
                             //status p = plugins.do_it(sg[u].node);
@@ -395,7 +406,7 @@ namespace feather
             // Temporarely turn off gl drawing for testing
             /*
             // set the state node drawing the gl 
-            cstate.sgmode = state::DrawGL;
+            cstate.sgMode = state::DrawGL;
 
             node_visitor vis;
             //node_d_visitor vis;
@@ -411,7 +422,7 @@ namespace feather
             // Temporary turn off do_it updating for testing
             /*
             // set the state node update 
-            cstate.sgmode = state::DoIt;
+            cstate.sgMode = state::DoIt;
 
             node_visitor vis;
             //node_d_visitor vis;

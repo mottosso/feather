@@ -19,7 +19,6 @@
 #include "deps.hpp"
 #include "qml_deps.hpp"
 #include "types.hpp"
-#include "commands.hpp"
 
 namespace feather
 {
@@ -106,7 +105,6 @@ namespace feather
                 void make_grid();
                 void draw_axis();
                 glCamera* camera(int camera) { return m_apCameras.at(camera); };
-                void update_scene();
 
             private:
                 std::vector<glCamera*> m_apCameras;
@@ -123,7 +121,6 @@ namespace feather
                 int m_GridMAttr;
                 std::vector<FVertex3D> m_aGrid;
                 std::vector<FVertex3D> m_aAxis;
-                std::vector<qml::gl_node> m_aNodes;
         };
 
     } // namespace gl
