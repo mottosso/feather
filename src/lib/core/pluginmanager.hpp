@@ -32,6 +32,7 @@ namespace feather
         std::string path;
         void *handle;
         status (*do_it)(int,field::Fields&);
+        void (*gl_info)(int,FGlInfo&);
         void (*draw_gl)(int,field::Fields&);
         bool (*node_exist)(int); // is there a node with the given type and id in this plugin
         int (*node_type)(int);
@@ -56,9 +57,8 @@ namespace feather
 
     template <> struct call_do_its<0> { static status exec(int id, field::Fields& fields) { return status(FAILED,"could not find node"); }; };
 
-
     template <int _Id> status node_do_it(field::Fields& fields) { return status(FAILED,"no node found"); };
-    
+   
     struct call_do_it {
         call_do_it(int node,field::Fields& fields): m_node(node), m_fields(fields){};
         void operator()(PluginInfo n) { if(n.node_exist(m_node)) { std::cout << "found node " << m_node << std::endl; n.do_it(m_node,m_fields); } };
@@ -67,7 +67,27 @@ namespace feather
             field::Fields& m_fields;
     };
 
-   
+
+    // GL INFO
+
+    template <int _Id>
+    struct call_gl_infos {
+        static void exec(int id, FGlInfo& info) { call_gl_infos<_Id-1>::exec(id,info); };
+    };
+
+    template <> struct call_gl_infos<0> { static void exec(int id, FGlInfo& fields) {}; };
+ 
+    template <int _Id> void node_gl_info(FGlInfo& info) {};
+
+    struct call_gl_info {
+        call_gl_info(int node,FGlInfo& info): m_node(node), m_info(info){};
+        void operator()(PluginInfo n) { if(n.node_exist(m_node)) { std::cout << "found gl info for node " << m_node << std::endl; n.gl_info(m_node,m_info); } };
+        private:
+            int m_node;
+            FGlInfo& m_info;
+    };
+
+
     // DRAW_GL()
 
     template <int _Id>
@@ -194,6 +214,7 @@ namespace feather
             ~PluginManager();
             status load_plugins();
             status do_it(int node,field::Fields& fields); // this is called by the scenegraph
+            void gl_info(int node, FGlInfo& info); 
             void draw_gl(int node); // this is called by the scenegraph
             status create_fields(int node, field::Fields& fields); // this will return a new instance of the node's fields 
             field::FieldBase* get_fieldBase(int uid, int node, int field, field::Fields& fields);
@@ -212,6 +233,7 @@ namespace feather
 
 #define C_PLUGIN_WRAPPER()\
     feather::status do_it(int, feather::field::Fields&);\
+    void gl_info(int, feather::FGlInfo& info);\
     void draw_gl(int, feather::field::Fields&);\
     bool node_exist(int);\
     int node_type(int);\
@@ -226,6 +248,10 @@ namespace feather
         return call_do_its<MAX_NODE_ID>::exec(id,fields);\
     };\
     \
+    /* get the node's gl info */\
+    void gl_info(int id, feather::FGlInfo& info) {\
+        call_gl_infos<MAX_NODE_ID>::exec(id,info);\
+    };\
     /* call node draw_gl()'s */\
     void draw_gl(int id, feather::field::Fields& fields) {\
         call_draw_gls<MAX_NODE_ID>::exec(id,fields);\

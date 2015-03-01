@@ -14,6 +14,7 @@
 // 
 // =====================================================================================
 #include "pluginmanager.hpp"
+#include "types.hpp"
 
 using namespace feather;
 
@@ -76,6 +77,12 @@ status PluginManager::do_it(int node, field::Fields&  fields)
     return status();
 }
 
+void PluginManager::gl_info(int node, FGlInfo& info)
+{
+    std::cout << "call node gl info " << node << std::endl;
+    std::for_each(m_plugins.begin(),m_plugins.end(), call_gl_info(node,info) );
+}
+
 void PluginManager::draw_gl(int node)
 {
     std::cout << "draw node " << node << std::endl;
@@ -94,6 +101,7 @@ status PluginManager::load_node(PluginInfo &node)
     }
 
     node.do_it = (status(*)(int,field::Fields&))dlsym(node.handle, "do_it");
+    node.gl_info = (void(*)(int,FGlInfo&))dlsym(node.handle, "gl_info");
     node.draw_gl = (void(*)(int,field::Fields&))dlsym(node.handle, "draw_gl");
     node.node_exist = (bool(*)(int))dlsym(node.handle, "node_exist");
     node.node_type = (int(*)(int))dlsym(node.handle, "node_type");

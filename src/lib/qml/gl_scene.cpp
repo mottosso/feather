@@ -352,13 +352,11 @@ void gl::glScene::draw(int width, int height)
     int maxUid = qml::command::get_max_uid();
 
     feather::FGlInfo info;
-    std::cout << "minUid = " << minUid << " maxUid = " << maxUid << std::endl;
-    /*
+
     while(maxUid > minUid) {
         qml::command::get_gl_node_info(maxUid,info);
         --maxUid;
     }
-    */
  
     /*
     m_apMeshes.at(0)->draw(m_apCameras.at(0)->view());
