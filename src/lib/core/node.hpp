@@ -57,8 +57,8 @@ namespace feather
 #define DO_IT(__node_enum)\
     template <> status node_do_it<__node_enum>(field::Fields& fields)
 
-#define GL_INFO(__node_enum)\
-    template <> status node_gl_info<__node_enum>(FGlInfo& info)
+#define GL_DRAW(__node_enum)\
+    template <> void node_gl_draw<__node_enum>(FNode& node, FGlInfo& info)
 
 #define DRAW_GL(__node_enum)\
     template <> void node_draw_gl<__node_enum>(field::Fields& fields)
@@ -75,12 +75,13 @@ namespace feather
             };\
         };\
         \
-        template <> struct call_gl_infos<__node_enum> {\
-            static void exec(int id, FGlInfo& info) {\
-                if(id==__node_enum){\
-                    node_gl_info<__node_enum>(info);\
+        template <> struct call_gl_draws<__node_enum> {\
+            static void exec(FNode& node, FGlInfo& info) {\
+                std::cout << "call_gl_draws\n";\
+                if(node.node==__node_enum){\
+                    node_gl_draw<__node_enum>(node,info);\
                 } else {\
-                    call_gl_infos<__node_enum-1>::exec(id,info);\
+                    call_gl_draws<__node_enum-1>::exec(node,info);\
                 }\
             };\
         };\

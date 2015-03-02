@@ -64,6 +64,11 @@ namespace feather
         return status();
     };
 
+    GL_DRAW(POLYGON_SHAPE)
+    {
+        std::cout << "polygonshape glinfo\n";
+    }; 
+
     DRAW_GL(POLYGON_SHAPE)
     { 
         //PolygonShapeFields* plane = static_cast<PolygonShapeFields*>(fields);

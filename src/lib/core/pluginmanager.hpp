@@ -32,7 +32,7 @@ namespace feather
         std::string path;
         void *handle;
         status (*do_it)(int,field::Fields&);
-        void (*gl_info)(int,FGlInfo&);
+        void (*gl_draw)(FNode&,FGlInfo&);
         void (*draw_gl)(int,field::Fields&);
         bool (*node_exist)(int); // is there a node with the given type and id in this plugin
         int (*node_type)(int);
@@ -68,22 +68,23 @@ namespace feather
     };
 
 
-    // GL INFO
+    // GL DRAW 
 
     template <int _Id>
-    struct call_gl_infos {
-        static void exec(int id, FGlInfo& info) { call_gl_infos<_Id-1>::exec(id,info); };
+    struct call_gl_draws {
+        static void exec(FNode& node, FGlInfo& info) { call_gl_draws<_Id-1>::exec(node,info); };
     };
 
-    template <> struct call_gl_infos<0> { static void exec(int id, FGlInfo& fields) {}; };
+    template <> struct call_gl_draws<0> { static void exec(FNode& node, FGlInfo& fields) {}; };
  
-    template <int _Id> void node_gl_info(FGlInfo& info) {};
+    template <int _Id> void node_gl_draw(FNode& node, FGlInfo& info) {};
 
-    struct call_gl_info {
-        call_gl_info(int node,FGlInfo& info): m_node(node), m_info(info){};
-        void operator()(PluginInfo n) { if(n.node_exist(m_node)) { std::cout << "found gl info for node " << m_node << std::endl; n.gl_info(m_node,m_info); } };
+    struct call_gl_draw {
+        call_gl_draw(FNode& node, FGlInfo& info): m_node(node), m_info(info){};
+        void operator()(PluginInfo n) { if(n.node_exist(m_node.node)) { std::cout << "found gl info for node " << m_node.uid << std::endl; n.gl_draw(m_node,m_info); } };
+
         private:
-            int m_node;
+            FNode& m_node;
             FGlInfo& m_info;
     };
 
@@ -214,8 +215,8 @@ namespace feather
             ~PluginManager();
             status load_plugins();
             status do_it(int node,field::Fields& fields); // this is called by the scenegraph
-            void gl_info(int node, FGlInfo& info); 
-            void draw_gl(int node); // this is called by the scenegraph
+            void gl_draw(FNode& node, FGlInfo& info); 
+            void draw_gl(int node); // OLD - this is called by the scenegraph
             status create_fields(int node, field::Fields& fields); // this will return a new instance of the node's fields 
             field::FieldBase* get_fieldBase(int uid, int node, int field, field::Fields& fields);
             status run_command(std::string cmd, parameter::ParameterList);
@@ -233,7 +234,7 @@ namespace feather
 
 #define C_PLUGIN_WRAPPER()\
     feather::status do_it(int, feather::field::Fields&);\
-    void gl_info(int, feather::FGlInfo& info);\
+    void gl_draw(feather::FNode& node, feather::FGlInfo& info);\
     void draw_gl(int, feather::field::Fields&);\
     bool node_exist(int);\
     int node_type(int);\
@@ -249,8 +250,9 @@ namespace feather
     };\
     \
     /* get the node's gl info */\
-    void gl_info(int id, feather::FGlInfo& info) {\
-        call_gl_infos<MAX_NODE_ID>::exec(id,info);\
+    void gl_draw(feather::FNode& node, feather::FGlInfo& info) {\
+        std::cout << "gl_draw\n";\
+        call_gl_draws<MAX_NODE_ID>::exec(node,info);\
     };\
     /* call node draw_gl()'s */\
     void draw_gl(int id, feather::field::Fields& fields) {\

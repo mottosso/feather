@@ -66,7 +66,6 @@ namespace feather
 
     static std::vector<FNodeDescriptor> node_selection;
 
-
     namespace scenegraph
     {
 
@@ -76,8 +75,9 @@ namespace feather
         void get_gl_node_init(int uid) {
             
         };
-        void get_gl_node_draw(int uid, FGlInfo& info) {
-            
+
+        void gl_draw(FNode& node, FGlInfo& info) {
+            plugins.gl_draw(node,info); 
         };
 
         status load_plugins() {

@@ -354,7 +354,8 @@ void gl::glScene::draw(int width, int height)
     feather::FGlInfo info;
 
     while(maxUid > minUid) {
-        qml::command::get_gl_node_info(maxUid,info);
+        if(qml::command::node_exists(maxUid))
+            qml::command::gl_draw(maxUid,info);
         --maxUid;
     }
  

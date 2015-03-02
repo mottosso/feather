@@ -33,6 +33,7 @@ namespace feather
 
             status init();
             int add_node(int type, int node, std::string name); 
+            bool node_exists(int uid);
             status connect_nodes(int n1, int f1, int n2, int f2); 
             status draw_sg(QMatrix4x4& view);
             status load_plugins();
@@ -49,7 +50,7 @@ namespace feather
             // SG EDITOR
             void get_node_connections(int uid, std::vector<int>& nodes);
             std::string get_node_name(int uid);
-            void get_gl_node_info(int uid, FGlInfo& info);
+            void gl_draw(int uid, FGlInfo& info);
             int get_min_uid();
             int get_max_uid();
 

@@ -19,6 +19,8 @@
 #include "deps.hpp"
 #include "field.hpp"
 #include "node.hpp"
+#include <QtGui/QOpenGLShaderProgram>
+#include <QtGui/QOpenGLShader>
 
 namespace feather
 {
@@ -154,6 +156,11 @@ namespace feather
         int uid;
         std::vector<FVector3D>* mesh;
         FTransform position;
+        QOpenGLShader* vertShader;
+        QOpenGLShader* fragShader;
+        QOpenGLShaderProgram* program;
+        int vertAttr;
+        int matAttr;
     };
 
 } // namespace feather

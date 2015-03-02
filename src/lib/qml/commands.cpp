@@ -67,6 +67,12 @@ int qml::command::add_node(int type, int node, std::string name)
     //return status();
 }
 
+bool qml::command::node_exists(int uid)
+{
+    // TODO
+    return true;
+}
+
 status qml::command::connect_nodes(int n1, int f1, int n2, int f2)
 {
     return scenegraph::connect(n1,f1,n2,f2);
@@ -156,9 +162,9 @@ std::string qml::command::get_node_name(int uid)
     return sg[uid].name;
 }
 
-void qml::command::get_gl_node_info(int uid, FGlInfo& info)
+void qml::command::gl_draw(int uid, FGlInfo& info)
 {
-
+    scenegraph::gl_draw(sg[uid],info);
 }
 
 int qml::command::get_min_uid()

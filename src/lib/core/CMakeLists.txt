@@ -1,6 +1,9 @@
 project(feather_core)
 
 FIND_PACKAGE(Boost COMPONENTS filesystem system REQUIRED)
+FIND_PACKAGE(Qt5OpenGL REQUIRED)
+
+SET(QT_USE_QTOPENGL TRUE)
 
 SET(feather_core_SRCS
     pluginmanager.cpp
@@ -10,7 +13,9 @@ SET_SOURCE_FILES_PROPERTIES(${feather_core_SRCS}
  PROPERTIES
  COMPILE_FLAGS ${CMAKE_CXX_FLAGS} )
 
-INCLUDE_DIRECTORIES(${BOOST_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${BOOST_INCLUDE_DIRS}
+    ${QtOpenGL_INCLUDE_DIRS}
+)
 
 SET(feather_core_LIBS
     ${Boost_FILESYSTEM_LIBRARY}
@@ -18,6 +23,8 @@ SET(feather_core_LIBS
 )
 
 ADD_LIBRARY(feather_core SHARED ${feather_core_SRCS})
+
+QT5_USE_MODULES(feather_core OpenGL)
 
 TARGET_LINK_LIBRARIES(feather_core ${feather_core_LIBS})
 
