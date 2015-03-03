@@ -69,11 +69,13 @@ namespace feather
         std::cout << "polygonshape glinfo\n";
     }; 
 
+    /*
     DRAW_GL(POLYGON_SHAPE)
     { 
         //PolygonShapeFields* plane = static_cast<PolygonShapeFields*>(fields);
         //std::cout << "drawing shape mesh:" << plane->meshIn << std::endl;
     };
+    */
 
 } // namespace feather
 

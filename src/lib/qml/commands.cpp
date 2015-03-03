@@ -77,11 +77,6 @@ status qml::command::connect_nodes(int n1, int f1, int n2, int f2)
 {
     return scenegraph::connect(n1,f1,n2,f2);
 }
- 
-status qml::command::draw_sg(QMatrix4x4& view)
-{
-    return scenegraph::update();
-}
 
 status qml::command::load_plugins()
 {

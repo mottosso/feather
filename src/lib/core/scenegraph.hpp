@@ -265,8 +265,10 @@ namespace feather
                 void initialize_vertex(Vertex u, const Graph & g) const
                 {
                     std::cout << "init node " << sg[u].node << std::endl;
+                    /*
                     if(cstate.sgMode==state::DrawGL)
                             plugins.draw_gl(sg[u].node);
+                    */
                 }
 
             // Start Vertex
@@ -400,22 +402,6 @@ namespace feather
 
     namespace scenegraph
     {
-
-        status draw_gl()
-        {
-            // Temporarely turn off gl drawing for testing
-            /*
-            // set the state node drawing the gl 
-            cstate.sgMode = state::DrawGL;
-
-            node_visitor vis;
-            //node_d_visitor vis;
-            std::cout << "\n*****DRAW GL START*****\n";
-            breadth_first_search(sg, vertex(0, sg), visitor(vis));
-            std::cout << "*****DRAW GL COMPLETE*****\n";
-            */
-            return status();
-        }
 
         status update()
         {
