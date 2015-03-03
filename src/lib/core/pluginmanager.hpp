@@ -32,6 +32,7 @@ namespace feather
         std::string path;
         void *handle;
         status (*do_it)(int,field::Fields&);
+        void (*gl_init)(FNode&,FGlInfo&);
         void (*gl_draw)(FNode&,FGlInfo&);
         bool (*node_exist)(int); // is there a node with the given type and id in this plugin
         int (*node_type)(int);
@@ -67,6 +68,27 @@ namespace feather
     };
 
 
+    // GL INIT 
+
+    template <int _Id>
+    struct call_gl_inits {
+        static void exec(FNode& node, FGlInfo& info) { call_gl_inits<_Id-1>::exec(node,info); };
+    };
+
+    template <> struct call_gl_inits<0> { static void exec(FNode& node, FGlInfo& fields) {}; };
+ 
+    template <int _Id> void node_gl_init(FNode& node, FGlInfo& info) {};
+
+    struct call_gl_init {
+        call_gl_init(FNode& node, FGlInfo& info): m_node(node), m_info(info){};
+        void operator()(PluginInfo n) { if(n.node_exist(m_node.node)) { std::cout << "found gl info for node " << m_node.uid << std::endl; n.gl_init(m_node,m_info); } };
+
+        private:
+            FNode& m_node;
+            FGlInfo& m_info;
+    };
+
+
     // GL DRAW 
 
     template <int _Id>
@@ -86,6 +108,7 @@ namespace feather
             FNode& m_node;
             FGlInfo& m_info;
     };
+
 
 
     // NODE MATCHING
@@ -195,6 +218,7 @@ namespace feather
             ~PluginManager();
             status load_plugins();
             status do_it(int node,field::Fields& fields); // this is called by the scenegraph
+            void gl_init(FNode& node, FGlInfo& info); 
             void gl_draw(FNode& node, FGlInfo& info); 
             status create_fields(int node, field::Fields& fields); // this will return a new instance of the node's fields 
             field::FieldBase* get_fieldBase(int uid, int node, int field, field::Fields& fields);
@@ -213,6 +237,7 @@ namespace feather
 
 #define C_PLUGIN_WRAPPER()\
     feather::status do_it(int, feather::field::Fields&);\
+    void gl_init(feather::FNode& node, feather::FGlInfo& info);\
     void gl_draw(feather::FNode& node, feather::FGlInfo& info);\
     bool node_exist(int);\
     int node_type(int);\
@@ -227,7 +252,11 @@ namespace feather
         return call_do_its<MAX_NODE_ID>::exec(id,fields);\
     };\
     \
-    /* get the node's gl info */\
+    void gl_init(feather::FNode& node, feather::FGlInfo& info) {\
+        std::cout << "gl_init\n";\
+        call_gl_inits<MAX_NODE_ID>::exec(node,info);\
+    };\
+    \
     void gl_draw(feather::FNode& node, feather::FGlInfo& info) {\
         std::cout << "gl_draw\n";\
         call_gl_draws<MAX_NODE_ID>::exec(node,info);\

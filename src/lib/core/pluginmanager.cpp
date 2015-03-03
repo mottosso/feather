@@ -77,6 +77,12 @@ status PluginManager::do_it(int node, field::Fields&  fields)
     return status();
 }
 
+void PluginManager::gl_init(FNode& node, FGlInfo& info)
+{
+    //std::cout << "call node gl info " << node << std::endl;
+    std::for_each(m_plugins.begin(),m_plugins.end(), call_gl_init(node,info) );
+}
+
 void PluginManager::gl_draw(FNode& node, FGlInfo& info)
 {
     //std::cout << "call node gl info " << node << std::endl;
@@ -95,6 +101,7 @@ status PluginManager::load_node(PluginInfo &node)
     }
 
     node.do_it = (status(*)(int,field::Fields&))dlsym(node.handle, "do_it");
+    node.gl_init = (void(*)(FNode&,FGlInfo&))dlsym(node.handle, "gl_init");
     node.gl_draw = (void(*)(FNode&,FGlInfo&))dlsym(node.handle, "gl_draw");
     node.node_exist = (bool(*)(int))dlsym(node.handle, "node_exist");
     node.node_type = (int(*)(int))dlsym(node.handle, "node_type");

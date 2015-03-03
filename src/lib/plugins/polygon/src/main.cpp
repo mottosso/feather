@@ -64,9 +64,14 @@ namespace feather
         return status();
     };
 
+    GL_INIT(POLYGON_SHAPE)
+    {
+        std::cout << "polygonshape gl init\n";
+    }; 
+
     GL_DRAW(POLYGON_SHAPE)
     {
-        std::cout << "polygonshape glinfo\n";
+        std::cout << "polygonshape gl draw\n";
     }; 
 
     /*

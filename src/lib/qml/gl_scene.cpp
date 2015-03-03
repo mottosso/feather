@@ -325,8 +325,19 @@ void gl::glScene::init()
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
-    m_apLights.at(0)->init();
-    m_apMeshes.at(0)->init();
+    //m_apLights.at(0)->init();
+    //m_apMeshes.at(0)->init();
+
+    int minUid = qml::command::get_min_uid();
+    int maxUid = qml::command::get_max_uid();
+
+    feather::FGlInfo info;
+
+    while(maxUid > minUid) {
+        if(qml::command::node_exists(maxUid))
+            qml::command::gl_init(maxUid,info);
+        --maxUid;
+    }
 }
 
 void gl::glScene::draw(int width, int height)

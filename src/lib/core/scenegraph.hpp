@@ -72,8 +72,8 @@ namespace feather
         int get_min_uid() { return plugins.min_uid(); };
         int get_max_uid() { return plugins.max_uid(); };
 
-        void get_gl_node_init(int uid) {
-            
+        void gl_init(FNode& node, FGlInfo& info) {
+            plugins.gl_init(node,info); 
         };
 
         void gl_draw(FNode& node, FGlInfo& info) {

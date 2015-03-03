@@ -157,6 +157,11 @@ std::string qml::command::get_node_name(int uid)
     return sg[uid].name;
 }
 
+void qml::command::gl_init(int uid, FGlInfo& info)
+{
+    scenegraph::gl_init(sg[uid],info);
+}
+
 void qml::command::gl_draw(int uid, FGlInfo& info)
 {
     scenegraph::gl_draw(sg[uid],info);
