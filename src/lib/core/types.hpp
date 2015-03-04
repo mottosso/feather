@@ -160,8 +160,11 @@ namespace feather
         QOpenGLShader* vertShader;
         QOpenGLShader* fragShader;
         QOpenGLShaderProgram* program;
-        int vertAttr;
-        int matAttr;
+        int vertex;
+        int matrix;
+        int normal;
+        int lightPosition;
+        int shaderDiffuse;
     };
 
 } // namespace feather

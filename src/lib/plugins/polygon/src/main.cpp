@@ -66,6 +66,85 @@ namespace feather
 
     GL_INIT(POLYGON_SHAPE)
     {
+        info.fragShader->compileSourceFile("shaders/frag/lambert.glsl");
+        info.vertShader->compileSourceFile("shaders/vert/mesh.glsl");
+
+        info.program->addShader(info.fragShader);
+        info.program->addShader(info.vertShader);
+
+        info.program->link();
+
+        info.vertex = info.program->attributeLocation("vertex");
+        info.matrix = info.program->uniformLocation("matrix");
+        info.normal = info.program->attributeLocation("normal");
+        info.lightPosition = info.program->attributeLocation("lightposition");
+        info.shaderDiffuse = info.program->attributeLocation("shader_diffuse");
+
+        /*
+        // test Cube Vertex
+        // Front 
+        m_apV.push_back(FVertex3D(1.0,1.0,1.0));
+        m_apV.push_back(FVertex3D(1.0,-1.0,1.0));
+        m_apV.push_back(FVertex3D(-1.0,-1.0,1.0));
+        m_apV.push_back(FVertex3D(-1.0,1.0,1.0));
+        // R Side
+        m_apV.push_back(FVertex3D(1.0,1.0,1.0));
+        m_apV.push_back(FVertex3D(1.0,1.0,-1.0));
+        m_apV.push_back(FVertex3D(1.0,-1.0,-1.0));
+        m_apV.push_back(FVertex3D(1.0,-1.0,1.0));
+        // L Side
+        m_apV.push_back(FVertex3D(-1.0,1.0,1.0));
+        m_apV.push_back(FVertex3D(-1.0,-1.0,1.0));
+        m_apV.push_back(FVertex3D(-1.0,-1.0,-1.0));
+        m_apV.push_back(FVertex3D(-1.0,1.0,-1.0));
+        // Back 
+        m_apV.push_back(FVertex3D(1.0,1.0,-1.0));
+        m_apV.push_back(FVertex3D(-1.0,1.0,-1.0));
+        m_apV.push_back(FVertex3D(-1.0,-1.0,-1.0));
+        m_apV.push_back(FVertex3D(1.0,-1.0,-1.0));
+        // Top
+        m_apV.push_back(FVertex3D(1.0,1.0,1.0));
+        m_apV.push_back(FVertex3D(-1.0,1.0,1.0));
+        m_apV.push_back(FVertex3D(-1.0,1.0,-1.0));
+        m_apV.push_back(FVertex3D(1.0,1.0,-1.0));
+        // Bottom 
+        m_apV.push_back(FVertex3D(1.0,-1.0,1.0));
+        m_apV.push_back(FVertex3D(1.0,-1.0,-1.0));
+        m_apV.push_back(FVertex3D(-1.0,-1.0,-1.0));
+        m_apV.push_back(FVertex3D(-1.0,-1.0,1.0));
+
+        // test Cube Normals
+        // Front
+        m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
+        m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
+        m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
+        m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
+        // Left
+        m_apVn.push_back(FVertex3D(-1.0,0.0,0.0));
+        m_apVn.push_back(FVertex3D(-1.0,0.0,0.0));
+        m_apVn.push_back(FVertex3D(-1.0,0.0,0.0));
+        m_apVn.push_back(FVertex3D(-1.0,0.0,0.0));
+        // Right 
+        m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
+        m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
+        m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
+        m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
+        // Back 
+        m_apVn.push_back(FVertex3D(0.0,0.0,-1.0));
+        m_apVn.push_back(FVertex3D(0.0,0.0,-1.0));
+        m_apVn.push_back(FVertex3D(0.0,0.0,-1.0));
+        m_apVn.push_back(FVertex3D(0.0,0.0,-1.0));
+        // Top 
+        m_apVn.push_back(FVertex3D(0.0,1.0,0.0));
+        m_apVn.push_back(FVertex3D(0.0,1.0,0.0));
+        m_apVn.push_back(FVertex3D(0.0,1.0,0.0));
+        m_apVn.push_back(FVertex3D(0.0,1.0,0.0));
+        // Bottom 
+        m_apVn.push_back(FVertex3D(0.0,-1.0,0.0));
+        m_apVn.push_back(FVertex3D(0.0,-1.0,0.0));
+        m_apVn.push_back(FVertex3D(0.0,-1.0,0.0));
+        m_apVn.push_back(FVertex3D(0.0,-1.0,0.0));
+        */
         std::cout << "polygonshape gl init\n";
     }; 
 
@@ -73,14 +152,6 @@ namespace feather
     {
         std::cout << "polygonshape gl draw\n";
     }; 
-
-    /*
-    DRAW_GL(POLYGON_SHAPE)
-    { 
-        //PolygonShapeFields* plane = static_cast<PolygonShapeFields*>(fields);
-        //std::cout << "drawing shape mesh:" << plane->meshIn << std::endl;
-    };
-    */
 
 } // namespace feather
 

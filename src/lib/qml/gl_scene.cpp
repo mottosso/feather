@@ -334,6 +334,9 @@ void gl::glScene::init()
     int maxUid = qml::command::get_max_uid();
 
     feather::FGlInfo info;
+    info.view = m_pView;
+    info.program = m_pProgram;
+
 
     while(maxUid > minUid) {
         if(qml::command::node_exists(maxUid))
