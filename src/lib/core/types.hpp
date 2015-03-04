@@ -156,6 +156,7 @@ namespace feather
         int uid;
         std::vector<FVector3D>* mesh;
         FTransform position;
+        QMatrix4x4* view;
         QOpenGLShader* vertShader;
         QOpenGLShader* fragShader;
         QOpenGLShaderProgram* program;

@@ -265,6 +265,8 @@ void gl::glMesh::draw(QMatrix4x4& view)
 
 gl::glScene::glScene()
 {
+    m_pProgram = new QOpenGLShaderProgram();
+    m_pView = new QMatrix4x4();
     m_apCameras.push_back(new gl::glCamera());
     m_apLights.push_back(new gl::glLight());
     m_apMeshes.push_back(new gl::glMesh(m_apLights.at(0)));

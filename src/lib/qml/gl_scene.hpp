@@ -110,6 +110,8 @@ namespace feather
                 std::vector<glCamera*> m_apCameras;
                 std::vector<glMesh*> m_apMeshes;
                 std::vector<glLight*> m_apLights;
+                QMatrix4x4* m_pView;
+                QOpenGLShaderProgram* m_pProgram;
                 QOpenGLShaderProgram m_GridProgram;
                 QOpenGLShaderProgram m_AxisProgram;
                 QOpenGLShader* m_pGridShader;
