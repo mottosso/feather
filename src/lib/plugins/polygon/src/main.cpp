@@ -66,11 +66,19 @@ namespace feather
 
     GL_INIT(POLYGON_SHAPE)
     {
-        info.fragShader->compileSourceFile("shaders/frag/lambert.glsl");
-        info.vertShader->compileSourceFile("shaders/vert/mesh.glsl");
+       //info.fragShader->compileSourceFile("shaders/frag/lambert.glsl");
+        //info.vertShader->compileSourceFile("shaders/vert/mesh.glsl");
+        QOpenGLShader* frag = new QOpenGLShader(QOpenGLShader::Fragment);
+        frag->compileSourceFile("shaders/frag/lambert.glsl");
+        QOpenGLShader* vert = new QOpenGLShader(QOpenGLShader::Vertex);
+        vert->compileSourceFile("shaders/vert/mesh.glsl");
 
-        info.program->addShader(info.fragShader);
-        info.program->addShader(info.vertShader);
+
+        //info.program->addShader(info.fragShader);
+        //info.program->addShader(info.vertShader);
+        
+        info.program->addShader(frag);
+        info.program->addShader(vert);
 
         info.program->link();
 
@@ -79,14 +87,17 @@ namespace feather
         info.normal = info.program->attributeLocation("normal");
         info.lightPosition = info.program->attributeLocation("lightposition");
         info.shaderDiffuse = info.program->attributeLocation("shader_diffuse");
+        typedef field::Field<FMesh,field::connection::In>* fielddata;
+        fielddata f = static_cast<fielddata>(node.fields.at(1));
 
-        /*
         // test Cube Vertex
         // Front 
-        m_apV.push_back(FVertex3D(1.0,1.0,1.0));
-        m_apV.push_back(FVertex3D(1.0,-1.0,1.0));
-        m_apV.push_back(FVertex3D(-1.0,-1.0,1.0));
-        m_apV.push_back(FVertex3D(-1.0,1.0,1.0));
+        f->value.v.push_back(FVertex3D(1.0,1.0,1.0));
+        f->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
+        f->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
+        f->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
+
+        /*
         // R Side
         m_apV.push_back(FVertex3D(1.0,1.0,1.0));
         m_apV.push_back(FVertex3D(1.0,1.0,-1.0));
@@ -150,6 +161,36 @@ namespace feather
 
     GL_DRAW(POLYGON_SHAPE)
     {
+        info.program->bind();
+        //info.program->setAttributeValue(info.lightPosition, m_pLight->position());
+
+        typedef field::Field<FMesh,field::connection::In>* fielddata;
+        fielddata f = static_cast<fielddata>(node.fields.at(1));
+
+        info.program->setUniformValue(info.matrix, *info.view);
+        info.program->enableAttributeArray(info.vertex);
+        //info.program->enableAttributeArray(info.normal);
+        info.program->setAttributeArray(info.vertex, GL_FLOAT, &f->value.v[0], 3);
+        //info.program->setAttributeArray(node.normal, GL_FLOAT, &f->value.vn[0],3);
+
+        //m_ShaderDiffuse.setRgb(100,100,100);
+        //info.program->setAttributeValue(m_ShaderDiffuseId, m_ShaderDiffuse);
+        glPolygonMode(GL_FRONT, GL_FILL);
+        glPolygonMode(GL_BACK, GL_LINE);
+        glDrawArrays(GL_QUADS, 0, f->value.v.size());
+
+        //m_ShaderDiffuse.setRgb(0,0,0);
+        //info.program.setAttributeValue(m_ShaderDiffuseId, m_ShaderDiffuse);
+        /*
+        glLineWidth(4.5);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glDrawArrays(GL_QUADS, 0, f->value.v.size());
+        */
+
+        info.program->disableAttributeArray(info.vertex);
+        //info.program->disableAttributeArray(info.normal);
+        info.program->release();
+
         std::cout << "polygonshape gl draw\n";
     }; 
 

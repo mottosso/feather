@@ -258,6 +258,7 @@ void gl::glMesh::draw(QMatrix4x4& view)
     m_Program.disableAttributeArray(m_Normal);
     m_Program.disableAttributeArray(m_Vertex);
     m_Program.release();
+
 }
 
 
@@ -336,7 +337,7 @@ void gl::glScene::init()
     feather::FGlInfo info;
     info.view = m_pView;
     info.program = m_pProgram;
-
+    info.view = &m_apCameras.at(0)->view();
 
     while(maxUid > minUid) {
         if(qml::command::node_exists(maxUid))
@@ -368,6 +369,9 @@ void gl::glScene::draw(int width, int height)
     int maxUid = qml::command::get_max_uid();
 
     feather::FGlInfo info;
+    info.view = m_pView;
+    info.program = m_pProgram;
+    info.view = &m_apCameras.at(0)->view();
 
     while(maxUid > minUid) {
         if(qml::command::node_exists(maxUid))
@@ -400,7 +404,7 @@ void gl::glScene::draw(int width, int height)
     glDisable(GL_DEPTH_TEST);
     //glDisable(GL_CULL_FACE);
 
-    //m_apCameras.at(0)->draw(width,height);
+    m_apCameras.at(0)->draw(width,height);
 }
 
 void gl::glScene::draw_grid()
