@@ -98,7 +98,7 @@ namespace feather
     {
         FVertex3DArray v;
         FTextureCoordArray st;
-        FNormal3DArray vn;
+        FVertex3DArray vn;
         void clear() { v.clear(); st.clear(); vn.clear(); };
     };
 
@@ -130,6 +130,12 @@ namespace feather
         node::Type type; // this is the node group type
         DataObject* parent; // ??still used??
         FAttributeArray* attrs; // ??still used??
+        // GL
+        int glvertex;
+        int glmatrix;
+        int glnormal;
+        int gllightPosition;
+        int glshaderDiffuse;
     };
 
     typedef std::vector<FNode*> FNodeArray;
@@ -160,11 +166,6 @@ namespace feather
         QOpenGLShader* vertShader;
         QOpenGLShader* fragShader;
         QOpenGLShaderProgram* program;
-        int vertex;
-        int matrix;
-        int normal;
-        int lightPosition;
-        int shaderDiffuse;
     };
 
 } // namespace feather
