@@ -36,7 +36,6 @@
 #include "light.hpp"
 #include "texture.hpp"
 #include "shader.hpp"
-#include "null.hpp"
 #include "pluginmanager.hpp"
 #include "state.hpp"
 
