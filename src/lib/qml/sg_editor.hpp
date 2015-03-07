@@ -1,18 +1,26 @@
-// =====================================================================================
-// 
-//       Filename:  sg_editor.hpp
-// 
-//    Description:  SceneGraph editor for qml interface
-// 
-//        Version:  1.0
-//        Created:  01/21/2015 05:16:16 AM
-//       Revision:  none
-//       Compiler:  g++
-// 
-//         Author:  Richard Layman (), rlayman2000@yahoo.com
-//        Company:  
-// 
-// =====================================================================================
+/***********************************************************************
+ *
+ * Filename: sg_editor.hpp
+ *
+ * Description: Editor widget for scenegraph.
+ *
+ * Copyright (C) 2015 Richard Layman, rlayman2000@yahoo.com 
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ ***********************************************************************/
+
 #ifndef SG_EDITOR_HPP
 #define SG_EDITOR_HPP
 
