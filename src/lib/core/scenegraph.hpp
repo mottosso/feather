@@ -413,7 +413,6 @@ namespace feather
         status update()
         {
             // Temporary turn off do_it updating for testing
-            /*
             // set the state node update 
             cstate.sgMode = state::DoIt;
 
@@ -429,8 +428,7 @@ namespace feather
                //get(boost::vertex_index, scenegraph))));
             std::cout << "*****UPDATE COMPLETE*****\n";
 
-            draw_gl();
-            */
+            //draw_gl();
             return status();
         };
 

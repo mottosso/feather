@@ -65,8 +65,8 @@ namespace feather
     { 
         //PolygonShapeFields* shape = static_cast<PolygonShapeFields*>(fields);
         typedef field::Field<int,field::connection::In>* fielddata;
-    fielddata f = static_cast<fielddata>(fields.at(0));
-  
+        fielddata f = static_cast<fielddata>(fields.at(0));
+
         std::cout << "value from polycube field:" << f->value << std::endl;
 
         return status();
@@ -95,9 +95,10 @@ namespace feather
         node.glnormal = info.program->attributeLocation("normal");
         node.gllightPosition = info.program->attributeLocation("lightposition");
         node.glshaderDiffuse = info.program->attributeLocation("shader_diffuse");
-        typedef field::Field<FMesh,field::connection::In>* fielddata;
-        fielddata f = static_cast<fielddata>(node.fields.at(1));
+        //typedef field::Field<FMesh,field::connection::In>* fielddata;
+        //fielddata f = static_cast<fielddata>(node.fields.at(1));
 
+        /*
         // test Cube Vertex
         // Front 
         f->value.v.push_back(FVertex3D(1.0,1.0,1.0));
@@ -161,6 +162,7 @@ namespace feather
         f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
         f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
         f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+        */
     }; 
 
     GL_DRAW(POLYGON_SHAPE)
@@ -235,7 +237,7 @@ NODE_INIT(POLYGON_PLANE,node::Polygon)
 ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,0,1)
 ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,0,2)
 ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::In,0,3)
-ADD_FIELD_TO_NODE(POLYGON_CUBE,int,field::Int,field::connection::Out,5,4)
+ADD_FIELD_TO_NODE(POLYGON_CUBE,FMesh,field::Mesh,field::connection::Out,FMesh(),4)
 
 namespace feather
 {
@@ -244,6 +246,73 @@ namespace feather
     {
         //PolygonCubeFields* cube = static_cast<PolygonCubeFields*>(fields);
         //std::cout << "cube: subX:" << cube->subX << std::endl;
+
+        typedef field::Field<FMesh,field::connection::Out>* fielddata;
+        fielddata f = static_cast<fielddata>(fields.at(4));
+
+        // Front 
+        f->value.v.push_back(FVertex3D(1.0,1.0,1.0));
+        f->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
+        f->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
+        f->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
+        // R Side
+        f->value.v.push_back(FVertex3D(1.0,1.0,1.0));
+        f->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
+        f->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
+        f->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
+        // L Side
+        f->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
+        f->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
+        f->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
+        f->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
+        // Back 
+        f->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
+        f->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
+        f->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
+        f->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
+        // Top
+        f->value.v.push_back(FVertex3D(1.0,1.0,1.0));
+        f->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
+        f->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
+        f->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
+        // Bottom 
+        f->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
+        f->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
+        f->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
+        f->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
+
+        // test Cube Normals
+        // Front
+        f->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
+        f->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
+        f->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
+        f->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
+        // Left
+        f->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
+        f->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
+        f->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
+        f->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
+        // Right 
+        f->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
+        f->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
+        f->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
+        f->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
+        // Back 
+        f->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
+        f->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
+        f->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
+        f->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
+        // Top 
+        f->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
+        f->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
+        f->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
+        f->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
+        // Bottom 
+        f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+        f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+        f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+        f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+ 
         return status();
     };
 
