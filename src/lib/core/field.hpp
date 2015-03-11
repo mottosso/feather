@@ -94,6 +94,8 @@ namespace feather
         template <> bool can_connect<Bool,Bool>() { return true; };
         template <> bool can_connect<Int,Int>() { return true; };
         template <> bool can_connect<Float,Float>() { return true; };
+        template <> bool can_connect<Mesh,Mesh>() { return true; };
+
 
        
         template <int _Type1, int _Type2>

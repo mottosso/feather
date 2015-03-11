@@ -304,24 +304,7 @@ namespace feather
                         if(!p.state)
                             std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
                     }
-                   
-                    /* 
-                    switch(cstate.sgMode) {
-                        case state::DoIt:
-                            plugins.do_it(sg[u].node);
-                            //status p = plugins.do_it(sg[u].node);
-                            //if(!p.state)
-                            //    std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
-                            break;
-                        case state::DrawGL:
-                            std::cout << "draw_gl " << sg[u].node << std::endl;
-                            plugins.draw_gl(sg[u].node);
-                            break;
-                        default:
-                            break;
-                    }
-                    */
-
+ 
                     // This might still come in handy later on
                     /*
                     switch(sg[u].type)
@@ -416,6 +399,7 @@ namespace feather
             // set the state node update 
             cstate.sgMode = state::DoIt;
 
+/*
             node_visitor vis;
             //node_d_visitor vis;
             std::cout << "\n*****GRAPH UPDATE*****\n";
@@ -429,13 +413,14 @@ namespace feather
             std::cout << "*****UPDATE COMPLETE*****\n";
 
             //draw_gl();
+*/
             return status();
         };
 
 
         status connect(FNodeDescriptor n1, int f1, FNodeDescriptor n2, int f2)
         {
-            // first we are going to see if the two types can be connected
+            // see if the two types can be connected
             int src_node = sg[n1].node;
             int tgt_node = sg[n2].node;
             field::FieldBase* sfield = get_fieldBase(n1,src_node,f1);
@@ -449,7 +434,7 @@ namespace feather
                 << ", tfieldtype=" << tfield->type
                 << std::endl;
 
-            // you show also check to see if another field is already connected
+            // check to see if another field is already connected
             if(field::can_types_connect<field::START,field::START>::exec(sfield->type,tfield->type)) {
                 FFieldConnection connection = boost::add_edge(n1, n2, sg);
                 sg[connection.first].n1 = n1;

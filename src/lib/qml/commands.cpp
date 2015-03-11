@@ -37,7 +37,7 @@ status qml::command::init() {
     //add_node(node::Null,null::Root);
     add_node(node::Polygon,322,"Cube01"); // PolyCube
     add_node(node::Polygon,320,"CubeShape"); // PolyShape
-    scenegraph::connect(0,4,1,2); // connect PolyCube.out to PolyShape.in
+    scenegraph::connect(0,4,1,1); // connect PolyCube.out to PolyShape.in
 
     smg::Instance()->add_state(selection::Node,0,0);
  

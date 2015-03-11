@@ -386,7 +386,7 @@ void gl::glScene::draw(int width, int height)
             qml::command::gl_draw(maxUid,info);
         --maxUid;
     }
- 
+
     /*
     m_apMeshes.at(0)->draw(m_apCameras.at(0)->view());
     m_apLights.at(0)->draw(m_apCameras.at(0)->view());
