@@ -399,7 +399,6 @@ namespace feather
             // set the state node update 
             cstate.sgMode = state::DoIt;
 
-/*
             node_visitor vis;
             //node_d_visitor vis;
             std::cout << "\n*****GRAPH UPDATE*****\n";
@@ -413,7 +412,6 @@ namespace feather
             std::cout << "*****UPDATE COMPLETE*****\n";
 
             //draw_gl();
-*/
             return status();
         };
 

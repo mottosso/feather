@@ -105,9 +105,9 @@ namespace feather
         typedef field::Field<FMesh,field::connection::Out>* targetdata;
         targetdata tf;
 
-        if(f->connected)
-            tf = static_cast<targetdata>(scenegraph::get_fieldBase(node.uid,node.node,4));
-
+        if(f->connected) {
+            tf = static_cast<targetdata>(scenegraph::get_fieldBase(f->puid,f->pn,f->pf));
+        }
 
         if(tf!=NULL)
         { 
@@ -198,6 +198,7 @@ namespace feather
         typedef field::Field<FMesh,field::connection::Out>* fielddata;
         fielddata f = static_cast<fielddata>(fields.at(4));
 
+        /*
         if(!f->value.v.size())
         {
             // Front 
@@ -263,7 +264,11 @@ namespace feather
             f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
             f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
         }
-        return status();
+        */
+
+         std::cout << "polygon cube doit() - [" << f << "] type=\n";// << f->type << std::endl;
+
+       return status();
     };
 
 } // namespace feather
