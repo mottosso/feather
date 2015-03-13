@@ -74,17 +74,11 @@ namespace feather
 
     GL_INIT(POLYGON_SHAPE)
     {
-      //info.fragShader->compileSourceFile("shaders/frag/lambert.glsl");
-        //info.vertShader->compileSourceFile("shaders/vert/mesh.glsl");
         QOpenGLShader* frag = new QOpenGLShader(QOpenGLShader::Fragment);
         frag->compileSourceFile("shaders/frag/lambert.glsl");
         QOpenGLShader* vert = new QOpenGLShader(QOpenGLShader::Vertex);
         vert->compileSourceFile("shaders/vert/mesh.glsl");
 
-
-        //info.program->addShader(info.fragShader);
-        //info.program->addShader(info.vertShader);
-        
         info.program->addShader(frag);
         info.program->addShader(vert);
 
@@ -165,9 +159,6 @@ namespace feather
 
     DO_IT(POLYGON_PLANE)
     { 
-        //PolygonPlaneFields* plane = static_cast<PolygonPlaneFields*>(fields);
-        //std::cout << "plane: subX:" << plane->subX << std::endl;
-
         return status();
     };
 
@@ -192,13 +183,9 @@ namespace feather
 
     DO_IT(POLYGON_CUBE) 
     {
-        //PolygonCubeFields* cube = static_cast<PolygonCubeFields*>(fields);
-        //std::cout << "cube: subX:" << cube->subX << std::endl;
-
         typedef field::Field<FMesh,field::connection::Out>* fielddata;
-        fielddata f = static_cast<fielddata>(fields.at(4));
+        fielddata f = static_cast<fielddata>(fields.at(0));
 
-        /*
         if(!f->value.v.size())
         {
             // Front 
@@ -264,9 +251,6 @@ namespace feather
             f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
             f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
         }
-        */
-
-         std::cout << "polygon cube doit() - [" << f << "] type=\n";// << f->type << std::endl;
 
        return status();
     };
