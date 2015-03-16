@@ -371,11 +371,12 @@ void gl::glScene::draw(int width, int height)
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
+    //glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
 
     int minUid = qml::command::get_min_uid();
     int maxUid = qml::command::get_max_uid();
 
+    // Draw SG Nodes
     feather::FGlInfo info;
     info.view = m_pView;
     info.program = m_pProgram;
@@ -407,12 +408,14 @@ void gl::glScene::draw(int width, int height)
     // draw each node
     //feather::qml::command::draw_sg(m_apCameras.at(0)->view());
  
+    m_apCameras.at(0)->draw(width,height);
+
     glDisable(GL_BLEND);
     glDisable(GL_LINE_SMOOTH);
     glDisable(GL_DEPTH_TEST);
     //glDisable(GL_CULL_FACE);
 
-    m_apCameras.at(0)->draw(width,height);
+
 }
 
 void gl::glScene::draw_grid()

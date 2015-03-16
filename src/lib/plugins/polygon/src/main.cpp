@@ -192,72 +192,72 @@ namespace feather
     DO_IT(POLYGON_CUBE) 
     {
         typedef field::Field<FMesh,field::connection::Out>* fielddata;
-        fielddata f = static_cast<fielddata>(fields.at(0));
+        fielddata meshOut = static_cast<fielddata>(fields.at(0));
 
-        if(!f->value.v.size())
+        if(!meshOut->value.v.size())
         {
             // Front 
-            f->value.v.push_back(FVertex3D(1.0,1.0,1.0));
-            f->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
-            f->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
-            f->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
+            meshOut->value.v.push_back(FVertex3D(1.0,1.0,1.0));
+            meshOut->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
+            meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
+            meshOut->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
             // R Side
-            f->value.v.push_back(FVertex3D(1.0,1.0,1.0));
-            f->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
-            f->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
-            f->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
+            meshOut->value.v.push_back(FVertex3D(1.0,1.0,1.0));
+            meshOut->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
+            meshOut->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
+            meshOut->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
             // L Side
-            f->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
-            f->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
-            f->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
-            f->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
+            meshOut->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
+            meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
+            meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
+            meshOut->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
             // Back 
-            f->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
-            f->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
-            f->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
-            f->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
+            meshOut->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
+            meshOut->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
+            meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
+            meshOut->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
             // Top
-            f->value.v.push_back(FVertex3D(1.0,1.0,1.0));
-            f->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
-            f->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
-            f->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
+            meshOut->value.v.push_back(FVertex3D(1.0,1.0,1.0));
+            meshOut->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
+            meshOut->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
+            meshOut->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
             // Bottom 
-            f->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
-            f->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
-            f->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
-            f->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
+            meshOut->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
+            meshOut->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
+            meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
+            meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
 
             // test Cube Normals
             // Front
-            f->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
-            f->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
-            f->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
-            f->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
             // Left
-            f->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
-            f->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
-            f->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
-            f->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
             // Right 
-            f->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
-            f->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
-            f->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
-            f->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
             // Back 
-            f->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
-            f->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
-            f->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
-            f->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
             // Top 
-            f->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
-            f->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
-            f->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
-            f->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
             // Bottom 
-            f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
-            f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
-            f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
-            f->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+            meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
         }
 
        return status();
