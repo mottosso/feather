@@ -191,76 +191,87 @@ namespace feather
 
     DO_IT(POLYGON_CUBE) 
     {
-        typedef field::Field<FMesh,field::connection::Out>* fielddata;
-        fielddata meshOut = static_cast<fielddata>(fields.at(0));
+        typedef field::Field<FMesh,field::connection::Out>* MeshOut;
+        typedef field::Field<int,field::connection::In>* SubIn;
 
-        if(!meshOut->value.v.size())
+        MeshOut meshOut = static_cast<MeshOut>(fields.at(0));
+        SubIn subX = static_cast<SubIn>(fields.at(1));
+        SubIn subY = static_cast<SubIn>(fields.at(2));
+        SubIn subZ = static_cast<SubIn>(fields.at(3));
+
+        if(subX->update || subY->update || subZ->update)
         {
-            // Front 
-            meshOut->value.v.push_back(FVertex3D(1.0,1.0,1.0));
-            meshOut->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
-            meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
-            meshOut->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
-            // R Side
-            meshOut->value.v.push_back(FVertex3D(1.0,1.0,1.0));
-            meshOut->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
-            meshOut->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
-            meshOut->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
-            // L Side
-            meshOut->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
-            meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
-            meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
-            meshOut->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
-            // Back 
-            meshOut->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
-            meshOut->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
-            meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
-            meshOut->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
-            // Top
-            meshOut->value.v.push_back(FVertex3D(1.0,1.0,1.0));
-            meshOut->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
-            meshOut->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
-            meshOut->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
-            // Bottom 
-            meshOut->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
-            meshOut->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
-            meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
-            meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
+            if(!meshOut->value.v.size())
+            {
+                // Front 
+                meshOut->value.v.push_back(FVertex3D(1.0,1.0,1.0));
+                meshOut->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
+                meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
+                meshOut->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
+                // R Side
+                meshOut->value.v.push_back(FVertex3D(1.0,1.0,1.0));
+                meshOut->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
+                meshOut->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
+                meshOut->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
+                // L Side
+                meshOut->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
+                meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
+                meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
+                meshOut->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
+                // Back 
+                meshOut->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
+                meshOut->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
+                meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
+                meshOut->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
+                // Top
+                meshOut->value.v.push_back(FVertex3D(1.0,1.0,1.0));
+                meshOut->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
+                meshOut->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
+                meshOut->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
+                // Bottom 
+                meshOut->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
+                meshOut->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
+                meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
+                meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
 
-            // test Cube Normals
-            // Front
-            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
-            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
-            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
-            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
-            // Left
-            meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
-            meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
-            meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
-            meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
-            // Right 
-            meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
-            meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
-            meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
-            meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
-            // Back 
-            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
-            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
-            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
-            meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
-            // Top 
-            meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
-            meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
-            meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
-            meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
-            // Bottom 
-            meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
-            meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
-            meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
-            meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+                // test Cube Normals
+                // Front
+                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
+                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
+                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
+                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
+                // Left
+                meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
+                meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
+                meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
+                meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
+                // Right 
+                meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
+                meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
+                meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
+                meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
+                // Back 
+                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
+                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
+                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
+                meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
+                // Top 
+                meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
+                meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
+                meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
+                meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
+                // Bottom 
+                meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+                meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+                meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+                meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+            }
+
+            subX->update = false;
+            subY->update = false;
+            subZ->update = false;
         }
-
-       return status();
+        return status();
     };
 
 } // namespace feather

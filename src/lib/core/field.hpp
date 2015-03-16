@@ -60,7 +60,7 @@ namespace feather
 
         struct FieldBase
         {
-            FieldBase():update(false),connected(false),puid(0),pf(0),type(0){};
+            FieldBase():update(true),connected(false),puid(0),pf(0),type(0){};
             int id;
             bool update; // this is used to optimize the scenegraph update process - the sg won't call a node's do_it unless one of it's input's fields update flags are set to true.
             // Connections
