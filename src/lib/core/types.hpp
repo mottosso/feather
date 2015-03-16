@@ -139,11 +139,11 @@ namespace feather
         DataObject* parent; // ??still used??
         FAttributeArray* attrs; // ??still used??
         // GL
-        int glvertex;
-        int glmatrix;
-        int glnormal;
-        int gllightPosition;
-        int glshaderDiffuse;
+        int glVertex;
+        int glMatrix;
+        int glNormal;
+        int glLightPosition;
+        int glShaderDiffuse;
     };
 
     typedef std::vector<FNode*> FNodeArray;

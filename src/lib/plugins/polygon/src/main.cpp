@@ -28,6 +28,7 @@
 #include "parameter.hpp"
 #include "command.hpp"
 #include "scenegraph.hpp"
+#include <QColor>
 
 #ifdef __cplusplus
 extern "C" {
@@ -84,11 +85,11 @@ namespace feather
 
         info.program->link();
 
-        node.glvertex = info.program->attributeLocation("vertex");
-        node.glmatrix = info.program->uniformLocation("matrix");
-        node.glnormal = info.program->attributeLocation("normal");
-        node.gllightPosition = info.program->attributeLocation("lightposition");
-        node.glshaderDiffuse = info.program->attributeLocation("shader_diffuse");
+        node.glVertex = info.program->attributeLocation("vertex");
+        node.glMatrix = info.program->uniformLocation("matrix");
+        node.glNormal = info.program->attributeLocation("normal");
+        node.glLightPosition = info.program->attributeLocation("lightposition");
+        node.glShaderDiffuse = info.program->attributeLocation("shader_diffuse");
     }; 
 
     GL_DRAW(POLYGON_SHAPE)
@@ -109,29 +110,36 @@ namespace feather
             {
                 std::cout << "drawing CUBE\n";
 
+                QVector3D lpos;
+                lpos.setX(4);
+                lpos.setY(20);
+                lpos.setZ(10);
+ 
                 info.program->bind();
-                //info.program->setAttributeValue(info.lightPosition, m_pLight->position());
+                info.program->setAttributeValue(node.glLightPosition, lpos);
 
-                info.program->setUniformValue(node.glmatrix, *info.view);
-                info.program->enableAttributeArray(node.glvertex);
-                info.program->enableAttributeArray(node.glnormal);
-                info.program->setAttributeArray(node.glvertex, GL_FLOAT, &tf->value.v[0], 3);
-                info.program->setAttributeArray(node.glnormal, GL_FLOAT, &tf->value.vn[0],3);
+                info.program->setUniformValue(node.glMatrix, *info.view);
+                info.program->enableAttributeArray(node.glVertex);
+                info.program->enableAttributeArray(node.glNormal);
+                info.program->setAttributeArray(node.glVertex, GL_FLOAT, &tf->value.v[0], 3);
+                info.program->setAttributeArray(node.glNormal, GL_FLOAT, &tf->value.vn[0],3);
 
-                //m_ShaderDiffuse.setRgb(100,100,100);
-                //info.program->setAttributeValue(m_ShaderDiffuseId, m_ShaderDiffuse);
+                QColor color;
+
+                color.setRgb(0,0,100);
+                info.program->setAttributeValue(node.glShaderDiffuse, color);
                 glPolygonMode(GL_FRONT, GL_FILL);
                 glPolygonMode(GL_BACK, GL_LINE);
                 glDrawArrays(GL_QUADS, 0, tf->value.v.size());
 
-                //m_ShaderDiffuse.setRgb(0,0,0);
-                //info.program.setAttributeValue(m_ShaderDiffuseId, m_ShaderDiffuse);
+                color.setRgb(0,0,0);
+                info.program->setAttributeValue(node.glShaderDiffuse, color);
                 glLineWidth(4.5);
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
                 glDrawArrays(GL_QUADS, 0, tf->value.vn.size());
 
-                info.program->disableAttributeArray(node.glvertex);
-                info.program->disableAttributeArray(node.glnormal);
+                info.program->disableAttributeArray(node.glVertex);
+                info.program->disableAttributeArray(node.glNormal);
                 info.program->release();
             }
         }
