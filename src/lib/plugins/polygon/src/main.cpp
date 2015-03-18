@@ -45,7 +45,7 @@ using namespace feather;
 #define POLYGON_CUBE 322
 
 
-PLUGIN_INIT(POLYGON_SHAPE,POLYGON_CUBE)
+PLUGIN_INIT("Polygon",POLYGON_SHAPE,POLYGON_CUBE)
 
 
 /*
@@ -128,6 +128,7 @@ namespace feather
 
                 color.setRgb(0,0,100);
                 info.program->setAttributeValue(node.glShaderDiffuse, color);
+
                 glPolygonMode(GL_FRONT, GL_FILL);
                 glPolygonMode(GL_BACK, GL_LINE);
                 glDrawArrays(GL_QUADS, 0, tf->value.v.size());
@@ -203,68 +204,61 @@ namespace feather
         {
             if(!meshOut->value.v.size())
             {
+                // VERTICS
                 // Front 
                 meshOut->value.v.push_back(FVertex3D(1.0,1.0,1.0));
                 meshOut->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
                 meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
                 meshOut->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
-                // R Side
-                meshOut->value.v.push_back(FVertex3D(1.0,1.0,1.0));
-                meshOut->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
-                meshOut->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
-                meshOut->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
-                // L Side
-                meshOut->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
-                meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
-                meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
-                meshOut->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
                 // Back 
                 meshOut->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
                 meshOut->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
                 meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
                 meshOut->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
-                // Top
-                meshOut->value.v.push_back(FVertex3D(1.0,1.0,1.0));
-                meshOut->value.v.push_back(FVertex3D(-1.0,1.0,1.0));
-                meshOut->value.v.push_back(FVertex3D(-1.0,1.0,-1.0));
-                meshOut->value.v.push_back(FVertex3D(1.0,1.0,-1.0));
-                // Bottom 
-                meshOut->value.v.push_back(FVertex3D(1.0,-1.0,1.0));
-                meshOut->value.v.push_back(FVertex3D(1.0,-1.0,-1.0));
-                meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,-1.0));
-                meshOut->value.v.push_back(FVertex3D(-1.0,-1.0,1.0));
 
-                // test Cube Normals
+                // NORMALS
                 // Front
                 meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
                 meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
                 meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
                 meshOut->value.vn.push_back(FVertex3D(0.0,0.0,1.0));
-                // Left
-                meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
-                meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
-                meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
-                meshOut->value.vn.push_back(FVertex3D(-1.0,0.0,0.0));
-                // Right 
-                meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
-                meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
-                meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
-                meshOut->value.vn.push_back(FVertex3D(1.0,0.0,0.0));
                 // Back 
                 meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
                 meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
                 meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
                 meshOut->value.vn.push_back(FVertex3D(0.0,0.0,-1.0));
+
+                // ID's
+                // Front
+                meshOut->value.i.push_back(0);
+                meshOut->value.i.push_back(1);
+                meshOut->value.i.push_back(2);
+                meshOut->value.i.push_back(3);
+                // Back 
+                meshOut->value.i.push_back(4);
+                meshOut->value.i.push_back(5);
+                meshOut->value.i.push_back(6);
+                meshOut->value.i.push_back(7);
                 // Top 
-                meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
-                meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
-                meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
-                meshOut->value.vn.push_back(FVertex3D(0.0,1.0,0.0));
+                meshOut->value.i.push_back(0);
+                meshOut->value.i.push_back(4);
+                meshOut->value.i.push_back(5);
+                meshOut->value.i.push_back(3);
                 // Bottom 
-                meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
-                meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
-                meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
-                meshOut->value.vn.push_back(FVertex3D(0.0,-1.0,0.0));
+                meshOut->value.i.push_back(1);
+                meshOut->value.i.push_back(5);
+                meshOut->value.i.push_back(6);
+                meshOut->value.i.push_back(2);
+                // Left 
+                meshOut->value.i.push_back(0);
+                meshOut->value.i.push_back(4);
+                meshOut->value.i.push_back(7);
+                meshOut->value.i.push_back(1);
+                // Right 
+                meshOut->value.i.push_back(2);
+                meshOut->value.i.push_back(5);
+                meshOut->value.i.push_back(6);
+                meshOut->value.i.push_back(3);
             }
 
             subX->update = false;

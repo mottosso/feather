@@ -108,6 +108,7 @@ status PluginManager::load_node(PluginInfo &node)
         return status(FAILED,"loaded failed to load");
     }
 
+    node.name = (std::string(*)())dlsym(node.handle, "name");
     node.do_it = (status(*)(int,field::Fields&))dlsym(node.handle, "do_it");
     node.gl_init = (void(*)(FNode&,FGlInfo&))dlsym(node.handle, "gl_init");
     node.gl_draw = (void(*)(FNode&,FGlInfo&))dlsym(node.handle, "gl_draw");
@@ -172,4 +173,9 @@ int PluginManager::min_uid()
 int PluginManager::max_uid()
 {
     return 2;
+}
+
+void PluginManager::loaded_plugins(std::vector<std::string>& list)
+{
+    std::for_each(m_plugins.begin(),m_plugins.end(), get_name(list) );
 }

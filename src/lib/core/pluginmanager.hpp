@@ -39,6 +39,7 @@ namespace feather
     struct PluginInfo {
         std::string path;
         void *handle;
+        std::string (*name)();
         status (*do_it)(int,field::Fields&);
         void (*gl_init)(FNode&,FGlInfo&);
         void (*gl_draw)(FNode&,FGlInfo&);
@@ -55,6 +56,13 @@ namespace feather
         void operator()() {};
     };
 
+    struct get_name {
+        get_name(std::vector<std::string>& list) { m_list = list; };
+        void operator()(PluginInfo n) { m_list.push_back(n.name()); };
+
+        private:
+            std::vector<std::string> m_list; 
+    };
 
     // DO_IT()
 
@@ -233,6 +241,7 @@ namespace feather
             status run_command(std::string cmd, parameter::ParameterList);
             int min_uid();
             int max_uid();
+            void loaded_plugins(std::vector<std::string>& list);
 
         private:
             status load_node(PluginInfo &node);
@@ -244,6 +253,7 @@ namespace feather
 } // namespace feather
 
 #define C_PLUGIN_WRAPPER()\
+    std::string name();\
     feather::status do_it(int, feather::field::Fields&);\
     void gl_init(feather::FNode& node, feather::FGlInfo& info);\
     void gl_draw(feather::FNode& node, feather::FGlInfo& info);\
@@ -254,7 +264,10 @@ namespace feather
     bool command_exist(std::string cmd);\
     feather::status command(std::string cmd, feather::parameter::ParameterList);\
 
-#define PLUGIN_INIT(startnode,endnode)\
+#define PLUGIN_INIT(__name,startnode,endnode)\
+    /* plugin name */\
+    std::string name() { return __name; };\
+    \
     /* call node do_it()'s */\
     feather::status do_it(int id, feather::field::Fields& fields) {\
         return call_do_its<MAX_NODE_ID>::exec(id,fields);\

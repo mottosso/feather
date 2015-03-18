@@ -107,6 +107,7 @@ namespace feather
         FVertex3DArray v;
         FTextureCoordArray st;
         FVertex3DArray vn;
+        FIntArray i;
         void clear() { v.clear(); st.clear(); vn.clear(); };
     };
 
