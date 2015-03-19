@@ -309,4 +309,57 @@ class Command : public QObject
         QList<Parameter *> m_parameters;
 };
 
+class Plugin : public QObject
+{
+    Q_OBJECT
+        Q_PROPERTY(QString name READ name WRITE setName)
+        Q_PROPERTY(QString description READ description WRITE setDescription)
+        Q_PROPERTY(QString author READ author WRITE setAuthor)
+
+    public:
+        Plugin(QObject* parent=0);
+        ~Plugin();
+
+        void setName( const QString& n) {
+            m_name=n;
+        };
+
+        QString name() const { return m_name; }
+
+        void setDescription( const QString& d) {
+            m_description=d;
+        };
+
+        QString description() const { return m_description; }
+
+        void setAuthor( const QString& a) {
+            m_author=a;
+        };
+
+        QString author() const { return m_author; }
+
+    private:
+        QString m_name;
+        QString m_description;
+        QString m_author;
+};
+
+class Plugins : public QObject
+{
+    Q_OBJECT
+        Q_PROPERTY(QQmlListProperty<Plugin> plugins READ plugins)
+
+    public:
+        Plugins(QObject* parent=0);
+        ~Plugins();
+
+        QQmlListProperty<Plugin> plugins();
+
+        Q_INVOKABLE void load();
+
+    private:
+        static void append_plugin(QQmlListProperty<Plugin> *list, Plugin *plugin);
+        QList<Plugin *> m_plugins;
+};
+
 #endif

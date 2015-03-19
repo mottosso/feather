@@ -37,6 +37,11 @@ Menu {
         onRejected: {} 
     }
 
+    PropertiesDialog {
+        id: propDialog
+        visible: false
+    }
+
     id: fileMenu 
     title: "File"
     visible: true
@@ -86,6 +91,14 @@ Menu {
         onTriggered: { importObj.exec() }
     }
 
+    // Properties
+    Action {
+        id: propAction
+        text: "Properties"
+        tooltip: "Modify application settings"
+        onTriggered: { propDialog.visible = (propDialog.visible) ? false : true; }
+    }
+
     // Close 
     Action {
         id: closeAction
@@ -120,6 +133,12 @@ Menu {
         MenuItem {
             action: importObjAction
         }
+    }
+
+    MenuSeparator {}
+
+    MenuItem {
+        action: propAction
     }
 
     MenuSeparator {}

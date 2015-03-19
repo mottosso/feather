@@ -166,3 +166,47 @@ void Command::append_parameter(QQmlListProperty<Parameter> *list, Parameter *par
         cmd->m_parameters.append(parameter);
     }
 }
+
+
+
+// Plugin
+Plugin::Plugin(QObject* parent) : QObject(parent)
+{
+}
+
+Plugin::~Plugin()
+{
+}
+
+
+// Plugins
+Plugins::Plugins(QObject* parent) : QObject(parent)
+{
+}
+
+Plugins::~Plugins()
+{
+}
+
+void Plugins::load()
+{
+    Plugin* plugin = new Plugin();
+    plugin->setName("test");
+    m_plugins.push_back(plugin); 
+}
+
+
+QQmlListProperty<Plugin> Plugins::plugins()
+{
+    return QQmlListProperty<Plugin>(this,0,&Plugins::append_plugin,0,0,0);
+}
+
+void Plugins::append_plugin(QQmlListProperty<Plugin> *list, Plugin *plugin)
+{
+    Plugins *cmd = qobject_cast<Plugins*>(list->object);
+    if(cmd) {
+        cmd->m_plugins.append(plugin);
+    }
+}
+
+

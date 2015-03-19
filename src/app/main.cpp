@@ -40,6 +40,8 @@ int main(int argc, char **argv)
     qmlRegisterType<Field>("feather.field", 1, 0, "Field");
     qmlRegisterType<Parameter>("feather.command", 1, 0, "Parameter");
     qmlRegisterType<Command>("feather.command", 1, 0, "Command");
+    qmlRegisterType<Plugin>("feather.plugin", 1, 0, "Plugin");
+    qmlRegisterType<Plugins>("feather.plugin", 1, 0, "Plugins");
 
     // Add the Root ndoe to the scenegraph and setup the scene
     feather::qml::command::init();
