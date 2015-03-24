@@ -97,7 +97,7 @@ namespace feather
 
     struct call_gl_init {
         call_gl_init(FNode& node, FGlInfo& info): m_node(node), m_info(info){};
-        void operator()(PluginInfo n) { if(n.node_exist(m_node.node)) { std::cout << "found gl info for node " << m_node.uid << std::endl; n.gl_init(m_node,m_info); } };
+        void operator()(PluginInfo n) { if(n.node_exist(m_node.node)) { /*std::cout << "found gl info for node " << m_node.uid << std::endl;*/ n.gl_init(m_node,m_info); } };
 
         private:
             FNode& m_node;
@@ -118,7 +118,7 @@ namespace feather
 
     struct call_gl_draw {
         call_gl_draw(FNode& node, FGlInfo& info): m_node(node), m_info(info){};
-        void operator()(PluginInfo n) { if(n.node_exist(m_node.node)) { std::cout << "found gl info for node " << m_node.uid << std::endl; n.gl_draw(m_node,m_info); } };
+        void operator()(PluginInfo n) { if(n.node_exist(m_node.node)) { /*std::cout << "found gl info for node " << m_node.uid << std::endl;*/ n.gl_draw(m_node,m_info); } };
 
         private:
             FNode& m_node;
@@ -274,12 +274,12 @@ namespace feather
     };\
     \
     void gl_init(feather::FNode& node, feather::FGlInfo& info) {\
-        std::cout << "gl_init\n";\
+        /*std::cout << "gl_init\n";*/\
         call_gl_inits<MAX_NODE_ID>::exec(node,info);\
     };\
     \
     void gl_draw(feather::FNode& node, feather::FGlInfo& info) {\
-        std::cout << "gl_draw\n";\
+        /*std::cout << "gl_draw\n";*/\
         call_gl_draws<MAX_NODE_ID>::exec(node,info);\
     };\
     \

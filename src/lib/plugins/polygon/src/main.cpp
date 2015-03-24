@@ -108,7 +108,7 @@ namespace feather
         { 
             if(tf->value.v.size() >= 4)
             {
-                std::cout << "drawing CUBE\n";
+                //std::cout << "drawing CUBE\n";
 
                 QVector3D lpos;
                 lpos.setX(4);

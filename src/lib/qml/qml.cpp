@@ -168,45 +168,53 @@ void Command::append_parameter(QQmlListProperty<Parameter> *list, Parameter *par
 }
 
 
-
-// Plugin
-Plugin::Plugin(QObject* parent) : QObject(parent)
-{
-}
-
-Plugin::~Plugin()
-{
-}
-
-
 // Plugins
-Plugins::Plugins(QObject* parent) : QObject(parent)
+Plugins::Plugins(QObject* parent) : QAbstractListModel(parent)
 {
+    PluginObject *first = new PluginObject(QString("TestA"), QString("descriptionA"));
+    PluginObject *second = new PluginObject(QString("TestB"), QString("descriptionB"));
+    m_items.append(first);
+    m_items.append(second);
 }
 
 Plugins::~Plugins()
 {
 }
 
-void Plugins::load()
+QHash<int, QByteArray> Plugins::roleNames() const
 {
-    Plugin* plugin = new Plugin();
-    plugin->setName("test");
-    m_plugins.push_back(plugin); 
+
+    QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
+    roles.insert(NameRole, QByteArray("name"));
+    roles.insert(DescriptionRole, QByteArray("description"));
+    return roles;
 }
 
-
-QQmlListProperty<Plugin> Plugins::plugins()
+int Plugins::rowCount(const QModelIndex& parent) const
 {
-    return QQmlListProperty<Plugin>(this,0,&Plugins::append_plugin,0,0,0);
+    return m_items.size();
 }
 
-void Plugins::append_plugin(QQmlListProperty<Plugin> *list, Plugin *plugin)
+QVariant Plugins::data(const QModelIndex& index, int role) const
 {
-    Plugins *cmd = qobject_cast<Plugins*>(list->object);
-    if(cmd) {
-        cmd->m_plugins.append(plugin);
+    if (!index.isValid())
+        return QVariant(); // Return Null variant if index is invalid
+    if (index.row() > (m_items.size()-1) )
+        return QVariant();
+    PluginObject *dobj = m_items.at(index.row());
+    switch (role) {
+        case Qt::DisplayRole: // The default display role now displays the first name as well
+        case NameRole:
+            return QVariant::fromValue(dobj->name);
+        case DescriptionRole:
+            return QVariant::fromValue(dobj->description);
+        default:
+            return QVariant();
     }
 }
 
+void Plugins::load()
+{
+
+}
 

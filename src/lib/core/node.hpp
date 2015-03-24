@@ -85,7 +85,7 @@ namespace feather
         \
         template <> struct call_gl_inits<__node_enum> {\
             static void exec(FNode& node, FGlInfo& info) {\
-                std::cout << "call_gl_init\n";\
+                /*std::cout << "call_gl_init\n";*/\
                 if(node.node==__node_enum){\
                     node_gl_init<__node_enum>(node,info);\
                 } else {\
@@ -96,7 +96,7 @@ namespace feather
         \
         template <> struct call_gl_draws<__node_enum> {\
             static void exec(FNode& node, FGlInfo& info) {\
-                std::cout << "call_gl_draws\n";\
+                /*std::cout << "call_gl_draws\n";*/\
                 if(node.node==__node_enum){\
                     node_gl_draw<__node_enum>(node,info);\
                 } else {\
