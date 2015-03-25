@@ -171,10 +171,7 @@ void Command::append_parameter(QQmlListProperty<Parameter> *list, Parameter *par
 // Plugins
 Plugins::Plugins(QObject* parent) : QAbstractListModel(parent)
 {
-    PluginObject *first = new PluginObject(QString("TestA"), QString("descriptionA"));
-    PluginObject *second = new PluginObject(QString("TestB"), QString("descriptionB"));
-    m_items.append(first);
-    m_items.append(second);
+    load();
 }
 
 Plugins::~Plugins()
@@ -187,6 +184,7 @@ QHash<int, QByteArray> Plugins::roleNames() const
     QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
     roles.insert(NameRole, QByteArray("name"));
     roles.insert(DescriptionRole, QByteArray("description"));
+    roles.insert(AuthorRole, QByteArray("author"));
     return roles;
 }
 
@@ -208,6 +206,8 @@ QVariant Plugins::data(const QModelIndex& index, int role) const
             return QVariant::fromValue(dobj->name);
         case DescriptionRole:
             return QVariant::fromValue(dobj->description);
+        case AuthorRole:
+            return QVariant::fromValue(dobj->author);
         default:
             return QVariant();
     }
@@ -215,6 +215,10 @@ QVariant Plugins::data(const QModelIndex& index, int role) const
 
 void Plugins::load()
 {
+    std::vector<PluginInfo> list;
+    qml::command::get_plugins(list);
 
+    for(uint i=0; i < list.size(); i++)
+        m_items.append(new PluginObject(QString(list[i].name.c_str()), QString(list[i].description.c_str()), QString(list[i].author.c_str())));
 }
 

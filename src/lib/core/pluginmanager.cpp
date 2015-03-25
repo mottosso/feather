@@ -56,7 +56,7 @@ status PluginManager::load_plugins()
                 if((*it).extension()==".so") {
                     // load plugin here
                     std::cout << "LOADING: " << *it << std::endl;
-                    PluginInfo node;
+                    PluginData node;
                     node.path = (*it).string();
                     status s = load_node(node);
                     if(s.state){
@@ -97,7 +97,7 @@ void PluginManager::gl_draw(FNode& node, FGlInfo& info)
     std::for_each(m_plugins.begin(),m_plugins.end(), call_gl_draw(node,info) );
 }
 
-status PluginManager::load_node(PluginInfo &node)
+status PluginManager::load_node(PluginData &node)
 {
    char *error;
 
@@ -109,6 +109,8 @@ status PluginManager::load_node(PluginInfo &node)
     }
 
     node.name = (std::string(*)())dlsym(node.handle, "name");
+    node.description = (std::string(*)())dlsym(node.handle, "description");
+    node.author = (std::string(*)())dlsym(node.handle, "author");
     node.do_it = (status(*)(int,field::Fields&))dlsym(node.handle, "do_it");
     node.gl_init = (void(*)(FNode&,FGlInfo&))dlsym(node.handle, "gl_init");
     node.gl_draw = (void(*)(FNode&,FGlInfo&))dlsym(node.handle, "gl_draw");
@@ -154,7 +156,7 @@ field::FieldBase* PluginManager::get_fieldBase(int uid, int node, int field, fie
     return NULL;
 }
 
-status PluginManager::load_command(PluginInfo &command)
+status PluginManager::load_command(PluginData &command)
 {
     return status(FAILED,"no command to load");
 }
@@ -175,7 +177,8 @@ int PluginManager::max_uid()
     return 2;
 }
 
-void PluginManager::loaded_plugins(std::vector<std::string>& list)
+void PluginManager::loaded_plugins(std::vector<PluginInfo>& list)
 {
-    std::for_each(m_plugins.begin(),m_plugins.end(), get_name(list) );
+    get_name info(list);
+    std::for_each(m_plugins.begin(), m_plugins.end(), info);
 }

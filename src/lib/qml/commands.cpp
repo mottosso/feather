@@ -185,7 +185,7 @@ int qml::command::get_max_uid()
     return cstate.sgState.maxUid; 
 }
 
-void qml::command::get_plugins(std::vector<std::string>& list)
+void qml::command::get_plugins(std::vector<PluginInfo>& list)
 {
     return plugins.loaded_plugins(list); 
 }

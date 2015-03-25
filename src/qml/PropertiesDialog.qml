@@ -32,23 +32,8 @@ Window {
     width: 500
     height: 400
 
-    Plugins { 
-        id: pluginsModule
+    Plugins { id: pluginsModule }
 
-        Component.onCompleted: {
-            load() 
-            //model = pluginsModule.plugins
-        }
-
-    }
-
-    ListModel {
-        id: modelTest
-
-        ListElement { name: "testA"; description: "A type" }
-        ListElement { name: "testB"; description: "B type" }
-    }
- 
     TabView {
         anchors.fill: parent
         anchors.margins: 2
@@ -59,7 +44,6 @@ Window {
 
         Tab {
             title: "Plugins"
-
 
             TableView {
                 id: tableView
@@ -77,35 +61,18 @@ Window {
                     width: 100
                 }
 
-                /*
                 TableViewColumn {
                     role: "author"
                     title: "Author"
                     width: 100
                 }
-                */
 
                 model: pluginsModule
-                //model: modelTest 
-
-                //rowDelegate: Component { Text { text: name } }
-                Component.onCompleted: {
-                    console.log(rowCount)
-                    //pluginsModule.load() 
-                    //model = pluginsModule.plugins
-                }
 
             }
 
         }
     
     }
-
-    /*
-    Component.onCompleted: {
-        pluginsModule.load() 
-        //model = pluginsModule.plugins
-    }
-    */
 
 }

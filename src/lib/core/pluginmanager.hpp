@@ -34,12 +34,18 @@
 namespace feather
 {
 
-    //struct PluginNodeFields{};
-
     struct PluginInfo {
+        std::string name;
+        std::string description;
+        std::string author;
+    };
+
+    struct PluginData {
         std::string path;
         void *handle;
         std::string (*name)();
+        std::string (*description)();
+        std::string (*author)();
         status (*do_it)(int,field::Fields&);
         void (*gl_init)(FNode&,FGlInfo&);
         void (*gl_draw)(FNode&,FGlInfo&);
@@ -57,11 +63,17 @@ namespace feather
     };
 
     struct get_name {
-        get_name(std::vector<std::string>& list) { m_list = list; };
-        void operator()(PluginInfo n) { m_list.push_back(n.name()); };
+        get_name(std::vector<PluginInfo>& list) : m_list(list) {};
+        void operator()(PluginData n) { 
+            PluginInfo info;
+            info.name = n.name();
+            info.description = n.description();
+            info.author = n.author();
+            m_list.push_back(info);
+        };
 
         private:
-            std::vector<std::string> m_list; 
+            std::vector<PluginInfo>& m_list; 
     };
 
     // DO_IT()
@@ -77,7 +89,7 @@ namespace feather
    
     struct call_do_it {
         call_do_it(int node,field::Fields& fields): m_node(node), m_fields(fields){};
-        void operator()(PluginInfo n) { if(n.node_exist(m_node)) { std::cout << "found node " << m_node << std::endl; n.do_it(m_node,m_fields); } };
+        void operator()(PluginData n) { if(n.node_exist(m_node)) { std::cout << "found node " << m_node << std::endl; n.do_it(m_node,m_fields); } };
         private:
             int m_node;
             field::Fields& m_fields;
@@ -97,7 +109,7 @@ namespace feather
 
     struct call_gl_init {
         call_gl_init(FNode& node, FGlInfo& info): m_node(node), m_info(info){};
-        void operator()(PluginInfo n) { if(n.node_exist(m_node.node)) { /*std::cout << "found gl info for node " << m_node.uid << std::endl;*/ n.gl_init(m_node,m_info); } };
+        void operator()(PluginData n) { if(n.node_exist(m_node.node)) { /*std::cout << "found gl info for node " << m_node.uid << std::endl;*/ n.gl_init(m_node,m_info); } };
 
         private:
             FNode& m_node;
@@ -118,7 +130,7 @@ namespace feather
 
     struct call_gl_draw {
         call_gl_draw(FNode& node, FGlInfo& info): m_node(node), m_info(info){};
-        void operator()(PluginInfo n) { if(n.node_exist(m_node.node)) { /*std::cout << "found gl info for node " << m_node.uid << std::endl;*/ n.gl_draw(m_node,m_info); } };
+        void operator()(PluginData n) { if(n.node_exist(m_node.node)) { /*std::cout << "found gl info for node " << m_node.uid << std::endl;*/ n.gl_draw(m_node,m_info); } };
 
         private:
             FNode& m_node;
@@ -217,7 +229,7 @@ namespace feather
 
     struct call_command {
         call_command(std::string cmd, parameter::ParameterList params){ m_cmd = cmd; m_params = params; };
-        void operator()(PluginInfo n) { if(n.command_exist(m_cmd)) { std::cout << "found command " << m_cmd << std::endl; n.command(m_cmd,m_params); } };
+        void operator()(PluginData n) { if(n.command_exist(m_cmd)) { std::cout << "found command " << m_cmd << std::endl; n.command(m_cmd,m_params); } };
         private:
             std::string m_cmd;
             parameter::ParameterList m_params;
@@ -241,19 +253,21 @@ namespace feather
             status run_command(std::string cmd, parameter::ParameterList);
             int min_uid();
             int max_uid();
-            void loaded_plugins(std::vector<std::string>& list);
+            void loaded_plugins(std::vector<PluginInfo>& list);
 
         private:
-            status load_node(PluginInfo &node);
-            status load_command(PluginInfo &command);
+            status load_node(PluginData &node);
+            status load_command(PluginData &command);
             std::string m_pluginPath;
-            std::vector<PluginInfo> m_plugins;
+            std::vector<PluginData> m_plugins;
     };
 
 } // namespace feather
 
 #define C_PLUGIN_WRAPPER()\
     std::string name();\
+    std::string description();\
+    std::string author();\
     feather::status do_it(int, feather::field::Fields&);\
     void gl_init(feather::FNode& node, feather::FGlInfo& info);\
     void gl_draw(feather::FNode& node, feather::FGlInfo& info);\
@@ -264,9 +278,13 @@ namespace feather
     bool command_exist(std::string cmd);\
     feather::status command(std::string cmd, feather::parameter::ParameterList);\
 
-#define PLUGIN_INIT(__name,startnode,endnode)\
+#define PLUGIN_INIT(__name,__description,__author,startnode,endnode)\
     /* plugin name */\
     std::string name() { return __name; };\
+    /* plugin description */\
+    std::string description() { return __description; };\
+    /* plugin name */\
+    std::string author() { return __author; };\
     \
     /* call node do_it()'s */\
     feather::status do_it(int id, feather::field::Fields& fields) {\

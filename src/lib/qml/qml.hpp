@@ -312,12 +312,15 @@ class Command : public QObject
 
 class PluginObject { 
     public:
-        PluginObject(const QString &Name,
-                const QString &Description):
-            name(Name),
-            description(Description) {}
+        PluginObject(const QString &_name,
+                const QString &_description,
+                const QString &_author):
+            name(_name),
+            description(_description),
+            author(_author) {}
         QString name;
         QString description;
+        QString author;
 };
 
 
@@ -332,7 +335,8 @@ class Plugins : public QAbstractListModel
         enum ERoles
         {
             NameRole = Qt::UserRole + 1,
-            DescriptionRole = Qt::UserRole +2
+            DescriptionRole = Qt::UserRole + 2,
+            AuthorRole = Qt::UserRole + 3
         };
 
         QHash<int, QByteArray> roleNames() const;

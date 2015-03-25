@@ -45,7 +45,7 @@ using namespace feather;
 #define POLYGON_CUBE 322
 
 
-PLUGIN_INIT("Polygon",POLYGON_SHAPE,POLYGON_CUBE)
+PLUGIN_INIT("Polygon","Polygon objects and tools","Richard Layman",POLYGON_SHAPE,POLYGON_CUBE)
 
 
 /*

@@ -38,7 +38,7 @@ extern "C" {
 
 using namespace feather;
 
-PLUGIN_INIT("Obj Import/Export",0,0)
+PLUGIN_INIT("Obj","Import and export obj format file data.","Richard Layman",0,0)
 
 
 /*

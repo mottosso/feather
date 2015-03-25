@@ -68,7 +68,7 @@ using namespace feather;
  * This macro handles some misc bindings
  * between the plugin and the pluginmanager.
  */ 
-PLUGIN_INIT("Common",SHAPE,TRANSFORM)
+PLUGIN_INIT("Common","Commonly used nodes and commands","Richard Layman",SHAPE,TRANSFORM)
 
 /*
  ***************************************

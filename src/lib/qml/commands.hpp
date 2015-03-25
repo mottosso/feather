@@ -29,6 +29,7 @@
 #include "types.hpp"
 #include "status.hpp"
 #include "command.hpp"
+#include "pluginmanager.hpp"
 
 namespace feather
 {
@@ -61,7 +62,7 @@ namespace feather
             void gl_draw(int uid, FGlInfo& info);
             int get_min_uid();
             int get_max_uid();
-            void get_plugins(std::vector<std::string>& list);
+            void get_plugins(std::vector<PluginInfo>& list);
 
         } // namespace command
 
