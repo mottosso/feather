@@ -35,5 +35,29 @@ SET_TARGET_PROPERTIES(feather_core
     VERSION 0.01
     SOVERSION 1)
 
+SET(feather_core_HDRS
+    deps.hpp
+    singleton.hpp
+    scenegraph.hpp
+    pluginmanager.hpp
+    types.hpp
+    state.hpp
+    status.hpp
+    parameter.hpp
+    command.hpp
+    field.hpp
+    node.hpp
+    data.hpp
+    selection.hpp
+    object.hpp
+    camera.hpp
+    light.hpp
+    texture.hpp
+    shader.hpp
+)
+
+INSTALL(FILES ${feather_core_HDRS}
+    DESTINATION /usr/include/feather)
+
 INSTALL(TARGETS feather_core
     LIBRARY DESTINATION /usr/lib64/feather)
