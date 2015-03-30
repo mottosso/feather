@@ -37,6 +37,7 @@ SET_TARGET_PROPERTIES(feather_core
 
 SET(feather_core_HDRS
     deps.hpp
+    types.hpp
     singleton.hpp
     scenegraph.hpp
     pluginmanager.hpp
