@@ -78,6 +78,7 @@ Rectangle {
 
     } 
 
+
     SceneGraphEditor {
         id: sg_editor
         anchors.top: toolBar.bottom
@@ -91,11 +92,15 @@ Rectangle {
             anchors.fill: parent
             acceptedButtons: Qt.RightButton
 
-            onClicked: { /*console.log("qml sg select")*/ }
+            onClicked: { popupTest.x = mouse.x; popupTest.y = mouse.y }
         }
     }    
 
+    NodeOutMenu { id: popupTest }
+
+
     Component.onCompleted: {
         sg_editor.update_sg()
+        popupTest.popup()
     }
 }
