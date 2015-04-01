@@ -49,30 +49,6 @@ class SceneGraph : public QObject
         Q_INVOKABLE int connect_nodes(int n1, int f1, int n2, int f2) { status p = qml::command::connect_nodes(n1,f1,n2,f2); return p.state; };
 };
 
-// NODE
-class Node: public QObject
-{
-    Q_OBJECT
-
-        Q_ENUMS(Type)
-
-    public:
-        Node(QObject* parent=0);
-        ~Node();
-
-        enum Type {
-            Camera = node::Camera,
-            Light = node::Light,
-            Texture = node::Texture,
-            Shader = node::Shader,
-            Object = node::Object 
-        };
-
-    private:
-        int m_id; // node id
-        int m_uid; // scenegraph vertex
-};
-
 // FIELD 
 class Field: public QObject
 {
@@ -193,6 +169,31 @@ class Field: public QObject
         int m_intVal;
         float m_floatVal;
         bool m_connected;
+};
+
+
+// NODE
+class Node: public QObject
+{
+    Q_OBJECT
+
+        Q_ENUMS(Type)
+
+    public:
+        Node(QObject* parent=0);
+        ~Node();
+
+        enum Type {
+            Camera = node::Camera,
+            Light = node::Light,
+            Texture = node::Texture,
+            Shader = node::Shader,
+            Object = node::Object 
+        };
+
+    private:
+        int m_id; // node id
+        int m_uid; // scenegraph vertex
 };
 
 

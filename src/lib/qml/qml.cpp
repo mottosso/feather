@@ -37,6 +37,16 @@ SceneGraph::~SceneGraph()
 }
 
 
+// Field
+Field::Field(QObject* parent): m_uid(0),m_node(0),m_field(0),m_boolVal(false),m_intVal(0),m_floatVal(0.0),m_connected(false)
+{
+}
+
+Field::~Field()
+{
+}
+
+
 // Node
 Node::Node(QObject* parent)
 {
@@ -46,15 +56,6 @@ Node::~Node()
 {
 }
 
-
-// Field
-Field::Field(QObject* parent): m_uid(0),m_node(0),m_field(0),m_boolVal(false),m_intVal(0),m_floatVal(0.0),m_connected(false)
-{
-}
-
-Field::~Field()
-{
-}
 
 // GET FIELD VALUES
 
