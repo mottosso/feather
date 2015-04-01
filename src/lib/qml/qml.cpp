@@ -46,17 +46,6 @@ Field::~Field()
 {
 }
 
-
-// Node
-Node::Node(QObject* parent)
-{
-}
-
-Node::~Node()
-{
-}
-
-
 // GET FIELD VALUES
 
 void Field::get_bool_val()
@@ -96,6 +85,42 @@ void Field::set_float_val()
 void Field::get_connected()
 {
     qml::command::get_field_connection_status(m_uid,m_node,m_field,m_connected);
+}
+
+
+// Node
+Node::Node(QObject* parent)
+{
+}
+
+Node::~Node()
+{
+}
+
+QQmlListProperty<Field> Node::inFields()
+{
+    return QQmlListProperty<Field>(this,0,&Node::append_inField,0,0,0);
+}
+
+QQmlListProperty<Field> Node::outFields()
+{
+    return QQmlListProperty<Field>(this,0,&Node::append_outField,0,0,0);
+}
+
+void Node::append_inField(QQmlListProperty<Field> *list, Field *field)
+{
+    Node *node = qobject_cast<Node*>(list->object);
+    if(node) {
+        node->m_inFields.append(field);
+    }
+}
+
+void Node::append_outField(QQmlListProperty<Field> *list, Field *field)
+{
+    Node *node = qobject_cast<Node*>(list->object);
+    if(node) {
+        node->m_outFields.append(field);
+    }
 }
 
 

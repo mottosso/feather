@@ -176,12 +176,15 @@ class Field: public QObject
 class Node: public QObject
 {
     Q_OBJECT
-
         Q_ENUMS(Type)
-
+        Q_PROPERTY(QQmlListProperty<Field> inFields READ inFields)
+        Q_PROPERTY(QQmlListProperty<Field> outFields READ outFields)
+ 
     public:
         Node(QObject* parent=0);
         ~Node();
+        QQmlListProperty<Field> inFields();
+        QQmlListProperty<Field> outFields();
 
         enum Type {
             Camera = node::Camera,
@@ -194,6 +197,10 @@ class Node: public QObject
     private:
         int m_id; // node id
         int m_uid; // scenegraph vertex
+        static void append_inField(QQmlListProperty<Field> *list, Field *field);
+        static void append_outField(QQmlListProperty<Field> *list, Field *field);
+        QList<Field *> m_inFields;
+        QList<Field *> m_outFields;
 };
 
 
