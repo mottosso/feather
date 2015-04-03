@@ -26,8 +26,9 @@
 #include "selection.hpp"
 
 // Connection
-SceneGraphConnection::SceneGraphConnection(QQuickItem* parent) :
+SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type, QQuickItem* parent) :
     QQuickPaintedItem(parent),
+    m_type(type),
     m_connFillBrush(QBrush(QColor("#DA70D6")))
 {
     setWidth(CONNECTION_WIDTH);
@@ -59,18 +60,7 @@ void SceneGraphConnection::paint(QPainter* painter)
 
 void SceneGraphConnection::mousePressEvent(QMouseEvent* event)
 {
-    std::cout << "connection clicked\n";
-    if(event->button()==Qt::RightButton) {
-        connRClicked();
-        std::cout << "r button\n";
-    }
-    if(event->button()==Qt::LeftButton) {
-        connLClicked();
-        std::cout << "l button\n";
-    }
-    if(event->button()==Qt::MiddleButton) {
-        std::cout << "m button\n";
-    }
+        connClicked(event->button(),m_type);
 }
 
 void SceneGraphConnection::mouseReleaseEvent(QMouseEvent* event)
@@ -103,8 +93,8 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
     m_x(0),
     m_y(0),
     m_nodeFillBrush(QBrush(QColor("#6A5ACD"))),
-    m_pInConn(new SceneGraphConnection(this)),
-    m_pOutConn(new SceneGraphConnection(this))
+    m_pInConn(new SceneGraphConnection(SceneGraphConnection::In,this)),
+    m_pOutConn(new SceneGraphConnection(SceneGraphConnection::Out,this))
 {
     if(feather::smg::Instance()->selected(m_uid)){
         m_nodeFillBrush.setColor(QColor("#FF007F"));
@@ -119,8 +109,8 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
     setAcceptedMouseButtons(Qt::AllButtons);
     setAcceptHoverEvents(true);
 
-    connect(m_pInConn,SIGNAL(connLClicked()),this,SLOT(inConnPressed()));
-    connect(m_pOutConn,SIGNAL(connLClicked()),this,SLOT(outConnPressed()));
+    connect(m_pInConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
+    connect(m_pOutConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
 }
 
 SceneGraphNode::~SceneGraphNode()
@@ -128,16 +118,9 @@ SceneGraphNode::~SceneGraphNode()
 
 }
 
-void SceneGraphNode::inConnPressed()
+void SceneGraphNode::ConnPressed(Qt::MouseButton button, SceneGraphConnection::Connection conn)
 {
-    std::cout << "in conn pressed\n";
-    inConnLClicked(); 
-}
-
-void SceneGraphNode::outConnPressed()
-{
-    std::cout << "out conn pressed\n";
-    outConnLClicked();
+    ConnClicked(button,conn,m_uid); 
 }
 
 void SceneGraphNode::paint(QPainter* painter)
@@ -248,11 +231,9 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
 {
     setAcceptedMouseButtons(Qt::AllButtons);
     SceneGraphNode *nodeA = new SceneGraphNode(0,322,this);
-    connect(nodeA,SIGNAL(inConnLClicked()),this,SLOT(inConnLOption()));
-    connect(nodeA,SIGNAL(outConnLClicked()),this,SLOT(outConnLOption()));
+    connect(nodeA,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int)));
     SceneGraphNode *nodeB = new SceneGraphNode(1,320,this);
-    connect(nodeB,SIGNAL(inConnLClicked()),this,SLOT(inConnLOption()));
-    connect(nodeB,SIGNAL(outConnLClicked()),this,SLOT(outConnLOption()));
+    connect(nodeB,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int)));
     m_nodes.push_back(nodeA);
     nodeA->setX(50);
     nodeA->setY(50);
@@ -267,14 +248,9 @@ SceneGraphEditor::~SceneGraphEditor()
 
 }
 
-void SceneGraphEditor::inConnLOption()
+void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int id)
 {
-    std::cout << "node in option\n";
-}
-
-void SceneGraphEditor::outConnLOption()
-{
-    std::cout << "node out option\n";
+    //std::cout << "node option " << button << " " << conn << " " << id << "\n";
 }
 
 void SceneGraphEditor::paint(QPainter* painter)

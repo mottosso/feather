@@ -40,7 +40,9 @@ class SceneGraphConnection : public QQuickPaintedItem
     Q_OBJECT
 
     public:
-        SceneGraphConnection(QQuickItem* parent=0);
+        enum Connection { In, Out };
+
+        SceneGraphConnection(Connection type, QQuickItem* parent=0);
         ~SceneGraphConnection();
         void paint(QPainter* painter);
 
@@ -52,14 +54,14 @@ class SceneGraphConnection : public QQuickPaintedItem
         void mouseMoveEvent(QMouseEvent* event);
 
     signals:
-        void connRClicked();
-        void connLClicked();
+        void connClicked(Qt::MouseButton button, SceneGraphConnection::Connection conn);
 
     private:
         int m_srcUid;
         int m_srcField;
         int m_tgtUid;
         int m_tgtField;
+        Connection m_type;
         QBrush m_connFillBrush;
 };
 
@@ -75,14 +77,10 @@ class SceneGraphNode : public QQuickPaintedItem
         void outConnectionPoint(QPointF& point);
     
     protected slots:
-        void inConnPressed();
-        void outConnPressed();
+        void ConnPressed(Qt::MouseButton button,SceneGraphConnection::Connection conn);
  
     signals:
-        void inConnRClicked();
-        void inConnLClicked();
-        void outConnRClicked();
-        void outConnLClicked();
+        void ConnClicked(Qt::MouseButton button, SceneGraphConnection::Connection conn, int id);
 
     protected:
         void mousePressEvent(QMouseEvent* event);
@@ -114,8 +112,7 @@ class SceneGraphEditor : public QQuickPaintedItem
         Q_INVOKABLE void update_sg() { update(); }; 
 
     protected slots:
-        void inConnLOption();
-        void outConnLOption();
+        void ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int id);
 
     protected:
         void mousePressEvent(QMouseEvent* event);
