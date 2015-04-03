@@ -87,13 +87,6 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.margins: 2
 
-        MouseArea {
-            id: mouseArea
-            anchors.fill: parent
-            acceptedButtons: Qt.RightButton
-
-            onClicked: { }
-        }
     }    
 
     NodeOutMenu { id: popupTest; }
