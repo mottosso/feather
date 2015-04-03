@@ -23,10 +23,14 @@
 
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import feather.node 1.0
 
 Menu {
     id: menuPopup
     visible: true
+    property alias node: cnode
+
+    Node { id: cnode }
 
     Action {
         id: testA

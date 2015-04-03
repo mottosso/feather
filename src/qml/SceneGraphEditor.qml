@@ -92,11 +92,11 @@ Rectangle {
             anchors.fill: parent
             acceptedButtons: Qt.RightButton
 
-            onClicked: { popupTest.x = mouse.x; popupTest.y = mouse.y }
+            onClicked: { }
         }
     }    
 
-    NodeOutMenu { id: popupTest }
+    NodeOutMenu { id: popupTest; }
 
 
     Component.onCompleted: {

@@ -51,6 +51,10 @@ class SceneGraphConnection : public QQuickPaintedItem
         void hoverLeaveEvent(QHoverEvent* event);
         void mouseMoveEvent(QMouseEvent* event);
 
+    signals:
+        void connRClicked();
+        void connLClicked();
+
     private:
         int m_srcUid;
         int m_srcField;
@@ -69,7 +73,17 @@ class SceneGraphNode : public QQuickPaintedItem
         void paint(QPainter* painter);
         void inConnectionPoint(QPointF& point);
         void outConnectionPoint(QPointF& point);
+    
+    protected slots:
+        void inConnPressed();
+        void outConnPressed();
  
+    signals:
+        void inConnRClicked();
+        void inConnLClicked();
+        void outConnRClicked();
+        void outConnLClicked();
+
     protected:
         void mousePressEvent(QMouseEvent* event);
         void mouseReleaseEvent(QMouseEvent* event);
@@ -98,6 +112,10 @@ class SceneGraphEditor : public QQuickPaintedItem
 
         void paint(QPainter* painter);
         Q_INVOKABLE void update_sg() { update(); }; 
+
+    protected slots:
+        void inConnLOption();
+        void outConnLOption();
 
     protected:
         void mousePressEvent(QMouseEvent* event);

@@ -59,6 +59,18 @@ void SceneGraphConnection::paint(QPainter* painter)
 
 void SceneGraphConnection::mousePressEvent(QMouseEvent* event)
 {
+    std::cout << "connection clicked\n";
+    if(event->button()==Qt::RightButton) {
+        connRClicked();
+        std::cout << "r button\n";
+    }
+    if(event->button()==Qt::LeftButton) {
+        connLClicked();
+        std::cout << "l button\n";
+    }
+    if(event->button()==Qt::MiddleButton) {
+        std::cout << "m button\n";
+    }
 }
 
 void SceneGraphConnection::mouseReleaseEvent(QMouseEvent* event)
@@ -106,11 +118,26 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
     m_pInConn->setY((NODE_HEIGHT/2)-2);
     setAcceptedMouseButtons(Qt::AllButtons);
     setAcceptHoverEvents(true);
+
+    connect(m_pInConn,SIGNAL(connLClicked()),this,SLOT(inConnPressed()));
+    connect(m_pOutConn,SIGNAL(connLClicked()),this,SLOT(outConnPressed()));
 }
 
 SceneGraphNode::~SceneGraphNode()
 {
 
+}
+
+void SceneGraphNode::inConnPressed()
+{
+    std::cout << "in conn pressed\n";
+    inConnLClicked(); 
+}
+
+void SceneGraphNode::outConnPressed()
+{
+    std::cout << "out conn pressed\n";
+    outConnLClicked();
 }
 
 void SceneGraphNode::paint(QPainter* painter)
@@ -220,18 +247,34 @@ void SceneGraphNode::getConnectionPoint(feather::field::connection::Type conn, Q
 SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(parent), m_scale(100), m_nodeWidth(80), m_nodeHeight(30)
 {
     setAcceptedMouseButtons(Qt::AllButtons);
-    m_nodes.push_back(new SceneGraphNode(0,322,this));
-    m_nodes.at(0)->setX(50);
-    m_nodes.at(0)->setY(50);
-    m_nodes.push_back(new SceneGraphNode(1,320,this));
-    m_nodes.at(1)->setX(250);
-    m_nodes.at(1)->setY(250);
+    SceneGraphNode *nodeA = new SceneGraphNode(0,322,this);
+    connect(nodeA,SIGNAL(inConnLClicked()),this,SLOT(inConnLOption()));
+    connect(nodeA,SIGNAL(outConnLClicked()),this,SLOT(outConnLOption()));
+    SceneGraphNode *nodeB = new SceneGraphNode(1,320,this);
+    connect(nodeB,SIGNAL(inConnLClicked()),this,SLOT(inConnLOption()));
+    connect(nodeB,SIGNAL(outConnLClicked()),this,SLOT(outConnLOption()));
+    m_nodes.push_back(nodeA);
+    nodeA->setX(50);
+    nodeA->setY(50);
+    m_nodes.push_back(nodeB);
+    nodeB->setX(250);
+    nodeB->setY(250);
     //setAcceptHoverEvents(true);
 }
 
 SceneGraphEditor::~SceneGraphEditor()
 {
 
+}
+
+void SceneGraphEditor::inConnLOption()
+{
+    std::cout << "node in option\n";
+}
+
+void SceneGraphEditor::outConnLOption()
+{
+    std::cout << "node out option\n";
 }
 
 void SceneGraphEditor::paint(QPainter* painter)
