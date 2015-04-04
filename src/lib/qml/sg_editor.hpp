@@ -34,6 +34,37 @@
 #define CONNECTION_WIDTH 10
 #define CONNECTION_HEIGHT 10 
 
+// FieldInfo
+class FieldInfo : public QObject
+{
+    Q_OBJECT
+        Q_ENUMS(Type)
+        Q_PROPERTY(QString name READ name)
+        Q_PROPERTY(Type type READ type)
+        Q_PROPERTY(bool locked READ locked)
+
+    public:
+        enum Type {
+            Bool=feather::field::Bool,
+            Int=feather::field::Int,
+            Double=feather::field::Double
+        };
+
+        FieldInfo(QString _name, Type _type, bool _locked, QObject* parent=0);
+        ~FieldInfo();
+
+        QString name() const { return m_name; }
+
+        Type type() { return m_type; }
+
+        bool locked() { return m_locked; }
+
+    private:
+        QString m_name;
+        Type m_type;
+        bool m_locked;
+};
+
 
 class SceneGraphConnection : public QQuickPaintedItem
 {
@@ -123,6 +154,8 @@ class SceneGraphEditor : public QQuickPaintedItem
 
     signals:
         void sgUpdated();
+        void openInConnMenu(int id);
+        void openOutConnMenu(int id);
 
     private:
         void drawNode(QPoint& point, QPainter* painter);

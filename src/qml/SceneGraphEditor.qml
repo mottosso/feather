@@ -91,9 +91,13 @@ Rectangle {
 
     NodeOutMenu { id: popupTest; }
 
+    function openInputConnectionMenu(id) {
+        console.log("fill in node " + id)
+        popupTest.popup()
+    }
 
     Component.onCompleted: {
         sg_editor.update_sg()
-        popupTest.popup()
+        sg_editor.openInConnMenu.connect(openInputConnectionMenu)
     }
 }

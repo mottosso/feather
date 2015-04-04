@@ -25,6 +25,21 @@
 #include "commands.hpp"
 #include "selection.hpp"
 
+FieldInfo::FieldInfo(QString _name, FieldInfo::Type _type, bool _locked, QObject* parent) :
+QObject(parent),
+m_name(_name),
+m_type(_type),
+m_locked(_locked)
+{
+
+}
+
+FieldInfo::~FieldInfo()
+{
+
+}
+
+                                                                        
 // Connection
 SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type, QQuickItem* parent) :
     QQuickPaintedItem(parent),
@@ -250,6 +265,11 @@ SceneGraphEditor::~SceneGraphEditor()
 
 void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int id)
 {
+    if(conn == SceneGraphConnection::In)
+        openInConnMenu(id);
+    else
+        openOutConnMenu(id);
+    
     //std::cout << "node option " << button << " " << conn << " " << id << "\n";
 }
 
