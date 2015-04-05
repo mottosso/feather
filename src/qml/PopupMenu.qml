@@ -1,8 +1,8 @@
 /***********************************************************************
  *
- * Filename: NodeOutMenu.qml 
+ * Filename: PopupMenu.qml 
  *
- * Description: List output fields of the node and their connections. 
+ * Description: Template Popup menu used by various editors popup menus. 
  *
  * Copyright (C) 2015 Richard Layman, rlayman2000@yahoo.com 
  *
@@ -21,23 +21,14 @@
  *
  ***********************************************************************/
 
-import QtQuick 2.3
-import QtQuick.Controls 1.2
-import feather.node 1.0
+import QtQuick 2.1
 
-Menu {
-    id: menuPopup
-    visible: true
-    property alias node: cnode
-
-    Node { id: cnode }
-
-    Action {
-        id: testA
-        text: "a"
-    }
-
-    MenuItem {
-        action: testA
-    }
+Rectangle {
+    id: popup
+    width: 100
+    height: 200
+    border.color: "black"
+    border.width: 1
+    color: "grey"
+    radius: 4
 }

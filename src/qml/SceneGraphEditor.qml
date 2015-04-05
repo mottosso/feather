@@ -89,11 +89,11 @@ Rectangle {
 
     }    
 
-    NodeOutMenu { id: popupTest; }
+    SGNodeConnectionMenu{ id: connMenu; }
 
     function openInputConnectionMenu(id) {
         console.log("fill in node " + id)
-        popupTest.popup()
+        connMenu.visible = true
     }
 
     Component.onCompleted: {
