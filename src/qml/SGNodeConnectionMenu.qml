@@ -42,8 +42,10 @@ PopupMenu {
 
     ListView {
         anchors.fill: parent
+        anchors.margins: 2
         model: popupModel
-        delegate: Text { text: name }
+        delegate: MenuButton { label: name } 
+        spacing: 2
     }
 }
 
