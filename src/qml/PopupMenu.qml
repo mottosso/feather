@@ -27,8 +27,23 @@ Rectangle {
     id: popup
     width: 100
     height: 200
+    visible: false
+
     border.color: "black"
     border.width: 1
     color: "grey"
     radius: 4
+
+    property alias model: view.model 
+    
+    ListView {
+        id: view
+        anchors.fill: parent
+        anchors.margins: 2
+        delegate: MenuButton { label: name } 
+        spacing: 2
+    }
+
+
+
 }

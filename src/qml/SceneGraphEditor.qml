@@ -78,6 +78,7 @@ Rectangle {
 
     } 
 
+    //ListModel { id: popupModel }
 
     SceneGraphEditor {
         id: sg_editor
@@ -86,10 +87,10 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: 2
-
+        //connModel: popupModel
     }    
 
-    SGNodeConnectionMenu{ id: connMenu; }
+    PopupMenu { id: connMenu; model: sg_editor.fields }
 
     function openInputConnectionMenu(id) {
         console.log("fill in node " + id)

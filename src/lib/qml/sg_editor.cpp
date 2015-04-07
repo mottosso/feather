@@ -256,6 +256,10 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
     nodeB->setX(250);
     nodeB->setY(250);
     //setAcceptHoverEvents(true);
+
+    // testing fields for qml menu
+    FieldInfo* info = new FieldInfo("TEST",FieldInfo::Int,false);
+    m_fields.push_back(info);
 }
 
 SceneGraphEditor::~SceneGraphEditor()
@@ -338,7 +342,6 @@ void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn,
     {
         cpoint.setX(npoint.x());
         cpoint.setY(npoint.y()+(m_nodeHeight/2));
- 
     }
     else
     {
@@ -346,6 +349,21 @@ void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn,
         cpoint.setY(npoint.y()+(m_nodeHeight/2));
     }
 }
+
+QQmlListProperty<FieldInfo> SceneGraphEditor::fields()
+{
+    return QQmlListProperty<FieldInfo>(this,0,&SceneGraphEditor::append_field,0,0,0);
+}
+
+void SceneGraphEditor::append_field(QQmlListProperty<FieldInfo> *list, FieldInfo *field)
+{
+    SceneGraphEditor *sgeditor = qobject_cast<SceneGraphEditor*>(list->object);
+    if(sgeditor) {
+        sgeditor->m_fields.append(field);
+    }
+}
+
+
 
 void SceneGraphEditor::mousePressEvent(QMouseEvent* event){};
 void SceneGraphEditor::mouseReleaseEvent(QMouseEvent* event){};

@@ -53,11 +53,11 @@ class FieldInfo : public QObject
         FieldInfo(QString _name, Type _type, bool _locked, QObject* parent=0);
         ~FieldInfo();
 
-        QString name() const { return m_name; }
+        QString name() const { return m_name; };
 
-        Type type() { return m_type; }
+        Type type() { return m_type; };
 
-        bool locked() { return m_locked; }
+        bool locked() { return m_locked; };
 
     private:
         QString m_name;
@@ -134,13 +134,16 @@ class SceneGraphNode : public QQuickPaintedItem
 class SceneGraphEditor : public QQuickPaintedItem
 {
     Q_OBJECT
-
+        Q_PROPERTY(QQmlListProperty<FieldInfo> feilds READ fields)
+ 
     public:
         SceneGraphEditor(QQuickItem* parent=0);
         ~SceneGraphEditor();
 
         void paint(QPainter* painter);
         Q_INVOKABLE void update_sg() { update(); }; 
+        QQmlListProperty<FieldInfo> fields();
+
 
     protected slots:
         void ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int id);
@@ -168,6 +171,9 @@ class SceneGraphEditor : public QQuickPaintedItem
 
         std::vector<SceneGraphNode*> m_nodes;
         std::vector<SceneGraphConnection*> m_connections;
+
+        static void append_field(QQmlListProperty<FieldInfo> *list, FieldInfo *field);
+        QList<FieldInfo*> m_fields;
 };
 
 #endif
