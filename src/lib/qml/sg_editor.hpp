@@ -34,36 +34,44 @@
 #define CONNECTION_WIDTH 10
 #define CONNECTION_HEIGHT 10 
 
-// FieldInfo
-class FieldInfo : public QObject
+class FieldInfo { 
+    public:
+        FieldInfo(const QString &_name,
+                const int &_type,
+                const bool &_locked):
+            name(_name),
+            type(_type),
+            locked(_locked) {}
+        QString name;
+        int type;
+        bool locked;
+};
+
+class ConnectionModel : public QAbstractListModel
 {
     Q_OBJECT
-        Q_ENUMS(Type)
-        Q_PROPERTY(QString name READ name)
-        Q_PROPERTY(Type type READ type)
-        Q_PROPERTY(bool locked READ locked)
 
     public:
-        enum Type {
-            Bool=feather::field::Bool,
-            Int=feather::field::Int,
-            Double=feather::field::Double
+        ConnectionModel(QObject* parent=0);
+        ~ConnectionModel();
+
+        enum ERoles
+        {
+            NameRole = Qt::UserRole + 1,
+            TypeRole = Qt::UserRole + 2,
+            LockedRole = Qt::UserRole + 3
         };
 
-        FieldInfo(QString _name, Type _type, bool _locked, QObject* parent=0);
-        ~FieldInfo();
-
-        QString name() const { return m_name; };
-
-        Type type() { return m_type; };
-
-        bool locked() { return m_locked; };
+        QHash<int, QByteArray> roleNames() const;
+        int rowCount(const QModelIndex& parent = QModelIndex()) const;
+        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
     private:
-        QString m_name;
-        Type m_type;
-        bool m_locked;
+        Q_DISABLE_COPY(ConnectionModel);
+        QList<FieldInfo*> m_fields;
 };
+
+
 
 
 class SceneGraphConnection : public QQuickPaintedItem
@@ -134,7 +142,6 @@ class SceneGraphNode : public QQuickPaintedItem
 class SceneGraphEditor : public QQuickPaintedItem
 {
     Q_OBJECT
-        Q_PROPERTY(QQmlListProperty<FieldInfo> feilds READ fields)
  
     public:
         SceneGraphEditor(QQuickItem* parent=0);
@@ -142,7 +149,6 @@ class SceneGraphEditor : public QQuickPaintedItem
 
         void paint(QPainter* painter);
         Q_INVOKABLE void update_sg() { update(); }; 
-        QQmlListProperty<FieldInfo> fields();
 
 
     protected slots:
@@ -171,9 +177,6 @@ class SceneGraphEditor : public QQuickPaintedItem
 
         std::vector<SceneGraphNode*> m_nodes;
         std::vector<SceneGraphConnection*> m_connections;
-
-        static void append_field(QQmlListProperty<FieldInfo> *list, FieldInfo *field);
-        QList<FieldInfo*> m_fields;
 };
 
 #endif

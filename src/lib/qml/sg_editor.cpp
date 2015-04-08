@@ -25,21 +25,54 @@
 #include "commands.hpp"
 #include "selection.hpp"
 
-FieldInfo::FieldInfo(QString _name, FieldInfo::Type _type, bool _locked, QObject* parent) :
-QObject(parent),
-m_name(_name),
-m_type(_type),
-m_locked(_locked)
+// Connection Model
+ConnectionModel::ConnectionModel(QObject* parent) : QAbstractListModel(parent)
 {
-
+    m_fields.append(new FieldInfo("A",0,true));
+    m_fields.append(new FieldInfo("B",0,false));
 }
 
-FieldInfo::~FieldInfo()
+ConnectionModel::~ConnectionModel()
 {
 
+}                                                                        
+
+QHash<int, QByteArray> ConnectionModel::roleNames() const
+{
+
+    QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
+    roles.insert(NameRole, QByteArray("name"));
+    roles.insert(TypeRole, QByteArray("type"));
+    roles.insert(LockedRole, QByteArray("locked"));
+    return roles;
 }
 
-                                                                        
+int ConnectionModel::rowCount(const QModelIndex& parent) const
+{
+    return m_fields.size();
+}
+
+QVariant ConnectionModel::data(const QModelIndex& index, int role) const
+{
+    if (!index.isValid())
+        return QVariant(); // Return Null variant if index is invalid
+    if (index.row() > (m_fields.size()-1) )
+        return QVariant();
+    FieldInfo *dobj = m_fields.at(index.row());
+    switch (role) {
+        case Qt::DisplayRole: // The default display role now displays the first name as well
+        case NameRole:
+            return QVariant::fromValue(dobj->name);
+        case TypeRole:
+            return QVariant::fromValue(dobj->type);
+        case LockedRole:
+            return QVariant::fromValue(dobj->locked);
+        default:
+            return QVariant();
+    }
+}
+
+
 // Connection
 SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type, QQuickItem* parent) :
     QQuickPaintedItem(parent),
@@ -256,10 +289,6 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
     nodeB->setX(250);
     nodeB->setY(250);
     //setAcceptHoverEvents(true);
-
-    // testing fields for qml menu
-    FieldInfo* info = new FieldInfo("TEST",FieldInfo::Int,false);
-    m_fields.push_back(info);
 }
 
 SceneGraphEditor::~SceneGraphEditor()
@@ -349,20 +378,6 @@ void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn,
         cpoint.setY(npoint.y()+(m_nodeHeight/2));
     }
 }
-
-QQmlListProperty<FieldInfo> SceneGraphEditor::fields()
-{
-    return QQmlListProperty<FieldInfo>(this,0,&SceneGraphEditor::append_field,0,0,0);
-}
-
-void SceneGraphEditor::append_field(QQmlListProperty<FieldInfo> *list, FieldInfo *field)
-{
-    SceneGraphEditor *sgeditor = qobject_cast<SceneGraphEditor*>(list->object);
-    if(sgeditor) {
-        sgeditor->m_fields.append(field);
-    }
-}
-
 
 
 void SceneGraphEditor::mousePressEvent(QMouseEvent* event){};

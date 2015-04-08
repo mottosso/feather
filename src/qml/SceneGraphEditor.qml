@@ -90,7 +90,9 @@ Rectangle {
         //connModel: popupModel
     }    
 
-    PopupMenu { id: connMenu; model: sg_editor.fields }
+    ConnectionModel { id: connModel }
+
+    PopupMenu { id: connMenu; model: connModel }
 
     function openInputConnectionMenu(id) {
         console.log("fill in node " + id)

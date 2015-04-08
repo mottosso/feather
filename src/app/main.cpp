@@ -34,6 +34,7 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
 
     qmlRegisterType<ViewportThread>("FeatherViewport", 1, 0, "Viewport");
+    qmlRegisterType<ConnectionModel>("feather.editors", 1, 0, "ConnectionModel");
     qmlRegisterType<SceneGraphEditor>("feather.editors", 1, 0, "SceneGraphEditor");
     qmlRegisterType<SceneGraph>("feather.scenegraph", 1, 0, "SceneGraph");
     qmlRegisterType<Node>("feather.node", 1, 0, "Node");
@@ -41,6 +42,7 @@ int main(int argc, char **argv)
     qmlRegisterType<Parameter>("feather.command", 1, 0, "Parameter");
     qmlRegisterType<Command>("feather.command", 1, 0, "Command");
     qmlRegisterType<Plugins>("feather.plugin", 1, 0, "Plugins");
+
 
     // Add the Root ndoe to the scenegraph and setup the scene
     feather::qml::command::init();
