@@ -78,7 +78,7 @@ Rectangle {
 
     } 
 
-    //ListModel { id: popupModel }
+    ConnectionModel { id: connModel }
 
     SceneGraphEditor {
         id: sg_editor
@@ -87,10 +87,8 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: 2
-        //connModel: popupModel
+        connection: connModel
     }    
-
-    ConnectionModel { id: connModel }
 
     PopupMenu { id: connMenu; model: connModel }
 

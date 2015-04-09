@@ -25,53 +25,6 @@
 #include "commands.hpp"
 #include "selection.hpp"
 
-// Connection Model
-ConnectionModel::ConnectionModel(QObject* parent) : QAbstractListModel(parent)
-{
-    m_fields.append(new FieldInfo("A",0,true));
-    m_fields.append(new FieldInfo("B",0,false));
-}
-
-ConnectionModel::~ConnectionModel()
-{
-
-}                                                                        
-
-QHash<int, QByteArray> ConnectionModel::roleNames() const
-{
-
-    QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
-    roles.insert(NameRole, QByteArray("name"));
-    roles.insert(TypeRole, QByteArray("type"));
-    roles.insert(LockedRole, QByteArray("locked"));
-    return roles;
-}
-
-int ConnectionModel::rowCount(const QModelIndex& parent) const
-{
-    return m_fields.size();
-}
-
-QVariant ConnectionModel::data(const QModelIndex& index, int role) const
-{
-    if (!index.isValid())
-        return QVariant(); // Return Null variant if index is invalid
-    if (index.row() > (m_fields.size()-1) )
-        return QVariant();
-    FieldInfo *dobj = m_fields.at(index.row());
-    switch (role) {
-        case Qt::DisplayRole: // The default display role now displays the first name as well
-        case NameRole:
-            return QVariant::fromValue(dobj->name);
-        case TypeRole:
-            return QVariant::fromValue(dobj->type);
-        case LockedRole:
-            return QVariant::fromValue(dobj->locked);
-        default:
-            return QVariant();
-    }
-}
-
 
 // Connection
 SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type, QQuickItem* parent) :
@@ -379,9 +332,57 @@ void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn,
     }
 }
 
-
 void SceneGraphEditor::mousePressEvent(QMouseEvent* event){};
 void SceneGraphEditor::mouseReleaseEvent(QMouseEvent* event){};
 void SceneGraphEditor::hoverEnterEvent(QHoverEvent* event){};
 void SceneGraphEditor::hoverLeaveEvent(QHoverEvent* event){};
 void SceneGraphEditor::mouseMoveEvent(QMouseEvent* event){};
+
+
+// Connection Model
+ConnectionModel::ConnectionModel(QObject* parent) : QAbstractListModel(parent)
+{
+    m_fields.append(new FieldInfo("A",0,true));
+    m_fields.append(new FieldInfo("B",0,false));
+}
+
+ConnectionModel::~ConnectionModel()
+{
+
+}                                                                        
+
+QHash<int, QByteArray> ConnectionModel::roleNames() const
+{
+
+    QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
+    roles.insert(NameRole, QByteArray("name"));
+    roles.insert(TypeRole, QByteArray("type"));
+    roles.insert(LockedRole, QByteArray("locked"));
+    return roles;
+}
+
+int ConnectionModel::rowCount(const QModelIndex& parent) const
+{
+    return m_fields.size();
+}
+
+QVariant ConnectionModel::data(const QModelIndex& index, int role) const
+{
+    if (!index.isValid())
+        return QVariant(); // Return Null variant if index is invalid
+    if (index.row() > (m_fields.size()-1) )
+        return QVariant();
+    FieldInfo *dobj = m_fields.at(index.row());
+    switch (role) {
+        case Qt::DisplayRole: // The default display role now displays the first name as well
+        case NameRole:
+            return QVariant::fromValue(dobj->name);
+        case TypeRole:
+            return QVariant::fromValue(dobj->type);
+        case LockedRole:
+            return QVariant::fromValue(dobj->locked);
+        default:
+            return QVariant();
+    }
+}
+

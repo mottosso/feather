@@ -86,9 +86,6 @@ Rectangle {
         onPressed: {
             if(mouse.button == Qt.RightButton)
                 popup.popup()
-
-            intField.state="pressed"
-            intField.update()
         }
 
         //onPositionChanged: { }

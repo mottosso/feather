@@ -50,7 +50,8 @@ class FieldInfo {
 class ConnectionModel : public QAbstractListModel
 {
     Q_OBJECT
-
+        Q_PROPERTY(QList<FieldInfo*> fields READ fields WRITE setFields NOTIFY fieldsChanged)
+ 
     public:
         ConnectionModel(QObject* parent=0);
         ~ConnectionModel();
@@ -65,13 +66,25 @@ class ConnectionModel : public QAbstractListModel
         QHash<int, QByteArray> roleNames() const;
         int rowCount(const QModelIndex& parent = QModelIndex()) const;
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+ 
+        // fields 
+        void setFields(QList<FieldInfo*>& f) {
+            if(m_fields != f) {
+                m_fields=f;
+            }
+        }
+
+        QList<FieldInfo*> fields() { return m_fields; }
+
+        void addField() { m_fields.append(new FieldInfo("C",0,true)); };
+ 
+    signals:
+        void fieldsChanged();
 
     private:
         Q_DISABLE_COPY(ConnectionModel);
         QList<FieldInfo*> m_fields;
 };
-
-
 
 
 class SceneGraphConnection : public QQuickPaintedItem
@@ -142,6 +155,7 @@ class SceneGraphNode : public QQuickPaintedItem
 class SceneGraphEditor : public QQuickPaintedItem
 {
     Q_OBJECT
+         Q_PROPERTY(ConnectionModel* connection READ connection WRITE setConnection NOTIFY connectionChanged)
  
     public:
         SceneGraphEditor(QQuickItem* parent=0);
@@ -150,7 +164,17 @@ class SceneGraphEditor : public QQuickPaintedItem
         void paint(QPainter* painter);
         Q_INVOKABLE void update_sg() { update(); }; 
 
+        // connection 
+        void setConnection(ConnectionModel* c) {
+            if(m_connection!= c) {
+                m_connection=c;
+                m_connection->addField();
+                connectionChanged();
+            }
+        }
 
+        ConnectionModel* connection() { return m_connection; }
+ 
     protected slots:
         void ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int id);
 
@@ -165,6 +189,7 @@ class SceneGraphEditor : public QQuickPaintedItem
         void sgUpdated();
         void openInConnMenu(int id);
         void openOutConnMenu(int id);
+        void connectionChanged();
 
     private:
         void drawNode(QPoint& point, QPainter* painter);
@@ -177,6 +202,8 @@ class SceneGraphEditor : public QQuickPaintedItem
 
         std::vector<SceneGraphNode*> m_nodes;
         std::vector<SceneGraphConnection*> m_connections;
+        ConnectionModel* m_connection;
 };
+
 
 #endif
