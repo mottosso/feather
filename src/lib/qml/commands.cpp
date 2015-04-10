@@ -96,6 +96,12 @@ status qml::command::run_command(std::string cmd, feather::parameter::ParameterL
     return plugins.run_command(cmd, params);
 }
 
+// GET FIELD BASE
+void qml::command::get_field_base(int uid, int node, int field, feather::field::FieldBase* f)
+{
+
+} 
+
 // GET FIELD VALUE
 
 status qml::command::get_field_val(int uid, int node, int field, bool& val)

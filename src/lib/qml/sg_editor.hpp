@@ -28,7 +28,6 @@
 #include "qml_deps.hpp"
 #include "field.hpp"
 
-
 #define NODE_WIDTH 100
 #define NODE_HEIGHT 30
 #define CONNECTION_WIDTH 10
@@ -76,7 +75,7 @@ class ConnectionModel : public QAbstractListModel
 
         QList<FieldInfo*> fields() { return m_fields; }
 
-        void addField() { m_fields.append(new FieldInfo("C",0,true)); };
+        void addField(QString name, int type, bool locked);
  
     signals:
         void fieldsChanged();
@@ -168,7 +167,7 @@ class SceneGraphEditor : public QQuickPaintedItem
         void setConnection(ConnectionModel* c) {
             if(m_connection!= c) {
                 m_connection=c;
-                m_connection->addField();
+                //m_connection->addField();
                 connectionChanged();
             }
         }

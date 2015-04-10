@@ -28,7 +28,7 @@ Rectangle {
 
     property alias label: label.text
 
-    height: 20
+    height: 15
     width: parent.width
     color: "lightgrey"
     border.color: "black"
@@ -41,7 +41,7 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         //font.bold: true 
-        font.pixelSize: 12
+        font.pixelSize: 10
         color: "black"
     }
 

@@ -42,7 +42,7 @@ Window {
         anchors.left: parent.left
         anchors.right: parent.right
         height: parent.height/2
-        anchors.margins: 2
+        anchors.margins: 1
         border.color: "black"
         border.width: 1
         color: "grey"
@@ -78,7 +78,7 @@ Window {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            anchors.margins: 2
+            anchors.margins: 1
 
             IntField {
                 id: subX 
@@ -121,7 +121,7 @@ Window {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 2
+        anchors.margins: 1
         border.color: "black"
         border.width: 1
         color: "darkgrey"

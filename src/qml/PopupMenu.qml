@@ -32,18 +32,16 @@ Rectangle {
     border.color: "black"
     border.width: 1
     color: "grey"
-    radius: 4
+    radius: 2
 
     property alias model: view.model 
     
     ListView {
         id: view
         anchors.fill: parent
-        anchors.margins: 2
+        anchors.margins: 1
         delegate: MenuButton { label: name } 
-        spacing: 2
+        spacing: 1
     }
-
-
 
 }

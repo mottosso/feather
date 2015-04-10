@@ -25,7 +25,6 @@
 #include "commands.hpp"
 #include "selection.hpp"
 
-
 // Connection
 SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type, QQuickItem* parent) :
     QQuickPaintedItem(parent),
@@ -251,11 +250,18 @@ SceneGraphEditor::~SceneGraphEditor()
 
 void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int id)
 {
+    feather::field::FieldBase* field;
+    feather::qml::command::get_field_base(0,id,0,field);
+    m_connection->addField("TEST",field->type,true); 
+    //m_connection->addField("D",0,true); 
+    //m_connection->addField("E",0,true); 
+
+    m_connection->layoutChanged();
     if(conn == SceneGraphConnection::In)
         openInConnMenu(id);
     else
         openOutConnMenu(id);
-    
+   
     //std::cout << "node option " << button << " " << conn << " " << id << "\n";
 }
 
@@ -342,8 +348,6 @@ void SceneGraphEditor::mouseMoveEvent(QMouseEvent* event){};
 // Connection Model
 ConnectionModel::ConnectionModel(QObject* parent) : QAbstractListModel(parent)
 {
-    m_fields.append(new FieldInfo("A",0,true));
-    m_fields.append(new FieldInfo("B",0,false));
 }
 
 ConnectionModel::~ConnectionModel()
@@ -386,3 +390,7 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
     }
 }
 
+void ConnectionModel::addField(QString name, int type, bool locked)
+{
+    m_fields.append(new FieldInfo(name,type,locked));
+}
