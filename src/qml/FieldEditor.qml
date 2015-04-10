@@ -32,6 +32,7 @@ Window {
     flags: Qt.Tool
     width: 200
     height: 500
+    color: "dimgrey"
 
     SceneGraph { id: sg }
 
@@ -45,7 +46,7 @@ Window {
         border.color: "black"
         border.width: 1
         color: "grey"
-        radius: 4
+        radius: 2
  
         // Node Title
         Rectangle {
@@ -53,10 +54,10 @@ Window {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 20
+            height: 15
             border.color: "black"
             border.width: 1
-            radius: 4
+            radius: 2
             color: "lightgrey"
  
             Text {
@@ -65,8 +66,8 @@ Window {
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                font.bold: true 
-                font.pixelSize: 16
+                font.bold: false 
+                font.pixelSize: 12
                 color: "black"
             }
         }
@@ -132,10 +133,10 @@ Window {
             anchors.top: parent.top 
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 20
+            height: 15
             border.color: "black"
             border.width: 1
-            radius: 4
+            radius: 2
             color: "slategrey"
  
             Text {
@@ -144,8 +145,8 @@ Window {
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                font.bold: true 
-                font.pixelSize: 16
+                font.bold: false 
+                font.pixelSize: 12
                 color: "black"
             }
         }
