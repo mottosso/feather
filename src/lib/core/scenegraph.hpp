@@ -129,6 +129,9 @@ namespace feather
 
         field::FieldBase* get_fieldBase(int uid, int node, int field) {
             field::FieldBase* f = plugins.get_fieldBase(uid,node,field,sg[uid].fields); 
+            if(!f)
+                return f;
+
             if(f->connected){
                 //std::cout << "field is connected to uid:" << f->puid << ", node:" << f->pn << ", field " << f->pf << std::endl;
                 return get_fieldBase(f->puid,f->pn,f->pf);

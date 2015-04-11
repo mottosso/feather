@@ -47,7 +47,7 @@ namespace feather
             status load_plugins();
             status run_command(std::string cmd, feather::parameter::ParameterList params);
             // get field base 
-            void get_field_base(int uid, int node, int field, feather::field::FieldBase* f);
+            status get_field_base(int uid, int field, feather::field::FieldBase* &f);
             // get the field value
             status get_field_val(int uid, int node, int field, bool& val);
             status get_field_val(int uid, int node, int field, int& val);
