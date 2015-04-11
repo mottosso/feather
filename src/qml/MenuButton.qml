@@ -22,11 +22,13 @@
  ***********************************************************************/
 
 import QtQuick 2.1
+import feather.field 1.0
 
 Rectangle {
     id: button
 
     property alias label: label.text
+    property int ftype: 0 // this is the feather::field::Type enum value
 
     height: 15
     width: parent.width
@@ -52,7 +54,7 @@ Rectangle {
             name: "normal"
             PropertyChanges {
                 target: button 
-                color: "lightgrey"
+                color: get_type_color(type) 
             }
         },
 
@@ -96,6 +98,20 @@ Rectangle {
 
     Component.onCompleted: {
         button.state="normal" 
+    }
+
+    function get_type_color(type) {
+        switch(type)
+        {
+            case 0: return "red"; break; // Null
+            case Field.Bool: return "blue"; break;
+            case Field.Int: return "lightgreen"; break;
+            case Field.Float: return "yellow"; break;
+            case Field.Vertex: return "cyan"; break;
+            case Field.Vector: return "pink"; break;
+            case Field.Mesh: return "magenta"; break;
+            default: return "white";
+        }
     }
 
 }

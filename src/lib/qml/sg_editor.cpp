@@ -252,10 +252,10 @@ void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::
 {
     feather::field::FieldBase* pfield;
     feather::qml::command::get_field_base(id,1,pfield);
-    std::cout << "field pointer for uid " << id << " = " << pfield << std::endl;
-    m_connection->addField("TEST",pfield->type,true); 
-    m_connection->addField("D",0,true); 
-    m_connection->addField("E",0,true); 
+    std::cout << "field pointer for uid " << id << " = " << pfield << " type " << pfield->type << std::endl;
+    m_connection->addField("A",pfield->type,true); 
+    m_connection->addField("B",1,true); 
+    m_connection->addField("C",2,true); 
 
     m_connection->layoutChanged();
     if(conn == SceneGraphConnection::In)

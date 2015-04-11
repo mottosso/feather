@@ -40,7 +40,7 @@ Rectangle {
         id: view
         anchors.fill: parent
         anchors.margins: 1
-        delegate: MenuButton { label: name } 
+        delegate: MenuButton { label: name; ftype: type } 
         spacing: 1
     }
 
