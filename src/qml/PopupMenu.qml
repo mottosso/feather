@@ -42,8 +42,11 @@ Rectangle {
         id: view
         anchors.fill: parent
         anchors.margins: 1
-        delegate: MenuButton { label: translation.get_field_name(322,1); ftype: type } 
+        delegate: MenuButton { label: translation.get_field_name(nid,fid); ftype: type } 
         spacing: 1
     }
 
+    function resize() {
+        popup.height = (popup.model.rowCount() * 15) + 4;
+    }
 }

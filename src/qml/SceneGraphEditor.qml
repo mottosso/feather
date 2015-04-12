@@ -92,8 +92,11 @@ Rectangle {
 
     PopupMenu { id: connMenu; model: connModel }
 
-    function openInputConnectionMenu(id) {
-        console.log("fill in node " + id)
+    function openInputConnectionMenu() {
+        connMenu.x = sg_editor.clickX
+        connMenu.y = sg_editor.clickY
+        //console.log(sg_editor.clickX + " " + sg_editor.clickY)
+        connMenu.resize()
         connMenu.visible = true
     }
 

@@ -33,15 +33,21 @@
 #define CONNECTION_WIDTH 10
 #define CONNECTION_HEIGHT 10 
 
+static int mouseClickX=0;
+static int mouseClickY=0;
+
 class FieldInfo { 
     public:
-        FieldInfo(const QString &_name,
-                const int &_type,
-                const bool &_locked):
-            name(_name),
+        FieldInfo(const int &_nid=0,
+                const int &_fid=0,
+                const int &_type=0,
+                const bool &_locked=false):
+            nid(_nid),
+            fid(_fid),
             type(_type),
             locked(_locked) {}
-        QString name;
+        int nid;
+        int fid;
         int type;
         bool locked;
 };
@@ -57,13 +63,14 @@ class ConnectionModel : public QAbstractListModel
 
         enum ERoles
         {
-            NameRole = Qt::UserRole + 1,
-            TypeRole = Qt::UserRole + 2,
-            LockedRole = Qt::UserRole + 3
+            NidRole = Qt::UserRole + 1,
+            FidRole = Qt::UserRole + 2,
+            TypeRole = Qt::UserRole + 3,
+            LockedRole = Qt::UserRole + 4
         };
 
         QHash<int, QByteArray> roleNames() const;
-        int rowCount(const QModelIndex& parent = QModelIndex()) const;
+        Q_INVOKABLE int rowCount(const QModelIndex& parent = QModelIndex()) const;
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
  
         // fields 
@@ -75,7 +82,7 @@ class ConnectionModel : public QAbstractListModel
 
         QList<FieldInfo*> fields() { return m_fields; }
 
-        void addField(QString name, int type, bool locked);
+        void addField(int nid, int fid, int type, bool locked);
  
     signals:
         void fieldsChanged();
@@ -131,7 +138,7 @@ class SceneGraphNode : public QQuickPaintedItem
         void ConnPressed(Qt::MouseButton button,SceneGraphConnection::Connection conn);
  
     signals:
-        void ConnClicked(Qt::MouseButton button, SceneGraphConnection::Connection conn, int id);
+        void ConnClicked(Qt::MouseButton button, SceneGraphConnection::Connection conn, int uid, int nid);
 
     protected:
         void mousePressEvent(QMouseEvent* event);
@@ -155,6 +162,8 @@ class SceneGraphEditor : public QQuickPaintedItem
 {
     Q_OBJECT
          Q_PROPERTY(ConnectionModel* connection READ connection WRITE setConnection NOTIFY connectionChanged)
+         Q_PROPERTY(int clickX READ clickX)
+         Q_PROPERTY(int clickY READ clickY)
  
     public:
         SceneGraphEditor(QQuickItem* parent=0);
@@ -173,9 +182,11 @@ class SceneGraphEditor : public QQuickPaintedItem
         }
 
         ConnectionModel* connection() { return m_connection; }
- 
+        int clickX() { return mouseClickX; }
+        int clickY() { return mouseClickY; }
+
     protected slots:
-        void ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int id);
+        void ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int uid, int nid);
 
     protected:
         void mousePressEvent(QMouseEvent* event);
@@ -186,8 +197,8 @@ class SceneGraphEditor : public QQuickPaintedItem
 
     signals:
         void sgUpdated();
-        void openInConnMenu(int id);
-        void openOutConnMenu(int id);
+        void openInConnMenu();
+        void openOutConnMenu();
         void connectionChanged();
 
     private:
@@ -198,6 +209,9 @@ class SceneGraphEditor : public QQuickPaintedItem
         int m_scale;
         int m_nodeWidth;
         int m_nodeHeight;
+
+        int m_clickX;
+        int m_clickY;
 
         std::vector<SceneGraphNode*> m_nodes;
         std::vector<SceneGraphConnection*> m_connections;

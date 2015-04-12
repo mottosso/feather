@@ -96,6 +96,9 @@ status qml::command::run_command(std::string cmd, feather::parameter::ParameterL
     return plugins.run_command(cmd, params);
 }
 
+
+// FIELDS
+
 // GET FIELD BASE
 status qml::command::get_field_base(int uid, int field, feather::field::FieldBase* &f)
 {
@@ -103,7 +106,7 @@ status qml::command::get_field_base(int uid, int field, feather::field::FieldBas
     //fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
     f = scenegraph::get_fieldBase(uid,sg[uid].node,field);
     if(!f) {
-        std::cout << "NULL FIELD\n";
+        //std::cout << "NULL FIELD\n";
         return status(FAILED,"null field base\n");
     }
     /*

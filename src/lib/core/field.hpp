@@ -65,6 +65,7 @@ namespace feather
             bool update; // this is used to optimize the scenegraph update process - the sg won't call a node's do_it unless one of it's input's fields update flags are set to true.
             // Connections
             // If nothing is connected to this field, both puid and pf are 0
+            int conn_type;
             bool connected; // is the field connected
             int puid; // uid of the node connected to this field
             int pn; // node key of the connected field
@@ -75,9 +76,10 @@ namespace feather
         template <typename _Type, int _Conn>
         struct Field : public FieldBase
         {
-            Field(int _type=0):conn(_Conn){ };
+            Field(int _type=0){ conn_type=_Conn; };
+            //Field(int _type=0):conn(_Conn){ };
             //typedef _Type type;
-            int conn;
+            //int conn;
             _Type value; // this is the field's value if nothing is connected to it
         };
 

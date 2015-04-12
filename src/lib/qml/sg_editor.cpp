@@ -61,6 +61,8 @@ void SceneGraphConnection::paint(QPainter* painter)
 void SceneGraphConnection::mousePressEvent(QMouseEvent* event)
 {
         connClicked(event->button(),m_type);
+        mouseClickX = event->x();
+        mouseClickY = event->y();
 }
 
 void SceneGraphConnection::mouseReleaseEvent(QMouseEvent* event)
@@ -120,7 +122,7 @@ SceneGraphNode::~SceneGraphNode()
 
 void SceneGraphNode::ConnPressed(Qt::MouseButton button, SceneGraphConnection::Connection conn)
 {
-    ConnClicked(button,conn,m_uid); 
+    ConnClicked(button,conn,m_uid,m_node); 
 }
 
 void SceneGraphNode::paint(QPainter* painter)
@@ -227,13 +229,13 @@ void SceneGraphNode::getConnectionPoint(feather::field::connection::Type conn, Q
 
 
 // Editor
-SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(parent), m_scale(100), m_nodeWidth(80), m_nodeHeight(30)
+SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(parent), m_scale(100), m_nodeWidth(80), m_nodeHeight(30), m_clickX(0), m_clickY(0)
 {
     setAcceptedMouseButtons(Qt::AllButtons);
     SceneGraphNode *nodeA = new SceneGraphNode(0,322,this);
-    connect(nodeA,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int)));
+    connect(nodeA,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
     SceneGraphNode *nodeB = new SceneGraphNode(1,320,this);
-    connect(nodeB,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int)));
+    connect(nodeB,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
     m_nodes.push_back(nodeA);
     nodeA->setX(50);
     nodeA->setY(50);
@@ -248,20 +250,26 @@ SceneGraphEditor::~SceneGraphEditor()
 
 }
 
-void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int id)
+void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int uid, int nid)
 {
     feather::field::FieldBase* pfield;
-    feather::qml::command::get_field_base(id,1,pfield);
-    std::cout << "field pointer for uid " << id << " = " << pfield << " type " << pfield->type << std::endl;
-    m_connection->addField("A",pfield->type,true); 
-    m_connection->addField("B",1,true); 
-    m_connection->addField("C",2,true); 
+    int i=1;
+    feather::qml::command::get_field_base(uid,i,pfield);
+
+    while(pfield!=NULL)
+    { 
+        //std::cout << "field pointer for uid " << uid << " = " << pfield << " type " << pfield->type << std::endl;
+        if(pfield->conn_type == feather::field::connection::In)
+            m_connection->addField(nid,i,pfield->type,true); 
+        i++;
+        feather::qml::command::get_field_base(uid,i,pfield);
+    }
 
     m_connection->layoutChanged();
     if(conn == SceneGraphConnection::In)
-        openInConnMenu(id);
+        openInConnMenu();
     else
-        openOutConnMenu(id);
+        openOutConnMenu();
    
     //std::cout << "node option " << button << " " << conn << " " << id << "\n";
 }
@@ -339,7 +347,13 @@ void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn,
     }
 }
 
-void SceneGraphEditor::mousePressEvent(QMouseEvent* event){};
+void SceneGraphEditor::mousePressEvent(QMouseEvent* event)
+{
+    //std::cout << "mouse x=" << event->x() << " y=" << event->y() << std::endl;
+    //m_clickX = event->x();
+    //m_clickY = event->y();
+};
+
 void SceneGraphEditor::mouseReleaseEvent(QMouseEvent* event){};
 void SceneGraphEditor::hoverEnterEvent(QHoverEvent* event){};
 void SceneGraphEditor::hoverLeaveEvent(QHoverEvent* event){};
@@ -360,7 +374,8 @@ QHash<int, QByteArray> ConnectionModel::roleNames() const
 {
 
     QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
-    roles.insert(NameRole, QByteArray("name"));
+    roles.insert(NidRole, QByteArray("nid"));
+    roles.insert(FidRole, QByteArray("fid"));
     roles.insert(TypeRole, QByteArray("type"));
     roles.insert(LockedRole, QByteArray("locked"));
     return roles;
@@ -380,8 +395,10 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
     FieldInfo *dobj = m_fields.at(index.row());
     switch (role) {
         case Qt::DisplayRole: // The default display role now displays the first name as well
-        case NameRole:
-            return QVariant::fromValue(dobj->name);
+        case NidRole:
+            return QVariant::fromValue(dobj->nid);
+        case FidRole:
+            return QVariant::fromValue(dobj->fid);
         case TypeRole:
             return QVariant::fromValue(dobj->type);
         case LockedRole:
@@ -391,7 +408,7 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
     }
 }
 
-void ConnectionModel::addField(QString name, int type, bool locked)
+void ConnectionModel::addField(int nid, int fid, int type, bool locked)
 {
-    m_fields.append(new FieldInfo(name,type,locked));
+    m_fields.append(new FieldInfo(nid,fid,type,locked));
 }
