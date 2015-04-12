@@ -33,8 +33,10 @@
 #define CONNECTION_WIDTH 10
 #define CONNECTION_HEIGHT 10 
 
-static int mouseClickX=0;
-static int mouseClickY=0;
+struct MouseInfo {
+        static int clickX;
+        static int clickY;
+};
 
 class FieldInfo { 
     public:
@@ -182,8 +184,8 @@ class SceneGraphEditor : public QQuickPaintedItem
         }
 
         ConnectionModel* connection() { return m_connection; }
-        int clickX() { return mouseClickX; }
-        int clickY() { return mouseClickY; }
+        int clickX() { return MouseInfo::clickX; }
+        int clickY() { return MouseInfo::clickY; }
 
     protected slots:
         void ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int uid, int nid);
@@ -209,9 +211,6 @@ class SceneGraphEditor : public QQuickPaintedItem
         int m_scale;
         int m_nodeWidth;
         int m_nodeHeight;
-
-        int m_clickX;
-        int m_clickY;
 
         std::vector<SceneGraphNode*> m_nodes;
         std::vector<SceneGraphConnection*> m_connections;

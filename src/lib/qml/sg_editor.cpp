@@ -25,6 +25,9 @@
 #include "commands.hpp"
 #include "selection.hpp"
 
+int MouseInfo::clickX=0;
+int MouseInfo::clickY=0;
+
 // Connection
 SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type, QQuickItem* parent) :
     QQuickPaintedItem(parent),
@@ -60,9 +63,9 @@ void SceneGraphConnection::paint(QPainter* painter)
 
 void SceneGraphConnection::mousePressEvent(QMouseEvent* event)
 {
+        MouseInfo::clickX = event->windowPos().x();
+        MouseInfo::clickY = event->windowPos().y();
         connClicked(event->button(),m_type);
-        mouseClickX = event->x();
-        mouseClickY = event->y();
 }
 
 void SceneGraphConnection::mouseReleaseEvent(QMouseEvent* event)
@@ -229,7 +232,7 @@ void SceneGraphNode::getConnectionPoint(feather::field::connection::Type conn, Q
 
 
 // Editor
-SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(parent), m_scale(100), m_nodeWidth(80), m_nodeHeight(30), m_clickX(0), m_clickY(0)
+SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(parent), m_scale(100), m_nodeWidth(80), m_nodeHeight(30)
 {
     setAcceptedMouseButtons(Qt::AllButtons);
     SceneGraphNode *nodeA = new SceneGraphNode(0,322,this);
@@ -350,8 +353,8 @@ void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn,
 void SceneGraphEditor::mousePressEvent(QMouseEvent* event)
 {
     //std::cout << "mouse x=" << event->x() << " y=" << event->y() << std::endl;
-    //m_clickX = event->x();
-    //m_clickY = event->y();
+    //MouseInfo::clickX = event->x();
+    //MouseInfo::clickY = event->y();
 };
 
 void SceneGraphEditor::mouseReleaseEvent(QMouseEvent* event){};
