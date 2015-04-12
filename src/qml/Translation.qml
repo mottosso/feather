@@ -1,8 +1,8 @@
 /***********************************************************************
  *
- * Filename: PopupMenu.qml 
+ * Filename: Translation.qml 
  *
- * Description: Template Popup menu used by various editors popup menus. 
+ * Description: This file holds all the translations for the interface. 
  *
  * Copyright (C) 2015 Richard Layman, rlayman2000@yahoo.com 
  *
@@ -23,27 +23,25 @@
 
 import QtQuick 2.1
 
-Rectangle {
-    id: popup
-    width: 100
-    height: 200
-    visible: false
+Item {
+    ListModel {
+        id: plugins
 
-    border.color: "black"
-    border.width: 1
-    color: "grey"
-    radius: 2
-
-    property alias model: view.model 
-
-    Translation { id: translation }
-    
-    ListView {
-        id: view
-        anchors.fill: parent
-        anchors.margins: 1
-        delegate: MenuButton { label: translation.get_field_name(322,1); ftype: type } 
-        spacing: 1
+        // Polygon Cube
+        ListElement { name: "SubX"; node: 322; field: 1 }
+        ListElement { name: "SubY"; node: 322; field: 2 }
+        ListElement { name: "SubZ"; node: 322; field: 3 }
     }
 
+    function get_field_name(nid,fid) {
+        var index=0;
+        while(index < plugins.count) {
+            var obj = plugins.get(index);
+            if(obj.node==nid && obj.field==fid)
+                return obj.name;
+            else
+                index++;
+        }
+        return "ERROR"        
+    }
 }
