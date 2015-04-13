@@ -71,7 +71,7 @@ namespace feather
 #define GL_DRAW(__node_enum)\
     template <> void node_gl_draw<__node_enum>(FNode& node, FGlInfo& info)
 
-#define NODE_INIT(__node_enum,__node_type)\
+#define NODE_INIT(__node_enum,__node_type,__node_icon)\
     namespace feather {\
         template <> struct call_do_its<__node_enum> {\
             static status exec(int id, field::Fields& fields) {\
@@ -120,10 +120,21 @@ namespace feather
                 if(id==__node_enum){\
                     return __node_type;\
                 } else {\
-                    return find_nodes<__node_enum-1>::exec(id);\
+                    return find_node_type<__node_enum-1>::exec(id);\
                 }\
             };\
         };\
+        \
+        template <> struct find_node_icon<__node_enum,__node_icon> {\
+            static bool exec(int id,std::string& file) {\
+                if(id==__node_enum){\
+                    file=__node_icon;\
+                } else {\
+                    find_node_icon<__node_enum-1>::exec(id,file);\
+                }\
+            };\
+        };\
+        \
         template <> struct find_create_fields<__node_enum> {\
             static  status exec(int id, field::Fields& fields) {\
                 if(id==__node_enum){\

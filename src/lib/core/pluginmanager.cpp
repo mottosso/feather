@@ -116,6 +116,7 @@ status PluginManager::load_node(PluginData &node)
     node.gl_draw = (void(*)(FNode&,FGlInfo&))dlsym(node.handle, "gl_draw");
     node.node_exist = (bool(*)(int))dlsym(node.handle, "node_exist");
     node.node_type = (int(*)(int))dlsym(node.handle, "node_type");
+    node.node_icon = (void(*)(int,std::string&))dlsym(node.handle, "node_icon");
     node.create_fields = (status(*)(int,field::Fields&))dlsym(node.handle,"create_fields");
     node.get_field = (field::FieldBase*(*)(int,int,field::Fields&))dlsym(node.handle, "get_field");
     node.command_exist = (bool(*)(std::string))dlsym(node.handle, "command_exist");
@@ -175,6 +176,12 @@ int PluginManager::min_uid()
 int PluginManager::max_uid()
 {
     return 2;
+}
+
+status PluginManager::node_icon_file(int nid, std::string& file)
+{
+    std::for_each(m_plugins.begin(),m_plugins.end(), call_node_icon(nid,file) );
+    return status();
 }
 
 void PluginManager::loaded_plugins(std::vector<PluginInfo>& list)

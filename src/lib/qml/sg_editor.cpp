@@ -163,6 +163,7 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
     m_node(_node),
     m_x(0),
     m_y(0),
+    m_imgPath("ui/icons/polycube.svg"),
     m_nodeFillBrush(QBrush(QColor("#6A5ACD"))),
     m_pInConn(new SceneGraphConnection(SceneGraphConnection::In,this)),
     m_pOutConn(new SceneGraphConnection(SceneGraphConnection::Out,this))
@@ -200,13 +201,15 @@ void SceneGraphNode::paint(QPainter* painter)
 
     QPen trimPen = QPen(QColor(0,0,0),2);
     QPen textPen = QPen(QColor("#FFFAFA"),2);
+    QFont textFont("DejaVuSans",8);
+
     //QBrush connInFillBrush = QBrush(QColor("#FF4500"));
     //QBrush connOutFillBrush = QBrush(QColor("#DA70D6"));
 
     // draw the node box
     painter->setPen(trimPen);
     painter->setBrush(m_nodeFillBrush);
-    painter->drawRoundedRect(QRect(2,2,NODE_WIDTH,NODE_HEIGHT),5,5);
+    painter->drawRoundedRect(QRect(2,2,NODE_WIDTH,NODE_HEIGHT),2,2);
 
     // draw the input and output connectors
     //QPoint sConnPoint;
@@ -219,11 +222,18 @@ void SceneGraphNode::paint(QPainter* painter)
     //painter->setBrush(connOutFillBrush);
     //painter->drawEllipse(tConnPoint,6,6);
 
+
     // draw the node's name
     painter->setPen(textPen);
-    painter->drawText(QRect(2,2,NODE_WIDTH,NODE_HEIGHT),Qt::AlignCenter,feather::qml::command::get_node_name(m_uid).c_str());
+    painter->setFont(textFont);
+    painter->drawText(QRect(8,2,NODE_WIDTH-26,NODE_HEIGHT),Qt::AlignLeft|Qt::AlignVCenter,feather::qml::command::get_node_name(m_uid).c_str());
     //setX(m_x);
     //setY(m_y);
+
+    QRectF tgt(NODE_WIDTH-26,4,24,24);
+    QRectF src(0,0,48,48);
+    QImage img(m_imgPath.c_str());
+    painter->drawImage(tgt,img,src);
 }
 
 void SceneGraphNode::mousePressEvent(QMouseEvent* event)

@@ -51,6 +51,7 @@ namespace feather
         void (*gl_draw)(FNode&,FGlInfo&);
         bool (*node_exist)(int); // is there a node with the given type and id in this plugin
         int (*node_type)(int);
+        void (*node_icon)(int,std::string&); // name of icon image in ui/icons path
         status(*create_fields)(int,field::Fields&); // creates a new instance of the nodes fields which will get deleted by the scenegraph when the node is removed.
         field::FieldBase* (*get_field)(int,int,field::Fields&);
         bool (*command_exist)(std::string cmd);
@@ -236,6 +237,26 @@ namespace feather
     };
     
 
+    // NODE ICON IMAGE 
+
+    template <int _Id>
+    struct call_node_icons {
+        static void exec(int nid, std::string& file) { call_node_icons<_Id-1>::exec(nid,file); };
+    };
+
+    template <> struct call_node_icons<0> { static void exec(int nid, std::string& file) {}; };
+ 
+    template <int _Id> void node_icon(int nid, std::string& file) {};
+
+    struct call_node_icon {
+        call_node_icon(int nid, std::string& file) : m_nid(nid),m_file(file){};
+        void operator()(PluginData n) { if(n.node_exist(m_nid)) { /*std::cout << "found gl info for node " << m_node.uid << std::endl;*/ n.node_icon(m_nid,m_file); } };
+
+        private:
+            int m_nid;
+            std::string& m_file;
+    };
+
 
     // PLUGIN MANAGER
 
@@ -253,6 +274,7 @@ namespace feather
             status run_command(std::string cmd, parameter::ParameterList);
             int min_uid();
             int max_uid();
+            status node_icon_file(int nid, std::string& path);
             void loaded_plugins(std::vector<PluginInfo>& list);
 
         private:
@@ -273,6 +295,7 @@ namespace feather
     void gl_draw(feather::FNode& node, feather::FGlInfo& info);\
     bool node_exist(int);\
     int node_type(int);\
+    void node_icon(int,std::string&);\
     feather::status create_fields(int, feather::field::Fields&);\
     feather::field::FieldBase* get_field(int,int,feather::field::Fields&);\
     bool command_exist(std::string cmd);\
@@ -309,6 +332,10 @@ namespace feather
     /* get the node type */\
     int node_type(int id) {\
         return find_node_type<MAX_NODE_ID>::exec(id);\
+    };\
+    /* get the node icon */\
+    void node_icon(int id, std::string& file) {\
+        return find_node_icon<MAX_NODE_ID>::exec(id,file);\
     };\
     \
     /* create a node field */\
