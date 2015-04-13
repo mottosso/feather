@@ -47,6 +47,6 @@ Rectangle {
     }
 
     function resize() {
-        popup.height = (popup.model.rowCount() * 15) + 4;
+        popup.height = (popup.model.rowCount() * 15) + popup.model.rowCount();
     }
 }

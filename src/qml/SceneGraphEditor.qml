@@ -92,7 +92,7 @@ Rectangle {
 
     PopupMenu { id: connMenu; model: connModel }
 
-    function openInputConnectionMenu() {
+    function openConnectionMenu() {
         connMenu.x = sg_editor.clickX
         connMenu.y = sg_editor.clickY
         console.log(sg_editor.clickX + " " + sg_editor.clickY)
@@ -102,6 +102,6 @@ Rectangle {
 
     Component.onCompleted: {
         sg_editor.update_sg()
-        sg_editor.openInConnMenu.connect(openInputConnectionMenu)
+        sg_editor.openConnMenu.connect(openConnectionMenu)
     }
 }

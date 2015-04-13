@@ -28,9 +28,20 @@ Item {
         id: plugins
 
         // Polygon Cube
+        // In
+        ListElement { name: "Mesh"; node: 320; field: 1 }
+        ListElement { name: "Test"; node: 320; field: 2 }
+        // Out 
+        //ListElement { name: ""; node: 320; field: 1 }
+
+        // Polygon Cube
+        // In
         ListElement { name: "SubX"; node: 322; field: 1 }
         ListElement { name: "SubY"; node: 322; field: 2 }
         ListElement { name: "SubZ"; node: 322; field: 3 }
+        // Out 
+        ListElement { name: "Mesh"; node: 322; field: 4 }
+
     }
 
     function get_field_name(nid,fid) {

@@ -259,22 +259,26 @@ void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::
     int i=1;
     feather::qml::command::get_field_base(uid,i,pfield);
 
+    m_connection->clear();
+ 
     while(pfield!=NULL)
     { 
-        //std::cout << "field pointer for uid " << uid << " = " << pfield << " type " << pfield->type << std::endl;
-        if(pfield->conn_type == feather::field::connection::In)
-            m_connection->addField(nid,i,pfield->type,true); 
+        if(conn == SceneGraphConnection::In) {
+            if(pfield->conn_type == feather::field::connection::In)
+                m_connection->addField(nid,i,pfield->type,true); 
+        }
+
+        if(conn == SceneGraphConnection::Out) {
+            if(pfield->conn_type == feather::field::connection::Out)
+                m_connection->addField(nid,i,pfield->type,true); 
+        }
+
         i++;
         feather::qml::command::get_field_base(uid,i,pfield);
     }
 
     m_connection->layoutChanged();
-    if(conn == SceneGraphConnection::In)
-        openInConnMenu();
-    else
-        openOutConnMenu();
-   
-    //std::cout << "node option " << button << " " << conn << " " << id << "\n";
+    openConnMenu();
 }
 
 void SceneGraphEditor::paint(QPainter* painter)
@@ -350,13 +354,7 @@ void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn,
     }
 }
 
-void SceneGraphEditor::mousePressEvent(QMouseEvent* event)
-{
-    //std::cout << "mouse x=" << event->x() << " y=" << event->y() << std::endl;
-    //MouseInfo::clickX = event->x();
-    //MouseInfo::clickY = event->y();
-};
-
+void SceneGraphEditor::mousePressEvent(QMouseEvent* event){};
 void SceneGraphEditor::mouseReleaseEvent(QMouseEvent* event){};
 void SceneGraphEditor::hoverEnterEvent(QHoverEvent* event){};
 void SceneGraphEditor::hoverLeaveEvent(QHoverEvent* event){};
@@ -409,6 +407,11 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
         default:
             return QVariant();
     }
+}
+
+void ConnectionModel::clear()
+{
+    m_fields.clear();
 }
 
 void ConnectionModel::addField(int nid, int fid, int type, bool locked)

@@ -74,6 +74,7 @@ class ConnectionModel : public QAbstractListModel
         QHash<int, QByteArray> roleNames() const;
         Q_INVOKABLE int rowCount(const QModelIndex& parent = QModelIndex()) const;
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+        void clear();
  
         // fields 
         void setFields(QList<FieldInfo*>& f) {
@@ -199,8 +200,7 @@ class SceneGraphEditor : public QQuickPaintedItem
 
     signals:
         void sgUpdated();
-        void openInConnMenu();
-        void openOutConnMenu();
+        void openConnMenu();
         void connectionChanged();
 
     private:
