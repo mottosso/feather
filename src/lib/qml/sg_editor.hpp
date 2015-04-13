@@ -33,6 +33,15 @@
 #define CONNECTION_WIDTH 10
 #define CONNECTION_HEIGHT 10 
 
+struct SGState {
+    // Source Node Info
+    // This is used for when connection node fields together
+    // and keeping track of the currently selected nodes
+    static int srcUid;
+    static int srcNid;
+    static int srcFid;
+};
+
 struct MouseInfo {
         static int clickX;
         static int clickY;

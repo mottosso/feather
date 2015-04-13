@@ -25,9 +25,71 @@
 #include "commands.hpp"
 #include "selection.hpp"
 
+
 int MouseInfo::clickX=0;
 int MouseInfo::clickY=0;
 
+
+
+// CONNECTION MODEL
+
+
+ConnectionModel::ConnectionModel(QObject* parent) : QAbstractListModel(parent)
+{
+}
+
+ConnectionModel::~ConnectionModel()
+{
+
+}                                                                        
+
+QHash<int, QByteArray> ConnectionModel::roleNames() const
+{
+
+    QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
+    roles.insert(NidRole, QByteArray("nid"));
+    roles.insert(FidRole, QByteArray("fid"));
+    roles.insert(TypeRole, QByteArray("type"));
+    roles.insert(LockedRole, QByteArray("locked"));
+    return roles;
+}
+
+int ConnectionModel::rowCount(const QModelIndex& parent) const
+{
+    return m_fields.size();
+}
+
+QVariant ConnectionModel::data(const QModelIndex& index, int role) const
+{
+    if (!index.isValid())
+        return QVariant(); // Return Null variant if index is invalid
+    if (index.row() > (m_fields.size()-1) )
+        return QVariant();
+    FieldInfo *dobj = m_fields.at(index.row());
+    switch (role) {
+        case Qt::DisplayRole: // The default display role now displays the first name as well
+        case NidRole:
+            return QVariant::fromValue(dobj->nid);
+        case FidRole:
+            return QVariant::fromValue(dobj->fid);
+        case TypeRole:
+            return QVariant::fromValue(dobj->type);
+        case LockedRole:
+            return QVariant::fromValue(dobj->locked);
+        default:
+            return QVariant();
+    }
+}
+
+void ConnectionModel::clear()
+{
+    m_fields.clear();
+}
+
+void ConnectionModel::addField(int nid, int fid, int type, bool locked)
+{
+    m_fields.append(new FieldInfo(nid,fid,type,locked));
+}
 // Connection
 SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type, QQuickItem* parent) :
     QQuickPaintedItem(parent),
@@ -46,6 +108,10 @@ SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type
     //std::cout << "EDGE for node 0 is " << feather::sg[connection.first].n1 << "=>" << feather::sg[connection.first].n2 << std::endl;
  
 }
+
+
+// SCENEGRAPH
+
 
 SceneGraphConnection::~SceneGraphConnection()
 {
@@ -360,61 +426,3 @@ void SceneGraphEditor::hoverEnterEvent(QHoverEvent* event){};
 void SceneGraphEditor::hoverLeaveEvent(QHoverEvent* event){};
 void SceneGraphEditor::mouseMoveEvent(QMouseEvent* event){};
 
-
-// Connection Model
-ConnectionModel::ConnectionModel(QObject* parent) : QAbstractListModel(parent)
-{
-}
-
-ConnectionModel::~ConnectionModel()
-{
-
-}                                                                        
-
-QHash<int, QByteArray> ConnectionModel::roleNames() const
-{
-
-    QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
-    roles.insert(NidRole, QByteArray("nid"));
-    roles.insert(FidRole, QByteArray("fid"));
-    roles.insert(TypeRole, QByteArray("type"));
-    roles.insert(LockedRole, QByteArray("locked"));
-    return roles;
-}
-
-int ConnectionModel::rowCount(const QModelIndex& parent) const
-{
-    return m_fields.size();
-}
-
-QVariant ConnectionModel::data(const QModelIndex& index, int role) const
-{
-    if (!index.isValid())
-        return QVariant(); // Return Null variant if index is invalid
-    if (index.row() > (m_fields.size()-1) )
-        return QVariant();
-    FieldInfo *dobj = m_fields.at(index.row());
-    switch (role) {
-        case Qt::DisplayRole: // The default display role now displays the first name as well
-        case NidRole:
-            return QVariant::fromValue(dobj->nid);
-        case FidRole:
-            return QVariant::fromValue(dobj->fid);
-        case TypeRole:
-            return QVariant::fromValue(dobj->type);
-        case LockedRole:
-            return QVariant::fromValue(dobj->locked);
-        default:
-            return QVariant();
-    }
-}
-
-void ConnectionModel::clear()
-{
-    m_fields.clear();
-}
-
-void ConnectionModel::addField(int nid, int fid, int type, bool locked)
-{
-    m_fields.append(new FieldInfo(nid,fid,type,locked));
-}
