@@ -51,7 +51,7 @@ namespace feather
         void (*gl_draw)(FNode&,FGlInfo&);
         bool (*node_exist)(int); // is there a node with the given type and id in this plugin
         int (*node_type)(int);
-        void (*node_icon)(int,std::string&); // name of icon image in ui/icons path
+        bool (*node_icon)(int,std::string&); // name of icon image in ui/icons path
         status(*create_fields)(int,field::Fields&); // creates a new instance of the nodes fields which will get deleted by the scenegraph when the node is removed.
         field::FieldBase* (*get_field)(int,int,field::Fields&);
         bool (*command_exist)(std::string cmd);
@@ -158,6 +158,16 @@ namespace feather
     };
 
     template <> struct find_node_type<0> { static bool exec(int id) { return false; }; };
+
+
+    // NODE ICON 
+
+    template <int _Id>
+    struct find_node_icon {
+        static bool exec(int id,std::string& file) { return find_node_icon<_Id-1>::exec(id,file); };
+    };
+
+    template <> struct find_node_icon<0> { static bool exec(int id,std::string& file) { return false; }; };
 
 
 
@@ -274,7 +284,7 @@ namespace feather
             status run_command(std::string cmd, parameter::ParameterList);
             int min_uid();
             int max_uid();
-            status node_icon_file(int nid, std::string& path);
+            status node_icon_file(int nid, std::string& file);
             void loaded_plugins(std::vector<PluginInfo>& list);
 
         private:
@@ -295,7 +305,7 @@ namespace feather
     void gl_draw(feather::FNode& node, feather::FGlInfo& info);\
     bool node_exist(int);\
     int node_type(int);\
-    void node_icon(int,std::string&);\
+    bool node_icon(int,std::string&);\
     feather::status create_fields(int, feather::field::Fields&);\
     feather::field::FieldBase* get_field(int,int,feather::field::Fields&);\
     bool command_exist(std::string cmd);\
@@ -334,7 +344,7 @@ namespace feather
         return find_node_type<MAX_NODE_ID>::exec(id);\
     };\
     /* get the node icon */\
-    void node_icon(int id, std::string& file) {\
+    bool node_icon(int id, std::string& file) {\
         return find_node_icon<MAX_NODE_ID>::exec(id,file);\
     };\
     \

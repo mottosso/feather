@@ -125,7 +125,7 @@ namespace feather
             };\
         };\
         \
-        template <> struct find_node_icon<__node_enum,__node_icon> {\
+        template <> struct find_node_icon<__node_enum> {\
             static bool exec(int id,std::string& file) {\
                 if(id==__node_enum){\
                     file=__node_icon;\

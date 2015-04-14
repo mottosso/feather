@@ -127,6 +127,10 @@ namespace feather
             boost::edges(sg);    
         };
 
+        status get_node_icon(int nid, std::string& file) {
+            return plugins.node_icon_file(nid,file);
+        };
+
         field::FieldBase* get_fieldBase(int uid, int node, int field) {
             field::FieldBase* f = plugins.get_fieldBase(uid,node,field,sg[uid].fields); 
             if(!f)

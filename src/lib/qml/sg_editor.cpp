@@ -163,7 +163,7 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
     m_node(_node),
     m_x(0),
     m_y(0),
-    m_imgPath("ui/icons/polycube.svg"),
+    m_imgDir("ui/icons/"),
     m_nodeFillBrush(QBrush(QColor("#6A5ACD"))),
     m_pInConn(new SceneGraphConnection(SceneGraphConnection::In,this)),
     m_pOutConn(new SceneGraphConnection(SceneGraphConnection::Out,this))
@@ -183,6 +183,9 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
 
     connect(m_pInConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
     connect(m_pOutConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
+
+    feather::qml::command::get_node_icon(m_node,m_imgFile);
+    m_imgPath << m_imgDir << m_imgFile;
 }
 
 SceneGraphNode::~SceneGraphNode()
@@ -232,7 +235,7 @@ void SceneGraphNode::paint(QPainter* painter)
 
     QRectF tgt(NODE_WIDTH-26,4,24,24);
     QRectF src(0,0,48,48);
-    QImage img(m_imgPath.c_str());
+    QImage img(m_imgPath.str().c_str());
     painter->drawImage(tgt,img,src);
 }
 

@@ -116,7 +116,7 @@ status PluginManager::load_node(PluginData &node)
     node.gl_draw = (void(*)(FNode&,FGlInfo&))dlsym(node.handle, "gl_draw");
     node.node_exist = (bool(*)(int))dlsym(node.handle, "node_exist");
     node.node_type = (int(*)(int))dlsym(node.handle, "node_type");
-    node.node_icon = (void(*)(int,std::string&))dlsym(node.handle, "node_icon");
+    node.node_icon = (bool(*)(int,std::string&))dlsym(node.handle, "node_icon");
     node.create_fields = (status(*)(int,field::Fields&))dlsym(node.handle,"create_fields");
     node.get_field = (field::FieldBase*(*)(int,int,field::Fields&))dlsym(node.handle, "get_field");
     node.command_exist = (bool(*)(std::string))dlsym(node.handle, "command_exist");
