@@ -37,6 +37,8 @@ struct SGState {
     // Source Node Info
     // This is used for when connection node fields together
     // and keeping track of the currently selected nodes
+    enum Mode { Normal, FieldConnection };
+    static Mode mode;
     static int srcUid;
     static int srcNid;
     static int srcFid;
@@ -186,6 +188,7 @@ class SceneGraphEditor : public QQuickPaintedItem
 
         void paint(QPainter* painter);
         Q_INVOKABLE void update_sg() { update(); }; 
+        Q_INVOKABLE void startConnection() { SGState::mode=SGState::FieldConnection; };
 
         // connection 
         void setConnection(ConnectionModel* c) {

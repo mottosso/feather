@@ -29,7 +29,10 @@
 int MouseInfo::clickX=0;
 int MouseInfo::clickY=0;
 
-
+SGState::Mode SGState::mode=SGState::Normal;
+int SGState::srcUid=0;
+int SGState::srcNid=0;
+int SGState::srcFid=0;
 
 // CONNECTION MODEL
 
@@ -40,12 +43,10 @@ ConnectionModel::ConnectionModel(QObject* parent) : QAbstractListModel(parent)
 
 ConnectionModel::~ConnectionModel()
 {
-
 }                                                                        
 
 QHash<int, QByteArray> ConnectionModel::roleNames() const
 {
-
     QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
     roles.insert(NidRole, QByteArray("nid"));
     roles.insert(FidRole, QByteArray("fid"));
@@ -152,7 +153,7 @@ void SceneGraphConnection::hoverLeaveEvent(QHoverEvent* event)
 
 void SceneGraphConnection::mouseMoveEvent(QMouseEvent* event)
 {
-
+    QQuickPaintedItem::mouseMoveEvent(event); 
 }
 
 
@@ -414,7 +415,13 @@ void SceneGraphEditor::drawConnection(QPointF& snode, QPointF& tnode, feather::f
     //std::cout << "snode x:" << snode.x() << ", y:" << snode.y() << ", tnode x: " << tnode.x() << ", y:" << tnode.y() << std::endl;
     QPen pathPen = QPen(QColor("#9ACD32"),2);
     path.moveTo(snode.x()+2,snode.y()+2);
-    path.cubicTo(tnode.x(),snode.y(),snode.x(),tnode.y(),tnode.x()-2,tnode.y()+2);
+
+    if(SGState::mode==SGState::Normal)
+        path.cubicTo(tnode.x(),snode.y(),snode.x(),tnode.y(),tnode.x()-2,tnode.y()+2);
+    else 
+        path.cubicTo(tnode.x(),snode.y(),snode.x(),tnode.y(),tnode.x()-2,tnode.y()+2);
+
+
     painter->setPen(pathPen);
     painter->drawPath(path);
 }
@@ -437,5 +444,5 @@ void SceneGraphEditor::mousePressEvent(QMouseEvent* event){};
 void SceneGraphEditor::mouseReleaseEvent(QMouseEvent* event){};
 void SceneGraphEditor::hoverEnterEvent(QHoverEvent* event){};
 void SceneGraphEditor::hoverLeaveEvent(QHoverEvent* event){};
-void SceneGraphEditor::mouseMoveEvent(QMouseEvent* event){};
+void SceneGraphEditor::mouseMoveEvent(QMouseEvent* event){ std::cout << "mouse move " << event->x() << " " << event->y() << "\n"; };
 
