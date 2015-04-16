@@ -33,6 +33,8 @@
 #define CONNECTION_WIDTH 10
 #define CONNECTION_HEIGHT 10 
 
+class SceneGraphEditor;
+
 struct SGState {
     // Source Node Info
     // This is used for when connection node fields together
@@ -42,6 +44,7 @@ struct SGState {
     static int srcUid;
     static int srcNid;
     static int srcFid;
+    static SceneGraphEditor* pSge;
 };
 
 struct MouseInfo {

@@ -33,6 +33,7 @@ SGState::Mode SGState::mode=SGState::Normal;
 int SGState::srcUid=0;
 int SGState::srcNid=0;
 int SGState::srcFid=0;
+SceneGraphEditor* SGState::pSge=NULL;
 
 // CONNECTION MODEL
 
@@ -94,8 +95,7 @@ void ConnectionModel::addField(int nid, int fid, int type, bool locked)
 // Connection
 SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type, QQuickItem* parent) :
     QQuickPaintedItem(parent),
-    m_type(type),
-    m_connFillBrush(QBrush(QColor("#DA70D6")))
+    m_type(type)
 {
     setWidth(CONNECTION_WIDTH);
     setHeight(CONNECTION_HEIGHT);
@@ -107,7 +107,10 @@ SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type
     //feather::FNodeDescriptor n = 0;
     //feather::FFieldConnection connection = boost::edge(n);
     //std::cout << "EDGE for node 0 is " << feather::sg[connection.first].n1 << "=>" << feather::sg[connection.first].n2 << std::endl;
- 
+    if(m_type == In)
+        m_connFillBrush = QBrush(QColor("#50C878"));
+    else
+        m_connFillBrush = QBrush(QColor("#9400D3"));
 }
 
 
@@ -116,14 +119,11 @@ SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type
 
 SceneGraphConnection::~SceneGraphConnection()
 {
-
 }
 
 void SceneGraphConnection::paint(QPainter* painter)
 {
-    
     painter->setRenderHints(QPainter::Antialiasing, true);
-
     painter->setBrush(m_connFillBrush);
     painter->drawEllipse(QPoint(5,5),CONNECTION_WIDTH/2,CONNECTION_HEIGHT/2);
 }
@@ -132,6 +132,7 @@ void SceneGraphConnection::mousePressEvent(QMouseEvent* event)
 {
         MouseInfo::clickX = event->windowPos().x();
         MouseInfo::clickY = event->windowPos().y();
+        SGState::mode = SGState::FieldConnection;
         connClicked(event->button(),m_type);
 }
 
@@ -147,13 +148,18 @@ void SceneGraphConnection::hoverEnterEvent(QHoverEvent* event)
 
 void SceneGraphConnection::hoverLeaveEvent(QHoverEvent* event)
 {
-    m_connFillBrush.setColor(QColor("#DA70D6"));
+    if(m_type == In)
+        m_connFillBrush = QBrush(QColor("#50C878"));
+    else
+        m_connFillBrush = QBrush(QColor("#9400D3"));
     update();
 }
 
 void SceneGraphConnection::mouseMoveEvent(QMouseEvent* event)
 {
-    QQuickPaintedItem::mouseMoveEvent(event); 
+    MouseInfo::clickX = event->windowPos().x(); 
+    MouseInfo::clickY = event->windowPos().y(); 
+    SGState::pSge->update();
 }
 
 
@@ -314,6 +320,7 @@ void SceneGraphNode::getConnectionPoint(feather::field::connection::Type conn, Q
 // Editor
 SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(parent), m_scale(100), m_nodeWidth(80), m_nodeHeight(30)
 {
+    SGState::pSge = this;
     setAcceptedMouseButtons(Qt::AllButtons);
     SceneGraphNode *nodeA = new SceneGraphNode(0,322,this);
     connect(nodeA,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
@@ -363,13 +370,13 @@ void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::
 
 void SceneGraphEditor::paint(QPainter* painter)
 {
-    setFillColor(QColor("#4682B4"));
+    setFillColor(QColor("#696969"));
     painter->setRenderHints(QPainter::Antialiasing, true);
     QPointF n1;
     QPointF n2;
     m_nodes.at(0)->outConnectionPoint(n1);
     m_nodes.at(1)->inConnectionPoint(n2);
-    drawConnection(n2,n1,feather::field::Double,painter);
+    drawConnection(n1,n2,feather::field::Double,painter);
 }
 
 void SceneGraphEditor::drawNode(QPoint& point, QPainter* painter)
@@ -413,13 +420,24 @@ void SceneGraphEditor::drawConnection(QPointF& snode, QPointF& tnode, feather::f
     brush.setStyle(Qt::NoBrush);
 
     //std::cout << "snode x:" << snode.x() << ", y:" << snode.y() << ", tnode x: " << tnode.x() << ", y:" << tnode.y() << std::endl;
-    QPen pathPen = QPen(QColor("#9ACD32"),2);
+    QPen pathPen;
+    if(SGState::mode==SGState::Normal)
+        pathPen = QPen(QColor("#99BADD"),1);
+    else
+        pathPen = QPen(QColor("#FFEF00"),2);
+
+
+
     path.moveTo(snode.x()+2,snode.y()+2);
 
     if(SGState::mode==SGState::Normal)
-        path.cubicTo(tnode.x(),snode.y(),snode.x(),tnode.y(),tnode.x()-2,tnode.y()+2);
+        path.cubicTo(tnode.x(),snode.y(),
+                snode.x(),tnode.y(),
+                tnode.x()-2,tnode.y()+2);
     else 
-        path.cubicTo(tnode.x(),snode.y(),snode.x(),tnode.y(),tnode.x()-2,tnode.y()+2);
+        path.cubicTo(MouseInfo::clickX,snode.y(),
+                snode.x(),MouseInfo::clickY-35,
+                MouseInfo::clickX-2,MouseInfo::clickY-35);
 
 
     painter->setPen(pathPen);
@@ -444,5 +462,5 @@ void SceneGraphEditor::mousePressEvent(QMouseEvent* event){};
 void SceneGraphEditor::mouseReleaseEvent(QMouseEvent* event){};
 void SceneGraphEditor::hoverEnterEvent(QHoverEvent* event){};
 void SceneGraphEditor::hoverLeaveEvent(QHoverEvent* event){};
-void SceneGraphEditor::mouseMoveEvent(QMouseEvent* event){ std::cout << "mouse move " << event->x() << " " << event->y() << "\n"; };
+void SceneGraphEditor::mouseMoveEvent(QMouseEvent* event){};
 

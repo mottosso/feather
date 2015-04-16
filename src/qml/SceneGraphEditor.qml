@@ -29,7 +29,7 @@ import feather.editors 1.0
 
 Rectangle {
     id: sgWindow
-    color: "blue" 
+    color: "black" 
 
     // Actions
 
