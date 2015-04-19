@@ -130,14 +130,16 @@ void SceneGraphConnection::paint(QPainter* painter)
 
 void SceneGraphConnection::mousePressEvent(QMouseEvent* event)
 {
-        MouseInfo::clickX = event->windowPos().x();
-        MouseInfo::clickY = event->windowPos().y();
-        SGState::mode = SGState::FieldConnection;
-        connClicked(event->button(),m_type);
+    MouseInfo::clickX = event->windowPos().x();
+    MouseInfo::clickY = event->windowPos().y();
+    SGState::mode = SGState::FieldConnection;
+    connClicked(event->button(),m_type);
 }
 
 void SceneGraphConnection::mouseReleaseEvent(QMouseEvent* event)
 {
+    SGState::mode = SGState::Normal;
+    update();
 }
 
 void SceneGraphConnection::hoverEnterEvent(QHoverEvent* event)
