@@ -38,6 +38,7 @@ PopupMenu {
         ListElement {
             name: "B"
         }
+
     }
     
     model: popupModel

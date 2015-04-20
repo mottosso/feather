@@ -84,6 +84,7 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true 
         acceptedButtons: Qt.LeftButton | Qt.RightButton
+        propagateComposedEvents: true
 
         onPressed: {
             if(mouse.button == Qt.RightButton)
