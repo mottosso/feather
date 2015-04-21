@@ -29,6 +29,8 @@ Rectangle {
 
     property alias label: label.text
     property int ftype: 0 // this is the feather::field::Type enum value
+    property int fid: 0
+    property int nid: 0
 
     height: 15
     width: parent.width
@@ -36,6 +38,8 @@ Rectangle {
     border.color: "black"
     border.width: 1
     radius: 2
+
+    signal leftButtonPress(int nid, int fid)
 
     Text {
         id: label

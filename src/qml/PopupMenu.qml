@@ -38,13 +38,24 @@ Rectangle {
 
     Translation { id: translation }
     
+    function leftButtonPressed(int nid, int fid) {
+        console.log("left button pressed")
+    }
+
     ListView {
         id: view
         anchors.fill: parent
         anchors.margins: 1
-        delegate: MenuButton { label: translation.get_field_name(nid,fid); ftype: type } 
+        delegate: MenuButton {
+            id: button
+            label: translation.get_field_name(nid,fid)
+            ftype: type
+            nid: nide
+            fid: fid
+        } 
         spacing: 1
 
+        Component.onCompleted: { button.leftButtonPress.connect(leftButtonPressed) }
     }
 
     function resize() {
