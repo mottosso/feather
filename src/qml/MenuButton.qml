@@ -39,8 +39,7 @@ Rectangle {
     border.width: 1
     radius: 2
 
-    signal leftButtonPress(int nid, int fid)
-    signal rightButtonPress(int nid, int fid)
+    signal connectionButtonPress(int button, int nid, int fid)
 
     Text {
         id: label
@@ -92,10 +91,7 @@ Rectangle {
         propagateComposedEvents: true
 
         onPressed: {
-            if(mouse.button == Qt.LeftButton)
-                leftButtonPress(nodeId,fieldId)
-            if(mouse.button == Qt.RightButton)
-                rightButtonPress(nodeId,fieldId)
+            connectionButtonPress(mouse.button,nodeId,fieldId)
         }
 
         onReleased: { button.state="normal" }

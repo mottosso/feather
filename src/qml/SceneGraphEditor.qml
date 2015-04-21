@@ -100,18 +100,13 @@ Rectangle {
         connMenu.visible = true
     }
 
-    function leftButtonPressed(nid,fid) {
-        console.log("left button pressed for node " + nid + ", field " + fid)
+    function connectionButtonPressed(button,nid,fid) {
+        sg_editor.connectionMousePressed(button,nid,fid);
     }
     
-    function rightButtonPressed(nid,fid) {
-        console.log("right button pressed for node " + nid + ", field " + fid)
-    }
- 
     Component.onCompleted: {
         sg_editor.update_sg()
         sg_editor.openConnMenu.connect(openConnectionMenu)
-        connMenu.leftButtonPressed.connect(leftButtonPressed)
-        connMenu.rightButtonPressed.connect(rightButtonPressed)
+        connMenu.connectionButtonPressed.connect(connectionButtonPressed)
     }
 }

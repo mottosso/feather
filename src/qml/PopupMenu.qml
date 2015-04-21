@@ -36,21 +36,10 @@ Rectangle {
 
     property alias model: view.model 
 
-    signal leftButtonPressed(int nid, int fid)
-    signal rightButtonPressed(int nid, int fid)
+    signal connectionButtonPressed(int button, int nid, int fid)
 
     Translation { id: translation }
    
-    /* 
-    function leftButtonPressed(nid,fid) {
-        console.log("left button pressed for node " + nid + ", field " + fid)
-    }
-    
-    function rightButtonPressed(nid,fid) {
-        console.log("right button pressed for node " + nid + ", field " + fid)
-    }
-    */
-
     ListView {
         id: view
         anchors.fill: parent
@@ -61,8 +50,7 @@ Rectangle {
             nodeId: nid
             fieldId: fid
             Component.onCompleted: {
-                leftButtonPress.connect(leftButtonPressed)
-                rightButtonPress.connect(rightButtonPressed)
+                connectionButtonPress.connect(connectionButtonPressed)
             }
         } 
         spacing: 1

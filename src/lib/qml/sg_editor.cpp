@@ -370,6 +370,16 @@ void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::
     openConnMenu();
 }
 
+void SceneGraphEditor::connectionMousePressed(int button, int nid, int fid)
+{
+    std::cout << "connection mouse pressed, button " << button << " nid " << nid << " fid " << fid << std::endl;
+}
+
+void SceneGraphEditor::connectionMouseReleased(int button, int nid, int fid)
+{
+
+}
+
 void SceneGraphEditor::paint(QPainter* painter)
 {
     setFillColor(QColor("#696969"));
