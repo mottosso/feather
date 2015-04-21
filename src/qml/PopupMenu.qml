@@ -45,15 +45,6 @@ Rectangle {
         delegate: MenuButton { label: translation.get_field_name(nid,fid); ftype: type } 
         spacing: 1
 
-    MouseArea {
-        id: mouseListArea
-        anchors.fill: parent
-        //hoverEnabled: true
-        //propagateComposedEvents: true
-
-        onExited: { popup.visible=false } 
-    }
-
     }
 
     function resize() {

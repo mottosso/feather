@@ -87,11 +87,11 @@ Rectangle {
         propagateComposedEvents: true
 
         onPressed: {
-            if(mouse.button == Qt.RightButton)
-                popup.popup()
+            if(mouse.button == Qt.LeftButton){
+               console.log("lpress") 
+            }
         }
 
-        //onPositionChanged: { }
         onReleased: { button.state="normal" }
         onEntered: { button.state="hover" }
         onExited: { button.state="normal" }
