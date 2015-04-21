@@ -36,26 +36,37 @@ Rectangle {
 
     property alias model: view.model 
 
+    signal leftButtonPressed(int nid, int fid)
+    signal rightButtonPressed(int nid, int fid)
+
     Translation { id: translation }
-    
-    function leftButtonPressed(int nid, int fid) {
-        console.log("left button pressed")
+   
+    /* 
+    function leftButtonPressed(nid,fid) {
+        console.log("left button pressed for node " + nid + ", field " + fid)
     }
+    
+    function rightButtonPressed(nid,fid) {
+        console.log("right button pressed for node " + nid + ", field " + fid)
+    }
+    */
 
     ListView {
         id: view
         anchors.fill: parent
         anchors.margins: 1
         delegate: MenuButton {
-            id: button
             label: translation.get_field_name(nid,fid)
             ftype: type
-            nid: nide
-            fid: fid
+            nodeId: nid
+            fieldId: fid
+            Component.onCompleted: {
+                leftButtonPress.connect(leftButtonPressed)
+                rightButtonPress.connect(rightButtonPressed)
+            }
         } 
         spacing: 1
 
-        Component.onCompleted: { button.leftButtonPress.connect(leftButtonPressed) }
     }
 
     function resize() {
