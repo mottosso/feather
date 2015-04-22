@@ -404,8 +404,6 @@ void SceneGraphEditor::drawConnection(QPointF& snode, QPointF& tnode, feather::f
     else
         pathPen = QPen(QColor("#FFEF00"),2);
 
-
-
     path.moveTo(snode.x()+2,snode.y()+2);
 
     if(SGState::mode==SGState::Normal)
@@ -416,7 +414,6 @@ void SceneGraphEditor::drawConnection(QPointF& snode, QPointF& tnode, feather::f
         path.cubicTo(MouseInfo::clickX,snode.y(),
                 snode.x(),MouseInfo::clickY-35,
                 MouseInfo::clickX-2,MouseInfo::clickY-35);
-
 
     painter->setPen(pathPen);
     painter->drawPath(path);

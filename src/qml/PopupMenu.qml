@@ -50,7 +50,7 @@ Rectangle {
             nodeId: nid
             fieldId: fid
             Component.onCompleted: {
-                connectionButtonPress.connect(connectionButtonPressed)
+                connectionButtonPress.connect(doConnectionPress)
             }
         } 
         spacing: 1
@@ -61,4 +61,8 @@ Rectangle {
         popup.height = (popup.model.rowCount() * 15) + popup.model.rowCount();
     }
 
+    function doConnectionPress(button,nid,fid) {
+        popup.visible=false
+        connectionButtonPressed(button,nid,fid)
+    }
 }
