@@ -377,12 +377,17 @@ void SceneGraphEditor::connectionMousePressed(int button, int nid, int fid)
 
 void SceneGraphEditor::connectionMouseReleased(int button, int nid, int fid)
 {
-
+    std::cout << "connection mouse released, button " << button << " nid " << nid << " fid " << fid << std::endl;
 }
 
 void SceneGraphEditor::connectionMouseClicked(int button, int nid, int fid)
 {
-
+    std::cout << "connection mouse clicked, button " << button << " nid " << nid << " fid " << fid << std::endl;
+    
+    if(SGState::mode==SGState::Normal)
+        SGState::mode=SGState::FieldConnection;
+    else
+        SGState::mode=SGState::Normal;
 }
 
 void SceneGraphEditor::paint(QPainter* painter)

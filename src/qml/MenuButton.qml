@@ -39,7 +39,7 @@ Rectangle {
     border.width: 1
     radius: 2
 
-    signal connectionButtonPress(int button, int nid, int fid)
+    signal connectionButtonPressed(int button, int nid, int fid)
     signal connectionButtonReleased(int button, int nid, int fid)
     signal connectionButtonClicked(int button, int nid, int fid)
 
@@ -90,10 +90,10 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true 
         acceptedButtons: Qt.LeftButton | Qt.RightButton
-        propagateComposedEvents: true
+        //propagateComposedEvents: true
 
         onPressed: {
-            connectionButtonPress(mouse.button,nodeId,fieldId)
+            connectionButtonPressed(mouse.button,nodeId,fieldId)
         }
 
         onReleased: { connectionButtonReleased(mouse.button,nodeId,fieldId); button.state="normal" }
@@ -119,5 +119,4 @@ Rectangle {
             default: return "white";
         }
     }
-
 }

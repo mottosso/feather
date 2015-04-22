@@ -96,6 +96,8 @@ Rectangle {
         sg_editor.update_sg()
         sg_editor.openConnMenu.connect(openConnectionMenu)
         connMenu.connectionButtonPressed.connect(connectionButtonPressed)
+        connMenu.connectionButtonReleased.connect(connectionButtonReleased)
+        connMenu.connectionButtonClicked.connect(connectionButtonClicked)
     }
 
     function openConnectionMenu() {

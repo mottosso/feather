@@ -52,7 +52,7 @@ Rectangle {
             nodeId: nid
             fieldId: fid
             Component.onCompleted: {
-                connectionButtonPress.connect(doConnectionPress)
+                connectionButtonPressed.connect(doConnectionPressed)
                 connectionButtonReleased.connect(doConnectionReleased)
                 connectionButtonClicked.connect(doConnectionClicked)
             }
@@ -65,15 +65,13 @@ Rectangle {
         popup.height = (popup.model.rowCount() * 15) + popup.model.rowCount();
     }
 
-    function doConnectionPress(button,nid,fid) {
+    function doConnectionPressed(button,nid,fid) {
         // mouse button press not used yet 
-        popup.visible=false
         //connectionButtonPressed(button,nid,fid)
     }
 
     function doConnectionReleased(button,nid,fid) {
         // mouse button release not used yet
-        popup.visible=false
         //connectionButtonReleased(button,nid,fid)
     }
 
