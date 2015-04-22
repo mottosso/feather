@@ -380,6 +380,11 @@ void SceneGraphEditor::connectionMouseReleased(int button, int nid, int fid)
 
 }
 
+void SceneGraphEditor::connectionMouseClicked(int button, int nid, int fid)
+{
+
+}
+
 void SceneGraphEditor::paint(QPainter* painter)
 {
     setFillColor(QColor("#696969"));

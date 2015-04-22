@@ -40,6 +40,8 @@ Rectangle {
     radius: 2
 
     signal connectionButtonPress(int button, int nid, int fid)
+    signal connectionButtonReleased(int button, int nid, int fid)
+    signal connectionButtonClicked(int button, int nid, int fid)
 
     Text {
         id: label
@@ -94,7 +96,8 @@ Rectangle {
             connectionButtonPress(mouse.button,nodeId,fieldId)
         }
 
-        onReleased: { button.state="normal" }
+        onReleased: { connectionButtonReleased(mouse.button,nodeId,fieldId); button.state="normal" }
+        onClicked: { connectionButtonClicked(mouse.button,nodeId,fieldId); button.state="normal" }
         onEntered: { button.state="hover" }
         onExited: { button.state="normal" }
     }

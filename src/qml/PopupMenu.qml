@@ -37,6 +37,8 @@ Rectangle {
     property alias model: view.model 
 
     signal connectionButtonPressed(int button, int nid, int fid)
+    signal connectionButtonReleased(int button, int nid, int fid)
+    signal connectionButtonClicked(int button, int nid, int fid)
 
     Translation { id: translation }
    
@@ -51,6 +53,8 @@ Rectangle {
             fieldId: fid
             Component.onCompleted: {
                 connectionButtonPress.connect(doConnectionPress)
+                connectionButtonReleased.connect(doConnectionReleased)
+                connectionButtonClicked.connect(doConnectionClicked)
             }
         } 
         spacing: 1
@@ -62,7 +66,19 @@ Rectangle {
     }
 
     function doConnectionPress(button,nid,fid) {
+        // mouse button press not used yet 
         popup.visible=false
-        connectionButtonPressed(button,nid,fid)
+        //connectionButtonPressed(button,nid,fid)
+    }
+
+    function doConnectionReleased(button,nid,fid) {
+        // mouse button release not used yet
+        popup.visible=false
+        //connectionButtonReleased(button,nid,fid)
+    }
+
+    function doConnectionClicked(button,nid,fid) {
+        popup.visible=false
+        connectionButtonClicked(button,nid,fid)
     }
 }

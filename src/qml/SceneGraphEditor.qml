@@ -92,6 +92,12 @@ Rectangle {
 
     PopupMenu { id: connMenu; model: connModel }
 
+    Component.onCompleted: {
+        sg_editor.update_sg()
+        sg_editor.openConnMenu.connect(openConnectionMenu)
+        connMenu.connectionButtonPressed.connect(connectionButtonPressed)
+    }
+
     function openConnectionMenu() {
         connMenu.x = sg_editor.clickX
         connMenu.y = sg_editor.clickY
@@ -103,10 +109,12 @@ Rectangle {
     function connectionButtonPressed(button,nid,fid) {
         sg_editor.connectionMousePressed(button,nid,fid);
     }
-    
-    Component.onCompleted: {
-        sg_editor.update_sg()
-        sg_editor.openConnMenu.connect(openConnectionMenu)
-        connMenu.connectionButtonPressed.connect(connectionButtonPressed)
+
+    function connectionButtonReleased(button,nid,fid) {
+        sg_editor.connectionMouseReleased(button,nid,fid);
+    }
+
+    function connectionButtonClicked(button,nid,fid) {
+        sg_editor.connectionMouseClicked(button,nid,fid);
     }
 }
