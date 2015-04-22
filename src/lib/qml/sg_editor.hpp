@@ -217,6 +217,7 @@ class SceneGraphEditor : public QQuickPaintedItem
         void mouseReleaseEvent(QMouseEvent* event);
         void hoverEnterEvent(QHoverEvent* event);
         void hoverLeaveEvent(QHoverEvent* event);
+        void hoverMoveEvent(QHoverEvent* event);
         void mouseMoveEvent(QMouseEvent* event);
 
     signals:

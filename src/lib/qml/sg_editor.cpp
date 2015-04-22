@@ -447,5 +447,6 @@ void SceneGraphEditor::mousePressEvent(QMouseEvent* event){};
 void SceneGraphEditor::mouseReleaseEvent(QMouseEvent* event){};
 void SceneGraphEditor::hoverEnterEvent(QHoverEvent* event){};
 void SceneGraphEditor::hoverLeaveEvent(QHoverEvent* event){};
-void SceneGraphEditor::mouseMoveEvent(QMouseEvent* event){};
+void SceneGraphEditor::hoverMoveEvent(QHoverEvent* event){ std::cout << "hover move\n"; };
+void SceneGraphEditor::mouseMoveEvent(QMouseEvent* event){ std::cout << "mouse move\n"; };
 

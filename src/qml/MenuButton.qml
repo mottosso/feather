@@ -90,10 +90,10 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true 
         acceptedButtons: Qt.LeftButton | Qt.RightButton
-        //propagateComposedEvents: true
+        propagateComposedEvents: true
 
         onPressed: {
-            connectionButtonPressed(mouse.button,nodeId,fieldId)
+            mouse.accepted=false; connectionButtonPressed(mouse.button,nodeId,fieldId)
         }
 
         onReleased: { connectionButtonReleased(mouse.button,nodeId,fieldId); button.state="normal" }

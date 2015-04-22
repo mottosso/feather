@@ -66,8 +66,8 @@ Rectangle {
     }
 
     function doConnectionPressed(button,nid,fid) {
-        // mouse button press not used yet 
-        //connectionButtonPressed(button,nid,fid)
+        popup.visible=false
+        connectionButtonPressed(button,nid,fid)
     }
 
     function doConnectionReleased(button,nid,fid) {
@@ -76,7 +76,7 @@ Rectangle {
     }
 
     function doConnectionClicked(button,nid,fid) {
-        popup.visible=false
-        connectionButtonClicked(button,nid,fid)
+        //popup.visible=false
+        //connectionButtonClicked(button,nid,fid)
     }
 }
