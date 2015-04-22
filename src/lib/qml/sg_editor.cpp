@@ -391,40 +391,6 @@ void SceneGraphEditor::paint(QPainter* painter)
     drawConnection(n1,n2,feather::field::Double,painter);
 }
 
-void SceneGraphEditor::drawNode(QPoint& point, QPainter* painter)
-{
-    int w = m_nodeWidth;
-    int h = m_nodeHeight;
-    int x = point.x();
-    int y = point.y();
-
-    QPen trimPen = QPen(QColor(0,0,0),2);
-    QPen textPen = QPen(QColor("#FFFAFA"),2);
-    QBrush nodeFillBrush = QBrush(QColor("#6A5ACD"));
-    QBrush connInFillBrush = QBrush(QColor("#FF4500"));
-    QBrush connOutFillBrush = QBrush(QColor("#DA70D6"));
-
-    // draw the node box
-    painter->setPen(trimPen);
-    painter->setBrush(nodeFillBrush);
-    painter->drawRoundedRect(QRect(x,y,w,h),5,5);
-
-    // draw the input and output connectors
-    QPoint sConnPoint;
-    QPoint tConnPoint;
-    getConnectionPoint(feather::field::connection::In,point,sConnPoint);
-    getConnectionPoint(feather::field::connection::Out,point,tConnPoint);
-    painter->setBrush(connInFillBrush);
-    painter->drawEllipse(sConnPoint,6,6);
-    painter->setBrush(connOutFillBrush);
-    painter->drawEllipse(tConnPoint,6,6);
-
-    // draw the node's name
-    painter->setPen(textPen);
-    painter->drawText(QRect(x,y,w,h),Qt::AlignCenter,"TestNode");
- 
-}
-
 void SceneGraphEditor::drawConnection(QPointF& snode, QPointF& tnode, feather::field::Type type, QPainter* painter)
 {
     QPainterPath path;

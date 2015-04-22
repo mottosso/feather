@@ -224,7 +224,6 @@ class SceneGraphEditor : public QQuickPaintedItem
         void connectionChanged();
 
     private:
-        void drawNode(QPoint& point, QPainter* painter);
         void drawConnection(QPointF& snode, QPointF& tnode, feather::field::Type type, QPainter* painter);
         void getConnectionPoint(feather::field::connection::Type conn, QPoint& npoint, QPoint& cpoint);
 
