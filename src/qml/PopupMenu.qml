@@ -36,9 +36,9 @@ Rectangle {
 
     property alias model: view.model 
 
-    signal connectionButtonPressed(int button, int nid, int fid)
-    signal connectionButtonReleased(int button, int nid, int fid)
-    signal connectionButtonClicked(int button, int nid, int fid)
+    signal connectionButtonPressed(int button, int uid, int nid, int fid)
+    signal connectionButtonReleased(int button, int uid, int nid, int fid)
+    signal connectionButtonClicked(int button, int uid, int nid, int fid)
 
     Translation { id: translation }
    
@@ -49,6 +49,7 @@ Rectangle {
         delegate: MenuButton {
             label: translation.get_field_name(nid,fid)
             ftype: type
+            sgId: uid
             nodeId: nid
             fieldId: fid
             Component.onCompleted: {
@@ -65,18 +66,18 @@ Rectangle {
         popup.height = (popup.model.rowCount() * 15) + popup.model.rowCount();
     }
 
-    function doConnectionPressed(button,nid,fid) {
+    function doConnectionPressed(button,uid,nid,fid) {
         popup.visible=false
-        connectionButtonPressed(button,nid,fid)
+        connectionButtonPressed(button,uid,nid,fid)
     }
 
-    function doConnectionReleased(button,nid,fid) {
+    function doConnectionReleased(button,uid,nid,fid) {
         // mouse button release not used yet
-        //connectionButtonReleased(button,nid,fid)
+        //connectionButtonReleased(button,uid,nid,fid)
     }
 
-    function doConnectionClicked(button,nid,fid) {
+    function doConnectionClicked(button,uid,nid,fid) {
         //popup.visible=false
-        //connectionButtonClicked(button,nid,fid)
+        //connectionButtonClicked(button,uid,nid,fid)
     }
 }

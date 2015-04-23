@@ -44,6 +44,9 @@ struct SGState {
     static int srcUid;
     static int srcNid;
     static int srcFid;
+    static int tgtUid;
+    static int tgtNid;
+    static int tgtFid;
     static SceneGraphEditor* pSge;
 };
 
@@ -54,14 +57,17 @@ struct MouseInfo {
 
 class FieldInfo { 
     public:
-        FieldInfo(const int &_nid=0,
+        FieldInfo(const int &_uid=0,
+                const int &_nid=0,
                 const int &_fid=0,
                 const int &_type=0,
                 const bool &_locked=false):
+            uid(_uid),
             nid(_nid),
             fid(_fid),
             type(_type),
             locked(_locked) {}
+        int uid;
         int nid;
         int fid;
         int type;
@@ -79,10 +85,11 @@ class ConnectionModel : public QAbstractListModel
 
         enum ERoles
         {
-            NidRole = Qt::UserRole + 1,
-            FidRole = Qt::UserRole + 2,
-            TypeRole = Qt::UserRole + 3,
-            LockedRole = Qt::UserRole + 4
+            UidRole = Qt::UserRole + 1,
+            NidRole = Qt::UserRole + 2,
+            FidRole = Qt::UserRole + 3,
+            TypeRole = Qt::UserRole + 4,
+            LockedRole = Qt::UserRole + 5
         };
 
         QHash<int, QByteArray> roleNames() const;
@@ -99,7 +106,7 @@ class ConnectionModel : public QAbstractListModel
 
         QList<FieldInfo*> fields() { return m_fields; }
 
-        void addField(int nid, int fid, int type, bool locked);
+        void addField(int uid, int nid, int fid, int type, bool locked);
  
     signals:
         void fieldsChanged();
@@ -192,9 +199,9 @@ class SceneGraphEditor : public QQuickPaintedItem
         void paint(QPainter* painter);
         Q_INVOKABLE void update_sg() { update(); }; 
         Q_INVOKABLE void startConnection() { SGState::mode=SGState::FieldConnection; };
-        Q_INVOKABLE void connectionMousePressed(int button, int nid, int fid);
-        Q_INVOKABLE void connectionMouseReleased(int button, int nid, int fid);
-        Q_INVOKABLE void connectionMouseClicked(int button, int nid, int fid);
+        Q_INVOKABLE void connectionMousePressed(int button, int uid, int nid, int fid);
+        Q_INVOKABLE void connectionMouseReleased(int button, int uid, int nid, int fid);
+        Q_INVOKABLE void connectionMouseClicked(int button, int uid, int nid, int fid);
 
         // connection 
         void setConnection(ConnectionModel* c) {

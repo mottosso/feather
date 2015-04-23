@@ -108,15 +108,15 @@ Rectangle {
         connMenu.visible = true
     }
 
-    function connectionButtonPressed(button,nid,fid) {
-        sg_editor.connectionMousePressed(button,nid,fid);
+    function connectionButtonPressed(button,uid,nid,fid) {
+        sg_editor.connectionMousePressed(button,uid,nid,fid);
     }
 
-    function connectionButtonReleased(button,nid,fid) {
-        sg_editor.connectionMouseReleased(button,nid,fid);
+    function connectionButtonReleased(button,uid,nid,fid) {
+        sg_editor.connectionMouseReleased(button,uid,nid,fid);
     }
 
-    function connectionButtonClicked(button,nid,fid) {
-        sg_editor.connectionMouseClicked(button,nid,fid);
+    function connectionButtonClicked(button,uid,nid,fid) {
+        sg_editor.connectionMouseClicked(button,uid,nid,fid);
     }
 }

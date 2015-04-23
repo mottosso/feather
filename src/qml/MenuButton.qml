@@ -29,6 +29,7 @@ Rectangle {
 
     property alias label: label.text
     property int ftype: 0 // this is the feather::field::Type enum value
+    property int sgId: 0
     property int fieldId: 0
     property int nodeId: 0
 
@@ -39,9 +40,9 @@ Rectangle {
     border.width: 1
     radius: 2
 
-    signal connectionButtonPressed(int button, int nid, int fid)
-    signal connectionButtonReleased(int button, int nid, int fid)
-    signal connectionButtonClicked(int button, int nid, int fid)
+    signal connectionButtonPressed(int button, int uid, int nid, int fid)
+    signal connectionButtonReleased(int button, int uid, int nid, int fid)
+    signal connectionButtonClicked(int button, int uid, int nid, int fid)
 
     Text {
         id: label
@@ -93,11 +94,11 @@ Rectangle {
         propagateComposedEvents: true
 
         onPressed: {
-            mouse.accepted=false; connectionButtonPressed(mouse.button,nodeId,fieldId)
+            mouse.accepted=false; connectionButtonPressed(mouse.button,sgId,nodeId,fieldId)
         }
 
-        onReleased: { connectionButtonReleased(mouse.button,nodeId,fieldId); button.state="normal" }
-        onClicked: { connectionButtonClicked(mouse.button,nodeId,fieldId); button.state="normal" }
+        onReleased: { connectionButtonReleased(mouse.button,sgId,nodeId,fieldId); button.state="normal" }
+        onClicked: { connectionButtonClicked(mouse.button,sgId,nodeId,fieldId); button.state="normal" }
         onEntered: { button.state="hover" }
         onExited: { button.state="normal" }
     }

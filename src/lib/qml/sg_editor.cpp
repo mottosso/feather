@@ -33,6 +33,9 @@ SGState::Mode SGState::mode=SGState::Normal;
 int SGState::srcUid=0;
 int SGState::srcNid=0;
 int SGState::srcFid=0;
+int SGState::tgtUid=0;
+int SGState::tgtNid=0;
+int SGState::tgtFid=0;
 SceneGraphEditor* SGState::pSge=NULL;
 
 // CONNECTION MODEL
@@ -49,6 +52,7 @@ ConnectionModel::~ConnectionModel()
 QHash<int, QByteArray> ConnectionModel::roleNames() const
 {
     QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
+    roles.insert(UidRole, QByteArray("uid"));
     roles.insert(NidRole, QByteArray("nid"));
     roles.insert(FidRole, QByteArray("fid"));
     roles.insert(TypeRole, QByteArray("type"));
@@ -70,6 +74,8 @@ QVariant ConnectionModel::data(const QModelIndex& index, int role) const
     FieldInfo *dobj = m_fields.at(index.row());
     switch (role) {
         case Qt::DisplayRole: // The default display role now displays the first name as well
+        case UidRole:
+            return QVariant::fromValue(dobj->uid);
         case NidRole:
             return QVariant::fromValue(dobj->nid);
         case FidRole:
@@ -88,9 +94,9 @@ void ConnectionModel::clear()
     m_fields.clear();
 }
 
-void ConnectionModel::addField(int nid, int fid, int type, bool locked)
+void ConnectionModel::addField(int uid, int nid, int fid, int type, bool locked)
 {
-    m_fields.append(new FieldInfo(nid,fid,type,locked));
+    m_fields.append(new FieldInfo(uid,nid,fid,type,locked));
 }
 // Connection
 SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type, QQuickItem* parent) :
@@ -354,12 +360,12 @@ void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::
     { 
         if(conn == SceneGraphConnection::In) {
             if(pfield->conn_type == feather::field::connection::In)
-                m_connection->addField(nid,i,pfield->type,true); 
+                m_connection->addField(uid,nid,i,pfield->type,true); 
         }
 
         if(conn == SceneGraphConnection::Out) {
             if(pfield->conn_type == feather::field::connection::Out)
-                m_connection->addField(nid,i,pfield->type,true); 
+                m_connection->addField(uid,nid,i,pfield->type,true); 
         }
 
         i++;
@@ -370,19 +376,19 @@ void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::
     openConnMenu();
 }
 
-void SceneGraphEditor::connectionMousePressed(int button, int nid, int fid)
+void SceneGraphEditor::connectionMousePressed(int button, int uid, int nid, int fid)
 {
-    std::cout << "connection mouse pressed, button " << button << " nid " << nid << " fid " << fid << std::endl;
+    std::cout << "connection mouse pressed, button " << button << " uid " << uid << " nid " << nid << " fid " << fid << std::endl;
 }
 
-void SceneGraphEditor::connectionMouseReleased(int button, int nid, int fid)
+void SceneGraphEditor::connectionMouseReleased(int button, int uid, int nid, int fid)
 {
-    std::cout << "connection mouse released, button " << button << " nid " << nid << " fid " << fid << std::endl;
+    std::cout << "connection mouse released, button " << button << " uid " << uid << " nid " << nid << " fid " << fid << std::endl;
 }
 
-void SceneGraphEditor::connectionMouseClicked(int button, int nid, int fid)
+void SceneGraphEditor::connectionMouseClicked(int button, int uid, int nid, int fid)
 {
-    std::cout << "connection mouse clicked, button " << button << " nid " << nid << " fid " << fid << std::endl;
+    std::cout << "connection mouse clicked, button " << button << " uid " << uid << " nid " << nid << " fid " << fid << std::endl;
     
     if(SGState::mode==SGState::Normal)
         SGState::mode=SGState::FieldConnection;
