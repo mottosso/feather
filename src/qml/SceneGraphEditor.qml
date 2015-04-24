@@ -31,8 +31,8 @@ import feather.scenegraph 1.0
 Rectangle {
     id: sgWindow
     color: "black" 
-
-    SceneGraph { id: sg }
+    
+    property SceneGraph scenegraph: Null
 
     // Actions
 
@@ -101,7 +101,7 @@ Rectangle {
         connMenu.connectionButtonPressed.connect(connectionButtonPressed)
         connMenu.connectionButtonReleased.connect(connectionButtonReleased)
         connMenu.connectionButtonClicked.connect(connectionButtonClicked)
-        sg.selectionChanged.connect(setSelection)
+        scenegraph.selectionChanged.connect(setSelection)
     }
 
     function openConnectionMenu() {
@@ -114,7 +114,7 @@ Rectangle {
 
     function connectionButtonPressed(button,uid,nid,fid) {
         sg_editor.connectionMousePressed(button,uid,nid,fid);
-        sg.add_selection(0,uid,nid,fid);
+        scenegraph.add_selection(0,uid,nid,fid);
     }
 
     function connectionButtonReleased(button,uid,nid,fid) {

@@ -23,6 +23,7 @@
 
 import QtQuick 2.3
 import QtQuick.Window 2.2
+import feather.scenegraph 1.0
 
 Window {
     id: sgEditor 
@@ -32,9 +33,11 @@ Window {
     width: 400
     height: 500
 
+    property SceneGraph scenegraph: null
+
     SceneGraphEditor {
         id: sg
         anchors.fill: parent
+        scenegraph: sgEditor.scenegraph
     }
-
 }

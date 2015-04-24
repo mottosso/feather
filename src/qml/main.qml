@@ -24,14 +24,16 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
+import feather.scenegraph 1.0
 
 ApplicationWindow {
     id: window
     width: 1200
     height: 700
     visible: true
-
     title: "Feather 0.1"
+
+    SceneGraph { id: sg }
 
     menuBar: MainMenu {}
 
@@ -46,8 +48,15 @@ ApplicationWindow {
         anchors.fill: parent
     }
 
-    SceneGraphDialog { id: sgEditor }
-    FieldEditor { id: fieldEditor }
+    SceneGraphDialog {
+        id: sgEditor
+        scenegraph: sg
+    }
+
+    FieldEditor {
+        id: fieldEditor
+        scenegraph: sg
+    }
 
     //Outliner {}
     //Material {}

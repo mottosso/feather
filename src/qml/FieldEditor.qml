@@ -33,8 +33,7 @@ Window {
     width: 200
     height: 500
     color: "dimgrey"
-
-    SceneGraph { id: sg }
+    property SceneGraph scenegraph: Null
 
     Rectangle {
         id: nodeFrame
@@ -155,11 +154,12 @@ Window {
         
  
     Component.onCompleted: {
-        sg.selectionChanged.connect(setSelection)        
+        scenegraph.selectionChanged.connect(setSelection)        
     }    
 
     function setSelection(type,uid,nid,fid) {
         console.log("fed triggered");
         console.log("field editor triggered for uid " + uid + " nid " + nid + " fid " + fid);
     }
+
 }
