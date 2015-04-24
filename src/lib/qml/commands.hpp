@@ -69,6 +69,8 @@ namespace feather
             int get_min_uid();
             int get_max_uid();
             void get_plugins(std::vector<PluginInfo>& list);
+            // SG SELECTION
+            status add_selection(int type, int uid, int nid, int fid);
 
         } // namespace command
 

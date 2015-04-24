@@ -26,10 +26,13 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import feather.editors 1.0
+import feather.scenegraph 1.0
 
 Rectangle {
     id: sgWindow
     color: "black" 
+
+    SceneGraph { id: sg }
 
     // Actions
 
@@ -98,6 +101,7 @@ Rectangle {
         connMenu.connectionButtonPressed.connect(connectionButtonPressed)
         connMenu.connectionButtonReleased.connect(connectionButtonReleased)
         connMenu.connectionButtonClicked.connect(connectionButtonClicked)
+        sg.selectionChanged.connect(setSelection)
     }
 
     function openConnectionMenu() {
@@ -110,6 +114,7 @@ Rectangle {
 
     function connectionButtonPressed(button,uid,nid,fid) {
         sg_editor.connectionMousePressed(button,uid,nid,fid);
+        sg.add_selection(0,uid,nid,fid);
     }
 
     function connectionButtonReleased(button,uid,nid,fid) {
@@ -118,5 +123,10 @@ Rectangle {
 
     function connectionButtonClicked(button,uid,nid,fid) {
         sg_editor.connectionMouseClicked(button,uid,nid,fid);
+    }
+
+    function setSelection(type,uid,nid,fid) {
+        console.log("sg triggered");
+        console.log("sg editor triggered for uid " + uid + " nid " + nid + " fid " + fid);
     }
 }

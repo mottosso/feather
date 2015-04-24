@@ -155,6 +155,11 @@ Window {
         
  
     Component.onCompleted: {
-        
+        sg.selectionChanged.connect(setSelection)        
     }    
+
+    function setSelection(type,uid,nid,fid) {
+        console.log("fed triggered");
+        console.log("field editor triggered for uid " + uid + " nid " + nid + " fid " + fid);
+    }
 }
