@@ -39,7 +39,7 @@ status qml::command::init() {
     add_node(node::Polygon,320,"CubeShape"); // PolyShape
     scenegraph::connect(0,4,1,1); // connect PolyCube.out to PolyShape.in
 
-    smg::Instance()->add_state(selection::Node,0,0);
+    smg::Instance()->add_state(selection::Node,0,0,0);
  
     // just testing the do_it plugin calls
     scenegraph::update();
