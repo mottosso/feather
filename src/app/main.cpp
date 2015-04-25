@@ -24,6 +24,7 @@
 #include "deps.hpp"
 #include "viewportthread.hpp"
 #include "sg_editor.hpp"
+#include "field_model.hpp"
 #include "qml.hpp"
 #include "commands.hpp"
 #include <QApplication>
@@ -34,11 +35,11 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
 
     qmlRegisterType<ViewportThread>("FeatherViewport", 1, 0, "Viewport");
-    qmlRegisterType<ConnectionModel>("feather.editors", 1, 0, "ConnectionModel");
     qmlRegisterType<SceneGraphEditor>("feather.editors", 1, 0, "SceneGraphEditor");
     qmlRegisterType<SceneGraph>("feather.scenegraph", 1, 0, "SceneGraph");
     qmlRegisterType<Node>("feather.node", 1, 0, "Node");
     qmlRegisterType<Field>("feather.field", 1, 0, "Field");
+    qmlRegisterType<FieldModel>("feather.field", 1, 0, "FieldModel");
     qmlRegisterType<Parameter>("feather.command", 1, 0, "Parameter");
     qmlRegisterType<Command>("feather.command", 1, 0, "Command");
     qmlRegisterType<Plugins>("feather.plugin", 1, 0, "Plugins");

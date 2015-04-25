@@ -27,6 +27,7 @@ import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import feather.editors 1.0
 import feather.scenegraph 1.0
+import feather.field 1.0
 
 Rectangle {
     id: sgWindow
@@ -81,7 +82,7 @@ Rectangle {
 
     } 
 
-    ConnectionModel { id: connModel }
+    FieldModel { id: connModel }
 
     SceneGraphEditor {
         id: sg_editor

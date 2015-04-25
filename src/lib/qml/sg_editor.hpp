@@ -26,7 +26,8 @@
 
 #include "deps.hpp"
 #include "qml_deps.hpp"
-#include "field.hpp"
+//#include "field.hpp"
+#include "field_model.hpp"
 
 #define NODE_WIDTH 100
 #define NODE_HEIGHT 30
@@ -50,70 +51,10 @@ struct SGState {
     static SceneGraphEditor* pSge;
 };
 
+
 struct MouseInfo {
         static int clickX;
         static int clickY;
-};
-
-class FieldInfo { 
-    public:
-        FieldInfo(const int &_uid=0,
-                const int &_nid=0,
-                const int &_fid=0,
-                const int &_type=0,
-                const bool &_locked=false):
-            uid(_uid),
-            nid(_nid),
-            fid(_fid),
-            type(_type),
-            locked(_locked) {}
-        int uid;
-        int nid;
-        int fid;
-        int type;
-        bool locked;
-};
-
-class ConnectionModel : public QAbstractListModel
-{
-    Q_OBJECT
-        Q_PROPERTY(QList<FieldInfo*> fields READ fields WRITE setFields NOTIFY fieldsChanged)
- 
-    public:
-        ConnectionModel(QObject* parent=0);
-        ~ConnectionModel();
-
-        enum ERoles
-        {
-            UidRole = Qt::UserRole + 1,
-            NidRole = Qt::UserRole + 2,
-            FidRole = Qt::UserRole + 3,
-            TypeRole = Qt::UserRole + 4,
-            LockedRole = Qt::UserRole + 5
-        };
-
-        QHash<int, QByteArray> roleNames() const;
-        Q_INVOKABLE int rowCount(const QModelIndex& parent = QModelIndex()) const;
-        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-        void clear();
- 
-        // fields 
-        void setFields(QList<FieldInfo*>& f) {
-            if(m_fields != f) {
-                m_fields=f;
-            }
-        }
-
-        QList<FieldInfo*> fields() { return m_fields; }
-
-        void addField(int uid, int nid, int fid, int type, bool locked);
- 
-    signals:
-        void fieldsChanged();
-
-    private:
-        Q_DISABLE_COPY(ConnectionModel);
-        QList<FieldInfo*> m_fields;
 };
 
 
@@ -188,7 +129,7 @@ class SceneGraphNode : public QQuickPaintedItem
 class SceneGraphEditor : public QQuickPaintedItem
 {
     Q_OBJECT
-         Q_PROPERTY(ConnectionModel* connection READ connection WRITE setConnection NOTIFY connectionChanged)
+         Q_PROPERTY(FieldModel* connection READ connection WRITE setConnection NOTIFY connectionChanged)
          Q_PROPERTY(int clickX READ clickX)
          Q_PROPERTY(int clickY READ clickY)
  
@@ -204,7 +145,7 @@ class SceneGraphEditor : public QQuickPaintedItem
         Q_INVOKABLE void connectionMouseClicked(int button, int uid, int nid, int fid);
 
         // connection 
-        void setConnection(ConnectionModel* c) {
+        void setConnection(FieldModel* c) {
             if(m_connection!= c) {
                 m_connection=c;
                 //m_connection->addField();
@@ -212,7 +153,7 @@ class SceneGraphEditor : public QQuickPaintedItem
             }
         }
 
-        ConnectionModel* connection() { return m_connection; }
+        FieldModel* connection() { return m_connection; }
         int clickX() { return MouseInfo::clickX; }
         int clickY() { return MouseInfo::clickY; }
 
@@ -242,7 +183,7 @@ class SceneGraphEditor : public QQuickPaintedItem
 
         std::vector<SceneGraphNode*> m_nodes;
         std::vector<SceneGraphConnection*> m_connections;
-        ConnectionModel* m_connection;
+        FieldModel* m_connection;
 };
 
 

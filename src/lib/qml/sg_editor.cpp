@@ -38,67 +38,9 @@ int SGState::tgtNid=0;
 int SGState::tgtFid=0;
 SceneGraphEditor* SGState::pSge=NULL;
 
-// CONNECTION MODEL
 
+// SCENEGRAPH
 
-ConnectionModel::ConnectionModel(QObject* parent) : QAbstractListModel(parent)
-{
-}
-
-ConnectionModel::~ConnectionModel()
-{
-}                                                                        
-
-QHash<int, QByteArray> ConnectionModel::roleNames() const
-{
-    QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
-    roles.insert(UidRole, QByteArray("uid"));
-    roles.insert(NidRole, QByteArray("nid"));
-    roles.insert(FidRole, QByteArray("fid"));
-    roles.insert(TypeRole, QByteArray("type"));
-    roles.insert(LockedRole, QByteArray("locked"));
-    return roles;
-}
-
-int ConnectionModel::rowCount(const QModelIndex& parent) const
-{
-    return m_fields.size();
-}
-
-QVariant ConnectionModel::data(const QModelIndex& index, int role) const
-{
-    if (!index.isValid())
-        return QVariant(); // Return Null variant if index is invalid
-    if (index.row() > (m_fields.size()-1) )
-        return QVariant();
-    FieldInfo *dobj = m_fields.at(index.row());
-    switch (role) {
-        case Qt::DisplayRole: // The default display role now displays the first name as well
-        case UidRole:
-            return QVariant::fromValue(dobj->uid);
-        case NidRole:
-            return QVariant::fromValue(dobj->nid);
-        case FidRole:
-            return QVariant::fromValue(dobj->fid);
-        case TypeRole:
-            return QVariant::fromValue(dobj->type);
-        case LockedRole:
-            return QVariant::fromValue(dobj->locked);
-        default:
-            return QVariant();
-    }
-}
-
-void ConnectionModel::clear()
-{
-    m_fields.clear();
-}
-
-void ConnectionModel::addField(int uid, int nid, int fid, int type, bool locked)
-{
-    m_fields.append(new FieldInfo(uid,nid,fid,type,locked));
-}
-// Connection
 SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type, QQuickItem* parent) :
     QQuickPaintedItem(parent),
     m_type(type)
@@ -118,10 +60,6 @@ SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type
     else
         m_connFillBrush = QBrush(QColor("#9400D3"));
 }
-
-
-// SCENEGRAPH
-
 
 SceneGraphConnection::~SceneGraphConnection()
 {
