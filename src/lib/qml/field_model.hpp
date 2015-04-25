@@ -79,7 +79,7 @@ class FieldModel : public QAbstractListModel
 
         QList<FieldInfo*> fields() { return m_fields; }
 
-        void addField(int uid, int nid, int fid, int type, bool locked);
+        Q_INVOKABLE void addField(int uid, int nid, int fid, int type, bool locked);
  
     signals:
         void fieldsChanged();

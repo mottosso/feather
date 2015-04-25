@@ -24,6 +24,7 @@
 import QtQuick 2.3
 import QtQuick.Window 2.2
 import feather.scenegraph 1.0
+import feather.field 1.0
 
 Window {
     id: fieldEditor 
@@ -34,6 +35,8 @@ Window {
     height: 500
     color: "dimgrey"
     property SceneGraph scenegraph: Null
+
+    FieldModel { id: fieldModel }
 
     Rectangle {
         id: nodeFrame
@@ -70,47 +73,24 @@ Window {
                 color: "black"
             }
         }
- 
-        Column {
+
+        ListView {
             spacing: 2
             anchors.top: nodeTitle.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.margins: 1
+            model: fieldModel
 
-            IntField {
-                id: subX 
+            delegate: IntField {
                 width: parent.width
-                // Ok, this is dangerous because the program will seq fault.
-                // This will need to be verified by the scenegraph
-                // BUT.... for the time being this will do for testing
-                uId: 0
-                nodeKey: 322
-                fieldKey: 1 
-                label: "SubX"
+                uId: uid
+                nodeKey: nid
+                fieldKey: fid
+                label: "***" 
             }
-
-            IntField {
-                id: subY 
-                width: parent.width
-                uId: 0
-                nodeKey: 322
-                fieldKey: 2 
-                label: "SubY"
-            }
-
-            IntField {
-                id: subZ 
-                width: parent.width
-                uId: 0
-                nodeKey: 322
-                fieldKey: 3 
-                label: "SubZ"
-            }
-
         }
-
 
     }
  
@@ -160,6 +140,8 @@ Window {
     function setSelection(type,uid,nid,fid) {
         console.log("fed triggered");
         console.log("field editor triggered for uid " + uid + " nid " + nid + " fid " + fid);
+        fieldModel.addField(uid,nid,fid,0,false)
+        fieldModel.layoutChanged()
     }
 
 }
