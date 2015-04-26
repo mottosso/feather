@@ -27,6 +27,7 @@
 #include "deps.hpp"
 #include "qml_deps.hpp"
 #include "field.hpp"
+#include "commands.hpp"
 
 class FieldInfo { 
     public:
@@ -80,6 +81,7 @@ class FieldModel : public QAbstractListModel
         QList<FieldInfo*> fields() { return m_fields; }
 
         Q_INVOKABLE void addField(int uid, int nid, int fid, int type, bool locked);
+        Q_INVOKABLE void addFields(int uid, int nid);
  
     signals:
         void fieldsChanged();

@@ -28,6 +28,7 @@
 #include "types.hpp"
 #include "command.hpp"
 #include "parameter.hpp"
+#include "field.hpp"
 
 #define MAX_NODE_ID 900
 
@@ -54,6 +55,7 @@ namespace feather
         bool (*node_icon)(int,std::string&); // name of icon image in ui/icons path
         status(*create_fields)(int,field::Fields&); // creates a new instance of the nodes fields which will get deleted by the scenegraph when the node is removed.
         field::FieldBase* (*get_field)(int,int,field::Fields&);
+        status (*get_fid_list)(int,field::connection::Type,std::vector<int>&);
         bool (*command_exist)(std::string cmd);
         status (*command)(std::string cmd, parameter::ParameterList);
     };
@@ -75,6 +77,21 @@ namespace feather
 
         private:
             std::vector<PluginInfo>& m_list; 
+    };
+
+    struct get_fids {
+        get_fids(int nid, field::connection::Type conn, std::vector<int>& list) : m_nid(nid),m_conn(conn),m_list(list) {};
+        void operator()(PluginData n) {
+            if(n.node_exist(m_nid))
+                n.get_fid_list(m_nid,m_conn,m_list); 
+            else
+                std::cout << "didn't find " << m_nid << std::endl;
+        };
+
+        private:
+            int m_nid;
+            field::connection::Type m_conn;
+            std::vector<int>& m_list; 
     };
 
     // DO_IT()
@@ -213,10 +230,49 @@ namespace feather
         };
 
 
+    // GET NODE'S FIDs
+
+    template <int _Nid, int _StartFid>
+    struct get_fid_list {
+        static bool exec(int nid, std::vector<int>& list) {
+            if(nid==_Nid) {
+                std::cout << "adding fid "  << _StartFid << " to list\n";
+                list.push_back(_StartFid);
+                return get_fid_list<_Nid,_StartFid-1>::exec(nid,list);
+            }
+        };
+    };
+
+    template <int _Nid>
+    struct get_fid_list<_Nid,0> {
+        static bool exec(int nid, std::vector<int>& list) {
+            return false;
+        };
+    };
+
+    template <int _EndNid, int _StartNid, int _StartFid>
+    struct find_node_fid_list {
+        static bool exec(int nid, std::vector<int>& list) {
+            if(nid==_StartNid)
+                return get_fid_list<_StartNid,_StartFid>::exec(nid,list);
+            else
+                return find_node_fid_list<_EndNid,_StartNid-1,_StartFid>::exec(nid,list);
+        };
+    };
+
+    template <int _StartNid, int _StartFid>
+    struct find_node_fid_list<_StartNid,_StartNid,_StartFid> {
+        static bool exec(int nid, std::vector<int>& list) {
+            if(nid==_StartNid)
+                return get_fid_list<_StartNid,_StartFid>::exec(nid,list);
+            else
+                return false;
+        };
+    };
+
     // CREATE FIELDS
 
-    // Add Field is used to setup the Fields vector
-
+    // Add Field is used to setup the Fields vector 
     template <int _Node, int _StartKey>
     struct add_fields {
         static status exec(field::Fields& fields) {
@@ -286,6 +342,7 @@ namespace feather
             int max_uid();
             status node_icon_file(int nid, std::string& file);
             void loaded_plugins(std::vector<PluginInfo>& list);
+            status get_fid_list(int nid, field::connection::Type conn, std::vector<int>& list);
 
         private:
             status load_node(PluginData &node);
@@ -308,6 +365,7 @@ namespace feather
     bool node_icon(int,std::string&);\
     feather::status create_fields(int, feather::field::Fields&);\
     feather::field::FieldBase* get_field(int,int,feather::field::Fields&);\
+    feather::status get_fid_list(int,feather::field::connection::Type,std::vector<int>&);\
     bool command_exist(std::string cmd);\
     feather::status command(std::string cmd, feather::parameter::ParameterList);\
 
@@ -356,7 +414,13 @@ namespace feather
     /* find the node's field */\
     feather::field::FieldBase* get_field(int nid, int fid, field::Fields& fields) {\
         return find_node_field<startnode,endnode,5>::exec(nid,fid,fields);\
+    };\
+    /* find the node's fid's*/\
+    status get_fid_list(int nid, feather::field::connection::Type conn, std::vector<int>& list) {\
+        find_node_fid_list<startnode,endnode,5>::exec(nid,list);\
+        return status();\
     };
+
 
 
 #endif

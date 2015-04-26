@@ -115,7 +115,7 @@ Rectangle {
     }
 
     function nodeSelection(type,uid,nid) {
-        scenegraph.node_selection(0,uid,nid);
+        scenegraph.node_selection(type,uid,nid);
     }
 
     function connectionButtonPressed(button,uid,nid,fid) {

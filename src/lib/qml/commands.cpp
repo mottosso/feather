@@ -135,7 +135,7 @@ status qml::command::get_field_val(int uid, int node, int field, int& val)
     typedef field::Field<int,field::connection::In>* fielddata;
     fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
     if(!f)
-        std::cout << "NULL FIELD\n";
+        std::cout << uid << "," << node << "," << field << " NULL FIELD\n";
     else  
         val=f->value;
     return status();
@@ -176,6 +176,14 @@ status qml::command::get_field_connection_status(int uid, int node, int field, b
     val = f->connected;
     return status();
 }
+
+status qml::command::get_fid_list(int nid, field::connection::Type conn, std::vector<int>& list)
+{
+    return scenegraph::get_fid_list(nid,conn,list);
+}
+
+
+// SCENEGRAPH EDITOR
 
 void qml::command::get_node_connections(int uid, std::vector<int>& nodes)
 {

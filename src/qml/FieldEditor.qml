@@ -145,7 +145,7 @@ Window {
         fieldModel.layoutChanged()
     }
 
-    function nodeSelect(uid,nid) {
-        console.log("field editor node selection for uid " + uid + " nid " + nid);
+    function nodeSelect(type,uid,nid) {
+        fieldModel.addFields(uid,nid)
     }
 }

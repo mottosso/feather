@@ -159,6 +159,9 @@ namespace feather
             return status();
         };
 
+        status get_fid_list(int nid, field::connection::Type conn, std::vector<int>& list) {
+            return plugins.get_fid_list(nid,conn,list);
+        }
 
         /* Add Node to SceneGraph
          * This is the recursive function that will keep going till
