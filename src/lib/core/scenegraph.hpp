@@ -145,11 +145,20 @@ namespace feather
             }
         };
 
+
         status add_selection(int type, int uid, int nid, int fid) {
             // status was returned here because we'll probably use it later
             smg::Instance()->add_state(static_cast<selection::Type>(type),uid,nid,fid);
             return status();
         };
+
+
+        status node_selection(int type, int uid, int nid) {
+            // status was returned here because we'll probably use it later
+            smg::Instance()->add_state(static_cast<selection::Type>(type),uid,nid,0);
+            return status();
+        };
+
 
         /* Add Node to SceneGraph
          * This is the recursive function that will keep going till

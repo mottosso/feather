@@ -196,6 +196,7 @@ void SceneGraphNode::mousePressEvent(QMouseEvent* event)
 {
     m_x = event->screenPos().x();
     m_y = event->screenPos().y();
+    NodePressed(event->button(),m_uid,m_node);
 }
 
 void SceneGraphNode::mouseReleaseEvent(QMouseEvent* event)
@@ -269,9 +270,13 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
     SGState::pSge = this;
     setAcceptedMouseButtons(Qt::AllButtons);
     SceneGraphNode *nodeA = new SceneGraphNode(0,322,this);
-    connect(nodeA,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
     SceneGraphNode *nodeB = new SceneGraphNode(1,320,this);
+
+    // connections
+    connect(nodeA,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
     connect(nodeB,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
+    connect(nodeA,SIGNAL(NodePressed(Qt::MouseButton,int,int)),this,SLOT(NodePressed(Qt::MouseButton,int,int)));
+
     m_nodes.push_back(nodeA);
     nodeA->setX(50);
     nodeA->setY(50);
@@ -312,6 +317,11 @@ void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::
 
     m_connection->layoutChanged();
     openConnMenu();
+}
+
+void SceneGraphEditor::NodePressed(Qt::MouseButton button, int uid, int nid)
+{
+    nodeSelection(0,uid,nid); 
 }
 
 void SceneGraphEditor::connectionMousePressed(int button, int uid, int nid, int fid)

@@ -135,6 +135,7 @@ Window {
  
     Component.onCompleted: {
         scenegraph.selectionChanged.connect(setSelection)        
+        scenegraph.nodeSelection.connect(nodeSelect)
     }    
 
     function setSelection(type,uid,nid,fid) {
@@ -144,4 +145,7 @@ Window {
         fieldModel.layoutChanged()
     }
 
+    function nodeSelect(uid,nid) {
+        console.log("field editor node selection for uid " + uid + " nid " + nid);
+    }
 }

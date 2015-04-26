@@ -104,6 +104,7 @@ class SceneGraphNode : public QQuickPaintedItem
  
     signals:
         void ConnClicked(Qt::MouseButton button, SceneGraphConnection::Connection conn, int uid, int nid);
+        void NodePressed(Qt::MouseButton button, int uid, int nid);
 
     protected:
         void mousePressEvent(QMouseEvent* event);
@@ -159,6 +160,7 @@ class SceneGraphEditor : public QQuickPaintedItem
 
     protected slots:
         void ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int uid, int nid);
+        void NodePressed(Qt::MouseButton button, int uid, int nid);
 
     protected:
         void mousePressEvent(QMouseEvent* event);
@@ -172,6 +174,7 @@ class SceneGraphEditor : public QQuickPaintedItem
         void sgUpdated();
         void openConnMenu();
         void connectionChanged();
+        void nodeSelection(int type, int uid, int nid);
 
     private:
         void drawConnection(QPointF& snode, QPointF& tnode, feather::field::Type type, QPainter* painter);

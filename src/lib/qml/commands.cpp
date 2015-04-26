@@ -221,3 +221,9 @@ status qml::command::add_selection(int type, int uid, int nid, int fid)
 {
     return scenegraph::add_selection(type,uid,nid,fid);
 }
+
+status qml::command::node_selection(int type, int uid, int nid)
+{
+    return scenegraph::node_selection(type,uid,nid);
+}
+

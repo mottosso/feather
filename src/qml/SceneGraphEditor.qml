@@ -99,6 +99,7 @@ Rectangle {
     Component.onCompleted: {
         sg_editor.update_sg()
         sg_editor.openConnMenu.connect(openConnectionMenu)
+        sg_editor.nodeSelection.connect(nodeSelection)
         connMenu.connectionButtonPressed.connect(connectionButtonPressed)
         connMenu.connectionButtonReleased.connect(connectionButtonReleased)
         connMenu.connectionButtonClicked.connect(connectionButtonClicked)
@@ -111,6 +112,10 @@ Rectangle {
         console.log(sg_editor.clickX + " " + sg_editor.clickY)
         connMenu.resize()
         connMenu.visible = true
+    }
+
+    function nodeSelection(type,uid,nid) {
+        scenegraph.node_selection(0,uid,nid);
     }
 
     function connectionButtonPressed(button,uid,nid,fid) {
