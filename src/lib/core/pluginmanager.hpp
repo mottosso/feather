@@ -55,7 +55,7 @@ namespace feather
         bool (*node_icon)(int,std::string&); // name of icon image in ui/icons path
         status(*create_fields)(int,field::Fields&); // creates a new instance of the nodes fields which will get deleted by the scenegraph when the node is removed.
         field::FieldBase* (*get_field)(int,int,field::Fields&);
-        status (*get_fid_list)(int,field::connection::Type,std::vector<int>&);
+        status (*get_fid_list)(int,field::connection::Type,field::Fields&,std::vector<int>&);
         bool (*command_exist)(std::string cmd);
         status (*command)(std::string cmd, parameter::ParameterList);
     };
@@ -80,10 +80,10 @@ namespace feather
     };
 
     struct get_fids {
-        get_fids(int nid, field::connection::Type conn, std::vector<int>& list) : m_nid(nid),m_conn(conn),m_list(list) {};
+        get_fids(int nid, field::connection::Type conn, field::Fields& fields, std::vector<int>& list) : m_nid(nid),m_conn(conn),m_fields(fields),m_list(list) {};
         void operator()(PluginData n) {
             if(n.node_exist(m_nid))
-                n.get_fid_list(m_nid,m_conn,m_list); 
+                n.get_fid_list(m_nid,m_conn,m_fields,m_list); 
             else
                 std::cout << "didn't find " << m_nid << std::endl;
         };
@@ -91,6 +91,7 @@ namespace feather
         private:
             int m_nid;
             field::connection::Type m_conn;
+            field::Fields& m_fields;
             std::vector<int>& m_list; 
     };
 
@@ -234,37 +235,50 @@ namespace feather
 
     template <int _Nid, int _StartFid>
     struct get_fid_list {
-        static bool exec(int nid, std::vector<int>& list) {
+        static bool exec(int nid, field::Fields& fields, std::vector<int>& list) {
             if(nid==_Nid) {
-                std::cout << "adding fid "  << _StartFid << " to list\n";
+                std::cout << "adding fid start\n";
+                field::FieldBase* f = find_field<_Nid,_StartFid>::exec(_StartFid,fields);
+                std::cout << "adding fid end\n";
+                //std::cout << "adding fid "  << _StartFid << " type " << f->type << " to list\n";
+
+                // FIX - why is f null??? 
+                if(!f)
+                    std::cout << "adding fid "  << _StartFid << " type " << f << " to list\n";
+                else
+                    std::cout << "FID NULL\n";
+
                 list.push_back(_StartFid);
-                return get_fid_list<_Nid,_StartFid-1>::exec(nid,list);
+                return get_fid_list<_Nid,_StartFid-1>::exec(nid,fields,list);
             }
         };
     };
 
     template <int _Nid>
     struct get_fid_list<_Nid,0> {
-        static bool exec(int nid, std::vector<int>& list) {
+        static bool exec(int nid, field::Fields& fields, std::vector<int>& list) {
             return false;
         };
     };
 
     template <int _EndNid, int _StartNid, int _StartFid>
     struct find_node_fid_list {
-        static bool exec(int nid, std::vector<int>& list) {
-            if(nid==_StartNid)
-                return get_fid_list<_StartNid,_StartFid>::exec(nid,list);
+        static bool exec(int nid, field::Fields& fields, std::vector<int>& list) {
+            if(nid==_StartNid) {
+                std::cout << "find fid start\n";
+                return get_fid_list<_StartNid,_StartFid>::exec(nid,fields,list);
+                std::cout << "find fid end\n";
+            }
             else
-                return find_node_fid_list<_EndNid,_StartNid-1,_StartFid>::exec(nid,list);
+                return find_node_fid_list<_EndNid,_StartNid-1,_StartFid>::exec(nid,fields,list);
         };
     };
 
     template <int _StartNid, int _StartFid>
     struct find_node_fid_list<_StartNid,_StartNid,_StartFid> {
-        static bool exec(int nid, std::vector<int>& list) {
+        static bool exec(int nid, field::Fields& fields, std::vector<int>& list) {
             if(nid==_StartNid)
-                return get_fid_list<_StartNid,_StartFid>::exec(nid,list);
+                return get_fid_list<_StartNid,_StartFid>::exec(nid,fields,list);
             else
                 return false;
         };
@@ -342,7 +356,7 @@ namespace feather
             int max_uid();
             status node_icon_file(int nid, std::string& file);
             void loaded_plugins(std::vector<PluginInfo>& list);
-            status get_fid_list(int nid, field::connection::Type conn, std::vector<int>& list);
+            status get_fid_list(int nid, field::connection::Type conn, field::Fields& fields, std::vector<int>& list);
 
         private:
             status load_node(PluginData &node);
@@ -365,7 +379,7 @@ namespace feather
     bool node_icon(int,std::string&);\
     feather::status create_fields(int, feather::field::Fields&);\
     feather::field::FieldBase* get_field(int,int,feather::field::Fields&);\
-    feather::status get_fid_list(int,feather::field::connection::Type,std::vector<int>&);\
+    feather::status get_fid_list(int,feather::field::connection::Type,feather::field::Fields&,std::vector<int>&);\
     bool command_exist(std::string cmd);\
     feather::status command(std::string cmd, feather::parameter::ParameterList);\
 
@@ -416,8 +430,8 @@ namespace feather
         return find_node_field<startnode,endnode,5>::exec(nid,fid,fields);\
     };\
     /* find the node's fid's*/\
-    status get_fid_list(int nid, feather::field::connection::Type conn, std::vector<int>& list) {\
-        find_node_fid_list<startnode,endnode,5>::exec(nid,list);\
+    status get_fid_list(int nid, feather::field::connection::Type conn, feather::field::Fields& fields, std::vector<int>& list) {\
+        find_node_fid_list<startnode,endnode,5>::exec(nid,fields,list);\
         return status();\
     };
 

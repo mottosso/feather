@@ -82,7 +82,9 @@ Window {
             anchors.bottom: parent.bottom
             anchors.margins: 1
             model: fieldModel
+            delegate: Text { height: 10; width: parent.width; text: uid + " " + nid + " " + fid }
 
+            /*
             delegate: IntField {
                 width: parent.width
                 uId: uid
@@ -90,6 +92,7 @@ Window {
                 fieldKey: fid
                 label: "***" 
             }
+            */
         }
 
     }

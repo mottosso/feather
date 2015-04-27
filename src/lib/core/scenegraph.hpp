@@ -159,8 +159,8 @@ namespace feather
             return status();
         };
 
-        status get_fid_list(int nid, field::connection::Type conn, std::vector<int>& list) {
-            return plugins.get_fid_list(nid,conn,list);
+        status get_fid_list(int uid, int nid, field::connection::Type conn, std::vector<int>& list) {
+            return plugins.get_fid_list(nid,conn,sg[uid].fields,list);
         }
 
         /* Add Node to SceneGraph

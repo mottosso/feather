@@ -119,7 +119,7 @@ status PluginManager::load_node(PluginData &node)
     node.node_icon = (bool(*)(int,std::string&))dlsym(node.handle, "node_icon");
     node.create_fields = (status(*)(int,field::Fields&))dlsym(node.handle,"create_fields");
     node.get_field = (field::FieldBase*(*)(int,int,field::Fields&))dlsym(node.handle, "get_field");
-    node.get_fid_list = (status(*)(int,field::connection::Type,std::vector<int>&))dlsym(node.handle, "get_fid_list");
+    node.get_fid_list = (status(*)(int,field::connection::Type,field::Fields&,std::vector<int>&))dlsym(node.handle, "get_fid_list");
     node.command_exist = (bool(*)(std::string))dlsym(node.handle, "command_exist");
     node.command = (status(*)(std::string,parameter::ParameterList))dlsym(node.handle, "command");
 
@@ -191,9 +191,9 @@ void PluginManager::loaded_plugins(std::vector<PluginInfo>& list)
     std::for_each(m_plugins.begin(), m_plugins.end(), info);
 }
 
-status PluginManager::get_fid_list(int nid, field::connection::Type conn, std::vector<int>& list)
+status PluginManager::get_fid_list(int nid, field::connection::Type conn, field::Fields& fields, std::vector<int>& list)
 {
-    get_fids plugin(nid,conn,list);
+    get_fids plugin(nid,conn,fields,list);
     std::for_each(m_plugins.begin(), m_plugins.end(), plugin);
     return status(); 
 }
