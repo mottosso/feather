@@ -232,53 +232,51 @@ namespace feather
 
 
     // GET NODE'S FIDs
-
-    template <int _Nid, int _StartFid>
+    // later connection direction needs to be added
+    template <int _Nid>
     struct get_fid_list {
         static bool exec(int nid, field::Fields& fields, std::vector<int>& list) {
             if(nid==_Nid) {
-                std::cout << "adding fid start\n";
-                field::FieldBase* f = find_field<_Nid,_StartFid>::exec(_StartFid,fields);
-                std::cout << "adding fid end\n";
-                //std::cout << "adding fid "  << _StartFid << " type " << f->type << " to list\n";
+                for(uint i=0; i < fields.size(); i++) {
+                    field::FieldBase* f = fields.at(fields.size()-(i+1));
 
-                // FIX - why is f null??? 
-                if(!f)
-                    std::cout << "adding fid "  << _StartFid << " type " << f << " to list\n";
-                else
-                    std::cout << "FID NULL\n";
-
-                list.push_back(_StartFid);
-                return get_fid_list<_Nid,_StartFid-1>::exec(nid,fields,list);
+                    if(!f) {
+                        std::cout << "FID NULL\n";
+                    }
+                    else {
+                        if(f->conn_type==field::connection::In)
+                            list.push_back(fields.size()-(i+1));
+                    }
+                }
+                return true;
             }
+            return false;
         };
     };
 
-    template <int _Nid>
-    struct get_fid_list<_Nid,0> {
+    template <>
+    struct get_fid_list<0> {
         static bool exec(int nid, field::Fields& fields, std::vector<int>& list) {
             return false;
         };
     };
 
-    template <int _EndNid, int _StartNid, int _StartFid>
+    template <int _EndNid, int _StartNid>
     struct find_node_fid_list {
         static bool exec(int nid, field::Fields& fields, std::vector<int>& list) {
             if(nid==_StartNid) {
-                std::cout << "find fid start\n";
-                return get_fid_list<_StartNid,_StartFid>::exec(nid,fields,list);
-                std::cout << "find fid end\n";
+                return get_fid_list<_StartNid>::exec(nid,fields,list);
             }
             else
-                return find_node_fid_list<_EndNid,_StartNid-1,_StartFid>::exec(nid,fields,list);
+                return find_node_fid_list<_EndNid,_StartNid-1>::exec(nid,fields,list);
         };
     };
 
-    template <int _StartNid, int _StartFid>
-    struct find_node_fid_list<_StartNid,_StartNid,_StartFid> {
+    template <int _StartNid>
+    struct find_node_fid_list<_StartNid,_StartNid> {
         static bool exec(int nid, field::Fields& fields, std::vector<int>& list) {
             if(nid==_StartNid)
-                return get_fid_list<_StartNid,_StartFid>::exec(nid,fields,list);
+                return get_fid_list<_StartNid>::exec(nid,fields,list);
             else
                 return false;
         };
@@ -431,7 +429,7 @@ namespace feather
     };\
     /* find the node's fid's*/\
     status get_fid_list(int nid, feather::field::connection::Type conn, feather::field::Fields& fields, std::vector<int>& list) {\
-        find_node_fid_list<startnode,endnode,5>::exec(nid,fields,list);\
+        find_node_fid_list<startnode,endnode>::exec(nid,fields,list);\
         return status();\
     };
 
