@@ -159,7 +159,7 @@ namespace feather
             return status();
         };
 
-        status get_fid_list(int uid, int nid, field::connection::Type conn, std::vector<int>& list) {
+        status get_fid_list(int uid, int nid, field::connection::Type conn, std::vector<field::FieldBase*>& list) {
             return plugins.get_fid_list(nid,conn,sg[uid].fields,list);
         }
 

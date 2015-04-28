@@ -61,7 +61,7 @@ namespace feather
             status set_field_val(int uid, int node, int field, int& val);
             status set_field_val(int uid, int node, int field, float& val);
             status get_field_connection_status(int uid, int node, int field, bool& val);
-            status get_fid_list(int uid, int nid, field::connection::Type conn, std::vector<int>& list);
+            status get_fid_list(int uid, int nid, field::connection::Type conn, std::vector<field::FieldBase*>& list);
 
             // SG EDITOR
             void get_node_connections(int uid, std::vector<int>& nodes);

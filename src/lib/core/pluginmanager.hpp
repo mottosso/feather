@@ -55,7 +55,7 @@ namespace feather
         bool (*node_icon)(int,std::string&); // name of icon image in ui/icons path
         status(*create_fields)(int,field::Fields&); // creates a new instance of the nodes fields which will get deleted by the scenegraph when the node is removed.
         field::FieldBase* (*get_field)(int,int,field::Fields&);
-        status (*get_fid_list)(int,field::connection::Type,field::Fields&,std::vector<int>&);
+        status (*get_fid_list)(int,field::connection::Type,field::Fields&,std::vector<field::FieldBase*>&);
         bool (*command_exist)(std::string cmd);
         status (*command)(std::string cmd, parameter::ParameterList);
     };
@@ -80,7 +80,7 @@ namespace feather
     };
 
     struct get_fids {
-        get_fids(int nid, field::connection::Type conn, field::Fields& fields, std::vector<int>& list) : m_nid(nid),m_conn(conn),m_fields(fields),m_list(list) {};
+        get_fids(int nid, field::connection::Type conn, field::Fields& fields, std::vector<field::FieldBase*>& list) : m_nid(nid),m_conn(conn),m_fields(fields),m_list(list) {};
         void operator()(PluginData n) {
             if(n.node_exist(m_nid))
                 n.get_fid_list(m_nid,m_conn,m_fields,m_list); 
@@ -92,7 +92,7 @@ namespace feather
             int m_nid;
             field::connection::Type m_conn;
             field::Fields& m_fields;
-            std::vector<int>& m_list; 
+            std::vector<field::FieldBase*>& m_list; 
     };
 
     // DO_IT()
@@ -235,7 +235,7 @@ namespace feather
     // later connection direction needs to be added
     template <int _Nid>
     struct get_fid_list {
-        static bool exec(int nid, field::Fields& fields, std::vector<int>& list) {
+        static bool exec(int nid, field::Fields& fields, std::vector<field::FieldBase*>& list) {
             if(nid==_Nid) {
                 for(uint i=0; i < fields.size(); i++) {
                     field::FieldBase* f = fields.at(fields.size()-(i+1));
@@ -245,7 +245,7 @@ namespace feather
                     }
                     else {
                         if(f->conn_type==field::connection::In)
-                            list.push_back(fields.size()-(i+1));
+                            list.push_back(f);
                     }
                 }
                 return true;
@@ -256,14 +256,14 @@ namespace feather
 
     template <>
     struct get_fid_list<0> {
-        static bool exec(int nid, field::Fields& fields, std::vector<int>& list) {
+        static bool exec(int nid, field::Fields& fields, std::vector<field::FieldBase*>& list) {
             return false;
         };
     };
 
     template <int _EndNid, int _StartNid>
     struct find_node_fid_list {
-        static bool exec(int nid, field::Fields& fields, std::vector<int>& list) {
+        static bool exec(int nid, field::Fields& fields, std::vector<field::FieldBase*>& list) {
             if(nid==_StartNid) {
                 return get_fid_list<_StartNid>::exec(nid,fields,list);
             }
@@ -274,7 +274,7 @@ namespace feather
 
     template <int _StartNid>
     struct find_node_fid_list<_StartNid,_StartNid> {
-        static bool exec(int nid, field::Fields& fields, std::vector<int>& list) {
+        static bool exec(int nid, field::Fields& fields, std::vector<field::FieldBase*>& list) {
             if(nid==_StartNid)
                 return get_fid_list<_StartNid>::exec(nid,fields,list);
             else
@@ -354,7 +354,7 @@ namespace feather
             int max_uid();
             status node_icon_file(int nid, std::string& file);
             void loaded_plugins(std::vector<PluginInfo>& list);
-            status get_fid_list(int nid, field::connection::Type conn, field::Fields& fields, std::vector<int>& list);
+            status get_fid_list(int nid, field::connection::Type conn, field::Fields& fields, std::vector<field::FieldBase*>& list);
 
         private:
             status load_node(PluginData &node);
@@ -377,7 +377,7 @@ namespace feather
     bool node_icon(int,std::string&);\
     feather::status create_fields(int, feather::field::Fields&);\
     feather::field::FieldBase* get_field(int,int,feather::field::Fields&);\
-    feather::status get_fid_list(int,feather::field::connection::Type,feather::field::Fields&,std::vector<int>&);\
+    feather::status get_fid_list(int,feather::field::connection::Type,feather::field::Fields&,std::vector<feather::field::FieldBase*>&);\
     bool command_exist(std::string cmd);\
     feather::status command(std::string cmd, feather::parameter::ParameterList);\
 
@@ -428,7 +428,7 @@ namespace feather
         return find_node_field<startnode,endnode,5>::exec(nid,fid,fields);\
     };\
     /* find the node's fid's*/\
-    status get_fid_list(int nid, feather::field::connection::Type conn, feather::field::Fields& fields, std::vector<int>& list) {\
+    status get_fid_list(int nid, feather::field::connection::Type conn, feather::field::Fields& fields, std::vector<feather::field::FieldBase*>& list) {\
         find_node_fid_list<startnode,endnode>::exec(nid,fields,list);\
         return status();\
     };

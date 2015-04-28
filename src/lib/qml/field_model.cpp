@@ -83,12 +83,13 @@ void FieldModel::addField(int uid, int nid, int fid, int type, bool locked)
 
 void FieldModel::addFields(int uid, int nid)
 {
-    std::vector<int> fids;
+    std::vector<feather::field::FieldBase*> fids;
     std::cout << "addFields " << nid << std::endl;
     feather::qml::command::get_fid_list(uid,nid,feather::field::connection::In,fids);
     m_fields.clear();
-    for(uint i=0; i < fids.size(); i++)
-        m_fields.append(new FieldInfo(uid,nid,fids.at(i),feather::field::Int,0));
+    for(uint i=0; i < fids.size(); i++) {
+        m_fields.append(new FieldInfo(uid,nid,fids.at(i)->id,fids.at(i)->type,0));
+    }
     layoutChanged();
 }
 

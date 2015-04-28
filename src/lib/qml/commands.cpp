@@ -177,7 +177,7 @@ status qml::command::get_field_connection_status(int uid, int node, int field, b
     return status();
 }
 
-status qml::command::get_fid_list(int uid, int nid, field::connection::Type conn, std::vector<int>& list)
+status qml::command::get_fid_list(int uid, int nid, field::connection::Type conn, std::vector<field::FieldBase*>& list)
 {
     return scenegraph::get_fid_list(uid,nid,conn,list);
 }
