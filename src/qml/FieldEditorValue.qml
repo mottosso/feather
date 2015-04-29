@@ -1,8 +1,8 @@
 /***********************************************************************
  *
- * Filename: IntField.qml 
+ * Filename: FieldEditorValue.qml 
  *
- * Description: Used for int values in node editors. 
+ * Description: Used to display values in the field editor. 
  *
  * Copyright (C) 2015 Richard Layman, rlayman2000@yahoo.com 
  *
@@ -32,12 +32,16 @@ Rectangle {
     property alias uId: field.uid // this is a unique of the node 
     property alias nodeKey: field.node // this if the node's number assigned by the plugin
     property alias fieldKey: field.field // this is the fields number assigned by the plugin
-    property alias label: label.text 
+    //property alias label: label.text 
+    property int type: 0 
     property int value: field.intVal
 
     Field { id: field }
 
     FieldPopup { id: popup }
+
+    Translation { id: name }
+
 
     // LABEL
 
@@ -51,6 +55,7 @@ Rectangle {
         horizontalAlignment: Text.AlignRight
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: 10
+        text: name.get_field_name(nodeKey,fieldKey);
     }    
    
     // VALUE

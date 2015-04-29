@@ -82,17 +82,7 @@ Window {
             anchors.bottom: parent.bottom
             anchors.margins: 1
             model: fieldModel
-            delegate: Text { height: 10; width: parent.width; text: uid + " " + nid + " " + fid }
-
-            /*
-            delegate: IntField {
-                width: parent.width
-                uId: uid
-                nodeKey: nid
-                fieldKey: fid
-                label: "***" 
-            }
-            */
+            delegate: FieldEditorValue { width: parent.width; uId: uid; nodeKey: nid; fieldKey: fid; type: type }
         }
 
     }
@@ -151,4 +141,5 @@ Window {
     function nodeSelect(type,uid,nid) {
         fieldModel.addFields(uid,nid)
     }
+
 }
