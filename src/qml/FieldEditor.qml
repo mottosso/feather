@@ -82,7 +82,7 @@ Window {
             anchors.bottom: parent.bottom
             anchors.margins: 1
             model: fieldModel
-            delegate: FieldEditorValue { width: parent.width; uId: uid; nodeKey: nid; fieldKey: fid; type: type }
+            delegate: FieldEditorValue { width: parent.width; uId: uid; nodeKey: nid; fieldKey: fid; fieldType: type }
         }
 
     }

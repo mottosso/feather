@@ -33,7 +33,7 @@ Rectangle {
     property alias nodeKey: field.node // this if the node's number assigned by the plugin
     property alias fieldKey: field.field // this is the fields number assigned by the plugin
     //property alias label: label.text 
-    property int type: 0 
+    property int fieldType: 0 
     property int value: field.intVal
 
     Field { id: field }
@@ -88,7 +88,7 @@ Rectangle {
             name: "normal"
             PropertyChanges {
                 target: intField 
-                color: "lightgrey"
+                color: typeNormalStateColor() //"lightgrey"
             }
 
             PropertyChanges {
@@ -186,4 +186,11 @@ Rectangle {
     }
 
     Component.onCompleted: { intField.state="normal" }
+
+    function typeNormalStateColor(t) {
+        switch(intField.fieldType) {
+            case Field.Int: return "limegreen"; break;
+            default: return "white";
+        }
+    }
 }

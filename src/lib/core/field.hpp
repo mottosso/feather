@@ -38,24 +38,24 @@ namespace feather
         } // namespace connection
 
         enum Type {
-            N,
-            Bool,
-            Int,
-            Float,
-            Double,
-            Vertex,
-            Vector,
-            Mesh,
-            RGB,
-            RGBA,
-            BoolArray,
-            IntArray,
-            FloatArray,
-            VertexArray,
-            VectorArray,
-            RGBArray,
-            RGBAArray,
-            START
+            N=0,
+            Bool=1,
+            Int=2,
+            Float=3,
+            Double=4,
+            Vertex=5,
+            Vector=6,
+            Mesh=7,
+            RGB=8,
+            RGBA=9,
+            BoolArray=10,
+            IntArray=11,
+            FloatArray=12,
+            VertexArray=13,
+            VectorArray=14,
+            RGBArray=15,
+            RGBAArray=16,
+            START=17
         };
 
         struct FieldBase
