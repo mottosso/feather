@@ -269,21 +269,8 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
 {
     SGState::pSge = this;
     setAcceptedMouseButtons(Qt::AllButtons);
-    SceneGraphNode *nodeA = new SceneGraphNode(0,322,this);
-    SceneGraphNode *nodeB = new SceneGraphNode(1,320,this);
 
-    // connections
-    connect(nodeA,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
-    connect(nodeB,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
-    connect(nodeA,SIGNAL(NodePressed(Qt::MouseButton,int,int)),this,SLOT(NodePressed(Qt::MouseButton,int,int)));
-
-    m_nodes.push_back(nodeA);
-    nodeA->setX(50);
-    nodeA->setY(50);
-    m_nodes.push_back(nodeB);
-    nodeB->setX(250);
-    nodeB->setY(250);
-    //setAcceptHoverEvents(true);
+    loadNodes(0);
 }
 
 SceneGraphEditor::~SceneGraphEditor()
@@ -350,9 +337,9 @@ void SceneGraphEditor::paint(QPainter* painter)
     painter->setRenderHints(QPainter::Antialiasing, true);
     QPointF n1;
     QPointF n2;
-    m_nodes.at(0)->outConnectionPoint(n1);
-    m_nodes.at(1)->inConnectionPoint(n2);
-    drawConnection(n1,n2,feather::field::Double,painter);
+    //m_nodes.at(0)->outConnectionPoint(n1);
+    //m_nodes.at(1)->inConnectionPoint(n2);
+    //drawConnection(n1,n2,feather::field::Double,painter);
 }
 
 void SceneGraphEditor::drawConnection(QPointF& snode, QPointF& tnode, feather::field::Type type, QPainter* painter)
@@ -395,6 +382,21 @@ void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn,
         cpoint.setX(npoint.x()+m_nodeWidth);
         cpoint.setY(npoint.y()+(m_nodeHeight/2));
     }
+}
+
+void SceneGraphEditor::loadNodes(int n)
+{
+    // go throught the scenegraph and get each node
+    
+    SceneGraphNode *node = new SceneGraphNode(n,322,this);
+
+    node->setX((m_nodes.size()*100)+50);
+    node->setY((m_nodes.size()*100)+50);
+
+    connect(node,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
+    connect(node,SIGNAL(NodePressed(Qt::MouseButton,int,int)),this,SLOT(NodePressed(Qt::MouseButton,int,int)));
+
+    m_nodes.push_back(node);
 }
 
 void SceneGraphEditor::mousePressEvent(QMouseEvent* event){};
