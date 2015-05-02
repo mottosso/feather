@@ -49,7 +49,7 @@ namespace feather
                 ~SelectionManager(){};
                 void clear() {};
                 int count() { return m_aStates.size(); };
-                void add_state(Type _type, int _uid, int _nid, int _fid) { m_aStates.push_back(SelectionState(_type,_uid,_nid,_fid)); };
+                void add_state(Type _type, int _uid, int _nid, int _fid=0) { m_aStates.push_back(SelectionState(_type,_uid,_nid,_fid)); }
                 SelectionState& get_state(int _i) { return m_aStates.at(_i); };
                 bool selected(int _uid) {
                     for(SelectionState i: m_aStates){

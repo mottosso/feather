@@ -48,6 +48,9 @@ namespace feather
             status load_plugins();
             status run_command(std::string cmd, feather::parameter::ParameterList params);
 
+            // Selection
+            status select_node(int uid);
+
             // Fields
  
             // get field base 

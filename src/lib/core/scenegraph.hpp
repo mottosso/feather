@@ -146,6 +146,13 @@ namespace feather
         };
 
 
+        // SELECTION
+
+        status add_selection(int uid) {
+            smg::Instance()->add_state(static_cast<selection::Type>(sg[uid].type),uid,sg[uid].node);
+            return status();
+        };
+
         status add_selection(int type, int uid, int nid, int fid) {
             // status was returned here because we'll probably use it later
             smg::Instance()->add_state(static_cast<selection::Type>(type),uid,nid,fid);

@@ -102,6 +102,14 @@ status qml::command::run_command(std::string cmd, feather::parameter::ParameterL
 }
 
 
+// Selection
+
+status qml::command::select_node(int uid)
+{
+    return scenegraph::add_selection(uid);
+}
+
+
 // FIELDS
 
 // GET FIELD BASE

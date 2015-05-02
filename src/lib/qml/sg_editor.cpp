@@ -270,7 +270,11 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
     SGState::pSge = this;
     setAcceptedMouseButtons(Qt::AllButtons);
 
-    loadNodes(0);
+    // for testing purposes I'm selecting the node from here.
+    // later this will be done from the viewport or outliner
+    feather::qml::command::select_node(0);
+
+    updateGraph();
 }
 
 SceneGraphEditor::~SceneGraphEditor()
@@ -384,11 +388,12 @@ void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn,
     }
 }
 
-void SceneGraphEditor::loadNodes(int n)
+void SceneGraphEditor::updateGraph()
 {
-    // go throught the scenegraph and get each node
-    
-    SceneGraphNode *node = new SceneGraphNode(n,322,this);
+    // get the selected node and it's children nodes
+    // as well as their connections
+
+    SceneGraphNode *node = new SceneGraphNode(0,322,this);
 
     node->setX((m_nodes.size()*100)+50);
     node->setY((m_nodes.size()*100)+50);
