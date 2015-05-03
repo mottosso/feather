@@ -50,6 +50,7 @@ namespace feather
 
             // Selection
             status select_node(int uid);
+            status get_selected_nodes(std::vector<int>& uids);
 
             // Fields
  

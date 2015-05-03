@@ -109,6 +109,12 @@ status qml::command::select_node(int uid)
     return scenegraph::add_selection(uid);
 }
 
+status qml::command::get_selected_nodes(std::vector<int>& uids)
+{
+    return scenegraph::get_selected_nodes(uids);
+}
+
+
 
 // FIELDS
 

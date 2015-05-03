@@ -159,6 +159,11 @@ namespace feather
             return status();
         };
 
+        status get_selected_nodes(std::vector<int>& uids) {
+            for(uint i=0; i < smg::Instance()->count(); i++)
+                uids.push_back(smg::Instance()->get_uid(i));
+            return status();
+        };
 
         status node_selection(int type, int uid, int nid) {
             // status was returned here because we'll probably use it later
