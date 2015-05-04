@@ -273,6 +273,7 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
     // for testing purposes I'm selecting the node from here.
     // later this will be done from the viewport or outliner
     feather::qml::command::select_node(0);
+    feather::qml::command::select_node(1);
 
     updateGraph();
 }
@@ -392,6 +393,11 @@ void SceneGraphEditor::updateGraph()
 {
     // get the selected node and it's children nodes
     // as well as their connections
+
+    std::vector<int> uids;
+    feather::qml::command::get_selected_nodes(uids);
+
+    std::cout << uids.size() << " nodes are selected\n";
 
     SceneGraphNode *node = new SceneGraphNode(0,322,this);
 
