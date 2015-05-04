@@ -1,8 +1,8 @@
 /***********************************************************************
  *
- * Filename: main.qml 
+ * Filename: ColorProperties.qml 
  *
- * Description: Entry point for the qml main window. 
+ * Description: Container for all the application color properties.
  *
  * Copyright (C) 2015 Richard Layman, rlayman2000@yahoo.com 
  *
@@ -22,44 +22,33 @@
  ***********************************************************************/
 
 import QtQuick 2.3
-import QtQuick.Controls 1.2
+import QtQuick.Window 2.2
 import QtQuick.Layouts 1.1
-import feather.scenegraph 1.0
 
-ApplicationWindow {
-    id: window
-    width: 1200
-    height: 700
+
+Window {
+    id: colorProperties
+    title: "Color Properties"
+    width: 500
+    height: 400
     visible: true
-    title: "Feather 0.1"
+    color: "grey"
 
-    SceneGraph { id: sg }
+    GridLayout {
+        //anchors.fill: parent
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        //width: parent.width
+        rows: 20
+        columns: 3
 
-    ColorProperties { id:colorPropertyEditor }
+        ColorProperty { id: windowBgProp; label: "Window BG"; color: "grey" }
+        ColorProperty { id: boolTypeProp; label: "Boolean Type"; color: "lightblue" }
+        ColorProperty { id: intTypeProp; label: "Int Type"; color: "lightgreen" }
+        ColorProperty { id: meshTypeProp; label: "Mesh Type"; color: "pink" }
 
-    menuBar: MainMenu {}
+    } 
 
-    toolBar: MainToolBar {}
-
-    statusBar: StatusBar {
-        RowLayout { BusyIndicator { implicitWidth: 10; implicitHeight: 10; running: true } Label { text: "Feather 0.1" } }
-    }
-
-    Viewport3D {
-        id: vp3d
-        anchors.fill: parent
-    }
-
-    SceneGraphDialog {
-        id: sgEditor
-        scenegraph: sg
-    }
-
-    FieldEditor {
-        id: fieldEditor
-        scenegraph: sg
-    }
-
-    //Outliner {}
-    //Material {}
+    Component.onCompleted: {}
 }
