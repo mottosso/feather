@@ -69,10 +69,9 @@ Window {
             rows: 1 
             columns: 3
 
-            ColorProperty { id: windowBgProp; label: "Window Main"; color: "grey" }
-            ColorProperty { id: textBgProp; label: "Window Trim"; color: "limegreen" }
-            ColorProperty { id: textColorProp; label: "Window Trim"; color: "black" }
-
+            ColorProperty { id: windowBgProp; name: "windowBg"; label: "Window Main" }
+            ColorProperty { id: textBgProp; name: "textBg"; label: "Window Trim" }
+            ColorProperty { id: textColorProp; name: "text"; label: "Window Trim" }
         } 
 
         // TYPES
@@ -102,27 +101,27 @@ Window {
             rows: 6 
             columns: 3
 
-            ColorProperty { id: boolTypeProp; label: "Boolean Type"; color: "#008080" }
-            ColorProperty { id: intTypeProp; label: "Int Type"; color: "#E2725B" }
-            ColorProperty { id: floatTypeProp; label: "Float Type"; color: "#318CE7" }
-            ColorProperty { id: doubleTypeProp; label: "Double Type"; color: "#FCF75E" }
-            ColorProperty { id: vertexTypeProp; label: "Vertex Type"; color: "#FF7F00" }
-            ColorProperty { id: vectorTypeProp; label: "Vector Type"; color: "#00CC99" }
-            ColorProperty { id: meshTypeProp; label: "Mesh Type"; color: "#FF007F" }
-            ColorProperty { id: rgbTypeProp; label: "RGB Type"; color: "#EDC9AF" }
-            ColorProperty { id: rgbaTypeProp; label: "RGBA Type"; color: "#FF7F50" }
-            ColorProperty { id: boolArrayTypeProp; label: "Bool Array Type"; color: "#FFA812" }
-            ColorProperty { id: intArrayTypeProp; label: "Int Array Type"; color: "#966FD6" }
-            ColorProperty { id: floatArrayTypeProp; label: "Float Array Type"; color: "#D1E231" }
-            ColorProperty { id: vertexArrayTypeProp; label: "Vertex Array Type"; color: "#B39EB5" }
-            ColorProperty { id: vectorArrayTypeProp; label: "Vector Array Type"; color: "#69359C" }
-            ColorProperty { id: rgbArrayTypeProp; label: "RGB Array Type"; color: "#87CEEB" }
-            ColorProperty { id: rgbaArrayTypeProp; label: "RGBA Array Type"; color: "#0F4D92" }
+            ColorProperty { id: boolTypeProp; name: "boolType"; label: "Boolean Type" }
+            ColorProperty { id: intTypeProp; name: "intType"; label: "Int Type" }
+            ColorProperty { id: floatTypeProp; name: "floatType"; label: "Float Type" }
+            ColorProperty { id: doubleTypeProp; name: "doubleType"; label: "Double Type" }
+            ColorProperty { id: vertexTypeProp; name: "vertexType"; label: "Vertex Type" }
+            ColorProperty { id: vectorTypeProp; name: "vectorType"; label: "Vector Type" }
+            ColorProperty { id: meshTypeProp; name: "meshType"; label: "Mesh Type" }
+            ColorProperty { id: rgbTypeProp; name: "rgbType"; label: "RGB Type" }
+            ColorProperty { id: rgbaTypeProp; name: "rgbaType"; label: "RGBA Type" }
+            ColorProperty { id: boolArrayTypeProp; name: "boolArrayType"; label: "Bool Array Type" }
+            ColorProperty { id: intArrayTypeProp; name: "intArrayType"; label: "Int Array Type" }
+            ColorProperty { id: floatArrayTypeProp; name: "floatArrayType"; label: "Float Array Type" }
+            ColorProperty { id: vertexArrayTypeProp; name: "vertexArrayType"; label: "Vertex Array Type" }
+            ColorProperty { id: vectorArrayTypeProp; name: "vectorArrayType"; label: "Vector Array Type" }
+            ColorProperty { id: rgbArrayTypeProp; name: "rgbArrayType"; label: "RGB Array Type" }
+            ColorProperty { id: rgbaArrayTypeProp; name: "rgbaArrayType"; label: "RGBA Array Type" }
         } 
 
     }
 
     }
 
-    Component.onCompleted: {}
+    Component.onCompleted: { }
 }

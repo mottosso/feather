@@ -30,9 +30,12 @@ Item {
     width: 150
     height: 20
     property alias label: label.text
-    property alias color: colorDialog.color
+    property string name: ""
+    //property alias color: colorDialog.color
 
     ColorDialog { id: colorDialog; title: "Color Property" }
+
+    Properties { id: properties }
 
     Row {
         spacing: 10
@@ -52,7 +55,7 @@ Item {
             id: colorBox
             width: 40
             height: colorProperty.height
-            color: colorDialog.color
+            color: "white"
             border.color: "black"
             border.width: 1
             radius: 2
@@ -68,5 +71,6 @@ Item {
     
     Component.onCompleted: {
         colorDialog.visible=false        
+        colorBox.color = properties.getColor(colorProperty.name)
     }
 }
