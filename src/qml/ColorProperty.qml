@@ -46,7 +46,6 @@ Item {
             font.bold: false 
             font.pixelSize: 12
             color: "black"
- 
         }
 
         Rectangle {

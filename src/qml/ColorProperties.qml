@@ -27,28 +27,102 @@ import QtQuick.Layouts 1.1
 
 
 Window {
-    id: colorProperties
+    id: colorWindow
     title: "Color Properties"
     width: 500
     height: 400
     visible: true
     color: "grey"
 
-    GridLayout {
-        //anchors.fill: parent
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        //width: parent.width
-        rows: 20
-        columns: 3
+    Item {
+        id: colorProperties
+        anchors.fill: parent
+        anchors.margins: 4
 
-        ColorProperty { id: windowBgProp; label: "Window BG"; color: "grey" }
-        ColorProperty { id: boolTypeProp; label: "Boolean Type"; color: "lightblue" }
-        ColorProperty { id: intTypeProp; label: "Int Type"; color: "lightgreen" }
-        ColorProperty { id: meshTypeProp; label: "Mesh Type"; color: "pink" }
+    Column {
+        spacing: 10
 
-    } 
+        // UI 
+
+        Rectangle {
+            width: colorProperties.width
+            height: 16
+            color: "lightgrey" 
+            border.color: "black"
+            border.width: 1
+            radius: 2
+            
+            Text {
+                text: "UI"
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.bold: false 
+                font.pixelSize: 12
+                color: "black"
+            }
+        }
+
+        GridLayout {
+            width: colorProperties.width
+            height: 1 * windowBgProp.height
+            rows: 1 
+            columns: 3
+
+            ColorProperty { id: windowBgProp; label: "Window Main"; color: "grey" }
+            ColorProperty { id: textBgProp; label: "Window Trim"; color: "limegreen" }
+            ColorProperty { id: textColorProp; label: "Window Trim"; color: "black" }
+
+        } 
+
+        // TYPES
+
+        Rectangle {
+            width: colorProperties.width
+            height: 16
+            color: "lightgrey" 
+            border.color: "black"
+            border.width: 1
+            radius: 2
+            
+            Text {
+                text: "Types"
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.bold: false 
+                font.pixelSize: 12
+                color: "black"
+            }
+        }
+
+        GridLayout {
+            width: colorProperties.width
+            height: 6 * windowBgProp.height
+            rows: 6 
+            columns: 3
+
+            ColorProperty { id: boolTypeProp; label: "Boolean Type"; color: "#008080" }
+            ColorProperty { id: intTypeProp; label: "Int Type"; color: "#E2725B" }
+            ColorProperty { id: floatTypeProp; label: "Float Type"; color: "#318CE7" }
+            ColorProperty { id: doubleTypeProp; label: "Double Type"; color: "#FCF75E" }
+            ColorProperty { id: vertexTypeProp; label: "Vertex Type"; color: "#FF7F00" }
+            ColorProperty { id: vectorTypeProp; label: "Vector Type"; color: "#00CC99" }
+            ColorProperty { id: meshTypeProp; label: "Mesh Type"; color: "#FF007F" }
+            ColorProperty { id: rgbTypeProp; label: "RGB Type"; color: "#EDC9AF" }
+            ColorProperty { id: rgbaTypeProp; label: "RGBA Type"; color: "#FF7F50" }
+            ColorProperty { id: boolArrayTypeProp; label: "Bool Array Type"; color: "#FFA812" }
+            ColorProperty { id: intArrayTypeProp; label: "Int Array Type"; color: "#966FD6" }
+            ColorProperty { id: floatArrayTypeProp; label: "Float Array Type"; color: "#D1E231" }
+            ColorProperty { id: vertexArrayTypeProp; label: "Vertex Array Type"; color: "#B39EB5" }
+            ColorProperty { id: vectorArrayTypeProp; label: "Vector Array Type"; color: "#69359C" }
+            ColorProperty { id: rgbArrayTypeProp; label: "RGB Array Type"; color: "#87CEEB" }
+            ColorProperty { id: rgbaArrayTypeProp; label: "RGBA Array Type"; color: "#0F4D92" }
+        } 
+
+    }
+
+    }
 
     Component.onCompleted: {}
 }
