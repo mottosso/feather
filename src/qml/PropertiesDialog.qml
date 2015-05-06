@@ -43,6 +43,12 @@ Window {
         }
 
         Tab {
+            title: "Colors"
+
+            ColorProperties { id: colorProperties; anchors.fill: parent }
+        }
+
+        Tab {
             title: "Plugins"
 
             TableView {
@@ -72,6 +78,8 @@ Window {
             }
 
         }
+
+
     
     }
 

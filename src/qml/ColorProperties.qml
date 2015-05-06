@@ -22,22 +22,13 @@
  ***********************************************************************/
 
 import QtQuick 2.3
-import QtQuick.Window 2.2
 import QtQuick.Layouts 1.1
 
 
-Window {
-    id: colorWindow
-    title: "Color Properties"
-    width: 500
-    height: 400
+Rectangle {
+    id: colorProperties
     visible: true
     color: "grey"
-
-    Item {
-        id: colorProperties
-        anchors.fill: parent
-        anchors.margins: 4
 
     Column {
         spacing: 10
@@ -118,8 +109,6 @@ Window {
             ColorProperty { id: rgbArrayTypeProp; name: "rgbArrayType"; label: "RGB Array Type" }
             ColorProperty { id: rgbaArrayTypeProp; name: "rgbaArrayType"; label: "RGBA Array Type" }
         } 
-
-    }
 
     }
 
