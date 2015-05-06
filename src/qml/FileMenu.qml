@@ -27,6 +27,10 @@ import QtQuick.Dialogs 1.0
 import feather.command 1.0
 
 Menu {
+    id: fileMenu 
+    title: "File"
+    visible: true
+    property Properties properties: Null
 
     FileDialog {
         id: importDialog
@@ -40,11 +44,8 @@ Menu {
     PropertiesDialog {
         id: propDialog
         visible: false
+        properties: fileMenu.properties
     }
-
-    id: fileMenu 
-    title: "File"
-    visible: true
 
     // COMMANDS
     Command {

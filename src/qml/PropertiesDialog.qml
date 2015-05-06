@@ -31,6 +31,7 @@ Window {
     visible: false
     width: 500
     height: 400
+    property Properties properties: Null
 
     Plugins { id: pluginsModule }
 
@@ -45,7 +46,11 @@ Window {
         Tab {
             title: "Colors"
 
-            ColorProperties { id: colorProperties; anchors.fill: parent }
+            ColorProperties {
+                id: colorProperties
+                anchors.fill: parent
+                properties: propEditor.properties 
+            }
         }
 
         Tab {

@@ -27,15 +27,21 @@ import QtQuick.Dialogs 1.2
 
 Item {
     id: colorProperty
-    width: 150
+    width: 100
     height: 20
     property alias label: label.text
     property string name: ""
-    //property alias color: colorDialog.color
+    property Properties properties: Null
 
-    ColorDialog { id: colorDialog; title: "Color Property" }
-
-    Properties { id: properties }
+    ColorDialog {
+        id: colorDialog
+        title: "Color Property"
+        
+        onAccepted: {
+            colorBox.color=colorDialog.color
+            properties.setColor(colorProperty.name,colorDialog.color)
+        }
+    }
 
     Row {
         spacing: 10
@@ -64,13 +70,16 @@ Item {
                 id: mouseArea
                 anchors.fill: parent
 
-                onClicked: { colorDialog.visible=true; }
+                onClicked: {
+                    colorDialog.color=colorBox.color
+                    colorDialog.open()
+                }
             }
         }
     }
     
     Component.onCompleted: {
-        colorDialog.visible=false        
+        colorDialog.visible=false
         colorBox.color = properties.getColor(colorProperty.name)
     }
 }

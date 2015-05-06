@@ -25,7 +25,9 @@ import QtQuick 2.3
 
 Item {
     id: properties
-    
+   
+    signal colorsChanged()
+ 
     ListModel {
         id: colorProperties
         // UI
@@ -38,23 +40,17 @@ Item {
         ListElement { name: "floatType"; color: "#318CE7" }
         ListElement { name: "doubleType"; color: "#FCF75E" }
         ListElement { name: "vertexType"; color: "#FF7F00" }
-        ListElement { name: "vectorType"; color: "#00CC99" }
         ListElement { name: "meshType"; color: "#FF007F" }
         ListElement { name: "rgbType"; color: "#EDC9AF" }
-        ListElement { name: "rgbaType"; color: "#FF7F50" }
-        ListElement { name: "boolArrayType"; color: "#FFA812" }
-        ListElement { name: "intArrayType"; color: "#966FD6" }
-        ListElement { name: "floatArrayType"; color: "#D1E231" }
-        ListElement { name: "vertexArrayType"; color: "#B39EB5" }
-        ListElement { name: "vectorArrayType"; color: "#69359C" }
-        ListElement { name: "rgbArrayType"; color: "#87CEEB" }
-        ListElement { name: "rgbaArrayType"; color: "#0F4D92" }
+        // NODES
+        ListElement { name: "cameraNode"; color: "#0F4D92" }
+        ListElement { name: "lightNode"; color: "#EDC9AF" }
     }
 
     Component.onCompleted: {}
 
     function loadProperties() {
-
+        colorsChanged()
     }
 
     function saveProperties() {
@@ -69,8 +65,12 @@ Item {
         return "#FFFFFF"
     }
 
-    function setColor(name) {
-
+    function setColor(name,color) {
+        for(var i=0; i < colorProperties.count; i++) {
+            if(colorProperties.get(i).name==name)
+                colorProperties.get(i).color=color
+        }
+        colorsChanged()
     }
 
 }

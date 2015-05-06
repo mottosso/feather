@@ -35,6 +35,7 @@ Window {
     height: 500
     color: "dimgrey"
     property SceneGraph scenegraph: Null
+    property Properties properties: Null
 
     FieldModel { id: fieldModel }
 
@@ -47,7 +48,7 @@ Window {
         anchors.margins: 1
         border.color: "black"
         border.width: 1
-        color: "grey"
+        color: properties.getColor("windowBg")
         radius: 2
  
         // Node Title
@@ -60,7 +61,7 @@ Window {
             border.color: "black"
             border.width: 1
             radius: 2
-            color: "lightgrey"
+            color: properties.getColor("windowBg")
  
             Text {
                 id: nodeLabel
@@ -129,6 +130,7 @@ Window {
     Component.onCompleted: {
         scenegraph.selectionChanged.connect(setSelection)        
         scenegraph.nodeSelection.connect(nodeSelect)
+        fieldEditor.properties.colorsChanged.connect(updateColor)
     }    
 
     function setSelection(type,uid,nid,fid) {
@@ -142,4 +144,8 @@ Window {
         fieldModel.addFields(uid,nid)
     }
 
+    function updateColor() {
+        console.log("update node color")
+        nodeFrame.color = properties.getColor("windowBg")        
+    }
 }

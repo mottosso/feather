@@ -35,9 +35,9 @@ ApplicationWindow {
 
     SceneGraph { id: sg }
 
-    ColorProperties { id:colorPropertyEditor }
+    Properties { id: properties }
 
-    menuBar: MainMenu {}
+    menuBar: MainMenu { properties: properties }
 
     toolBar: MainToolBar {}
 
@@ -58,6 +58,7 @@ ApplicationWindow {
     FieldEditor {
         id: fieldEditor
         scenegraph: sg
+        properties: properties
     }
 
     //Outliner {}

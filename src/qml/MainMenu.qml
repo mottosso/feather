@@ -21,13 +21,14 @@
  *
  ***********************************************************************/
 
-import QtQuick 2.1
+import QtQuick 2.3
 import QtQuick.Controls 1.2
 
 MenuBar {
     id: menu
+    property Properties properties: Null
     
-    FileMenu{}
+    FileMenu{ properties: menu.properties }
 
     EditMenu{}
 

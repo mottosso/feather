@@ -29,6 +29,7 @@ Rectangle {
     id: colorProperties
     visible: true
     color: "grey"
+    property Properties properties: Null
 
     Column {
         spacing: 10
@@ -56,13 +57,13 @@ Rectangle {
 
         GridLayout {
             width: colorProperties.width
-            height: 1 * windowBgProp.height
+            height: rows * 20
             rows: 1 
-            columns: 3
+            columns: 4
 
-            ColorProperty { id: windowBgProp; name: "windowBg"; label: "Window Main" }
-            ColorProperty { id: textBgProp; name: "textBg"; label: "Window Trim" }
-            ColorProperty { id: textColorProp; name: "text"; label: "Window Trim" }
+            ColorProperty { properties: colorProperties.properties; width: 130; name: "windowBg"; label: "Window BG" }
+            ColorProperty { properties: colorProperties.properties; width: 130; name: "textBg"; label: "Text BG" }
+            ColorProperty { properties: colorProperties.properties; width: 130; name: "text"; label: "Text" }
         } 
 
         // TYPES
@@ -76,7 +77,7 @@ Rectangle {
             radius: 2
             
             Text {
-                text: "Types"
+                text: "TYPES"
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -88,27 +89,49 @@ Rectangle {
 
         GridLayout {
             width: colorProperties.width
-            height: 6 * windowBgProp.height
-            rows: 6 
-            columns: 3
+            height: rows * 20 
+            rows: 2 
+            columns: 4
 
-            ColorProperty { id: boolTypeProp; name: "boolType"; label: "Boolean Type" }
-            ColorProperty { id: intTypeProp; name: "intType"; label: "Int Type" }
-            ColorProperty { id: floatTypeProp; name: "floatType"; label: "Float Type" }
-            ColorProperty { id: doubleTypeProp; name: "doubleType"; label: "Double Type" }
-            ColorProperty { id: vertexTypeProp; name: "vertexType"; label: "Vertex Type" }
-            ColorProperty { id: vectorTypeProp; name: "vectorType"; label: "Vector Type" }
-            ColorProperty { id: meshTypeProp; name: "meshType"; label: "Mesh Type" }
-            ColorProperty { id: rgbTypeProp; name: "rgbType"; label: "RGB Type" }
-            ColorProperty { id: rgbaTypeProp; name: "rgbaType"; label: "RGBA Type" }
-            ColorProperty { id: boolArrayTypeProp; name: "boolArrayType"; label: "Bool Array Type" }
-            ColorProperty { id: intArrayTypeProp; name: "intArrayType"; label: "Int Array Type" }
-            ColorProperty { id: floatArrayTypeProp; name: "floatArrayType"; label: "Float Array Type" }
-            ColorProperty { id: vertexArrayTypeProp; name: "vertexArrayType"; label: "Vertex Array Type" }
-            ColorProperty { id: vectorArrayTypeProp; name: "vectorArrayType"; label: "Vector Array Type" }
-            ColorProperty { id: rgbArrayTypeProp; name: "rgbArrayType"; label: "RGB Array Type" }
-            ColorProperty { id: rgbaArrayTypeProp; name: "rgbaArrayType"; label: "RGBA Array Type" }
-        } 
+            ColorProperty { properties: colorProperties.properties; name: "boolType"; label: "Boolean" }
+            ColorProperty { properties: colorProperties.properties; name: "intType"; label: "Int" }
+            ColorProperty { properties: colorProperties.properties; name: "floatType"; label: "Float" }
+            ColorProperty { properties: colorProperties.properties; name: "doubleType"; label: "Double" }
+            ColorProperty { properties: colorProperties.properties; name: "vertexType"; label: "Vertex" }
+            ColorProperty { properties: colorProperties.properties; name: "meshType"; label: "Mesh" }
+            ColorProperty { properties: colorProperties.properties; name: "rgbType"; label: "RGB" }
+       } 
+
+        // TYPES
+
+        Rectangle {
+            width: colorProperties.width
+            height: 16
+            color: "lightgrey" 
+            border.color: "black"
+            border.width: 1
+            radius: 2
+            
+            Text {
+                text: "NODES"
+                anchors.fill: parent
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.bold: false 
+                font.pixelSize: 12
+                color: "black"
+            }
+        }
+
+        GridLayout {
+            width: colorProperties.width
+            height: rows * 20 
+            rows: 1 
+            columns: 4
+
+            ColorProperty { properties: colorProperties.properties; name: "cameraNode"; label: "Camera" }
+            ColorProperty { properties: colorProperties.properties; name: "lightNode"; label: "Light" }
+       } 
 
     }
 
