@@ -35,6 +35,7 @@ Rectangle {
     //property alias label: label.text 
     property int fieldType: 0 
     property int value: field.intVal
+    property Properties properties: Null
 
     Field { id: field }
 
@@ -189,8 +190,16 @@ Rectangle {
 
     function typeNormalStateColor(t) {
         switch(intField.fieldType) {
-            case Field.Int: return "limegreen"; break;
+            case Field.Bool: return properties.getColor("boolType"); break;
+            case Field.Int: return properties.getColor("intType"); break;
+            case Field.Float: return properties.getColor("floatType"); break;
+            case Field.Double: return properties.getColor("doubleType"); break;
+            case Field.Vertex: return properties.getColor("vertexType"); break;
+            case Field.Vector: return properties.getColor("vertexType"); break;
+            case Field.Mesh: return properties.getColor("meshType"); break;
+            case Field.RGB || Field.RGBA: return properties.getColor("rgbType"); break;
             default: return "white";
+
         }
     }
 }
