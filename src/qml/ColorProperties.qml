@@ -58,12 +58,16 @@ Rectangle {
         GridLayout {
             width: colorProperties.width
             height: rows * 20
-            rows: 1 
+            rows: 2 
             columns: 4
 
             ColorProperty { properties: colorProperties.properties; width: 130; name: "windowBg"; label: "Window BG" }
+            ColorProperty { properties: colorProperties.properties; width: 130; name: "panel"; label: "Panel" }
+            ColorProperty { properties: colorProperties.properties; width: 130; name: "labelBg"; label: "Label BG" }
+            ColorProperty { properties: colorProperties.properties; width: 130; name: "label"; label: "Label" }
             ColorProperty { properties: colorProperties.properties; width: 130; name: "textBg"; label: "Text BG" }
             ColorProperty { properties: colorProperties.properties; width: 130; name: "text"; label: "Text" }
+
         } 
 
         // TYPES

@@ -199,7 +199,6 @@ Rectangle {
             case Field.Mesh: return properties.getColor("meshType"); break;
             case Field.RGB || Field.RGBA: return properties.getColor("rgbType"); break;
             default: return "white";
-
         }
     }
 }

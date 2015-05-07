@@ -33,7 +33,6 @@ Window {
     flags: Qt.Tool
     width: 200
     height: 500
-    color: "dimgrey"
     property SceneGraph scenegraph: Null
     property Properties properties: Null
 
@@ -97,7 +96,6 @@ Window {
         anchors.margins: 1
         border.color: "black"
         border.width: 1
-        color: "darkgrey"
         radius: 4
 
         // Node Base Title
@@ -110,7 +108,7 @@ Window {
             border.color: "black"
             border.width: 1
             radius: 2
-            color: "slategrey"
+            //color: "slategrey"
  
             Text {
                 id: nodeBaseLabel
@@ -131,6 +129,7 @@ Window {
         scenegraph.selectionChanged.connect(setSelection)        
         scenegraph.nodeSelection.connect(nodeSelect)
         fieldEditor.properties.colorsChanged.connect(updateColor)
+        updateColor()
     }    
 
     function setSelection(type,uid,nid,fid) {
@@ -146,6 +145,11 @@ Window {
 
     function updateColor() {
         console.log("update node color")
-        nodeFrame.color = properties.getColor("windowBg")        
+        nodeFrame.color = properties.getColor("panel")        
+        baseFrame.color = properties.getColor("panel")        
+        nodeTitle.color = properties.getColor("labelBg")        
+        nodeBaseTitle.color = properties.getColor("labelBg")        
+        fieldEditor.color = properties.getColor("windowBg")
+
     }
 }
