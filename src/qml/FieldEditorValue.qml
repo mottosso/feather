@@ -190,12 +190,12 @@ Rectangle {
 
     function typeNormalStateColor(t) {
         switch(intField.fieldType) {
-            case Field.Bool: return properties.getColor("boolType"); break;
-            case Field.Int: return properties.getColor("intType"); break;
-            case Field.Float: return properties.getColor("floatType"); break;
-            case Field.Double: return properties.getColor("doubleType"); break;
-            case Field.Vertex: return properties.getColor("vertexType"); break;
-            case Field.Vector: return properties.getColor("vertexType"); break;
+            case Field.Bool || Field.BoolArray: return properties.getColor("boolType"); break;
+            case Field.Int || Field.IntArray: return properties.getColor("intType"); break;
+            case Field.Float || Field.FloatArray: return properties.getColor("floatType"); break;
+            case Field.Double || Field.DoubleArray: return properties.getColor("doubleType"); break;
+            case Field.Vertex || Field.VertexArray: return properties.getColor("vertexType"); break;
+            case Field.Vector || Field.VectorArray: return properties.getColor("vertexType"); break;
             case Field.Mesh: return properties.getColor("meshType"); break;
             case Field.RGB || Field.RGBA: return properties.getColor("rgbType"); break;
             default: return "white";
