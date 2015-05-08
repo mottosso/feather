@@ -398,15 +398,19 @@ void SceneGraphEditor::updateGraph()
 
     std::cout << uids.size() << " nodes are selected\n";
 
-    SceneGraphNode *node = new SceneGraphNode(0,322,this);
+    for(uint i=0; i < uids.size(); i++) {
+        int nid=0;
+        feather::qml::command::get_node_id(uids[i],nid); 
+        SceneGraphNode *node = new SceneGraphNode(uids[i],nid,this);
 
-    node->setX((m_nodes.size()*100)+50);
-    node->setY((m_nodes.size()*100)+50);
+        node->setX((m_nodes.size()*100)+50);
+        node->setY((m_nodes.size()*100)+50);
 
-    connect(node,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
-    connect(node,SIGNAL(NodePressed(Qt::MouseButton,int,int)),this,SLOT(NodePressed(Qt::MouseButton,int,int)));
+        connect(node,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
+        connect(node,SIGNAL(NodePressed(Qt::MouseButton,int,int)),this,SLOT(NodePressed(Qt::MouseButton,int,int)));
 
-    m_nodes.push_back(node);
+        m_nodes.push_back(node);
+    }
 }
 
 void SceneGraphEditor::mousePressEvent(QMouseEvent* event){};

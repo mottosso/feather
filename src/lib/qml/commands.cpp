@@ -91,6 +91,11 @@ status qml::command::get_node_icon(int nid, std::string& file)
     return scenegraph::get_node_icon(nid,file);
 }
 
+status qml::command::get_node_id(int uid, int& nid)
+{
+    return scenegraph::get_node_id(uid,nid);
+}
+
 status qml::command::load_plugins()
 {
     return scenegraph::load_plugins(); 

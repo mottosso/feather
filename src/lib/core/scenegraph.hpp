@@ -131,6 +131,11 @@ namespace feather
             return plugins.node_icon_file(nid,file);
         };
 
+        status get_node_id(int uid, int& nid) {
+            nid=sg[uid].node;
+            return status();
+        };
+
         field::FieldBase* get_fieldBase(int uid, int node, int field) {
             field::FieldBase* f = plugins.get_fieldBase(uid,node,field,sg[uid].fields); 
             if(!f)
