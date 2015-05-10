@@ -398,9 +398,10 @@ void SceneGraphEditor::updateGraph()
 
     std::cout << uids.size() << " nodes are selected\n";
 
+    // for each selected uid we will draw all the nodes connected to it.
     for(uint i=0; i < uids.size(); i++) {
         int nid=0;
-        feather::qml::command::get_node_id(uids[i],nid); 
+        feather::qml::command::get_node_id(uids[i],nid);
         SceneGraphNode *node = new SceneGraphNode(uids[i],nid,this);
 
         node->setX((m_nodes.size()*100)+50);
@@ -410,6 +411,9 @@ void SceneGraphEditor::updateGraph()
         connect(node,SIGNAL(NodePressed(Qt::MouseButton,int,int)),this,SLOT(NodePressed(Qt::MouseButton,int,int)));
 
         m_nodes.push_back(node);
+
+        std::vector<int> cuids; 
+        feather::qml::command::get_node_connected_uids(uids[i],cuids);
     }
 }
 

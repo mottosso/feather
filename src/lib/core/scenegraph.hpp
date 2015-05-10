@@ -136,6 +136,12 @@ namespace feather
             return status();
         };
 
+        status get_node_connected_uids(int uid, std::vector<int>& uids) {
+            //nid=sg[uid].node;
+            //std::for_each(sg.begin(), sg.end(), [](){ std::cout << "triggered\n"; });
+            return status();
+        };
+
         field::FieldBase* get_fieldBase(int uid, int node, int field) {
             field::FieldBase* f = plugins.get_fieldBase(uid,node,field,sg[uid].fields); 
             if(!f)
