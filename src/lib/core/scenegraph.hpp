@@ -124,7 +124,8 @@ namespace feather
          *  uid to the nodes reference
          */
         void get_node_connections(int uid, std::vector<int>& nodes) {
-            boost::edges(sg);    
+            // TODO
+            //boost::edges(sg);    
         };
 
         status get_node_icon(int nid, std::string& file) {
@@ -137,8 +138,15 @@ namespace feather
         };
 
         status get_node_connected_uids(int uid, std::vector<int>& uids) {
-            //nid=sg[uid].node;
-            //std::for_each(sg.begin(), sg.end(), [](){ std::cout << "triggered\n"; });
+            typedef typename boost::graph_traits<FSceneGraph>::out_edge_iterator oe;
+            FSceneGraph::edge_descriptor e;
+            std::pair<oe,oe> p = boost::out_edges(uid,sg);
+            e = *p.first;
+            FNodeDescriptor u = source(e,sg);
+            FNodeDescriptor v = target(e,sg);
+
+            std::cout << "NODE SOURCE: " << u << ", NODE TARGET: " << v << std::endl;  
+            uids.push_back(v); 
             return status();
         };
 
