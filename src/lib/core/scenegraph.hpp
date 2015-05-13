@@ -137,6 +137,7 @@ namespace feather
             return status();
         };
 
+        // Currently this function will only return one connected node
         status get_node_connected_uids(int uid, std::vector<int>& uids) {
             typedef typename boost::graph_traits<FSceneGraph>::out_edge_iterator oe;
             FSceneGraph::edge_descriptor e;
@@ -145,7 +146,7 @@ namespace feather
             FNodeDescriptor u = source(e,sg);
             FNodeDescriptor v = target(e,sg);
 
-            std::cout << "NODE SOURCE: " << u << ", NODE TARGET: " << v << std::endl;  
+            //std::cout << "NODE SOURCE: " << u << ", NODE TARGET: " << v << std::endl;  
             uids.push_back(v); 
             return status();
         };
