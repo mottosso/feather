@@ -428,7 +428,7 @@ void SceneGraphEditor::updateLeaf(int uid, int xpos, int ypos)
     std::vector<int> cuids;
     // update each connected node as a separate leaf 
     feather::qml::command::get_node_connected_uids(uid,cuids);
-    std::for_each(cuids.begin(),cuids.end(),[&xpos,&ypos,this](int key){ if(!key){updateLeaf(key,xpos,ypos);} });
+    std::for_each(cuids.begin(),cuids.end(),[&xpos,&ypos,this](int key){ if(key){ xpos+=100; ypos+=100; updateLeaf(key,xpos,ypos);} });
 }
 
 
