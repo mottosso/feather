@@ -274,7 +274,6 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
     // later this will be done from the viewport or outliner
     feather::qml::command::select_node(0);
 
-    updateGraph();
 }
 
 SceneGraphEditor::~SceneGraphEditor()
@@ -337,6 +336,11 @@ void SceneGraphEditor::connectionMouseClicked(int button, int uid, int nid, int 
 
 void SceneGraphEditor::paint(QPainter* painter)
 {
+    while(m_nodes.size() > 0) {
+        m_nodes.clear();
+    }
+
+    updateGraph(painter);
     setFillColor(QColor("#696969"));
     painter->setRenderHints(QPainter::Antialiasing, true);
     QPointF n1;
@@ -374,6 +378,30 @@ void SceneGraphEditor::drawConnection(QPointF& snode, QPointF& tnode, feather::f
     painter->drawPath(path);
 }
 
+void SceneGraphEditor::drawConnection(int sx, int sy, int tx, int ty, QPainter* painter)
+{
+    QPainterPath path;
+    QBrush brush = painter->brush();
+    brush.setStyle(Qt::NoBrush);
+
+    //std::cout << "snode x:" << snode.x() << ", y:" << snode.y() << ", tnode x: " << tnode.x() << ", y:" << tnode.y() << std::endl;
+    QPen pathPen;
+    if(SGState::mode==SGState::Normal)
+        pathPen = QPen(QColor("#99BADD"),1);
+    else
+        pathPen = QPen(QColor("#FFEF00"),2);
+
+    path.moveTo(sx+2,sy+2);
+
+    if(SGState::mode==SGState::Normal)
+        path.cubicTo(tx,sy,sx,ty,tx-2,ty+2);
+    else 
+        path.cubicTo(MouseInfo::clickX,sy,sx,MouseInfo::clickY-35,MouseInfo::clickX-2,MouseInfo::clickY-35);
+
+    painter->setPen(pathPen);
+    painter->drawPath(path);
+}
+
 void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn, QPoint& npoint, QPoint& cpoint)
 {
     if(conn == feather::field::connection::In)
@@ -388,7 +416,7 @@ void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn,
     }
 }
 
-void SceneGraphEditor::updateGraph()
+void SceneGraphEditor::updateGraph(QPainter* painter)
 {
     // get the selected node and it's children nodes
     // as well as their connections
@@ -403,7 +431,7 @@ void SceneGraphEditor::updateGraph()
 
     // for each selected uid we will draw all the nodes connected to it.
     for(uint i=0; i < uids.size(); i++) {
-        updateLeaf(uids[i],xpos,ypos);
+        updateLeaf(uids[i],xpos,ypos,painter);
         //std::vector<int> cuids; 
         //feather::qml::command::get_node_connected_uids(uids[i],cuids);
     }
@@ -411,7 +439,7 @@ void SceneGraphEditor::updateGraph()
 }
 
 
-void SceneGraphEditor::updateLeaf(int uid, int xpos, int ypos)
+void SceneGraphEditor::updateLeaf(int uid, int xpos, int ypos, QPainter* painter)
 {
     int nid=0;
     feather::qml::command::get_node_id(uid,nid);
@@ -428,7 +456,7 @@ void SceneGraphEditor::updateLeaf(int uid, int xpos, int ypos)
     std::vector<int> cuids;
     // update each connected node as a separate leaf 
     feather::qml::command::get_node_connected_uids(uid,cuids);
-    std::for_each(cuids.begin(),cuids.end(),[&xpos,&ypos,this](int key){ if(key){ xpos+=100; ypos+=100; updateLeaf(key,xpos,ypos);} });
+    std::for_each(cuids.begin(),cuids.end(),[&xpos,&ypos,painter,this](int key){ if(key){ drawConnection(xpos,ypos,xpos+=100,ypos+=100,painter); updateLeaf(key,xpos,ypos,painter); } });
 }
 
 

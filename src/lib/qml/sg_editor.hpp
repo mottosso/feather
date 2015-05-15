@@ -178,9 +178,10 @@ class SceneGraphEditor : public QQuickPaintedItem
 
     private:
         void drawConnection(QPointF& snode, QPointF& tnode, feather::field::Type type, QPainter* painter);
+        void drawConnection(int sx, int sy, int tx, int ty, QPainter* painter);
         void getConnectionPoint(feather::field::connection::Type conn, QPoint& npoint, QPoint& cpoint);
-        void updateGraph();
-        void updateLeaf(int uid, int xpos, int ypos);
+        void updateGraph(QPainter* painter);
+        void updateLeaf(int uid, int xpos, int ypos, QPainter* painter);
 
         int m_scale;
         int m_nodeWidth;
