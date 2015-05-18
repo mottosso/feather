@@ -113,7 +113,8 @@ namespace feather
             sg[uid].node = n;
             sg[uid].name = name;
             plugins.create_fields(n,sg[uid].fields);
-            node_selection.push_back(n); 
+            // do the selection in a seperate command
+            //node_selection.push_back(n); 
 
             // Return the node number
             return static_cast<int>(uid);
@@ -140,14 +141,24 @@ namespace feather
         // Currently this function will only return one connected node
         status get_node_connected_uids(int uid, std::vector<int>& uids) {
             typedef typename boost::graph_traits<FSceneGraph>::out_edge_iterator oe;
+            typedef typename boost::graph_traits<FSceneGraph>::in_edge_iterator ie;
             FSceneGraph::edge_descriptor e;
-            std::pair<oe,oe> p = boost::out_edges(uid,sg);
-            e = *p.first;
+            std::pair<oe,oe> op = boost::out_edges(uid,sg);
+            std::pair<ie,ie> ip = boost::in_edges(uid,sg);
+            e = *op.first;
             FNodeDescriptor u = source(e,sg);
             FNodeDescriptor v = target(e,sg);
 
-            //std::cout << "NODE SOURCE: " << u << ", NODE TARGET: " << v << std::endl;  
-            uids.push_back(v); 
+            //std::cout << "NODE INFO: " << edges(e,sg) << ", NODE TARGET: " << v << std::endl;  
+ 
+            std::cout << "OUT NODE SOURCE: " << sg[e].n2 << ", NODE TARGET: " << sg[v].uid << std::endl;  
+            e = *ip.first;
+            u = source(e,sg);
+            v = target(e,sg);
+            std::cout << "IN NODE SOURCE: " << u << ", NODE TARGET: " << v << std::endl;  
+
+
+            uids.push_back(sg[v].uid); 
             return status();
         };
 
@@ -177,6 +188,10 @@ namespace feather
             // status was returned here because we'll probably use it later
             smg::Instance()->add_state(static_cast<selection::Type>(type),uid,nid,fid);
             return status();
+        };
+
+        void clear_selection() {
+            smg::Instance()->clear();
         };
 
         status get_selected_nodes(std::vector<int>& uids) {

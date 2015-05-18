@@ -47,7 +47,7 @@ namespace feather
             public:
                 SelectionManager(){};
                 ~SelectionManager(){};
-                void clear() {};
+                void clear() { m_aStates.clear(); };
                 uint count() { return m_aStates.size(); };
                 void add_state(Type _type, int _uid, int _nid, int _fid=0) {
                     // don't add the state if the uid is already selected

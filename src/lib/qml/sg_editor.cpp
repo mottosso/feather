@@ -179,13 +179,14 @@ void SceneGraphNode::paint(QPainter* painter)
     //painter->drawEllipse(tConnPoint,6,6);
 
 
-    // draw the node's name
+    // Node Label 
     painter->setPen(textPen);
     painter->setFont(textFont);
     painter->drawText(QRect(8,2,NODE_WIDTH-26,NODE_HEIGHT),Qt::AlignLeft|Qt::AlignVCenter,feather::qml::command::get_node_name(m_uid).c_str());
     //setX(m_x);
     //setY(m_y);
 
+    // Node Icon
     QRectF tgt(NODE_WIDTH-26,4,24,24);
     QRectF src(0,0,48,48);
     QImage img(m_imgPath.str().c_str());
@@ -196,11 +197,14 @@ void SceneGraphNode::mousePressEvent(QMouseEvent* event)
 {
     m_x = event->screenPos().x();
     m_y = event->screenPos().y();
-    NodePressed(event->button(),m_uid,m_node);
+    nodePressed(event->button(),m_uid,m_node);
 }
 
 void SceneGraphNode::mouseReleaseEvent(QMouseEvent* event)
 {
+    // clear selection
+    //feather::qml::command::clear_selection();
+
     if(feather::smg::Instance()->selected(m_uid)){
         m_nodeFillBrush.setColor(QColor("#FF007F"));
         update();
@@ -225,7 +229,7 @@ void SceneGraphNode::hoverLeaveEvent(QHoverEvent* event)
         m_nodeFillBrush.setColor(QColor("#6A5ACD"));
         update();
     }
-   update();
+   //update();
 }
 
 void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
@@ -273,7 +277,7 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
     // for testing purposes I'm selecting the node from here.
     // later this will be done from the viewport or outliner
     feather::qml::command::select_node(0);
-
+    updateGraph();
 }
 
 SceneGraphEditor::~SceneGraphEditor()
@@ -309,7 +313,7 @@ void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::
     openConnMenu();
 }
 
-void SceneGraphEditor::NodePressed(Qt::MouseButton button, int uid, int nid)
+void SceneGraphEditor::nodePressed(Qt::MouseButton button, int uid, int nid)
 {
     nodeSelection(0,uid,nid); 
 }
@@ -336,15 +340,9 @@ void SceneGraphEditor::connectionMouseClicked(int button, int uid, int nid, int 
 
 void SceneGraphEditor::paint(QPainter* painter)
 {
-    while(m_nodes.size() > 0) {
-        m_nodes.clear();
-    }
-
-    updateGraph(painter);
     setFillColor(QColor("#696969"));
     painter->setRenderHints(QPainter::Antialiasing, true);
-    QPointF n1;
-    QPointF n2;
+
     //m_nodes.at(0)->outConnectionPoint(n1);
     //m_nodes.at(1)->inConnectionPoint(n2);
     //drawConnection(n1,n2,feather::field::Double,painter);
@@ -416,7 +414,7 @@ void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn,
     }
 }
 
-void SceneGraphEditor::updateGraph(QPainter* painter)
+void SceneGraphEditor::updateGraph()
 {
     // get the selected node and it's children nodes
     // as well as their connections
@@ -429,9 +427,11 @@ void SceneGraphEditor::updateGraph(QPainter* painter)
 
     std::cout << uids.size() << " nodes are selected\n";
 
+    std::for_each(uids.begin(),uids.end(),[](int& n){ std::cout << n << ","; });
+
     // for each selected uid we will draw all the nodes connected to it.
     for(uint i=0; i < uids.size(); i++) {
-        updateLeaf(uids[i],xpos,ypos,painter);
+        updateLeaf(uids[i],xpos,ypos+=100);
         //std::vector<int> cuids; 
         //feather::qml::command::get_node_connected_uids(uids[i],cuids);
     }
@@ -439,24 +439,25 @@ void SceneGraphEditor::updateGraph(QPainter* painter)
 }
 
 
-void SceneGraphEditor::updateLeaf(int uid, int xpos, int ypos, QPainter* painter)
+void SceneGraphEditor::updateLeaf(int uid, int xpos, int ypos)
 {
     int nid=0;
-    feather::qml::command::get_node_id(uid,nid);
+    feather::status s = feather::qml::command::get_node_id(uid,nid);
+
     SceneGraphNode *node = new SceneGraphNode(uid,nid,this);
 
     node->setX(xpos);
     node->setY(ypos);
 
     connect(node,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
-    connect(node,SIGNAL(NodePressed(Qt::MouseButton,int,int)),this,SLOT(NodePressed(Qt::MouseButton,int,int)));
+    connect(node,SIGNAL(nodePressed(Qt::MouseButton,int,int)),this,SLOT(nodePressed(Qt::MouseButton,int,int)));
 
     m_nodes.push_back(node);
 
     std::vector<int> cuids;
     // update each connected node as a separate leaf 
     feather::qml::command::get_node_connected_uids(uid,cuids);
-    std::for_each(cuids.begin(),cuids.end(),[&xpos,&ypos,painter,this](int key){ if(key){ drawConnection(xpos,ypos,xpos+=100,ypos+=100,painter); updateLeaf(key,xpos,ypos,painter); } });
+    std::for_each(cuids.begin(),cuids.end(),[&xpos,&ypos,this](int key){ std::cout << "drawing leaf " << key << std::endl; /*if(key){ drawConnection(xpos,ypos,xpos+100,ypos+100,painter);*/ updateLeaf(key,xpos+100,ypos+100); });
 }
 
 

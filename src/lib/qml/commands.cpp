@@ -124,6 +124,10 @@ status qml::command::get_selected_nodes(std::vector<int>& uids)
     return scenegraph::get_selected_nodes(uids);
 }
 
+void qml::command::clear_selection()
+{
+    scenegraph::clear_selection();
+}
 
 
 // FIELDS
