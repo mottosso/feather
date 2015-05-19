@@ -121,7 +121,7 @@ namespace feather
 
     typedef struct {} FAttributeArray;
 
-    typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS, FNode, FConnection> FSceneGraph;
+    typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, FNode, FConnection> FSceneGraph;
 
     typedef FSceneGraph::vertex_descriptor FNodeDescriptor;
 

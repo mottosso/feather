@@ -416,9 +416,6 @@ void SceneGraphEditor::getConnectionPoint(feather::field::connection::Type conn,
 
 void SceneGraphEditor::updateGraph()
 {
-    // get the selected node and it's children nodes
-    // as well as their connections
-
     int xpos = 100;
     int ypos = 50;
 
@@ -432,8 +429,6 @@ void SceneGraphEditor::updateGraph()
     // for each selected uid we will draw all the nodes connected to it.
     for(uint i=0; i < uids.size(); i++) {
         updateLeaf(uids[i],xpos,ypos+=100);
-        //std::vector<int> cuids; 
-        //feather::qml::command::get_node_connected_uids(uids[i],cuids);
     }
 
 }
@@ -457,7 +452,10 @@ void SceneGraphEditor::updateLeaf(int uid, int xpos, int ypos)
     std::vector<int> cuids;
     // update each connected node as a separate leaf 
     feather::qml::command::get_node_connected_uids(uid,cuids);
-    std::for_each(cuids.begin(),cuids.end(),[&xpos,&ypos,this](int key){ std::cout << "drawing leaf " << key << std::endl; /*if(key){ drawConnection(xpos,ypos,xpos+100,ypos+100,painter);*/ updateLeaf(key,xpos+100,ypos+100); });
+    std::for_each(cuids.begin(),cuids.end(),[&xpos,&ypos,this](int key){
+        std::cout << "drawing leaf " << key << std::endl;
+        updateLeaf(key,xpos+100,ypos+100);
+    });
 }
 
 

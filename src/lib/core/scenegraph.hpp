@@ -133,34 +133,25 @@ namespace feather
             return plugins.node_icon_file(nid,file);
         };
 
+
         status get_node_id(int uid, int& nid) {
             nid=sg[uid].node;
             return status();
         };
 
-        // Currently this function will only return one connected node
+
         status get_node_connected_uids(int uid, std::vector<int>& uids) {
-            typedef typename boost::graph_traits<FSceneGraph>::out_edge_iterator oe;
-            typedef typename boost::graph_traits<FSceneGraph>::in_edge_iterator ie;
-            FSceneGraph::edge_descriptor e;
-            std::pair<oe,oe> op = boost::out_edges(uid,sg);
-            std::pair<ie,ie> ip = boost::in_edges(uid,sg);
-            e = *op.first;
-            FNodeDescriptor u = source(e,sg);
-            FNodeDescriptor v = target(e,sg);
-
-            //std::cout << "NODE INFO: " << edges(e,sg) << ", NODE TARGET: " << v << std::endl;  
+            typedef typename boost::graph_traits<FSceneGraph>::out_edge_iterator ei;
+            std::pair<ei,ei> p = boost::out_edges(uid,sg);
  
-            std::cout << "OUT NODE SOURCE: " << sg[e].n2 << ", NODE TARGET: " << sg[v].uid << std::endl;  
-            e = *ip.first;
-            u = source(e,sg);
-            v = target(e,sg);
-            std::cout << "IN NODE SOURCE: " << u << ", NODE TARGET: " << v << std::endl;  
+            for(;p.first!=p.second;++p.first){
+                std::cout << "edge iter " << *p.first << std::endl;
+                uids.push_back(target(*p.first,sg));
+            }
 
-
-            uids.push_back(sg[v].uid); 
             return status();
         };
+
 
         field::FieldBase* get_fieldBase(int uid, int node, int field) {
             field::FieldBase* f = plugins.get_fieldBase(uid,node,field,sg[uid].fields); 
