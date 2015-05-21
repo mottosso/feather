@@ -286,22 +286,28 @@ void SceneGraphLink::paint(QPainter* painter)
     QBrush brush = painter->brush();
     brush.setStyle(Qt::NoBrush);
 
-    //std::cout << "snode x:" << snode.x() << ", y:" << snode.y() << ", tnode x: " << tnode.x() << ", y:" << tnode.y() << std::endl;
+    QPointF sp;
+    QPointF tp;
+    m_snode->outConnectionPoint(sp);
+    m_tnode->inConnectionPoint(tp);
+
     QPen pathPen;
     if(SGState::mode==SGState::Normal)
         pathPen = QPen(QColor("#99BADD"),1);
     else
         pathPen = QPen(QColor("#FFEF00"),2);
 
-    path.moveTo(m_snode->x()+2,m_snode->y()+2);
+    path.moveTo(sp.x()+2,sp.y()+2);
+
+    int midX = sp.x() + ((tp.x()-sp.x())/2);
 
     if(SGState::mode==SGState::Normal)
-        path.cubicTo(m_tnode->x(),m_snode->y(),
-                m_snode->x(),m_tnode->y(),
-                m_tnode->x()-2,m_tnode->y()+2);
+        path.cubicTo(midX,sp.y(),
+                midX,tp.y(),
+                tp.x()-2,tp.y()+2);
     else 
-        path.cubicTo(MouseInfo::clickX,m_snode->y(),
-                m_snode->x(),MouseInfo::clickY-35,
+        path.cubicTo(MouseInfo::clickX,sp.y(),
+                midX,MouseInfo::clickY-35,
                 MouseInfo::clickX-2,MouseInfo::clickY-35);
 
     painter->setPen(pathPen);
@@ -385,9 +391,7 @@ void SceneGraphEditor::paint(QPainter* painter)
     setFillColor(QColor("#696969"));
     painter->setRenderHints(QPainter::Antialiasing, true);
 
-    //m_nodes.at(0)->outConnectionPoint(n1);
-    //m_nodes.at(1)->inConnectionPoint(n2);
-    //drawConnection(n1,n2,feather::field::Double,painter);
+    std::for_each(m_links.begin(),m_links.end(),[painter](SceneGraphLink* l){ l->paint(painter); });
 }
 
 void SceneGraphEditor::drawConnection(QPointF& snode, QPointF& tnode, feather::field::Type type, QPainter* painter)
@@ -396,7 +400,6 @@ void SceneGraphEditor::drawConnection(QPointF& snode, QPointF& tnode, feather::f
     QBrush brush = painter->brush();
     brush.setStyle(Qt::NoBrush);
 
-    //std::cout << "snode x:" << snode.x() << ", y:" << snode.y() << ", tnode x: " << tnode.x() << ", y:" << tnode.y() << std::endl;
     QPen pathPen;
     if(SGState::mode==SGState::Normal)
         pathPen = QPen(QColor("#99BADD"),1);
@@ -490,10 +493,12 @@ void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int 
     connect(node,SIGNAL(nodePressed(Qt::MouseButton,int,int)),this,SLOT(nodePressed(Qt::MouseButton,int,int)));
 
     m_nodes.push_back(node);
-
+    
     // make a link if we have a pointer to a parent node
-    if(pnode!=NULL)
-        m_links.push_back(new SceneGraphLink(pnode,node));
+    if(pnode!=NULL) {
+        std::cout << "adding link\n";
+        m_links.push_back(new SceneGraphLink(pnode,node,this));
+    }
 
     std::vector<int> cuids;
     // update each connected node as a separate leaf 
