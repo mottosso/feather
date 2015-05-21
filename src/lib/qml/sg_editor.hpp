@@ -197,9 +197,6 @@ class SceneGraphEditor : public QQuickPaintedItem
         void nodeSelection(int type, int uid, int nid);
 
     private:
-        void drawConnection(QPointF& snode, QPointF& tnode, feather::field::Type type, QPainter* painter);
-        void drawConnection(int sx, int sy, int tx, int ty, QPainter* painter);
-        void getConnectionPoint(feather::field::connection::Type conn, QPoint& npoint, QPoint& cpoint);
         void updateGraph();
         void updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int ypos);
 
@@ -209,9 +206,7 @@ class SceneGraphEditor : public QQuickPaintedItem
 
         std::vector<SceneGraphNode*> m_nodes;
         std::vector<SceneGraphLink*> m_links;
-        std::vector<SceneGraphConnection*> m_connections;
         FieldModel* m_connection;
-
 };
 
 
