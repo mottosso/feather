@@ -45,9 +45,25 @@ ApplicationWindow {
         RowLayout { BusyIndicator { implicitWidth: 10; implicitHeight: 10; running: true } Label { text: "Feather 0.1" } }
     }
 
-    Viewport3D {
-        id: vp3d
+    Item {
+        id: centralWidgetId
         anchors.fill: parent
+
+        Viewport3D {
+            id: vp3d
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: cmdLineId.top
+        }
+
+        CommandLine {
+            id: cmdLineId
+            height: 30
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+        }
     }
 
     SceneGraphDialog {
