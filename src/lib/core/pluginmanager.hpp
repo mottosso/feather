@@ -350,6 +350,7 @@ namespace feather
             status create_fields(int node, field::Fields& fields); // this will return a new instance of the node's fields 
             field::FieldBase* get_fieldBase(int uid, int node, int field, field::Fields& fields);
             status run_command(std::string cmd, parameter::ParameterList);
+            status run_command_string(std::string str);
             int min_uid();
             int max_uid();
             status node_icon_file(int nid, std::string& file);

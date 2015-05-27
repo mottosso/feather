@@ -169,6 +169,17 @@ status PluginManager::run_command(std::string cmd, parameter::ParameterList para
     return status();
 }
 
+status PluginManager::run_command_string(std::string str)
+{
+    std::string cmd;
+    parameter::ParameterList params;
+
+    // here I need to parse the input string and get the cmd and params
+
+    std::for_each(m_plugins.begin(),m_plugins.end(), call_command(cmd,params) );
+    return status();
+}
+
 int PluginManager::min_uid()
 {
     return 0;

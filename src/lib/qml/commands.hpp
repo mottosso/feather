@@ -49,6 +49,7 @@ namespace feather
             status get_node_connected_uids(int uid, std::vector<int>& uids);
             status load_plugins();
             status run_command(std::string cmd, feather::parameter::ParameterList params);
+            status run_command_string(std::string str);
 
             // Selection
             status select_node(int uid);

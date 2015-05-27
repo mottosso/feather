@@ -111,6 +111,11 @@ status qml::command::run_command(std::string cmd, feather::parameter::ParameterL
     return plugins.run_command(cmd, params);
 }
 
+status qml::command::run_command_string(std::string str)
+{
+    return plugins.run_command_string(str);
+}
+
 
 // Selection
 
