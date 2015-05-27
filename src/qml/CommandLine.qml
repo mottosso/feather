@@ -52,8 +52,11 @@ Rectangle {
                 id: cmdId
                 color: "black"
                 anchors.fill: parent
+                anchors.margins: 4
                 cursorVisible: true
-                font.pixelSize: 16
+                font.pixelSize: 12
+                horizontalAlignment: Text.AlignHLeft
+                verticalAlignment: Text.AlignVCenter
             }
         }
 
@@ -74,8 +77,11 @@ Rectangle {
                 id: msgId
                 color: "yellow"
                 anchors.fill: parent
+                anchors.margins: 4
                 cursorVisible: true
-                font.pixelSize: 16
+                font.pixelSize: 12
+                horizontalAlignment: Text.AlignHLeft
+                verticalAlignment: Text.AlignVCenter
             }
         }
 
