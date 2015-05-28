@@ -23,6 +23,7 @@
 
 import QtQuick 2.3
 import feather.command 1.0
+import feather.scenegraph 1.0
 
 Rectangle {
     id: cmdlineEditor
@@ -31,6 +32,7 @@ Rectangle {
     border.width: 1
     width: 500
     height: 20
+    property SceneGraph scenegraph: Null
 
     Item {
         anchors.fill: parent
@@ -85,5 +87,13 @@ Rectangle {
             }
         }
 
+    }
+
+    function run_command() {
+        scenegraph.run_command_string(cmdId.text)
+    }
+
+    Component.onCompleted: {
+        cmdId.accepted.connect(run_command)
     }
 }

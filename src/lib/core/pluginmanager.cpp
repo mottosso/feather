@@ -174,6 +174,21 @@ status PluginManager::run_command_string(std::string str)
     std::string cmd;
     parameter::ParameterList params;
 
+    using boost::spirit::qi::int_;
+    using boost::spirit::qi::_1;
+    using boost::spirit::qi::phrase_parse;
+    using boost::spirit::ascii::space;
+    using boost::phoenix::ref;
+
+    int t1=0;
+    int t2=0;
+    bool r = phrase_parse(str.begin(), str.end(), ( '(' >> int_[ref(t1)=_1] >> ',' >> int_[ref(t2)=_1] >> ')' ), space);
+
+    if(!r)
+        return status(FAILED,"Failed to parse command");
+
+    std::cout << "the command values are " << t1 << "," << t2 << std::endl;
+
     // here I need to parse the input string and get the cmd and params
 
     std::for_each(m_plugins.begin(),m_plugins.end(), call_command(cmd,params) );
