@@ -174,24 +174,46 @@ status PluginManager::run_command_string(std::string str)
     std::string cmd;
     parameter::ParameterList params;
 
+    using boost::spirit::ascii::string;
+    using boost::spirit::ascii::char_;
+    using boost::spirit::qi::lexeme;
     using boost::spirit::qi::int_;
     using boost::spirit::qi::_1;
+    using boost::spirit::qi::lit;
     using boost::spirit::qi::phrase_parse;
     using boost::spirit::ascii::space;
     using boost::phoenix::ref;
+    using boost::phoenix::val;
 
-    int t1=0;
-    int t2=0;
-    bool r = phrase_parse(str.begin(), str.end(), ( '(' >> int_[ref(t1)=_1] >> ',' >> int_[ref(t2)=_1] >> ')' ), space);
+    std::string cmdstr;
+    std::string paramstr;
+    std::vector<std::string> parameters;
+    std::string::iterator first = str.begin();
+    std::string::iterator last = str.end();
+
+    bool r = phrase_parse(first, last, ( *(char_-'(') >> '(' >> *(char_-')') >> ')' ), space, cmdstr, paramstr);
 
     if(!r)
+    {
+        std::cout << "command failed\n";
         return status(FAILED,"Failed to parse command");
+    }
 
-    std::cout << "the command values are " << t1 << "," << t2 << std::endl;
+    std::cout << "the command is " << cmdstr << ", the params are " << paramstr << std::endl;
 
-    // here I need to parse the input string and get the cmd and params
+    first = paramstr.begin();
+    last = paramstr.end();
+    r = phrase_parse(first, last, *( *(char_ - ',') >> ',' ), space, parameters);
 
-    std::for_each(m_plugins.begin(),m_plugins.end(), call_command(cmd,params) );
+    if(!r)
+    {
+        std::cout << "params failed\n";
+        return status(FAILED,"Failed to parse parameters");
+    }
+
+    std::cout << "parameter 1 is " << parameters.at(0) << std::endl;
+
+    //std::for_each(m_plugins.begin(),m_plugins.end(), call_command(cmd,params) );
     return status();
 }
 
