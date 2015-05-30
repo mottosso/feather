@@ -180,6 +180,7 @@ status PluginManager::run_command_string(std::string str)
     using boost::spirit::qi::int_;
     using boost::spirit::qi::_1;
     using boost::spirit::qi::lit;
+    using boost::spirit::qi::eol;
     using boost::spirit::qi::phrase_parse;
     using boost::spirit::ascii::space;
     using boost::phoenix::ref;
@@ -203,7 +204,7 @@ status PluginManager::run_command_string(std::string str)
 
     first = paramstr.begin();
     last = paramstr.end();
-    r = phrase_parse(first, last, *( *(char_ - ',') >> ',' ), space, parameters);
+    r = phrase_parse(first, last, *( *(char_ - ',') >> ',' || eol ), space, parameters);
 
     if(!r)
     {
@@ -211,9 +212,14 @@ status PluginManager::run_command_string(std::string str)
         return status(FAILED,"Failed to parse parameters");
     }
 
-    std::cout << "parameter 1 is " << parameters.at(0) << std::endl;
+    // they and get the parameter type
+    bool passed=true;
+    std::for_each(parameters.begin(), parameters.end(), [this,&passed,&params](std::string val){ bool r = add_parameter_to_list(val,params); if(!r){ passed=false; } } );
+    
+    if(!passed)
+        return status(FAILED,"unable to get parse parameters");
 
-    //std::for_each(m_plugins.begin(),m_plugins.end(), call_command(cmd,params) );
+    std::for_each(m_plugins.begin(),m_plugins.end(), call_command(cmd,params) );
     return status();
 }
 
@@ -246,3 +252,48 @@ status PluginManager::get_fid_list(int nid, field::connection::Type conn, field:
     return status(); 
 }
 
+bool PluginManager::add_parameter_to_list(std::string val, parameter::ParameterList& list)
+{
+    bool r;
+
+    using boost::spirit::qi::int_;
+    using boost::spirit::qi::char_;
+    using boost::spirit::qi::float_;
+    using boost::spirit::qi::phrase_parse;
+    using boost::spirit::qi::parse;
+    using boost::spirit::ascii::space;
+
+    std::string::iterator first,last;
+    first = val.begin();
+    last = val.end();
+
+    // see if the value is a int
+    int ival=0;
+    r = parse(first,last, int_, ival);
+    if(r && first==last) {
+        list.addIntParameter("",ival);
+        return true;
+    }
+
+    // see if the val is a float
+    first = val.begin();
+    last = val.end();
+    float fval=0.0;
+    r = parse(first, last, float_, fval);
+    if(r && first==last) {
+        list.addRealParameter("",fval);
+        return true;
+    }
+
+    // see if the val is a float
+    first = val.begin();
+    last = val.end();
+    std::string sval;
+    r = phrase_parse(first, last, ( '"' >> *(char_ - '"') >> '"' ), space, sval);
+    if(r && first==last) {
+        list.addStringParameter("",sval);
+        return true;
+    }
+
+    return false;
+}
