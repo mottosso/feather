@@ -58,6 +58,8 @@ namespace feather
         status (*get_fid_list)(int,field::connection::Type,field::Fields&,std::vector<field::FieldBase*>&);
         bool (*command_exist)(std::string cmd);
         status (*command)(std::string cmd, parameter::ParameterList);
+        status (*parameter_name)(std::string, int, std::string&);
+        status (*parameter_type)(std::string, int, parameter::Type&);
     };
 
     struct test_call {
@@ -358,7 +360,7 @@ namespace feather
             status get_fid_list(int nid, field::connection::Type conn, field::Fields& fields, std::vector<field::FieldBase*>& list);
 
         private:
-            bool add_parameter_to_list(std::string val, parameter::ParameterList& list);
+            bool add_parameter_to_list(int key, std::string val, parameter::ParameterList& list);
             status load_node(PluginData &node);
             status load_command(PluginData &command);
             std::string m_pluginPath;
@@ -382,6 +384,9 @@ namespace feather
     feather::status get_fid_list(int,feather::field::connection::Type,feather::field::Fields&,std::vector<feather::field::FieldBase*>&);\
     bool command_exist(std::string cmd);\
     feather::status command(std::string cmd, feather::parameter::ParameterList);\
+    feather::status parameter_name(std::string cmd, int key, std::string& name);\
+    feather::status parameter_type(std::string cmd, int key, feather::parameter::Type& type);\
+
 
 #define PLUGIN_INIT(__name,__description,__author,startnode,endnode)\
     /* plugin name */\

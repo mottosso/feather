@@ -89,6 +89,7 @@ namespace feather\
 // check if the command exists
 //bool command_exist(std::string cmd) { return (cmd==cmdstring) ? true : false; };
 
+
 #define INIT_COMMAND_CALLS(cmdenum)\
 /* call the command */\
 feather::status command(std::string cmd, feather::parameter::ParameterList params) {\
@@ -97,7 +98,19 @@ feather::status command(std::string cmd, feather::parameter::ParameterList param
 };\
 \
 /* check to see if the command exist */\
-bool command_exist(std::string cmd) { return feather::command::exist<feather::command::cmdenum>::exec(cmd); };
+bool command_exist(std::string cmd) { return feather::command::exist<feather::command::cmdenum>::exec(cmd); };\
+\
+/* get the parameter name */\
+feather::status parameter_name(std::string cmd, int key, std::string& name) {\
+    typedef feather::parameter::get_name<20,feather::command::cmdenum> call;\
+    return call::exec(key,name);\
+};\
+\
+/* get the parameter type */\
+feather::status parameter_type(std::string cmd, int key, parameter::Type& type) {\
+    typedef feather::parameter::get_type<20,feather::command::cmdenum> call;\
+    return call::exec(key,type);\
+};\
 
 
 #endif

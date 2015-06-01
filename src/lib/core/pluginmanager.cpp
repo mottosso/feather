@@ -122,6 +122,9 @@ status PluginManager::load_node(PluginData &node)
     node.get_fid_list = (status(*)(int,field::connection::Type,field::Fields&,std::vector<field::FieldBase*>&))dlsym(node.handle, "get_fid_list");
     node.command_exist = (bool(*)(std::string))dlsym(node.handle, "command_exist");
     node.command = (status(*)(std::string,parameter::ParameterList))dlsym(node.handle, "command");
+    node.parameter_name = (status(*)(std::string,int,std::string&))dlsym(node.handle, "parameter_name");
+    node.parameter_type = (status(*)(std::string,int,parameter::Type&))dlsym(node.handle, "parameter_type");
+
 
     if ((error = dlerror()) != NULL)  
     {
@@ -214,7 +217,8 @@ status PluginManager::run_command_string(std::string str)
 
     // they and get the parameter type
     bool passed=true;
-    std::for_each(parameters.begin(), parameters.end(), [this,&passed,&params](std::string val){ bool r = add_parameter_to_list(val,params); if(!r){ passed=false; } } );
+    int key=1;
+    std::for_each(parameters.begin(), parameters.end(), [this,&key,&passed,&params](std::string val){ bool r = add_parameter_to_list(key,val,params); key++; if(!r){ passed=false; } } );
     
     if(!passed)
         return status(FAILED,"unable to get parse parameters");
@@ -252,7 +256,7 @@ status PluginManager::get_fid_list(int nid, field::connection::Type conn, field:
     return status(); 
 }
 
-bool PluginManager::add_parameter_to_list(std::string val, parameter::ParameterList& list)
+bool PluginManager::add_parameter_to_list(int key, std::string val, parameter::ParameterList& list)
 {
     bool r;
 

@@ -91,8 +91,55 @@ namespace feather
             std::vector<ParameterBase*> m_params;
         };
 
+        // get the parameter name
+        template <int _Parameter,int _Command>
+        struct get_name{
+            static status exec(int key, std::string& name); //{ return get_name<_Parameter-1,_Command>::exec(key,name); };
+        };
+
+        template <> struct get_name<0,0> {
+            static status exec(int key, std::string& name) { return status(FAILED,"no command parameter found"); };
+        }; 
+
+
+        // get the parameter type 
+        template <int _Parameter,int _Command>
+        struct get_type {
+            static status exec(int key, Type& type);
+        };
+
+        template <> struct get_type<0,0> {
+            static status exec(int key, Type& type) { return status(FAILED,"no command parameter found"); };
+        }; 
+
     } // namespace parameter
 
 } // namespace feather
+
+#define ADD_PARAMETER(__cmdenum,__key,__type,__name)\
+namespace feather\
+{\
+    namespace parameter\
+    {\
+        template<> status get_name<__key,__cmdenum>::exec(int k, std::string& n) {\
+            if(k==__key) {\
+                n=__name;\
+                return status();\
+            } else {\
+                get_name<__key-1,__cmdenum>::exec(k,n);\
+            }\
+        };\
+\
+        template<> status get_type<__key,__cmdenum>::exec(int k, Type& t) {\
+            if(k==__key) {\
+                t=__type;\
+                return status();\
+            } else {\
+                get_type<__key-1,__cmdenum>::exec(k,t);\
+            }\
+        };\
+\
+    } /* namespace parameter */ \
+} /* namespace feather*/ \
 
 #endif
