@@ -62,11 +62,6 @@ namespace feather
         status (*parameter_type)(std::string, int, parameter::Type&);
     };
 
-    struct test_call {
-        test_call(int t) {};
-        void operator()() {};
-    };
-
     struct get_name {
         get_name(std::vector<PluginInfo>& list) : m_list(list) {};
         void operator()(PluginData n) { 

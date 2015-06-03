@@ -101,15 +101,34 @@ namespace feather
             static status exec(int key, std::string& name) { return status(FAILED,"no command parameter found"); };
         }; 
 
+        /*
+        // find the parameter type
+        template <int _Parameter, int _Command>
+        struct find_type {
+            static status exec(int key, Type& t) {
+                if(key==_Parameter)
+                    return get_type<_Parameter,_Command>::exec(key,t);
+                else
+                    return find_type<_Parameter-1,_Command>::exec(key,t);
+            };
+        };
+
+        template <int _Command>
+        struct find_type<0,_Command> {
+            return status(FAILED,"no matching parameter found for command");
+        };
+        */
 
         // get the parameter type 
         template <int _Parameter,int _Command>
         struct get_type {
-            static status exec(int key, Type& type);
+            static status exec(int k, Type& t) {
+                return get_type<_Parameter-1,_Command>::exec(k,t);
+            };
         };
 
-        template <> struct get_type<0,0> {
-            static status exec(int key, Type& type) { return status(FAILED,"no command parameter found"); };
+        template <int _Command> struct get_type<0,_Command> {
+            static status exec(int k, Type& t) { return status(FAILED,"no command parameter found"); };
         }; 
 
     } // namespace parameter

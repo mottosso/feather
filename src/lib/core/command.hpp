@@ -45,6 +45,13 @@ namespace feather
             static bool exec(std::string n);
         };
 
+        /*
+        template <int _Command>
+        struct find_id{
+            static bool exec(std::string n, int& i);
+        };
+        */
+
         // defaults
 
         template <> struct run<0> {
@@ -54,6 +61,47 @@ namespace feather
         template <> struct exist<0> {
             static bool exec(std::string n) { return false; };
         };
+
+        /*
+        template <int _Command>
+        struct id {
+            static const int exec(std::string n)
+        };
+        */
+
+        template <int _Parameter, int _Command>
+        struct get_parameter_type {
+            static status exec(std::string n, int k, parameter::Type& t) {
+                return get_parameter_type<_Parameter,_Command-1>::exec(n,k,t);
+            }; 
+        };
+
+        template <int _Parameter>
+        struct get_parameter_type<_Parameter,0> {
+            static status exec(std::string n, int p, parameter::Type& t) { return status(FAILED,"could not find parameter type"); };
+        };
+
+        /*
+        template <int _Command>
+        struct find_id {
+            static status exec(std::string n);
+        };
+
+        template <> struct find_id<0> {
+            static status exec(std::string n) { return status(FAILED,"was not able to find command"); };
+        };
+        */
+
+        /*
+        template <int _Command>
+        struct find_command {
+            static bool exec(std::string n);
+        };
+        
+        template <> struct find_command<0> {
+            static bool exec(std::string n) { return false; };
+        };
+        */
 
     } // namespace command
 
@@ -83,6 +131,14 @@ namespace feather\
             };\
         };\
         \
+        template <int _Parameter> struct get_parameter_type<_Parameter,cmdenum> {\
+            static status exec(std::string n, int p, parameter::Type& t) {\
+                if(n==cmdstring)\
+                    return parameter::get_type<20,cmdenum>::exec(p,t);\
+                else\
+                    return get_parameter_type<_Parameter,cmdenum-1>::exec(n,p,t);\
+            };\
+        };\
     } /* namespace command */\
 }  /* namespace feather */\
 
@@ -107,9 +163,8 @@ feather::status parameter_name(std::string cmd, int key, std::string& name) {\
 };\
 \
 /* get the parameter type */\
-feather::status parameter_type(std::string cmd, int key, parameter::Type& type) {\
-    typedef feather::parameter::get_type<20,feather::command::cmdenum> call;\
-    return call::exec(key,type);\
+feather::status parameter_type(std::string n, int k, parameter::Type& t) {\
+    return feather::command::get_parameter_type<20,feather::command::cmdenum>::exec(n,k,t);\
 };\
 
 
