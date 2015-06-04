@@ -69,6 +69,21 @@ namespace feather
         };
         */
 
+        // get command parameter name
+        template <int _Parameter, int _Command>
+        struct get_parameter_name {
+            static status exec(std::string c, int k, std::string& n) {
+                return get_parameter_name<_Parameter,_Command-1>::exec(c,k,n);
+            }; 
+        };
+
+        template <int _Parameter>
+        struct get_parameter_name<_Parameter,0> {
+            static status exec(std::string c, int p, std::string& n) { return status(FAILED,"could not find parameter name"); };
+        };
+
+    
+        // get command parameter type
         template <int _Parameter, int _Command>
         struct get_parameter_type {
             static status exec(std::string n, int k, parameter::Type& t) {
@@ -131,6 +146,15 @@ namespace feather\
             };\
         };\
         \
+        template <int _Parameter> struct get_parameter_name<_Parameter,cmdenum> {\
+            static status exec(std::string c, int p, std::string& n) {\
+                if(c==cmdstring)\
+                    return parameter::get_name<20,cmdenum>::exec(p,n);\
+                else\
+                    return get_parameter_name<_Parameter,cmdenum-1>::exec(c,p,n);\
+            };\
+        };\
+        \
         template <int _Parameter> struct get_parameter_type<_Parameter,cmdenum> {\
             static status exec(std::string n, int p, parameter::Type& t) {\
                 if(n==cmdstring)\
@@ -157,9 +181,8 @@ feather::status command(std::string cmd, feather::parameter::ParameterList param
 bool command_exist(std::string cmd) { return feather::command::exist<feather::command::cmdenum>::exec(cmd); };\
 \
 /* get the parameter name */\
-feather::status parameter_name(std::string cmd, int key, std::string& name) {\
-    typedef feather::parameter::get_name<20,feather::command::cmdenum> call;\
-    return call::exec(key,name);\
+feather::status parameter_name(std::string c, int k, std::string& n) {\
+    return feather::command::get_parameter_name<20,feather::command::cmdenum>::exec(c,k,n);\
 };\
 \
 /* get the parameter type */\

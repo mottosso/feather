@@ -355,7 +355,7 @@ namespace feather
             status get_fid_list(int nid, field::connection::Type conn, field::Fields& fields, std::vector<field::FieldBase*>& list);
 
         private:
-            bool add_parameter_to_list(int key, std::string val, parameter::ParameterList& list);
+            bool add_parameter_to_list(std::string cmd, int key, std::string val, parameter::ParameterList& list);
             status load_node(PluginData &node);
             status load_command(PluginData &command);
             std::string m_pluginPath;

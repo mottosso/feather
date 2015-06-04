@@ -218,7 +218,7 @@ status PluginManager::run_command_string(std::string str)
     // they and get the parameter type
     bool passed=true;
     int key=1;
-    std::for_each(parameters.begin(), parameters.end(), [this,&key,&passed,&params](std::string val){ bool r = add_parameter_to_list(key,val,params); key++; if(!r){ passed=false; } } );
+    std::for_each(parameters.begin(), parameters.end(), [&cmdstr,this,&key,&passed,&params](std::string val){ bool r = add_parameter_to_list(cmdstr,key,val,params); key++; if(!r){ passed=false; } } );
     
     if(!passed)
         return status(FAILED,"unable to get parse parameters");
@@ -256,7 +256,7 @@ status PluginManager::get_fid_list(int nid, field::connection::Type conn, field:
     return status(); 
 }
 
-bool PluginManager::add_parameter_to_list(int key, std::string val, parameter::ParameterList& list)
+bool PluginManager::add_parameter_to_list(std::string cmd, int key, std::string val, parameter::ParameterList& list)
 {
     bool r;
 
@@ -270,6 +270,11 @@ bool PluginManager::add_parameter_to_list(int key, std::string val, parameter::P
     std::string::iterator first,last;
     first = val.begin();
     last = val.end();
+
+    std::string param_name;
+    //status p = parameter_name(cmd,key,param_name);
+    //if(p.state==PASSED)
+    //    std::cout << "parameter name for key " << key << " is " << param_name << std::endl;
 
     // see if the value is a int
     int ival=0;

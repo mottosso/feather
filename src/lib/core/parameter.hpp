@@ -97,7 +97,7 @@ namespace feather
             static status exec(int key, std::string& name); //{ return get_name<_Parameter-1,_Command>::exec(key,name); };
         };
 
-        template <> struct get_name<0,0> {
+        template <int _Command> struct get_name<0,_Command> {
             static status exec(int key, std::string& name) { return status(FAILED,"no command parameter found"); };
         }; 
 
