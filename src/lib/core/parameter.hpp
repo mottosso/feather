@@ -94,7 +94,7 @@ namespace feather
         // get the parameter name
         template <int _Parameter,int _Command>
         struct get_name{
-            static status exec(int key, std::string& name); //{ return get_name<_Parameter-1,_Command>::exec(key,name); };
+            static status exec(int key, std::string& name) { return get_name<_Parameter-1,_Command>::exec(key,name); };
         };
 
         template <int _Command> struct get_name<0,_Command> {

@@ -433,8 +433,15 @@ namespace feather
     status get_fid_list(int nid, feather::field::connection::Type conn, feather::field::Fields& fields, std::vector<feather::field::FieldBase*>& list) {\
         find_node_fid_list<startnode,endnode>::exec(nid,fields,list);\
         return status();\
-    };
-
-
+    };\
+    \
+    /* find if command exist */\
+    bool command_exist(std::string cmd) { return feather::command::exist<800>::exec(cmd); };\
+    \
+    /* get the parameter name */\
+    feather::status parameter_name(std::string c, int k, std::string& n) {\
+    return feather::command::get_parameter_name<20,800>::exec(c,k,n);\
+    };\
+    \
 
 #endif

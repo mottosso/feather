@@ -42,7 +42,7 @@ namespace feather
 
         template <int _Command>
         struct exist {
-            static bool exec(std::string n);
+            static bool exec(std::string n) { return exist<_Command-1>::exec(n); };
         };
 
         /*
@@ -139,6 +139,7 @@ namespace feather\
         \
         template <> struct exist<cmdenum> {\
             static bool exec(std::string n) {\
+                std::cout << "looking\n";\
                 if(n==cmdstring)\
                     return true;\
                 else\
@@ -178,12 +179,12 @@ feather::status command(std::string cmd, feather::parameter::ParameterList param
 };\
 \
 /* check to see if the command exist */\
-bool command_exist(std::string cmd) { return feather::command::exist<feather::command::cmdenum>::exec(cmd); };\
+/*bool command_exist(std::string cmd) { return feather::command::exist<feather::command::cmdenum>::exec(cmd); };*/\
 \
 /* get the parameter name */\
-feather::status parameter_name(std::string c, int k, std::string& n) {\
+/*feather::status parameter_name(std::string c, int k, std::string& n) {\
     return feather::command::get_parameter_name<20,feather::command::cmdenum>::exec(c,k,n);\
-};\
+};*/\
 \
 /* get the parameter type */\
 feather::status parameter_type(std::string n, int k, parameter::Type& t) {\
