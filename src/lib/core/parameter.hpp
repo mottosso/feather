@@ -145,7 +145,7 @@ namespace feather\
                 n=__name;\
                 return status();\
             } else {\
-                get_name<__key-1,__cmdenum>::exec(k,n);\
+                return get_name<__key-1,__cmdenum>::exec(k,n);\
             }\
         };\
 \
@@ -154,7 +154,7 @@ namespace feather\
                 t=__type;\
                 return status();\
             } else {\
-                get_type<__key-1,__cmdenum>::exec(k,t);\
+                return get_type<__key-1,__cmdenum>::exec(k,t);\
             }\
         };\
 \

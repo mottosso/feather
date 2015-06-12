@@ -274,12 +274,17 @@ bool PluginManager::add_parameter_to_list(std::string cmd, int key, std::string 
     // get the parameter name
     std::string param_name;
     status p(FAILED,"no parameter name found");
-    std::for_each(m_plugins.begin(), m_plugins.end(), [&p,&param_name,&key,&cmd](PluginData plugin){ if(plugin.command_exist(cmd)){ p=plugin.parameter_name(cmd,key,param_name); std::cout << "found name " << param_name << "\n"; } } );
+    std::for_each(m_plugins.begin(), m_plugins.end(), [&p,&param_name,&key,&cmd](PluginData plugin){ if( plugin.command_exist(cmd) && p.state==FAILED ){ p=plugin.parameter_name(cmd,key,param_name); std::cout << "found name " << param_name << " for key " << key << " pass state=" << p.state << "\n"; } std::cout << "loop\n"; } );
     //status p = parameter_name(cmd,key,param_name);
+
+    std::cout << "exited\n";
+
     if(p.state==PASSED)
         std::cout << "parameter name for key " << key << " is " << param_name << std::endl;
+    else 
+        std::cout << "parameter failed '" << p.msg.c_str() << "'" << std::endl;
 
-    /*
+
     // see if the value is a int
     int ival=0;
     r = parse(first,last, int_, ival);
@@ -307,7 +312,6 @@ bool PluginManager::add_parameter_to_list(std::string cmd, int key, std::string 
         list.addStringParameter("",sval);
         return true;
     }
-    */
 
     return false;
 }
