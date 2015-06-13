@@ -93,7 +93,13 @@ Rectangle {
         scenegraph.run_command_string(cmdId.text)
     }
 
+    function command_message_changed(msg) {
+        console.log("msg changed " + msg)
+        msgId.text = msg
+    }
+
     Component.onCompleted: {
         cmdId.accepted.connect(run_command)
+        scenegraph.commandMessageChanged.connect(command_message_changed)
     }
 }

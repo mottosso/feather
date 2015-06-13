@@ -79,12 +79,14 @@ namespace feather
             };
 
             template <typename _T>
-                _T getParameterValue(std::string n) {
-                    for(int i=0; m_params.size(); i++) {
-                        if(m_params.at(i)->name==n)
-                            return static_cast<Parameter<_T>*>(m_params.at(i))->value;
+                bool getParameterValue(std::string n, _T val) {
+                    for(int i=0; i < m_params.size(); i++) {
+                        if(m_params.at(i)->name==n) {
+                            val=static_cast<Parameter<_T>*>(m_params.at(i))->value;
+                            return true;
+                        }
                     }
-                    return 0;
+                    return false;
                 }
 
             private:

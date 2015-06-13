@@ -303,6 +303,7 @@ namespace feather
 
     // COMMANDS 
 
+    /*
     struct call_command {
         call_command(std::string cmd, parameter::ParameterList params){ m_cmd = cmd; m_params = params; };
         void operator()(PluginData n) { if(n.command_exist(m_cmd)) { std::cout << "found command " << m_cmd << std::endl; n.command(m_cmd,m_params); } };
@@ -310,7 +311,7 @@ namespace feather
             std::string m_cmd;
             parameter::ParameterList m_params;
     };
-    
+    */ 
 
     // NODE ICON IMAGE 
 
@@ -430,13 +431,18 @@ namespace feather
         return find_node_field<startnode,endnode,5>::exec(nid,fid,fields);\
     };\
     /* find the node's fid's*/\
-    status get_fid_list(int nid, feather::field::connection::Type conn, feather::field::Fields& fields, std::vector<feather::field::FieldBase*>& list) {\
+    feather::status get_fid_list(int nid, feather::field::connection::Type conn, feather::field::Fields& fields, std::vector<feather::field::FieldBase*>& list) {\
         find_node_fid_list<startnode,endnode>::exec(nid,fields,list);\
         return status();\
     };\
     \
     /* find if command exist */\
     bool command_exist(std::string cmd) { return feather::command::exist<800>::exec(cmd); };\
+    \
+    /* call the command */\
+    feather::status command(std::string cmd, parameter::ParameterList params) {\
+        return feather::command::run<800>::exec(cmd,params);\
+    };\
     \
     /* get the parameter name */\
     feather::status parameter_name(std::string c, int k, std::string& n) {\

@@ -168,8 +168,9 @@ status PluginManager::load_command(PluginData &command)
 
 status PluginManager::run_command(std::string cmd, parameter::ParameterList params)
 {
-    std::for_each(m_plugins.begin(),m_plugins.end(), call_command(cmd,params) );
-    return status();
+    status s(FAILED,"failed to call command");
+    std::for_each(m_plugins.begin(),m_plugins.end(), [&cmd,&params,&s](PluginData plugin){ if(plugin.command_exist(cmd) && s.state==FAILED) { s=plugin.command(cmd,params); } } );
+    return s;
 }
 
 status PluginManager::run_command_string(std::string str)
@@ -223,8 +224,11 @@ status PluginManager::run_command_string(std::string str)
     if(!passed)
         return status(FAILED,"unable to get parse parameters");
 
-    std::for_each(m_plugins.begin(),m_plugins.end(), call_command(cmd,params) );
-    return status();
+    // replaced call_command(cmd,params)
+    status s(FAILED,"command failed to run");
+    std::for_each(m_plugins.begin(),m_plugins.end(), [&cmdstr,&params,&s](PluginData plugin){ if(plugin.command_exist(cmdstr) && s.state==FAILED) { s=plugin.command(cmdstr,params); } } );
+
+    return s;
 }
 
 int PluginManager::min_uid()
@@ -279,11 +283,12 @@ bool PluginManager::add_parameter_to_list(std::string cmd, int key, std::string 
 
     std::cout << "exited\n";
 
-    if(p.state==PASSED)
+    if(p.state==PASSED) {
         std::cout << "parameter name for key " << key << " is " << param_name << std::endl;
-    else 
+    } else { 
         std::cout << "parameter failed '" << p.msg.c_str() << "'" << std::endl;
-
+        return false;
+    }
 
     // see if the value is a int
     int ival=0;
