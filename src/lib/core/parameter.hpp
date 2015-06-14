@@ -89,6 +89,10 @@ namespace feather
                     return false;
                 }
 
+            inline const uint parameterCount() { return m_params.size(); };
+
+            inline const std::string parameterName(const uint i) { if(i < parameterCount()){ return m_params.at(i)->name; } return ""; };
+
             private:
             std::vector<ParameterBase*> m_params;
         };
@@ -102,24 +106,6 @@ namespace feather
         template <int _Command> struct get_name<0,_Command> {
             static status exec(int key, std::string& name) { return status(FAILED,"no command parameter found"); };
         }; 
-
-        /*
-        // find the parameter type
-        template <int _Parameter, int _Command>
-        struct find_type {
-            static status exec(int key, Type& t) {
-                if(key==_Parameter)
-                    return get_type<_Parameter,_Command>::exec(key,t);
-                else
-                    return find_type<_Parameter-1,_Command>::exec(key,t);
-            };
-        };
-
-        template <int _Command>
-        struct find_type<0,_Command> {
-            return status(FAILED,"no matching parameter found for command");
-        };
-        */
 
         // get the parameter type 
         template <int _Parameter,int _Command>

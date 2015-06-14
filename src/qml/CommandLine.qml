@@ -69,18 +69,18 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: cmdBgId.right
-            color: "darkred"
+            color: "grey"
             border.color: "black"
             border.width: 1
             radius: 2
             anchors.margins: 2
 
-            TextInput {
+            Text {
                 id: msgId
                 color: "yellow"
                 anchors.fill: parent
                 anchors.margins: 4
-                cursorVisible: true
+                //cursorVisible: true
                 font.pixelSize: 12
                 horizontalAlignment: Text.AlignHLeft
                 verticalAlignment: Text.AlignVCenter
@@ -93,9 +93,26 @@ Rectangle {
         scenegraph.run_command_string(cmdId.text)
     }
 
-    function command_message_changed(msg) {
-        console.log("msg changed " + msg)
-        msgId.text = msg
+    function command_message_changed(pass,msg) {
+        if(pass==0) // failed
+        {
+            msgBgId.color = "red"
+            msgId.color = "yellow"
+            msgId.text = msg
+        }
+        else if(pass==1) // passed 
+        {
+            msgBgId.color = "grey"
+            msgId.color = "black"
+            msgId.text = ""
+            cmdId.text = ""
+        }
+        else // warning
+        {
+            msgBgId.color = "yellow"
+            msgId.color = "black"
+            msgId.text = msg
+        }
     }
 
     Component.onCompleted: {

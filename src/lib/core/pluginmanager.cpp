@@ -87,13 +87,11 @@ status PluginManager::do_it(int node, field::Fields&  fields)
 
 void PluginManager::gl_init(FNode& node, FGlInfo& info)
 {
-    //std::cout << "call node gl info " << node << std::endl;
     std::for_each(m_plugins.begin(),m_plugins.end(), call_gl_init(node,info) );
 }
 
 void PluginManager::gl_draw(FNode& node, FGlInfo& info)
 {
-    //std::cout << "call node gl info " << node << std::endl;
     std::for_each(m_plugins.begin(),m_plugins.end(), call_gl_draw(node,info) );
 }
 
@@ -270,6 +268,8 @@ bool PluginManager::add_parameter_to_list(std::string cmd, int key, std::string 
     using boost::spirit::qi::phrase_parse;
     using boost::spirit::qi::parse;
     using boost::spirit::ascii::space;
+    using boost::spirit::lit;
+
 
     std::string::iterator first,last;
     first = val.begin();
@@ -278,23 +278,16 @@ bool PluginManager::add_parameter_to_list(std::string cmd, int key, std::string 
     // get the parameter name
     std::string param_name;
     status p(FAILED,"no parameter name found");
-    std::for_each(m_plugins.begin(), m_plugins.end(), [&p,&param_name,&key,&cmd](PluginData plugin){ if( plugin.command_exist(cmd) && p.state==FAILED ){ p=plugin.parameter_name(cmd,key,param_name); std::cout << "found name " << param_name << " for key " << key << " pass state=" << p.state << "\n"; } std::cout << "loop\n"; } );
-    //status p = parameter_name(cmd,key,param_name);
+    std::for_each(m_plugins.begin(), m_plugins.end(), [&p,&param_name,&key,&cmd](PluginData plugin){ if( plugin.command_exist(cmd) && p.state==FAILED ){ p=plugin.parameter_name(cmd,key,param_name); } } );
 
-    std::cout << "exited\n";
-
-    if(p.state==PASSED) {
-        std::cout << "parameter name for key " << key << " is " << param_name << std::endl;
-    } else { 
-        std::cout << "parameter failed '" << p.msg.c_str() << "'" << std::endl;
+    if(p.state==FAILED)
         return false;
-    }
 
     // see if the value is a int
     int ival=0;
     r = parse(first,last, int_, ival);
     if(r && first==last) {
-        list.addIntParameter("",ival);
+        list.addIntParameter(param_name,ival);
         return true;
     }
 
@@ -304,17 +297,31 @@ bool PluginManager::add_parameter_to_list(std::string cmd, int key, std::string 
     float fval=0.0;
     r = parse(first, last, float_, fval);
     if(r && first==last) {
-        list.addRealParameter("",fval);
+        list.addRealParameter(param_name,fval);
         return true;
     }
 
-    // see if the val is a float
+    // see if the val is a bool 
+    first = val.begin();
+    last = val.end();
+    bool bval;
+    r = phrase_parse(first, last, lit("true") | lit("false"), space);
+    if(r && first==last) {
+        if(val=="true")
+            bval=true;
+        else
+            bval=false;
+        list.addBoolParameter(param_name,bval);
+        return true;
+    }
+
+    // see if the val is a string 
     first = val.begin();
     last = val.end();
     std::string sval;
     r = phrase_parse(first, last, ( '"' >> *(char_ - '"') >> '"' ), space, sval);
     if(r && first==last) {
-        list.addStringParameter("",sval);
+        list.addStringParameter(param_name,sval);
         return true;
     }
 

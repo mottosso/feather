@@ -49,12 +49,12 @@ class SceneGraph : public QObject
         Q_INVOKABLE int connect_nodes(int n1, int f1, int n2, int f2) { status p = qml::command::connect_nodes(n1,f1,n2,f2); return p.state; };
         Q_INVOKABLE int add_selection(int type, int uid, int nid, int fid) { status p = qml::command::add_selection(type,uid,nid,fid); emit selectionChanged(type,uid,nid,fid); return p.state; };
         Q_INVOKABLE int node_selection(int type, int uid, int nid) { status p = qml::command::node_selection(type,uid,nid); emit nodeSelection(type,uid,nid); return p.state; };
-        Q_INVOKABLE int run_command_string(QString str) { status p = qml::command::run_command_string(str.toStdString()); emit commandMessageChanged(QString(p.msg.c_str())); std::cout << "run command string msg='" << p.msg << "'\n"; return p.state; };
+        Q_INVOKABLE int run_command_string(QString str) { status p = qml::command::run_command_string(str.toStdString()); emit commandMessageChanged(p.state,QString(p.msg.c_str())); std::cout << "run command string msg='" << p.msg << "'\n"; return p.state; };
 
     signals:
         void selectionChanged(int type, int uid, int nid, int fid);
         void nodeSelection(int type, int uid, int nid);
-        void commandMessageChanged(QString msg);
+        void commandMessageChanged(int code, QString msg);
 };
 
 // FIELD 

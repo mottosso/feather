@@ -44,13 +44,6 @@ namespace feather
             static bool exec(std::string n) { return exist<_Command-1>::exec(n); };
         };
 
-        /*
-        template <int _Command>
-        struct find_id{
-            static bool exec(std::string n, int& i);
-        };
-        */
-
         // defaults
 
         template <> struct run<0> {
@@ -60,30 +53,6 @@ namespace feather
         template <> struct exist<0> {
             static bool exec(std::string n) { return false; };
         };
-
-        /*
-        template <int _Command>
-        struct id {
-            static const int exec(std::string n)
-        };
-        */
-
-        /*
-        // get command parameter name
-        template <int _Command>
-        struct get_command_run {
-            static status exec(std::string c, parameter::ParameterList p) {
-                return get_command_run<_Command-1>::exec(c,p);
-            }; 
-        };
-
-        template <>
-        struct get_command_run<0> {
-            static status exec(std::string c, parameter::ParameterList p) {
-                return status(FAILED,"could not find command");
-            }; 
-        };
-        */
 
         // get command parameter name
         template <int _Parameter, int _Command>
@@ -111,28 +80,6 @@ namespace feather
         struct get_parameter_type<_Parameter,0> {
             static status exec(std::string n, int p, parameter::Type& t) { return status(FAILED,"could not find parameter type"); };
         };
-
-        /*
-        template <int _Command>
-        struct find_id {
-            static status exec(std::string n);
-        };
-
-        template <> struct find_id<0> {
-            static status exec(std::string n) { return status(FAILED,"was not able to find command"); };
-        };
-        */
-
-        /*
-        template <int _Command>
-        struct find_command {
-            static bool exec(std::string n);
-        };
-        
-        template <> struct find_command<0> {
-            static bool exec(std::string n) { return false; };
-        };
-        */
 
     } // namespace command
 
@@ -162,18 +109,6 @@ namespace feather\
             };\
         };\
         \
-        /*\
-        template <> struct get_command_run<cmdenum> {\
-            static bool exec(std::string n, parameter::ParameterList p) {\
-                std::cout << "looking\n";\
-                if(n==cmdstring)\
-                    return run<cmdenum>::exec(n,p);\
-                else\
-                    return get_command_run<cmdenum-1>::exec(n,p);\
-            };\
-        };\
-        */\
-        \
         template <int _Parameter> struct get_parameter_name<_Parameter,cmdenum> {\
             static status exec(std::string c, int p, std::string& n) {\
                 if(c==cmdstring)\
@@ -194,33 +129,8 @@ namespace feather\
     } /* namespace command */\
 }  /* namespace feather */\
 
-// check if the command exists
-//bool command_exist(std::string cmd) { return (cmd==cmdstring) ? true : false; };
-
 
 #define INIT_COMMAND_CALLS(cmdenum)\
-/*\
-template <> struct run<cmdenum> {\
-    static status exec(std::string cmd, parameter::ParameterList) { return ; };\
-};\
-*/\
-\
-/* call the command */\
-/*\
-feather::status command(std::string cmd, feather::parameter::ParameterList params) {\
-    typedef feather::command::run<feather::command::cmdenum> call;\
-    return call::exec(cmd, params);\
-};\
-*/\
-\
-/* check to see if the command exist */\
-/*bool command_exist(std::string cmd) { return feather::command::exist<feather::command::cmdenum>::exec(cmd); };*/\
-\
-/* get the parameter name */\
-/*feather::status parameter_name(std::string c, int k, std::string& n) {\
-    return feather::command::get_parameter_name<20,feather::command::cmdenum>::exec(c,k,n);\
-};*/\
-\
 /* get the parameter type */\
 feather::status parameter_type(std::string n, int k, parameter::Type& t) {\
     return feather::command::get_parameter_type<20,feather::command::cmdenum>::exec(n,k,t);\

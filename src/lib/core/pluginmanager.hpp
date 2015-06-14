@@ -105,7 +105,7 @@ namespace feather
    
     struct call_do_it {
         call_do_it(int node,field::Fields& fields): m_node(node), m_fields(fields){};
-        void operator()(PluginData n) { if(n.node_exist(m_node)) { std::cout << "found node " << m_node << std::endl; n.do_it(m_node,m_fields); } };
+        void operator()(PluginData n) { if(n.node_exist(m_node)) { n.do_it(m_node,m_fields); } };
         private:
             int m_node;
             field::Fields& m_fields;
@@ -125,7 +125,7 @@ namespace feather
 
     struct call_gl_init {
         call_gl_init(FNode& node, FGlInfo& info): m_node(node), m_info(info){};
-        void operator()(PluginData n) { if(n.node_exist(m_node.node)) { /*std::cout << "found gl info for node " << m_node.uid << std::endl;*/ n.gl_init(m_node,m_info); } };
+        void operator()(PluginData n) { if(n.node_exist(m_node.node)) { n.gl_init(m_node,m_info); } };
 
         private:
             FNode& m_node;
@@ -146,7 +146,7 @@ namespace feather
 
     struct call_gl_draw {
         call_gl_draw(FNode& node, FGlInfo& info): m_node(node), m_info(info){};
-        void operator()(PluginData n) { if(n.node_exist(m_node.node)) { /*std::cout << "found gl info for node " << m_node.uid << std::endl;*/ n.gl_draw(m_node,m_info); } };
+        void operator()(PluginData n) { if(n.node_exist(m_node.node)) { n.gl_draw(m_node,m_info); } };
 
         private:
             FNode& m_node;
@@ -299,19 +299,6 @@ namespace feather
     };
 
     template <> struct find_create_fields<0> { static status exec(int id, field::Fields& fields) { return status(FAILED,"No matching node fould to create fields in"); }; };
-
-
-    // COMMANDS 
-
-    /*
-    struct call_command {
-        call_command(std::string cmd, parameter::ParameterList params){ m_cmd = cmd; m_params = params; };
-        void operator()(PluginData n) { if(n.command_exist(m_cmd)) { std::cout << "found command " << m_cmd << std::endl; n.command(m_cmd,m_params); } };
-        private:
-            std::string m_cmd;
-            parameter::ParameterList m_params;
-    };
-    */ 
 
     // NODE ICON IMAGE 
 
