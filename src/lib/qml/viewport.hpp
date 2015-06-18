@@ -29,22 +29,66 @@
 #include "types.hpp"
 #include "gl_scene.hpp"
 
-class Viewport
+
+class ViewportRender : public QObject, protected QOpenGLFunctions
 {
+    Q_OBJECT
 
     public:
-        Viewport();
-        ~Viewport();
+        ViewportRender();
+        ~ViewportRender();
 
-        void initialize(int width, int height);
+        void initialize();
         void render(int width, int height);
         void rotateCamera(int x, int y);
         void zoomCamera(int z);
+        void setViewportSize(const QSize &size) { m_viewportSize = size; };
+           
+    public slots:
+        void paint();
+
+    //protected:
+        //QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
+        //void mousePressEvent(QMouseEvent* event);
 
     private:
         QSize m_viewportSize;
         feather::gl::glScene* m_pScene;    
         int m_CurrentCamera;
+
+
+};
+
+
+class Viewport : public QQuickItem
+{
+    Q_OBJECT
+
+    public:
+        Viewport();
+        ~Viewport();
+
+        //static QList<QRender *> threads;
+       Q_INVOKABLE void mousePressed(int x, int y);
+       Q_INVOKABLE void moveCamera(int x, int y);
+       Q_INVOKABLE void zoomCamera(int z);
+
+       //public Q_SLOTS:
+       //    void ready();
+
+    public slots:
+        void sync();
+        void cleanup();
+
+    private slots:
+        void handleWindowChanged(QQuickWindow *win);
+
+    private:
+        //RenderViewportRender *m_renderRender;
+        ViewportRender *m_pRender;
+        int m_x;
+        int m_y;
+
 };
 
 

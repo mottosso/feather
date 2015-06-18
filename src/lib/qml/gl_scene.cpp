@@ -356,6 +356,8 @@ void gl::glScene::init()
 
 void gl::glScene::draw(int width, int height)
 {
+    glViewport(0,0,width,height);
+
     glDepthMask(true);
 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
@@ -414,7 +416,6 @@ void gl::glScene::draw(int width, int height)
     glDisable(GL_LINE_SMOOTH);
     glDisable(GL_DEPTH_TEST);
     //glDisable(GL_CULL_FACE);
-
 
 }
 

@@ -34,6 +34,8 @@ Rectangle {
         id: renderer
         anchors.fill: parent
         anchors.margins: 2
+        //width: 500
+        //height: 500
 
         MouseArea {
             id: mouseArea
