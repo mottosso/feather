@@ -22,7 +22,7 @@
  ***********************************************************************/
 
 #include "deps.hpp"
-#include "viewport.hpp"
+#include "viewportthread.hpp"
 #include "sg_editor.hpp"
 #include "field_model.hpp"
 #include "qml.hpp"
@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
-    qmlRegisterType<Viewport>("FeatherViewport", 1, 0, "Viewport");
+    qmlRegisterType<ViewportThread>("FeatherViewport", 1, 0, "Viewport");
     qmlRegisterType<SceneGraphEditor>("feather.editors", 1, 0, "SceneGraphEditor");
     qmlRegisterType<SceneGraph>("feather.scenegraph", 1, 0, "SceneGraph");
     qmlRegisterType<Node>("feather.node", 1, 0, "Node");
@@ -53,6 +53,11 @@ int main(int argc, char **argv)
     {
         QQmlApplicationEngine view("ui/main.qml");
         execReturn = app.exec();
+    }
+
+    foreach (QThread *t, ViewportThread::threads) {
+        t->wait();
+        delete t;
     }
 
     return execReturn;
