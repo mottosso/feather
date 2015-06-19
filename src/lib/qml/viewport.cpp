@@ -121,6 +121,9 @@ void Viewport::handleWindowChanged(QQuickWindow *win)
         connect(win, SIGNAL(sceneGraphInvalidated()), this, SLOT(cleanup()), Qt::DirectConnection);
         win->setClearBeforeRendering(false);
     }
+
+    if(window())
+        window()->update();
 }
 
 void Viewport::sync()
@@ -133,7 +136,6 @@ void Viewport::sync()
     } else {
         m_pRender->setViewportSize(window()->size() * window()->devicePixelRatio());
     }
-    window()->update();
 }
 
 void Viewport::cleanup()
