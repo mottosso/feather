@@ -83,7 +83,9 @@ gl::glLight::glLight()
 gl::glLight::~glLight()
 {
     delete m_pFragShader;
+    m_pFragShader=0;
     delete m_pVertShader;
+    m_pVertShader=0;
 }
 
 void gl::glLight::init()
@@ -156,7 +158,14 @@ gl::glMesh::glMesh(glLight* light)
 
 gl::glMesh::~glMesh()
 {
-
+    delete m_pFillShader;
+    m_pFillShader=0;
+    delete m_pEdgeShader;
+    m_pEdgeShader=0;
+    delete m_pVertShader;
+    m_pVertShader=0;
+    delete m_pLight;
+    m_pLight=0;
 }
 
 void gl::glMesh::init()
@@ -263,8 +272,8 @@ void gl::glMesh::draw(QMatrix4x4& view)
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDrawArrays(GL_QUADS, 0, m_apV.size());
 
-    m_Program.disableAttributeArray(m_Normal);
     m_Program.disableAttributeArray(m_Vertex);
+    m_Program.disableAttributeArray(m_Normal);
     m_Program.release();
 
 }
@@ -283,7 +292,25 @@ gl::glScene::glScene()
 
 gl::glScene::~glScene()
 {
-
+    while(m_apCameras.size()) {
+        delete m_apCameras[0];
+    }
+    while(m_apMeshes.size()) {
+        delete m_apMeshes[0];
+    }
+    while(m_apLights.size()) {
+        delete m_apLights[0];
+    }
+    delete m_pView;
+    m_pView=0;
+    delete m_pProgram;
+    m_pProgram=0;
+    delete m_pGridShader;
+    m_pGridShader=0;
+    delete m_pGridFragShader;
+    m_pGridFragShader=0;
+    delete m_pAxisVShader;
+    m_pAxisVShader=0;
 }
 
 void gl::glScene::init()

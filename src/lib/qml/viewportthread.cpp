@@ -36,6 +36,8 @@ ViewportThread::ViewportThread()
 ViewportThread::~ViewportThread()
 {
     m_renderThread->quit();
+    delete m_renderThread;
+    m_renderThread=0;
 }
 
 void ViewportThread::ready()
@@ -212,6 +214,9 @@ void RenderViewportThread::shutDown()
 TextureNode::~TextureNode()
 {
     delete m_texture;
+    m_texture=0;
+    delete m_window;
+    m_window=0;
 }
 
 
