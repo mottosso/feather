@@ -108,7 +108,7 @@ namespace feather
         FTextureCoordArray st;
         FVertex3DArray vn;
         FIntArray i;
-        void clear() { v.clear(); st.clear(); vn.clear(); };
+        void clear() { v.clear(); st.clear(); vn.clear(); i.clear(); };
     };
 
     // SceneGraph Types
