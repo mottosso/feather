@@ -78,8 +78,7 @@ void main(void)
 
     //vec3 normalDirection = normalize(m_3x3_inv_transp * gl_Normal);
 
-    vec3 diffuseReflection
-        = vec3(light0.diffuse) * vec3(mymaterial.diffuse) * ndot;
+    vec3 diffuseReflection = vec3(light0.diffuse) * vec3(mymaterial.diffuse) * ndot;
 
     c = vec4(diffuseReflection, 1.0);
 

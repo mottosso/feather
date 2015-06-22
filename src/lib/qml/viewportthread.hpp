@@ -46,7 +46,6 @@ class ViewportThread : public QQuickItem
         public Q_SLOTS:
             void ready();
 
-
     protected:
         QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
         //void mousePressEvent(QMouseEvent* event);
@@ -68,6 +67,7 @@ class RenderViewportThread : public QThread
     Q_OBJECT
     public:
         RenderViewportThread(const QSize &size);
+        ~RenderViewportThread();
         void setSize(const QSize& size) { m_size=size; };
         QOffscreenSurface *surface;
         QOpenGLContext *context;

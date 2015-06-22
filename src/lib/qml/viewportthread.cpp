@@ -35,6 +35,7 @@ ViewportThread::ViewportThread()
 
 ViewportThread::~ViewportThread()
 {
+    std::cout << "DESTROY VIEW\n";
     m_renderThread->quit();
     delete m_renderThread;
     m_renderThread=0;
@@ -126,6 +127,20 @@ void ViewportThread::zoomCamera(int z)
     ViewportThread::threads << this;
 }
 
+RenderViewportThread::~RenderViewportThread()
+{
+    std::cout << "shutdown called\n";
+    context->makeCurrent(surface);
+    delete m_renderFbo;
+    delete m_displayFbo;
+    delete m_viewport;
+    context->doneCurrent();
+    delete context;
+    surface->deleteLater();
+    exit();
+    //moveToThread(QGuiApplication::instance()->thread());
+}
+
 void RenderViewportThread::moveCamera(int x, int y)
 {
     m_viewport->rotateCamera(x,y);
@@ -189,15 +204,18 @@ void RenderViewportThread::renderNext()
 
 void RenderViewportThread::shutDown()
 {
+    /*
+    std::cout << "shutdown called\n";
     context->makeCurrent(surface);
     delete m_renderFbo;
     delete m_displayFbo;
-    //delete m_viewport;
+    delete m_viewport;
     context->doneCurrent();
     delete context;
     surface->deleteLater();
     exit();
     moveToThread(QGuiApplication::instance()->thread());
+    */
 }
 
     TextureNode::TextureNode(QQuickWindow *window)
