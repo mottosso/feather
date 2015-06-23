@@ -164,8 +164,7 @@ gl::glMesh::~glMesh()
     m_pEdgeShader=0;
     delete m_pVertShader;
     m_pVertShader=0;
-    delete m_pLight;
-    m_pLight=0;
+    // the light will be deleted by the scenegraph
 }
 
 void gl::glMesh::init()
@@ -292,25 +291,25 @@ gl::glScene::glScene()
 
 gl::glScene::~glScene()
 {
-    while(m_apCameras.size()) {
-        delete m_apCameras[0];
+    for(uint i=0; i < m_apCameras.size(); i++) {
+        delete m_apCameras[i];
     }
-    while(m_apMeshes.size()) {
-        delete m_apMeshes[0];
+    m_apCameras.clear();
+
+    for(uint i=0; i < m_apMeshes.size(); i++) {
+        delete m_apMeshes[i];
     }
-    while(m_apLights.size()) {
-        delete m_apLights[0];
+    m_apMeshes.clear();
+
+    for(uint i=0; i < m_apLights.size(); i++) {
+        delete m_apLights[i];
     }
+    m_apLights.clear();
+
     delete m_pView;
     m_pView=0;
     delete m_pProgram;
     m_pProgram=0;
-    delete m_pGridShader;
-    m_pGridShader=0;
-    delete m_pGridFragShader;
-    m_pGridFragShader=0;
-    delete m_pAxisVShader;
-    m_pAxisVShader=0;
 }
 
 void gl::glScene::init()

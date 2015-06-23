@@ -122,9 +122,6 @@ namespace feather
                 QOpenGLShaderProgram* m_pProgram;
                 QOpenGLShaderProgram m_GridProgram;
                 QOpenGLShaderProgram m_AxisProgram;
-                QOpenGLShader* m_pGridShader;
-                QOpenGLShader* m_pGridFragShader;
-                QOpenGLShader* m_pAxisVShader;
                 int m_AxisVAttr;
                 int m_AxisMAttr;
                 int m_GridVAttr;
