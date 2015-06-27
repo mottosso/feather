@@ -50,8 +50,8 @@ namespace feather
 
     typedef struct{double x; double y; double z;} FNormal3D;
     typedef struct{ double x; double y; double z; double w;} FVector3D;
-    typedef struct{int r; int g; int b;} FColorRGB;
-    typedef struct{int r; int g; int b; int a;} FColorRGBA;
+    typedef struct{uint r; uint g; uint b;} FColorRGB;
+    typedef struct{uint r; uint g; uint b; uint a;} FColorRGBA;
 
     struct FTransform
     {
@@ -67,8 +67,9 @@ namespace feather
         FDouble t;
     };
 
-    typedef struct{int v; int vt; int vn;} FFacePoint;
-    typedef struct{std::vector<FFacePoint> f; } FFace;
+    typedef struct{uint v; uint vt; uint vn;} FFacePoint;
+    //typedef struct{std::vector<FFacePoint> f; } FFace;
+    typedef std::vector<FFacePoint> FFace;
     typedef double FMatrix[4][4];
 
     // Arrays
@@ -107,8 +108,41 @@ namespace feather
         FVertex3DArray v;
         FTextureCoordArray st;
         FVertex3DArray vn;
+        FFaceArray f;
         FIntArray i;
-        void clear() { v.clear(); st.clear(); vn.clear(); i.clear(); };
+        inline void add_face(const FFace face) { f.push_back(face); };
+        inline void build_iarray() { i.clear(); std::for_each(f.begin(), f.end(), [this](FFace fp){ std::for_each(fp.begin(), fp.end(), [this](FFacePoint fp){ i.push_back(fp.v); }); }); };
+        // remove all the vertex, normals, tex coords and faces from the mesh
+        inline void clear() { v.clear(); st.clear(); vn.clear(); i.clear(); };
+        // cut the face along two edges
+        inline bool split_face(const uint face, const uint v1, const uint v2) {
+            // verify the face and edges
+            if(face >= f.size()) {
+                if(v1 >= f.at(face).size() || v2 >= f.at(face).size() || v1==v2 || v1==v2+1 || v1==v2-1)
+                    return false;
+            }
+            
+            // we're going to insert a new face after the selected face and modify the selected face
+            
+            // get the id of the fp of the face
+            FFace f1;
+            FFace f2;
+            bool sf=false; // true if on face two
+            std::for_each(f.at(face).begin(), f.at(face).end(), [&v1,&v2,&f1,&f2,&sf](FFacePoint fp){
+                if(fp.v==v1 || fp.v==v2)
+                    (sf) ? sf=true : sf=false; 
+                    
+                if(sf) 
+                    f2.push_back(fp);
+                else
+                    f1.push_back(fp);
+            } );
+            
+            // replace the old face and add the new one right after it.
+            // TODO
+
+            return true;
+        };
     };
 
     // SceneGraph Types

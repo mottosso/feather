@@ -11,6 +11,9 @@ set(QT_USE_OPENGL TRUE)
 
 add_definitions("-D GL_GLEXT_PROTOTYPES")
 
+SET(CMAKE_CXX_STANDARD 11)
+SET(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # RELEASE VERSION
 set(CMAKE_BUILD_TYPE=Release)
 set(CMAKE_CXX_FLAGS "-g -Wall")
@@ -23,11 +26,9 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 #set(CMAKE_BUILD_TYPE=Profile)
 
-#set(CMAKE_CXX_LANGUAGE_STANDARD "c++11")
 #set(CMAKE_CXX_LIBRARY "libc++")
 #set(CMAKE_CXX_FLAGS "-g")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 # for seg fault debugging
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -v -da -Q -std=c++11")
 

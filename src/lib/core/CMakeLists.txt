@@ -1,5 +1,7 @@
 project(feather_core)
 
+SET(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 FIND_PACKAGE(Boost COMPONENTS filesystem system REQUIRED)
 FIND_PACKAGE(Qt5OpenGL REQUIRED)
 
@@ -32,8 +34,15 @@ TARGET_LINK_LIBRARIES(feather_core ${feather_core_LIBS})
 
 SET_TARGET_PROPERTIES(feather_core
     PROPERTIES
+    CMAKE_CXX_STANDARD 11
+    CMAKE_CXX_STANDARD_REQUIRED ON
+)
+
+SET_TARGET_PROPERTIES(feather_core
+    PROPERTIES
     VERSION 0.01
-    SOVERSION 1)
+    SOVERSION 1
+)
 
 SET(feather_core_HDRS
     deps.hpp
