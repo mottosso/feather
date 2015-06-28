@@ -67,7 +67,14 @@ namespace feather
         FDouble t;
     };
 
-    typedef struct{uint v; uint vt; uint vn;} FFacePoint;
+    struct FFacePoint
+    {
+        FFacePoint(uint _v=0, uint _vt=0, uint _vn=0): v(_v), vt(_vt), vn(_vn) {};
+        uint v;
+        uint vt;
+        uint vn;
+    };
+
     //typedef struct{std::vector<FFacePoint> f; } FFace;
     typedef std::vector<FFacePoint> FFace;
     typedef double FMatrix[4][4];
@@ -122,24 +129,34 @@ namespace feather
                     return false;
             }
             
-            // we're going to insert a new face after the selected face and modify the selected face
-            
             // get the id of the fp of the face
             FFace f1;
             FFace f2;
             bool sf=false; // true if on face two
             std::for_each(f.at(face).begin(), f.at(face).end(), [&v1,&v2,&f1,&f2,&sf](FFacePoint fp){
-                if(fp.v==v1 || fp.v==v2)
-                    (sf) ? sf=true : sf=false; 
-                    
-                if(sf) 
-                    f2.push_back(fp);
-                else
-                    f1.push_back(fp);
+                (!sf) ? f1.push_back(fp) : f2.push_back(fp);
+                if(fp.v==v1 || fp.v==v2) {
+                    if(!sf) {
+                        f2.push_back(fp);        
+                        sf=true;
+                    } else {
+                        f1.push_back(fp);
+                        sf=false;
+                    } 
+                }
             } );
             
             // replace the old face and add the new one right after it.
-            // TODO
+            std::vector<FFace> sface;
+            sface.push_back(f1);
+            sface.push_back(f2);
+            auto it = f.begin();
+            // set the iterator to the point where the faces need to be inserted
+            it=it+face; // set the iterator to the face that needs to be replaced
+            // remove the old face
+            f.erase(it);
+            // add the two new faces in it's place
+            f.insert(it,sface.begin(),sface.end());
 
             return true;
         };
