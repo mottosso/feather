@@ -120,19 +120,17 @@ namespace feather
         inline void add_face(const FFace face) { f.push_back(face); };
         inline void build_iarray() {
             i.clear();
-            int id=0;
-            std::for_each(f.begin(), f.end(), [this,&id](FFace fp){
-                std::for_each(fp.begin(), fp.end(), [this,&id](FFacePoint fp){
-                    // will be using the ear clipping method to trianglate the polygon
-                    if(id<3) {
-                        i.push_back(fp.v);
-                        id++;
-                        if(id==3)
-                            id=0;
-                    } else {
-                        id=0;
-                    }
-                });
+            uint id=0;
+            std::for_each(f.begin(), f.end(), [this,&id](FFace _face){
+                while(id+1 < _face.size()) {
+                    i.push_back(_face.at(id++).v);
+                    i.push_back(_face.at(id++).v);
+                    if(id+1 < _face.size())
+                        i.push_back(_face.at(id).v);
+                    else
+                        i.push_back(_face.at(0).v);
+                }
+                id=0;
             });
         };
         // remove all the vertex, normals, tex coords and faces from the mesh
