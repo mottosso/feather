@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 attribute highp vec4 vertex;
+attribute highp vec4 color;
 attribute highp vec3 normal;
 attribute highp vec4 lightposition;
 attribute highp vec4 shader_diffuse;
@@ -30,6 +31,8 @@ uniform mediump mat4 matrix;
 uniform mat3 m_3x3_inv_transp;
 varying vec4 c;
 varying vec3 n;
+
+varying vec4 vcolor;
 
 /*
 struct lightSource
@@ -81,6 +84,6 @@ void main(void)
     vec3 diffuseReflection = vec3(light0.diffuse) * vec3(mymaterial.diffuse) * ndot;
 
     c = vec4(diffuseReflection, 1.0);
-
+    vcolor = color;
     gl_Position = matrix * vertex;
 }

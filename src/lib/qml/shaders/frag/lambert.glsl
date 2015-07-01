@@ -22,7 +22,9 @@
  ***********************************************************************/
 
 varying vec4 c;
+varying vec4 vcolor;
  
 void main(void) {
-  gl_FragColor = c;
+  //gl_FragColor = c;
+    gl_FragColor = vcolor;
 }

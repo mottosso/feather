@@ -50,8 +50,24 @@ namespace feather
 
     typedef struct{double x; double y; double z;} FNormal3D;
     typedef struct{ double x; double y; double z; double w;} FVector3D;
-    typedef struct{uint r; uint g; uint b;} FColorRGB;
-    typedef struct{uint r; uint g; uint b; uint a;} FColorRGBA;
+
+    struct FColorRGB
+    {
+        FColorRGB(float _r=1.0, float _g=1.0, float _b=1.0, float _a=1.0):r(_r),g(_g),b(_b){};
+        float r;
+        float g;
+        float b;
+        float a;
+    };
+
+    struct FColorRGBA
+    {
+        FColorRGBA(float _r=1.0, float _g=1.0, float _b=1.0, float _a=1.0):r(_r),g(_g),b(_b),a(_a){};
+        float r;
+        float g;
+        float b;
+        float a;
+    };
 
     struct FTransform
     {
@@ -85,7 +101,9 @@ namespace feather
     typedef std::vector<FDouble> FDoubleArray;
     typedef std::vector<FString> FStringArray;
     typedef std::vector<FVertex3D> FVertex3DArray;
-    typedef std::vector<FVector3D> FVector3DArray;
+    typedef std::vector<FVertex3D> FVertex3DArray;
+    typedef std::vector<FColorRGB> FColorRGBArray;
+    typedef std::vector<FColorRGBA> FColorRGBAArray;
     typedef std::vector<FTextureCoord> FTextureCoordArray;
     typedef std::vector<FNormal3D> FNormal3DArray;
     typedef std::vector<FFace> FFaceArray;
@@ -117,18 +135,26 @@ namespace feather
         FVertex3DArray vn;
         FFaceArray f;
         FIntArray i;
+        FColorRGBAArray c;
+
         inline void add_face(const FFace face) { f.push_back(face); };
-        inline void build_iarray() {
+        inline void build_gl() {
             i.clear();
+            c.clear();
             uint id=0;
             std::for_each(f.begin(), f.end(), [this,&id](FFace _face){
                 while(id+1 < _face.size()) {
                     i.push_back(_face.at(id++).v);
+                    c.push_back(FColorRGBA());
                     i.push_back(_face.at(id++).v);
-                    if(id+1 < _face.size())
+                    c.push_back(FColorRGBA());
+                    if(id+1 < _face.size()) {
+                        c.push_back(FColorRGBA());
                         i.push_back(_face.at(id).v);
-                    else
-                        i.push_back(_face.at(0).v);
+                    } else {
+                       c.push_back(FColorRGBA());
+                       i.push_back(_face.at(0).v);
+                    }
                 }
                 id=0;
             });
@@ -206,6 +232,7 @@ namespace feather
         FAttributeArray* attrs; // ??still used??
         // GL
         int glVertex;
+        int glColor;
         int glMatrix;
         int glNormal;
         int glLightPosition;
