@@ -142,20 +142,27 @@ namespace feather
             i.clear();
             c.clear();
             uint id=0;
-            std::for_each(f.begin(), f.end(), [this,&id](FFace _face){
+            int fcount=0; // this is a temp value to test selection
+            std::for_each(f.begin(), f.end(), [this,&id,&fcount](FFace _face){
                 while(id+1 < _face.size()) {
-                    i.push_back(_face.at(id++).v);
-                    c.push_back(FColorRGBA());
-                    i.push_back(_face.at(id++).v);
-                    c.push_back(FColorRGBA());
-                    if(id+1 < _face.size()) {
+                    if(fcount==3) {
+                        c.push_back(FColorRGBA(1.0,0.0,0.0,1.0));
+                        c.push_back(FColorRGBA(1.0,0.0,0.0,1.0));
+                        c.push_back(FColorRGBA(1.0,0.0,0.0,1.0));
+                    } else {
                         c.push_back(FColorRGBA());
+                        c.push_back(FColorRGBA());
+                        c.push_back(FColorRGBA());
+                    }
+                    i.push_back(_face.at(id++).v);
+                    i.push_back(_face.at(id++).v);
+                    if(id+1 < _face.size()) {
                         i.push_back(_face.at(id).v);
                     } else {
-                       c.push_back(FColorRGBA());
                        i.push_back(_face.at(0).v);
                     }
                 }
+                fcount++;
                 id=0;
             });
         };
