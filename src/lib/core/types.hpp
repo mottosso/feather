@@ -134,40 +134,54 @@ namespace feather
         FTextureCoordArray st;
         FVertex3DArray vn;
         FFaceArray f;
-        FIntArray i;
-        FColorRGBAArray c;
-
+        // gl
+        FVertex3DArray glv;
+        FVertex3DArray glvn;
+        FIntArray gli;
+        FColorRGBAArray glc;
+        
         inline void add_face(const FFace face) { f.push_back(face); };
         inline void build_gl() {
-            i.clear();
-            c.clear();
+            glv.clear();
+            glvn.clear();
+            gli.clear();
+            glc.clear();
             uint id=0;
             int fcount=0; // this is a temp value to test selection
             std::for_each(f.begin(), f.end(), [this,&id,&fcount](FFace _face){
-                while(id+1 < _face.size()) {
+                while(id+2 <= _face.size()) {
                     if(fcount==3) {
-                        c.push_back(FColorRGBA(1.0,0.0,0.0,1.0));
-                        c.push_back(FColorRGBA(1.0,0.0,0.0,1.0));
-                        c.push_back(FColorRGBA(1.0,0.0,0.0,1.0));
+                        glc.push_back(FColorRGBA(1.0,0.0,0.0,1.0));
+                        glc.push_back(FColorRGBA(1.0,0.0,0.0,1.0));
+                        glc.push_back(FColorRGBA(1.0,0.0,0.0,1.0));
                     } else {
-                        c.push_back(FColorRGBA());
-                        c.push_back(FColorRGBA());
-                        c.push_back(FColorRGBA());
+                        glc.push_back(FColorRGBA());
+                        glc.push_back(FColorRGBA());
+                        glc.push_back(FColorRGBA());
                     }
-                    i.push_back(_face.at(id++).v);
-                    i.push_back(_face.at(id++).v);
-                    if(id+1 < _face.size()) {
-                        i.push_back(_face.at(id).v);
+                    //glv.push_back(v.at(_face.at(id).v));
+                    //glvn.push_back(vn.at(_face.at(id).vn));
+                    gli.push_back(_face.at(id).v);
+                    //glv.push_back(v.at(_face.at(id+1).v));
+                    //glvn.push_back(vn.at(_face.at(id+1).vn));
+                    gli.push_back(_face.at(id+1).v);
+                    if(id+2 < _face.size()) {
+                        //glv.push_back(v.at(_face.at(id+2).v));
+                        //glvn.push_back(vn.at(_face.at(id+2).vn));
+                        gli.push_back(_face.at(id+2).v);
                     } else {
-                       i.push_back(_face.at(0).v);
+                       //glv.push_back(v.at(_face.at(0).v));
+                       //glvn.push_back(vn.at(_face.at(0).vn));
+                       gli.push_back(_face.at(0).v);
                     }
+                    id=id+2;
                 }
                 fcount++;
                 id=0;
             });
         };
         // remove all the vertex, normals, tex coords and faces from the mesh
-        inline void clear() { v.clear(); st.clear(); vn.clear(); i.clear(); };
+        inline void clear() { v.clear(); st.clear(); vn.clear(); glv.clear(); glvn.clear(); gli.clear(); };
         // cut the face along two edges
         inline bool split_face(const uint face, const uint v1, const uint v2) {
             // verify the face and edges
@@ -242,6 +256,7 @@ namespace feather
         int glColor;
         int glMatrix;
         int glNormal;
+        int glView; // 0=face, 1=edge, 2=point
         int glLightPosition;
         int glShaderDiffuse;
     };
