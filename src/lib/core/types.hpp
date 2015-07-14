@@ -137,9 +137,12 @@ namespace feather
         // gl
         FVertex3DArray glv;
         FVertex3DArray glvn;
-        FIntArray gli;
+        FIntArray gli; // for tris
         FColorRGBAArray glc;
-        
+        // gl face edges
+        FIntArray glec; // edge count
+        FIntArray glei; // edge indics
+ 
         inline void add_face(const FFace face) { f.push_back(face); };
         inline void build_gl() {
             glv.clear();
@@ -149,6 +152,9 @@ namespace feather
             uint id=0;
             int fcount=0; // this is a temp value to test selection
             std::for_each(f.begin(), f.end(), [this,&id,&fcount](FFace _face){
+
+                for_each(_face.begin(),_face.end(),[this](FFacePoint _fp){ glei.push_back(_fp.v); });
+
                 while(id+2 <= _face.size()) {
                     if(fcount==3) {
                         glc.push_back(FColorRGBA(1.0,0.0,0.0,1.0));
@@ -159,12 +165,15 @@ namespace feather
                         glc.push_back(FColorRGBA());
                         glc.push_back(FColorRGBA());
                     }
+
                     //glv.push_back(v.at(_face.at(id).v));
                     //glvn.push_back(vn.at(_face.at(id).vn));
                     gli.push_back(_face.at(id).v);
+ 
                     //glv.push_back(v.at(_face.at(id+1).v));
                     //glvn.push_back(vn.at(_face.at(id+1).vn));
                     gli.push_back(_face.at(id+1).v);
+
                     if(id+2 < _face.size()) {
                         //glv.push_back(v.at(_face.at(id+2).v));
                         //glvn.push_back(vn.at(_face.at(id+2).vn));
@@ -174,6 +183,7 @@ namespace feather
                        //glvn.push_back(vn.at(_face.at(0).vn));
                        gli.push_back(_face.at(0).v);
                     }
+
                     id=id+2;
                 }
                 fcount++;
