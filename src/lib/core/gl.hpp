@@ -33,6 +33,11 @@
     frag->compileSourceFile(__shader);\
     info.program->addShader(frag);
  
+#define ADD_GL_GEOM_SHADER(__shader)\
+    QOpenGLShader* geom = new QOpenGLShader(QOpenGLShader::Geometry);\
+    geom->compileSourceFile(__shader);\
+    info.program->addShader(geom);
+ 
 #define ADD_GL_VERT_SHADER(__shader)\
     QOpenGLShader* vert = new QOpenGLShader(QOpenGLShader::Vertex);\
     vert->compileSourceFile(__shader);\

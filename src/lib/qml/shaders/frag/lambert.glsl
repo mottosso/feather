@@ -21,6 +21,10 @@
  *
  ***********************************************************************/
 
+#version 120
+#extension GL_EXT_gpu_shader4 : enable
+#extension GL_EXT_fragment_shader4 : enable
+
 //varying vec4 c;
 varying vec4 vcolor;
 varying vec3 n;
