@@ -23,6 +23,8 @@
 
 import QtQuick 2.2
 import QtQuick.Window 2.2
+import QtQuick.Controls 1.4
+import feather.scenegraph 1.0
 
 Window {
     id: outliner
@@ -31,11 +33,12 @@ Window {
     flags: Qt.Tool
     width: 300
     height: 600
+    property SceneGraph scenegraph: Null
     
-    Rectangle {
+    TreeView {
         id: tree
         anchors.fill: parent
-        color: "white"
+        //color: "white"
     }
     
 }

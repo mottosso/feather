@@ -78,6 +78,10 @@ ApplicationWindow {
         properties: properties
     }
 
-    //Outliner {}
+    Outliner {
+        id: outliner
+        scenegraph: sg
+    }
+
     //Material {}
 }
