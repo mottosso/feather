@@ -25,6 +25,7 @@
 #include "viewportthread.hpp"
 #include "sg_editor.hpp"
 #include "field_model.hpp"
+#include "tree_model.hpp"
 #include "qml.hpp"
 #include "commands.hpp"
 #include <QApplication>
@@ -37,6 +38,7 @@ int main(int argc, char **argv)
     qmlRegisterType<ViewportThread>("FeatherViewport", 1, 0, "Viewport");
     qmlRegisterType<SceneGraphEditor>("feather.editors", 1, 0, "SceneGraphEditor");
     qmlRegisterType<SceneGraph>("feather.scenegraph", 1, 0, "SceneGraph");
+    qmlRegisterType<TreeModel>("feather.scenegraph", 1, 0, "TreeModel");
     qmlRegisterType<Node>("feather.node", 1, 0, "Node");
     qmlRegisterType<Field>("feather.field", 1, 0, "Field");
     qmlRegisterType<FieldModel>("feather.field", 1, 0, "FieldModel");
