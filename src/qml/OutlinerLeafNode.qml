@@ -1,8 +1,8 @@
 /***********************************************************************
  *
- * Filename: Outliner.qml 
+ * Filename: OutlinerLeafNode.qml 
  *
- * Description: Window that display the node tree. 
+ * Description: Leaf node drawn by the Outliner. 
  *
  * Copyright (C) 2015 Richard Layman, rlayman2000@yahoo.com 
  *
@@ -21,39 +21,14 @@
  *
  ***********************************************************************/
 
-import QtQuick 2.2
-import QtQuick.Window 2.2
-import QtQuick.Controls 1.4
-import feather.scenegraph 1.0
+import QtQuick 2.3
+import feather.field 1.0
 
-Window {
-    id: outliner
-    title: "Outliner"
-    visible: true
-    flags: Qt.Tool
-    width: 300
-    height: 600
-    property SceneGraph scenegraph: Null
-   
-    TreeModel { id: treeModel }
-
-    TreeView {
-        id: tree
-        anchors.fill: parent
-
-        TableViewColumn {
-            title: "Name"
-            role: "uid"
-            width: 100
-        }
-
-        model: treeModel
-        //itemDelegate: OutlinerLeafNode {}
- 
-   }
-
-    Component.onCompleted: {
-        treeModel.addLeaf(0,1)
-        treeModel.addLeaf(1,1)
+Item {
+    Text {
+        anchors.verticalCenter: parent.verticalCenter
+        color: "black" //styleData.textColor
+        elide: styleData.elideMode
+        text: styleData.value
     }
 }
