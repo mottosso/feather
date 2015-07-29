@@ -38,7 +38,6 @@ class LeafInfo {
 class TreeModel : public QAbstractListModel
 {
     Q_OBJECT
-        Q_PROPERTY(QList<LeafInfo*> tree READ tree WRITE setTree NOTIFY treeChanged)
  
     public:
         TreeModel(QObject* parent=0);
@@ -47,31 +46,23 @@ class TreeModel : public QAbstractListModel
         enum ERoles
         {
             UidRole = Qt::UserRole + 1,
-            NidRole = Qt::UserRole + 2,
+            NidRole
         };
 
-        QHash<int, QByteArray> roleNames() const;
-        Q_INVOKABLE int rowCount(const QModelIndex& parent = QModelIndex()) const;
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
         void clear();
  
-        // fields 
-        void setTree(QList<LeafInfo*>& t) {
-            if(m_tree != t) {
-                m_tree=t;
-            }
-        }
-
-        QList<LeafInfo*> tree() { return m_tree; }
-
-        Q_INVOKABLE void addLeaf(int uid, int nid);
-
+        void addLeaf(const LeafInfo &leaf);
+        int rowCount(const QModelIndex& parent = QModelIndex()) const;
+ 
     signals:
         void treeChanged();
 
+    protected:
+        QHash<int,QByteArray> roleNames() const;
+
     private:
-        Q_DISABLE_COPY(TreeModel);
-        QList<LeafInfo*> m_tree;
+        QList<LeafInfo> m_tree;
 };
 
 #endif

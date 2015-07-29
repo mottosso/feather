@@ -25,6 +25,8 @@
 
 TreeModel::TreeModel(QObject* parent) : QAbstractListModel(parent)
 {
+    addLeaf(LeafInfo(1,2));
+    addLeaf(LeafInfo(2,3));
 }
 
 TreeModel::~TreeModel()
@@ -33,15 +35,16 @@ TreeModel::~TreeModel()
 
 QHash<int, QByteArray> TreeModel::roleNames() const
 {
-    QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
-    roles.insert(UidRole, QByteArray("uid"));
-    roles.insert(NidRole, QByteArray("nid"));
+    QHash<int, QByteArray> roles;
+    roles[UidRole] = "uid";
+    roles[NidRole] = "nid";
     return roles;
 }
 
 int TreeModel::rowCount(const QModelIndex& parent) const
 {
-    return m_tree.size();
+    Q_UNUSED(parent)
+    return m_tree.count();
 }
 
 QVariant TreeModel::data(const QModelIndex& index, int role) const
@@ -50,16 +53,14 @@ QVariant TreeModel::data(const QModelIndex& index, int role) const
         return QVariant(); // Return Null variant if index is invalid
     if (index.row() > (m_tree.size()-1) )
         return QVariant();
-    LeafInfo *dobj = m_tree.at(index.row());
-    switch (role) {
-        case Qt::DisplayRole: // The default display role now displays the first name as well
-        case UidRole:
-            return QVariant::fromValue(dobj->uid);
-        case NidRole:
-            return QVariant::fromValue(dobj->nid);
-        default:
-            return QVariant();
+    const LeafInfo &leaf = m_tree[index.row()];
+    if(role==UidRole) {
+        return leaf.uid;
     }
+    else if(role==NidRole) {
+        return leaf.nid;
+    }
+    return QVariant();
 }
 
 void TreeModel::clear()
@@ -67,8 +68,10 @@ void TreeModel::clear()
     m_tree.clear();
 }
 
-void TreeModel::addLeaf(int uid, int nid)
+void TreeModel::addLeaf(const LeafInfo &leaf)
 {
-    m_tree.append(new LeafInfo(uid,nid));
+    beginInsertRows(QModelIndex(),rowCount(),rowCount());
+    m_tree << leaf;
+    endInsertRows();
 }
 

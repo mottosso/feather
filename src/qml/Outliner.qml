@@ -51,9 +51,4 @@ Window {
         //itemDelegate: OutlinerLeafNode {}
  
    }
-
-    Component.onCompleted: {
-        treeModel.addLeaf(0,1)
-        treeModel.addLeaf(1,1)
-    }
 }
