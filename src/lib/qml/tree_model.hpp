@@ -33,9 +33,10 @@ class LeafInfo {
         LeafInfo(const int &_uid=0, const int &_nid=0): uid(_uid),nid(_nid){}
         int uid;
         int nid;
+        std::vector<LeafInfo> children;
 };
 
-class TreeModel : public QAbstractListModel
+class TreeModel : public QAbstractItemModel
 {
     Q_OBJECT
  
@@ -54,7 +55,10 @@ class TreeModel : public QAbstractListModel
  
         void addLeaf(const LeafInfo &leaf);
         int rowCount(const QModelIndex& parent = QModelIndex()) const;
- 
+        int columnCount(const QModelIndex& parent = QModelIndex()) const;
+        QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+        QModelIndex parent(const QModelIndex& index) const;
+         
     signals:
         void treeChanged();
 
@@ -63,6 +67,8 @@ class TreeModel : public QAbstractListModel
 
     private:
         QList<LeafInfo> m_tree;
+        QModelIndex m_main;
+        QModelIndex m_child;
 };
 
 #endif

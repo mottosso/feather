@@ -42,8 +42,14 @@ Window {
         anchors.fill: parent
 
         TableViewColumn {
-            title: "Name"
+            title: "UID"
             role: "uid"
+            width: 100
+        }
+
+        TableViewColumn {
+            title: "NID"
+            role: "nid"
             width: 100
         }
 
@@ -51,4 +57,6 @@ Window {
         //itemDelegate: OutlinerLeafNode {}
  
    }
+
+    Component.onCompleted: {}
 }

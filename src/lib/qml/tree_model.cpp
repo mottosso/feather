@@ -23,10 +23,16 @@
 
 #include "tree_model.hpp"
 
-TreeModel::TreeModel(QObject* parent) : QAbstractListModel(parent)
+TreeModel::TreeModel(QObject* parent) : QAbstractItemModel(parent)
 {
-    addLeaf(LeafInfo(1,2));
-    addLeaf(LeafInfo(2,3));
+    addLeaf(LeafInfo(0,0));
+    addLeaf(LeafInfo(1,1));
+
+    //moveRow(m_child,1,m_main,3);
+    //insertColumn(2,createIndex(1,0));
+    //insertRow(1,m_child);
+    
+    std::cout << "row count: " << rowCount() << std::endl;
 }
 
 TreeModel::~TreeModel()
@@ -47,6 +53,23 @@ int TreeModel::rowCount(const QModelIndex& parent) const
     return m_tree.count();
 }
 
+int TreeModel::columnCount(const QModelIndex& parent) const
+{
+    Q_UNUSED(parent)
+    return 1;
+}
+
+QModelIndex TreeModel::index(int row, int column, const QModelIndex& parent) const
+{
+    //Q_UNUSED(parent)
+    return parent.child(row,column);
+}
+
+QModelIndex TreeModel::parent(const QModelIndex& index) const
+{
+    return index;
+}
+ 
 QVariant TreeModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid())
@@ -70,8 +93,14 @@ void TreeModel::clear()
 
 void TreeModel::addLeaf(const LeafInfo &leaf)
 {
-    beginInsertRows(QModelIndex(),rowCount(),rowCount());
-    m_tree << leaf;
+    //std::cout << "pre rowCount():" << rowCount() << std::endl;
+    beginInsertRows(QModelIndex(),1,1);
+    //beginInsertRows(parent,rowCount(),rowCount());
+    //beginInsertColumns(createIndex(row,column),row,column);
+    m_tree.push_back(LeafInfo(2,3));
+    // m_tree << leaf;
     endInsertRows();
+    //endInsertColumns();
+    //std::cout << "post rowCount():" << rowCount() << std::endl;
 }
 
