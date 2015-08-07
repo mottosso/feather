@@ -28,6 +28,7 @@
 #include "field.hpp"
 #include "commands.hpp"
 
+/*
 class LeafInfo {
     public:
         LeafInfo(const int &_uid=0, const int &_nid=0): uid(_uid),nid(_nid){}
@@ -35,7 +36,72 @@ class LeafInfo {
         int nid;
         std::vector<LeafInfo> children;
 };
+*/
 
+class Leaf
+{
+    public:
+        explicit Leaf(const QList<QVariant> &data, Leaf *parentItem = 0);
+        ~Leaf();
+
+        void appendChild(Leaf *child);
+
+        Leaf *child(int row);
+        int childCount() const;
+        int columnCount() const;
+        QVariant data(int column) const;
+        int row() const;
+        Leaf *parentItem();
+
+    private:
+        QList<Leaf*> m_childItems;
+        QList<QVariant> m_itemData;
+        Leaf *m_parentItem;
+        int uid;
+        int nid;
+};
+
+
+// TREE MODEL
+
+class TreeModel : public QAbstractItemModel
+{
+    Q_OBJECT
+
+    public:
+        explicit TreeModel(QObject *parent = 0);
+        //explicit TreeModel(const QString &data, QObject *parent = 0);
+        ~TreeModel();
+
+        enum ERoles
+        {
+            UidRole = Qt::UserRole + 1,
+            NidRole
+        };
+
+
+        QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+        Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+        QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+        QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+        QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
+        int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+        int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+
+
+    protected:
+        QHash<int,QByteArray> roleNames() const;
+
+
+    private:
+        //void setupModelData(const QStringList &lines, Leaf *parent);
+        void setupModelData(Leaf *parent);
+
+        Leaf *rootItem;
+};
+
+
+/*
 class TreeModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -70,5 +136,6 @@ class TreeModel : public QAbstractItemModel
         QModelIndex m_main;
         QModelIndex m_child;
 };
+*/
 
 #endif

@@ -55,7 +55,8 @@ Window {
 
         model: treeModel
         //itemDelegate: OutlinerLeafNode {}
- 
+        //itemDelegate: Text{ text: "uid" + treeModel.data(0) }
+
    }
 
     Component.onCompleted: {}
