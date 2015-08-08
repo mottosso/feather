@@ -83,6 +83,7 @@ namespace feather
             // SG SELECTION
             status add_selection(int type, int uid, int nid, int fid);
             status node_selection(int type, int uid, int nid);
+
         } // namespace command
 
     } // namespace qml

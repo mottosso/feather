@@ -197,23 +197,37 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation, int rol
     return QVariant();
 }
 
-void TreeModel::setupModelData(Leaf *parent)
-{
-    QList<Leaf*> parents;
-    parents << parent;
-    QList<QVariant> columnData;
-    QStringList columnStrings;
-    columnStrings << "A" << "B";
-    columnData << columnStrings[0]; 
-    //parents.last()->appendChild(new Leaf(columnData, parents.last()));
-    //parents << parents.last()->child(parents.last()->childCount()-1);
-    parent->appendChild(new Leaf(columnData,parent));    
-    parent->appendChild(new Leaf(columnData,parent));    
-    parent->child(0)->appendChild(new Leaf(columnData,parent));    
-    parent->child(1)->appendChild(new Leaf(columnData,parent));    
-}
-
 void TreeModel::updateTree()
 {
-    
+    // Get the scenegraph tree that is stored in the core and updated whenever a node is added or removed.
+    // Go through the tree and translate each node to a Leaf to be added to the scenegraph.
+    rootItem->clear();
+
+    // Start with the root node
+    loadChildren(0,rootItem);
 }
+
+void TreeModel::loadChildren(const int uid, Leaf* parent)
+{
+    QList<QVariant> data;
+    QStringList cStrings;
+    cStrings << feather::qml::command::get_node_name(uid).c_str() << "0";
+    data << cStrings[0];
+    parent->appendChild(new Leaf(data,parent)); 
+
+    // recursive loop through each child node
+    std::vector<int> children;
+
+    feather::qml::command::get_node_connected_uids(uid,children);
+    feather::qml::command::get_children(uid,children);
+
+    if(!children.size())
+        return;
+
+    QList<Leaf*> parents;
+
+    for_each(children.begin(), children.end(), [this,&parent](int uid){
+        loadChildren(uid,parent->lastChild());
+    });
+}
+

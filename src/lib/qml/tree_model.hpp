@@ -37,11 +37,13 @@ class Leaf
         void appendChild(Leaf *child);
 
         Leaf *child(int row);
+        Leaf *lastChild() { return m_childItems.last(); };
         int childCount() const;
         int columnCount() const;
         QVariant data(int column) const;
         int row() const;
         Leaf *parentItem();
+        void clear() { m_childItems.clear(); };
 
     private:
         QList<Leaf*> m_childItems;
@@ -68,7 +70,6 @@ class TreeModel : public QAbstractItemModel
             NidRole
         };
 
-
         QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
         Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
         QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
@@ -81,10 +82,8 @@ class TreeModel : public QAbstractItemModel
     protected:
         QHash<int,QByteArray> roleNames() const;
 
-
     private:
-        void setupModelData(Leaf *parent);
-
+        void loadChildren(const int uid, Leaf* parent); 
         Leaf *rootItem;
 };
 
