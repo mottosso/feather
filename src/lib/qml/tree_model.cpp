@@ -68,7 +68,6 @@ int Leaf::columnCount() const
 QVariant Leaf::data(int column) const
 {
     return m_itemData.value(column);
-    //return uid;
 }
 
 Leaf *Leaf::parentItem()
@@ -79,15 +78,12 @@ Leaf *Leaf::parentItem()
 
 // TREE MODEL
     TreeModel::TreeModel(QObject *parent)
-    //TreeModel::TreeModel(const QString &data, QObject *parent)
 : QAbstractItemModel(parent)
 {
-    //QString data("1              2\n3            4\n5            6\n");
     QList<QVariant> rootData;
     rootData << "uid" << "nid";
     rootItem = new Leaf(rootData);
-    //setupModelData(data.split(QString("\n")), rootItem);
-    setupModelData(rootItem);
+    updateTree();
 }
 
 TreeModel::~TreeModel()
@@ -182,11 +178,6 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
             return QVariant();
     }
 
-    /*
-    Leaf *item = static_cast<Leaf*>(index.internalPointer());
-
-    return item->data(index.column());
-    */
 }
 
 
@@ -206,7 +197,6 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation, int rol
     return QVariant();
 }
 
-//void TreeModel::setupModelData(const QStringList &lines, Leaf *parent)
 void TreeModel::setupModelData(Leaf *parent)
 {
     QList<Leaf*> parents;
@@ -221,149 +211,9 @@ void TreeModel::setupModelData(Leaf *parent)
     parent->appendChild(new Leaf(columnData,parent));    
     parent->child(0)->appendChild(new Leaf(columnData,parent));    
     parent->child(1)->appendChild(new Leaf(columnData,parent));    
-
-
-
-    //parents.last()->appendChild(new Leaf(columnData,parents.last()));
-    //parents.last()->appendChild(new Leaf(columnData,parents.last())); 
-    //parent->appendChild(parents.last());    
-
-
-
-/*
-    QList<Leaf*> parents;
-    QList<int> indentations;
-    parents << parent;
-    indentations << 0;
-
-    int number = 0;
-
-    while (number < lines.count()) {
-        int position = 0;
-        while (position < lines[number].length()) {
-            if (lines[number].mid(position, 1) != " ")
-                break;
-            position++;
-        }
-
-        QString lineData = lines[number].mid(position).trimmed();
-
-        if (!lineData.isEmpty()) {
-            // Read the column data from the rest of the line.
-            QStringList columnStrings = lineData.split("\t", QString::SkipEmptyParts);
-            QList<QVariant> columnData;
-            for (int column = 0; column < columnStrings.count(); ++column)
-                columnData << columnStrings[column];
-
-            if (position > indentations.last()) {
-                // The last child of the current parent is now the new parent
-                // unless the current parent has no children.
-
-                if (parents.last()->childCount() > 0) {
-                    parents << parents.last()->child(parents.last()->childCount()-1);
-                    indentations << position;
-                }
-            } else {
-                while (position < indentations.last() && parents.count() > 0) {
-                    parents.pop_back();
-                    indentations.pop_back();
-                }
-            }
-
-            // Append a new item to the current parent's list of children.
-            parents.last()->appendChild(new Leaf(columnData, parents.last()));
-        }
-
-        ++number;
-    }
-*/
 }
 
-
-
-
-
-
-/*
-TreeModel::TreeModel(QObject* parent) : QAbstractItemModel(parent)
+void TreeModel::updateTree()
 {
-    addLeaf(LeafInfo(0,0));
-    addLeaf(LeafInfo(1,1));
-
-    //moveRow(m_child,1,m_main,3);
-    //insertColumn(2,createIndex(1,0));
-    //insertRow(1,m_child);
     
-    std::cout << "row count: " << rowCount() << std::endl;
 }
-
-TreeModel::~TreeModel()
-{
-}                                                                        
-
-QHash<int, QByteArray> TreeModel::roleNames() const
-{
-    QHash<int, QByteArray> roles;
-    roles[UidRole] = "uid";
-    roles[NidRole] = "nid";
-    return roles;
-}
-
-int TreeModel::rowCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent)
-    return m_tree.count();
-}
-
-int TreeModel::columnCount(const QModelIndex& parent) const
-{
-    Q_UNUSED(parent)
-    return 1;
-}
-
-QModelIndex TreeModel::index(int row, int column, const QModelIndex& parent) const
-{
-    //Q_UNUSED(parent)
-    return parent.child(row,column);
-}
-
-QModelIndex TreeModel::parent(const QModelIndex& index) const
-{
-    return QModelIndex();
-}
- 
-QVariant TreeModel::data(const QModelIndex& index, int role) const
-{
-    if (!index.isValid())
-        return QVariant(); // Return Null variant if index is invalid
-    if (index.row() > (m_tree.size()-1) )
-        return QVariant();
-    const LeafInfo &leaf = m_tree[index.row()];
-    if(role==UidRole) {
-        return leaf.uid;
-    }
-    else if(role==NidRole) {
-        return leaf.nid;
-    }
-    return QVariant();
-}
-
-void TreeModel::clear()
-{
-    m_tree.clear();
-}
-
-void TreeModel::addLeaf(const LeafInfo &leaf)
-{
-    //std::cout << "pre rowCount():" << rowCount() << std::endl;
-    beginInsertRows(QModelIndex(),rowCount(),1);
-    //beginInsertRows(parent,rowCount(),rowCount());
-    //beginInsertColumns(createIndex(row,column),row,column);
-    m_tree.push_back(LeafInfo(2,3));
-    // m_tree << leaf;
-    endInsertRows();
-    //endInsertColumns();
-    //std::cout << "post rowCount():" << rowCount() << std::endl;
-}
-*/
-

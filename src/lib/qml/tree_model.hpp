@@ -28,16 +28,6 @@
 #include "field.hpp"
 #include "commands.hpp"
 
-/*
-class LeafInfo {
-    public:
-        LeafInfo(const int &_uid=0, const int &_nid=0): uid(_uid),nid(_nid){}
-        int uid;
-        int nid;
-        std::vector<LeafInfo> children;
-};
-*/
-
 class Leaf
 {
     public:
@@ -70,7 +60,6 @@ class TreeModel : public QAbstractItemModel
 
     public:
         explicit TreeModel(QObject *parent = 0);
-        //explicit TreeModel(const QString &data, QObject *parent = 0);
         ~TreeModel();
 
         enum ERoles
@@ -87,55 +76,17 @@ class TreeModel : public QAbstractItemModel
         QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
         int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
         int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-
+        Q_INVOKABLE void updateTree();
 
     protected:
         QHash<int,QByteArray> roleNames() const;
 
 
     private:
-        //void setupModelData(const QStringList &lines, Leaf *parent);
         void setupModelData(Leaf *parent);
 
         Leaf *rootItem;
 };
 
-
-/*
-class TreeModel : public QAbstractItemModel
-{
-    Q_OBJECT
- 
-    public:
-        TreeModel(QObject* parent=0);
-        ~TreeModel();
-
-        enum ERoles
-        {
-            UidRole = Qt::UserRole + 1,
-            NidRole
-        };
-
-        QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-        void clear();
- 
-        void addLeaf(const LeafInfo &leaf);
-        int rowCount(const QModelIndex& parent = QModelIndex()) const;
-        int columnCount(const QModelIndex& parent = QModelIndex()) const;
-        QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
-        QModelIndex parent(const QModelIndex& index) const;
-         
-    signals:
-        void treeChanged();
-
-    protected:
-        QHash<int,QByteArray> roleNames() const;
-
-    private:
-        QList<LeafInfo> m_tree;
-        QModelIndex m_main;
-        QModelIndex m_child;
-};
-*/
 
 #endif
