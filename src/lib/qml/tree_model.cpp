@@ -29,7 +29,6 @@ Leaf::Leaf(const QList<QVariant> &data, Leaf *parent)
 {
     m_parentItem = parent;
     m_itemData = data;
-    uid = 10;
 }
 
 Leaf::~Leaf()
@@ -81,7 +80,7 @@ Leaf *Leaf::parentItem()
 : QAbstractItemModel(parent)
 {
     QList<QVariant> rootData;
-    rootData << "uid" << "nid";
+    rootData << "name" << "visible" << "icon" << "uid" << "nid";
     rootItem = new Leaf(rootData);
     updateTree();
 }
@@ -114,6 +113,9 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) con
 QHash<int, QByteArray> TreeModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
+    roles[NameRole] = "name";
+    roles[VisibleRole] = "visible";
+    roles[IconRole] = "icon";
     roles[UidRole] = "uid";
     roles[NidRole] = "nid";
     return roles;
@@ -162,18 +164,19 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    /* 
-    if (role != Qt::DisplayRole)
-        return QVariant();
-    */
-
     Leaf *item = static_cast<Leaf*>(index.internalPointer());
 
     switch (role) {
-        case UidRole:
+        case NameRole:
             return item->data(0);
-        case NidRole:
+        case VisibleRole:
             return item->data(1);
+        case IconRole:
+            return item->data(2);
+        case UidRole:
+            return item->data(3);
+         case NidRole:
+            return item->data(4);
         default:
             return QVariant();
     }
@@ -199,27 +202,30 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation, int rol
 
 void TreeModel::updateTree()
 {
-    // Get the scenegraph tree that is stored in the core and updated whenever a node is added or removed.
-    // Go through the tree and translate each node to a Leaf to be added to the scenegraph.
     rootItem->clear();
-
-    // Start with the root node
     loadChildren(0,rootItem);
 }
 
 void TreeModel::loadChildren(const int uid, Leaf* parent)
 {
     QList<QVariant> data;
-    QStringList cStrings;
-    cStrings << feather::qml::command::get_node_name(uid).c_str() << "0";
-    data << cStrings[0];
+    // create data
+    data.append(feather::qml::command::get_node_name(uid).c_str()); // name
+    data.append(true); // visible
+    int nid;
+    std::string icon;
+    feather::qml::command::get_node_id(uid,nid); 
+    feather::qml::command::get_node_icon(nid,icon); 
+    data.append(icon.c_str()); // icon 
+    data.append(uid); // uid
+    data.append(0); // nid
+ 
     parent->appendChild(new Leaf(data,parent)); 
 
     // recursive loop through each child node
     std::vector<int> children;
 
     feather::qml::command::get_node_connected_uids(uid,children);
-    feather::qml::command::get_children(uid,children);
 
     if(!children.size())
         return;

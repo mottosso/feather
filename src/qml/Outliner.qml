@@ -21,7 +21,7 @@
  *
  ***********************************************************************/
 
-import QtQuick 2.2
+import QtQuick 2.5
 import QtQuick.Window 2.2
 import QtQuick.Controls 1.4
 import feather.scenegraph 1.0
@@ -42,20 +42,24 @@ Window {
         anchors.fill: parent
 
         TableViewColumn {
-            title: "UID"
-            role: "uid"
-            width: 100
+            title: "name"
+            role: "name"
+            width: tree.width-100
         }
 
         TableViewColumn {
-            title: "NID"
-            role: "nid"
-            width: 100
+            title: "visible"
+            role: "visible"
+            //width: 100
         }
 
         model: treeModel
-        //itemDelegate: OutlinerLeafNode {}
+        sortIndicatorVisible: true
+        headerVisible: false
+
+        style: OutlinerLeafNode {}
         //itemDelegate: Text{ text: "uid" + treeModel.data(0) }
+        //itemDelegate: Text{ text: model.uid }
 
    }
 

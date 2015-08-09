@@ -49,8 +49,6 @@ class Leaf
         QList<Leaf*> m_childItems;
         QList<QVariant> m_itemData;
         Leaf *m_parentItem;
-        int uid;
-        int nid;
 };
 
 
@@ -66,7 +64,10 @@ class TreeModel : public QAbstractItemModel
 
         enum ERoles
         {
-            UidRole = Qt::UserRole + 1,
+            NameRole = Qt::UserRole + 1,
+            VisibleRole,
+            IconRole,
+            UidRole,
             NidRole
         };
 

@@ -21,14 +21,35 @@
  *
  ***********************************************************************/
 
-import QtQuick 2.3
-import feather.field 1.0
+import QtQuick 2.5
+import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.4
 
-Item {
-    Text {
-        anchors.verticalCenter: parent.verticalCenter
-        color: "black" //styleData.textColor
-        elide: styleData.elideMode
-        text: styleData.value
+
+TreeViewStyle {
+    id: style
+
+    backgroundColor: "#848482"
+    alternateBackgroundColor: "#848482"
+
+    itemDelegate: Item {
+        Item { id: nodeName; visible: false; Row { Image { sourceSize.width: 16; sourceSize.height: 16; source: "icons/"+model.icon } Text { elide: styleData.elideMode; font.pixelSize: 12; text: model.name } } }
+        Item { id: nodeVisible; visible: false; CheckBox { checked: model.visible } }
+        Component.onCompleted: {
+            switch(styleData.column){
+                case 0:
+                    nodeName.visible=true;
+                    nodeVisible.visible=false;
+                    break;
+                case 1:
+                    nodeName.visible=false;
+                    nodeVisible.visible=true;
+                    break;
+                default:
+                    0 
+            }
+        }
     }
+
 }
+
