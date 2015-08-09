@@ -33,8 +33,38 @@ TreeViewStyle {
     alternateBackgroundColor: "#848482"
 
     itemDelegate: Item {
-        Item { id: nodeName; visible: false; Row { Image { sourceSize.width: 16; sourceSize.height: 16; source: "icons/"+model.icon } Text { elide: styleData.elideMode; font.pixelSize: 12; text: model.name } } }
-        Item { id: nodeVisible; visible: false; CheckBox { checked: model.visible } }
+        Item { id: nodeName; visible: false; Row { Image { sourceSize.width: 18; sourceSize.height: 18; source: "icons/"+model.icon } Text { elide: styleData.elideMode; font.pixelSize: 12; text: model.name } } }
+        Item { 
+            id: nodeVisible
+            visible: false
+            width: 20
+            height: 20
+            Image {
+                id: visible_icon
+                visible: true 
+                sourceSize.width: 18
+                sourceSize.height: 18
+                source: "icons/visible.svg"
+            }
+
+            Image {
+                id: not_visible_icon
+                visible: false 
+                sourceSize.width: 18
+                sourceSize.height: 18
+                source: "icons/not_visible.svg"
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    visible_icon.visible = (visible_icon.visible) ? false : true
+                    not_visible_icon.visible = (not_visible_icon.visible) ? false : true
+                }
+            }
+        }
+        //Item { id: nodeVisible; visible: false; CheckBox { checked: model.visible } }
+
         Component.onCompleted: {
             switch(styleData.column){
                 case 0:

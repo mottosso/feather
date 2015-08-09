@@ -44,7 +44,7 @@ Window {
         TableViewColumn {
             title: "name"
             role: "name"
-            width: tree.width-100
+            width: tree.width-40
         }
 
         TableViewColumn {
@@ -58,9 +58,6 @@ Window {
         headerVisible: false
 
         style: OutlinerLeafNode {}
-        //itemDelegate: Text{ text: "uid" + treeModel.data(0) }
-        //itemDelegate: Text{ text: model.uid }
-
    }
 
     Component.onCompleted: {}
