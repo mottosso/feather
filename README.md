@@ -16,11 +16,13 @@ v0.1 Features
 * Open/Save feather project files
 * DAG with field connections between different nodes
 * Users can add custom node fields to any node and connect this field to any other field of the same type in another node
+* Nodes can be added to layers and modified using the layer editor. The layer's name and color can also be changed making groups easier to find.
 * Plugin architecture
 * Import/Export obj files
 * Outliner Editor
 * SceneGraph Editor
 * Field Editor
+* Layer Editor
 * 3D Viewport Editor
 * Polygon Tools - Bevel, Extrude, Inset
 * Selection Tools - Pick, Box, Ring, Loop
