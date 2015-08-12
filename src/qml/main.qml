@@ -78,6 +78,11 @@ ApplicationWindow {
         properties: properties
     }
 
+    LayerEditor {
+        id: layerEditor
+        scenegraph: sg
+    }
+
     Outliner {
         id: outliner
         scenegraph: sg

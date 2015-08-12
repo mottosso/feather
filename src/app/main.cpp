@@ -25,7 +25,8 @@
 #include "viewportthread.hpp"
 #include "sg_editor.hpp"
 #include "field_model.hpp"
-#include "tree_model.hpp"
+#include "layer_model.hpp"
+#include "tree_model.hpp" // is this being used ????
 #include "qml.hpp"
 #include "commands.hpp"
 #include <QApplication>
@@ -42,6 +43,7 @@ int main(int argc, char **argv)
     qmlRegisterType<Node>("feather.node", 1, 0, "Node");
     qmlRegisterType<Field>("feather.field", 1, 0, "Field");
     qmlRegisterType<FieldModel>("feather.field", 1, 0, "FieldModel");
+    qmlRegisterType<LayerModel>("feather.layer", 1, 0, "LayerModel");
     qmlRegisterType<Parameter>("feather.command", 1, 0, "Parameter");
     qmlRegisterType<Command>("feather.command", 1, 0, "Command");
     qmlRegisterType<Plugins>("feather.plugin", 1, 0, "Plugins");
