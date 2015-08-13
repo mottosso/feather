@@ -67,7 +67,7 @@ Rectangle {
             ColorProperty { properties: colorProperties.properties; width: 130; name: "label"; label: "Label" }
             ColorProperty { properties: colorProperties.properties; width: 130; name: "textBg"; label: "Text BG" }
             ColorProperty { properties: colorProperties.properties; width: 130; name: "text"; label: "Text" }
-
+            ColorProperty { properties: colorProperties.properties; width: 130; name: "menu"; label: "Menu" }
         } 
 
         // TYPES

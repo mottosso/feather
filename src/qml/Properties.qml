@@ -37,6 +37,7 @@ Item {
         ListElement { name: "panel"; color: "#303030" }
         ListElement { name: "labelBg"; color: "#F0F8FF" }
         ListElement { name: "label"; color: "#000000" }
+        ListElement { name: "menu"; color: "#848482" }
         // TYPES
         ListElement { name: "boolType"; color: "#008080" }
         ListElement { name: "intType"; color: "#E2725B" }

@@ -25,6 +25,7 @@ import QtQuick 2.3
 import QtQuick.Window 2.2
 import feather.scenegraph 1.0
 import feather.layer 1.0
+import QtQuick.Controls 1.2
 
 Window {
     id: layerEditor 
@@ -35,11 +36,59 @@ Window {
     height: 500
     property SceneGraph scenegraph: Null
 
+    Action {
+        id: addLayerAction
+        text: "Add Layer"
+        tooltip: "Add a new layer to the Layer Editor"
+        onTriggered: {}
+    }
+
+    Action {
+        id: removeLayerAction
+        text: "Remove Layer"
+        tooltip: "Remove selected layer from the Layer Editor"
+        onTriggered: {}
+    }
+
+
+    Rectangle {
+        id: toolBar
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 34
+        border.color: "black"
+        border.width: 1
+        color: properties.getColor("menu")
+        radius: 2
+
+        Row {
+            spacing: 4
+            anchors.fill: parent
+            anchors.margins: 2
+
+            ToolButton {
+                width: 32; height: 32
+                iconSource: "/usr/local/feather/ui/icons/layer_add.svg"
+                iconName: "add layer"
+                action: addLayerAction 
+            }
+
+            ToolButton {
+                width: 32; height: 32
+                iconSource: "/usr/local/feather/ui/icons/layer_remove.svg"
+                iconName: "remove layer"
+                action: removeLayerAction 
+            }
+        }
+    }    
+
+
     LayerModel { id: layerModel }
 
     Rectangle {
         id: layerFrame
-        anchors.top: parent.top
+        anchors.top: toolBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         height: parent.height
@@ -54,7 +103,6 @@ Window {
             anchors.fill: parent
             //anchors.margins: 1
             model: layerModel
-            //delegate: LayerEditorValue { properties: fieldEditor.properties; width: parent.width; uId: uid; nodeKey: nid; fieldKey: fid; fieldType: type }
             delegate: LayerBar { width: parent.width; barId: layerId; barName: layerName; barColor: layerColor; barVisible: layerVisible; barLocked: layerLocked }
         }
 
@@ -66,11 +114,12 @@ Window {
         //nodeTitle.color = properties.getColor("labelBg")        
         //nodeBaseTitle.color = properties.getColor("labelBg")        
         layerEditor.color = properties.getColor("windowBg")
-
+        toolBar.color = properties.getColor("menu")
     }
 
     Component.onCompleted: {
         updateColor()
+        properties.colorsChanged.connect(updateColor)
     }    
 
 }
