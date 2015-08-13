@@ -41,53 +41,53 @@ Rectangle {
         spacing: 2
         anchors.fill: parent
 
-    Text {
-        id: label
-        //anchors.top: parent.top
-        //anchors.bottom: parent.bottom
-        //anchors.left: parent.left
-        height: parent.height
-        width: parent.width-40
-        //anchors.margins: 4
-        horizontalAlignment: Text.AlignLeft
-        verticalAlignment: Text.AlignVCenter
-        font.pixelSize: 12
-        font.bold: false 
-    }    
+        Text {
+            id: label
+            //anchors.top: parent.top
+            //anchors.bottom: parent.bottom
+            //anchors.left: parent.left
+            height: parent.height
+            width: parent.width-40
+            //anchors.margins: 4
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+            font.pixelSize: 12
+            font.bold: false 
+        }    
 
  
-    Item { 
-        id: barVisibleIcon
-        visible: true 
-        width: 20
-        height: 20
-
-        Image {
-            id: visible_icon
-            anchors.fill: parent
+        Item { 
+            id: barVisibleIcon
             visible: true 
-            sourceSize.width: 18
-            sourceSize.height: 18
-            source: "icons/visible.svg"
-        }
+            width: 20
+            height: 20
 
-        Image {
-            id: not_visible_icon
-            anchors.fill: parent
-            visible: false 
-            sourceSize.width: 18
-            sourceSize.height: 18
-            source: "icons/not_visible.svg"
-        }
+            Image {
+                id: visible_icon
+                anchors.fill: parent
+                visible: true 
+                sourceSize.width: 18
+                sourceSize.height: 18
+                source: "icons/visible.svg"
+            }
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                visible_icon.visible = (visible_icon.visible) ? false : true
+            Image {
+                id: not_visible_icon
+                anchors.fill: parent
+                visible: false 
+                sourceSize.width: 18
+                sourceSize.height: 18
+                source: "icons/not_visible.svg"
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    visible_icon.visible = (visible_icon.visible) ? false : true
                     not_visible_icon.visible = (not_visible_icon.visible) ? false : true
+                }
             }
         }
-    }
 
     }
 
