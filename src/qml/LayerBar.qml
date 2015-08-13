@@ -22,10 +22,11 @@
  ***********************************************************************/
 
 import QtQuick 2.3
+import QtQuick.Dialogs 1.0
 
 Rectangle {
     id: layerFrame
-    height: 20
+    height: 24
     radius: 2
     //color: "hotpink"
     border.width: 1
@@ -37,9 +38,30 @@ Rectangle {
     property bool barLocked: false
     // LABEL
 
+
+
+    ColorDialog {
+        id: colorDialog
+        title: "Layer Color"
+        onAccepted: {
+            //console.log("You chose: " + colorDialog.color)
+            layerFrame.color = colorDialog.color
+            colorDialog.visible = false;
+            //Qt.quit()
+        }
+        onRejected: {
+            //console.log("Canceled")
+            colorDialog.visible = false;
+            //Qt.quit()
+        }
+        Component.onCompleted: visible = false 
+    }
+
+
     Row {
-        spacing: 2
+        spacing: 8
         anchors.fill: parent
+        anchors.margins: 4
 
         Text {
             id: label
@@ -47,11 +69,11 @@ Rectangle {
             //anchors.bottom: parent.bottom
             //anchors.left: parent.left
             height: parent.height
-            width: parent.width-40
+            width: parent.width-50
             //anchors.margins: 4
-            horizontalAlignment: Text.AlignLeft
+            horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 12
+            font.pixelSize: 14
             font.bold: false 
         }    
 
@@ -61,7 +83,7 @@ Rectangle {
             id: barVisibleIcon
             visible: true 
             width: 20
-            height: 20
+            height: parent.height
 
             Image {
                 id: visible_icon
@@ -95,10 +117,10 @@ Rectangle {
             id: barLockIcon
             visible: true 
             width: 20
-            height: 20
+            height: parent.height 
 
             Image {
-                id: lock_icon
+                id: locked_icon
                 anchors.fill: parent
                 visible: true 
                 sourceSize.width: 18
@@ -218,13 +240,21 @@ Rectangle {
 
         onPressed: {
             //if(mouse.button == Qt.RightButton)
+            mouse.accepted=false
         }
 
+        onClicked: { mouse.accepted=false }
+
+        onDoubleClicked: { colorDialog.color=layerFrame.color; colorDialog.visible=true }
         //onPositionChanged: { }
         //onReleased: { layerFrame.state="normal" }
         //onEntered: { layerFrame.state="hover" }
         //onExited: { layerFrame.state="normal" }
     }
 
-    Component.onCompleted: { console.log("layer id=" + layerId); /*layerFrame.state="normal"*/ }
+    Component.onCompleted: {
+        console.log("layer id=" + layerId)
+        /*layerFrame.state="normal"*/
+    }
+
 }
