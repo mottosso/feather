@@ -55,7 +55,8 @@ Rectangle {
             font.bold: false 
         }    
 
- 
+
+        // Bar Visiblity 
         Item { 
             id: barVisibleIcon
             visible: true 
@@ -85,6 +86,40 @@ Rectangle {
                 onClicked: {
                     visible_icon.visible = (visible_icon.visible) ? false : true
                     not_visible_icon.visible = (not_visible_icon.visible) ? false : true
+                }
+            }
+        }
+
+        // Bar Locking 
+        Item { 
+            id: barLockIcon
+            visible: true 
+            width: 20
+            height: 20
+
+            Image {
+                id: lock_icon
+                anchors.fill: parent
+                visible: true 
+                sourceSize.width: 18
+                sourceSize.height: 18
+                source: "icons/locked.svg"
+            }
+
+            Image {
+                id: unlocked_icon
+                anchors.fill: parent
+                visible: false 
+                sourceSize.width: 18
+                sourceSize.height: 18
+                source: "icons/unlocked.svg"
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    locked_icon.visible = (locked_icon.visible) ? false : true
+                    unlocked_icon.visible = (unlocked_icon.visible) ? false : true
                 }
             }
         }
