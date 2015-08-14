@@ -23,6 +23,8 @@
 
 import QtQuick 2.3
 import QtQuick.Dialogs 1.0
+import QtQuick.Window 2.2
+import QtQuick.Controls 1.4
 
 Rectangle {
     id: layerFrame
@@ -36,10 +38,8 @@ Rectangle {
     property alias barColor: layerFrame.color
     property bool barVisible: true  
     property bool barLocked: false
+
     // LABEL
-
-
-
     ColorDialog {
         id: colorDialog
         title: "Layer Color"
@@ -57,26 +57,58 @@ Rectangle {
         Component.onCompleted: visible = false 
     }
 
-
     Row {
         spacing: 8
         anchors.fill: parent
         anchors.margins: 4
 
-        Text {
-            id: label
-            //anchors.top: parent.top
-            //anchors.bottom: parent.bottom
-            //anchors.left: parent.left
+        Item {
+            id: labelName
             height: parent.height
             width: parent.width-50
-            //anchors.margins: 4
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font.pixelSize: 14
-            font.bold: false 
-        }    
 
+            Text {
+                id: label
+                anchors.fill: parent
+                visible: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 14
+                font.bold: false
+
+            }
+
+            TextField {
+                id: labelEdit
+                anchors.fill: parent
+                visible: false
+                readOnly: false
+            }
+ 
+            MouseArea {
+                anchors.fill: parent
+                onDoubleClicked: {
+                    mouse.accepted = false
+                    if(label.visible){
+                        label.visible = false
+                        labelEdit.visible = true
+                        labelEdit.placeholderText = "Enter Layer Name" 
+                        labelEdit.forceActiveFocus()
+                    }
+                }
+            }
+
+            function setLabelName(){
+                label.text = labelEdit.text
+                labelEdit.visible = false
+                label.visible = true
+            }
+
+            Component.onCompleted: {
+                labelEdit.accepted.connect(setLabelName)
+            } 
+ 
+        }
 
         // Bar Visiblity 
         Item { 

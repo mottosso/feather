@@ -25,7 +25,7 @@ import QtQuick 2.3
 import QtQuick.Window 2.2
 import feather.scenegraph 1.0
 import feather.layer 1.0
-import QtQuick.Controls 1.2
+import QtQuick.Controls 1.4
 
 Window {
     id: layerEditor 
@@ -115,6 +115,7 @@ Window {
         //nodeBaseTitle.color = properties.getColor("labelBg")        
         layerEditor.color = properties.getColor("windowBg")
         toolBar.color = properties.getColor("menu")
+        
     }
 
     Component.onCompleted: {
