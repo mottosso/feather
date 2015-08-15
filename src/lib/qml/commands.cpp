@@ -25,6 +25,7 @@
 #include "field.hpp"
 #include "scenegraph.hpp"
 #include "selection.hpp"
+#include "layer.hpp"
 
 using namespace feather;
 
@@ -114,6 +115,32 @@ status qml::command::run_command(std::string cmd, feather::parameter::ParameterL
 status qml::command::run_command_string(std::string str)
 {
     return plugins.run_command_string(str);
+}
+
+
+// Layer
+
+status qml::command::add_layer(feather::FLayer layer)
+{
+    layers.add_layer(layer);
+    return status();
+}
+
+status qml::command::remove_layer(int id)
+{
+    bool p = layers.remove_layer(id);
+    return (!p) ? status(FAILED,"failed to remover layer: id out of range") : status();
+}
+
+status qml::command::get_layer(int id, feather::FLayer &layer)
+{
+    bool p = layers.layer(id,layer);
+    return (!p) ? status(FAILED,"failed to get layer: id out of range") :status();
+}
+
+int qml::command::layer_count()
+{
+    return layers.count();
 }
 
 

@@ -41,6 +41,9 @@ namespace feather
         {
 
             status init();
+
+            // Node
+
             int add_node(int type, int node, std::string name); 
             bool node_exists(int uid);
             status connect_nodes(int n1, int f1, int n2, int f2); 
@@ -51,10 +54,20 @@ namespace feather
             status run_command(std::string cmd, feather::parameter::ParameterList params);
             status run_command_string(std::string str);
 
+            
+            // Layer
+            status add_layer(FLayer layer);
+            status remove_layer(int id);
+            status get_layer(int id, FLayer &layer);
+            int layer_count();
+
+
             // Selection
+
             status select_node(int uid);
             status get_selected_nodes(std::vector<int>& uids);
             void clear_selection();
+
 
             // Fields
  
@@ -71,7 +84,9 @@ namespace feather
             status get_field_connection_status(int uid, int node, int field, bool& val);
             status get_fid_list(int uid, int nid, field::connection::Type conn, std::vector<field::FieldBase*>& list);
 
+
             // SG EDITOR
+
             void get_node_connections(int uid, std::vector<int>& nodes);
             std::string get_node_name(int uid);
             void gl_init(int uid, FGlInfo& info);

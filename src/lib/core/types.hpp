@@ -114,6 +114,19 @@ namespace feather
         FString message;        
     };
 
+    
+    // Layer Properties
+    struct FLayer
+    {
+        FLayer(std::string _n="", FColorRGB _c=FColorRGB(), bool _v=true, bool _l=true, std::vector<uint> _u=std::vector<uint>()): name(_n),color(_c),visible(_v),locked(_l),uids(_u) {};
+        std::string name;
+        FColorRGB color;
+        bool visible;
+        bool locked;
+        std::vector<uint> uids;            
+    };
+
+
 
     // Mesh Components
 

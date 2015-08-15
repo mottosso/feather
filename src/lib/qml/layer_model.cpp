@@ -25,8 +25,11 @@
 
 LayerModel::LayerModel(QObject* parent) : QAbstractListModel(parent)
 {
-    // TESTING
-    addLayers();
+    addLayer(0,"Base",QColor("blue"),true,false);
+    addLayer(1,"A",QColor("blue"),true,false);
+    addLayer(2,"B",QColor("blue"),true,false);
+
+    //updateLayers();
 }
 
 LayerModel::~LayerModel()
@@ -80,24 +83,24 @@ void LayerModel::clear()
 
 void LayerModel::addLayer(int id, QString name, QColor color, bool visible, bool locked)
 {
-    m_layers.append(new LayerInfo(id,name,color,visible,locked));
+    // this will create a new layer with not uids
+    feather::FLayer l(name.toStdString(),feather::FColorRGB());
+    feather::qml::command::add_layer(l);
+    updateLayers();
 }
 
-void LayerModel::addLayers()
+void LayerModel::updateLayers()
 {
     // THIS IS FOR TESTING
-    m_layers.append(new LayerInfo(0,"base","hotpink"));
-    m_layers.append(new LayerInfo(1,"A","limegreen"));
-    m_layers.append(new LayerInfo(2,"B","skyblue"));
-    layoutChanged();
- 
-    /*
-    feather::qml::command::get_fid_list(uid,nid,feather::field::connection::In,fids);
+    uint size = feather::qml::command::layer_count();
+
     m_layers.clear();
-    for(uint i=0; i < fids.size(); i++) {
-        m_layers.append(new LayerInfo(uid,nid,fids.at(i)->id,fids.at(i)->type,0));
+
+    for(uint i=0; i < size; i++){
+        feather::FLayer l;
+        feather::qml::command::get_layer(i,l);
+        m_layers.append(new LayerInfo(i,QString(l.name.c_str()),QColor("red")));
     }
     layoutChanged();
-    */
 }
 

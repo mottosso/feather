@@ -29,19 +29,23 @@
 namespace feather
 {
 
-    namespace layer
+    class Layers
     {
+        public:
+            Layers(){};
+            ~Layers(){ clear(); };
 
-        struct properties
-        {
-            std::string name;
-            FColorRGB color;
-            std::vector<uint> uids;            
-        };
+            inline void add_layer(FLayer l) { m_apLayers.push_back(l); };
+            inline bool remove_layer(int id) { return false; }; // TODO
+            inline int count() { return m_apLayers.size(); };
+            inline void clear() { m_apLayers.clear(); };
+            inline bool layer(int id, FLayer& l) { if(count() > id){ l=m_apLayers.at(id); return true; } return false; };
+ 
+        private:   
+            std::vector<FLayer> m_apLayers;
+    };
 
-        std::vector<properties> layers;
-
-    } // namespace layer
+    static Layers layers;
 
 } // namespace feather
 
