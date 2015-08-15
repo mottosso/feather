@@ -54,6 +54,12 @@ namespace feather
     struct FColorRGB
     {
         FColorRGB(float _r=1.0, float _g=1.0, float _b=1.0, float _a=1.0):r(_r),g(_g),b(_b){};
+        inline int int_red() { return 255 * r; };
+        inline int int_green() { return 255 * g; };
+        inline int int_blue() { return 255 * b; };
+        inline void set_red(int _r) { r = _r / 255.0; };
+        inline void set_green(int _g) { r = _g / 255.0; };
+        inline void set_blue(int _b) { r = _b / 255.0; };
         float r;
         float g;
         float b;

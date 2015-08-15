@@ -35,9 +35,10 @@ Rectangle {
 
     property int barId: 0
     property alias barName: label.text
-    property alias barColor: layerFrame.color
+    property alias barColor: layerFrame.color 
     property bool barVisible: true  
     property bool barLocked: false
+    property bool selected: false
 
     // LABEL
     ColorDialog {
@@ -62,10 +63,57 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: 4
 
+        // Bar Locking 
+        Item { 
+            id: selectIcon
+            visible: true 
+            width: 20
+            height: parent.height 
+            property color deselectColor: barColor
+
+            Image {
+                id: select_on_icon
+                anchors.fill: parent
+                visible: false 
+                sourceSize.width: 18
+                sourceSize.height: 18
+                source: "icons/select_bubble_on.svg"
+            }
+
+            Image {
+                id: select_off_icon
+                anchors.fill: parent
+                visible: true 
+                sourceSize.width: 18
+                sourceSize.height: 18
+                source: "icons/select_bubble_off.svg"
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    if(!selected) {
+                        layerFrame.selected = true
+                        layerFrame.border.color = "hotpink"
+                        selectIcon.deselectColor = barColor
+                        barColor = "limegreen"
+                        layerFrame.border.width = 2
+                    } else {
+                        layerFrame.selected = false 
+                        layerFrame.border.color = "black"
+                        barColor = selectIcon.deselectColor 
+                        layerFrame.border.width = 1
+                    }
+                    select_on_icon.visible = (select_on_icon.visible) ? false : true
+                    select_off_icon.visible = (select_off_icon.visible) ? false : true
+                }
+            }
+        }
+
         Item {
             id: labelName
             height: parent.height
-            width: parent.width-50
+            width: parent.width-110
 
             Text {
                 id: label
@@ -86,8 +134,18 @@ Rectangle {
             }
  
             MouseArea {
+                id: mouseTextArea
                 anchors.fill: parent
-                onDoubleClicked: {
+                hoverEnabled: true 
+                acceptedButtons: Qt.LeftButton // | Qt.RightButton
+
+
+                //onPressed: { console.log("text pressed"); /*mouse.accepted = false*/ }
+
+                //onClicked: { mouse.accepted = false }
+
+                onClicked: {
+                    console.log("text clicked");
                     mouse.accepted = false
                     if(label.visible){
                         label.visible = false
@@ -96,6 +154,9 @@ Rectangle {
                         labelEdit.forceActiveFocus()
                     }
                 }
+    
+                onDoubleClicked: { console.log("text double clicked");  mouse.accepted = false }
+
             }
 
             function setLabelName(){
@@ -108,6 +169,34 @@ Rectangle {
                 labelEdit.accepted.connect(setLabelName)
             } 
  
+        }
+
+        // Bar Color 
+        Item { 
+            id: barColorIcon
+            visible: true 
+            width: 20
+            height: parent.height
+
+            Image {
+                id: color_icon
+                anchors.fill: parent
+                visible: true 
+                sourceSize.width: 18
+                sourceSize.height: 18
+                source: "icons/color.svg"
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    colorDialog.color = layerFrame.color
+                    colorDialog.visible = (!colorDialog.visible) ? true : false
+                    layerFrame.color = colorDialog.color
+                    // TODO - set the core layer color
+                    mouse.accepted = false
+                }
+            }
         }
 
         // Bar Visiblity 
@@ -140,11 +229,14 @@ Rectangle {
                 onClicked: {
                     visible_icon.visible = (visible_icon.visible) ? false : true
                     not_visible_icon.visible = (not_visible_icon.visible) ? false : true
+                    mouse.accepted = false
                 }
             }
         }
 
+
         // Bar Locking 
+
         Item { 
             id: barLockIcon
             visible: true 
@@ -174,119 +266,9 @@ Rectangle {
                 onClicked: {
                     locked_icon.visible = (locked_icon.visible) ? false : true
                     unlocked_icon.visible = (unlocked_icon.visible) ? false : true
+                    mouse.accepted = false;
                 }
             }
         }
-
     }
-
-    
-    /*
-    states: [
-        // NORMAL
-        State {
-            name: "normal"
-            PropertyChanges {
-                target: intField 
-                color: typeNormalStateColor() //"lightgrey"
-            }
-
-            PropertyChanges {
-                target: label 
-                color: "black"
-                font.bold: false
-            }
- 
-            PropertyChanges {
-                target: valueBox
-                color: (field.connected) ? "deeppink" : "lightblue"
-            }
-
-            PropertyChanges {
-                target: valueText
-                color: "black"
-                font.bold: false
-            }
-        },
-
-        // HOVER
-        State {
-            name: "hover"
-            PropertyChanges {
-                target: intField 
-                color: "lightblue"
-            }
-
-            PropertyChanges {
-                target: label 
-                color: "black"
-                font.bold: true 
-            }
-
-            PropertyChanges {
-                target: valueBox
-                color: "midnightblue"
-            }
-
-            PropertyChanges {
-                target: valueText
-                color: "white"
-                 font.bold: true 
-            }
-        },
-
-        // PRESSED  
-        State {
-            name: "pressed"
-            PropertyChanges {
-                target: intField 
-                color: "green"
-            }
-
-            PropertyChanges {
-                target: label 
-                color: "black"
-                font.bold: true 
-            }
-
-            PropertyChanges {
-                target: valueBox
-                color: "limegreen"
-            }
-
-            PropertyChanges {
-                target: valueText
-                color: "black"
-                font.bold: true 
-            }
-        }
-
-    ]
-    */
-
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        hoverEnabled: true 
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-        onPressed: {
-            //if(mouse.button == Qt.RightButton)
-            mouse.accepted=false
-        }
-
-        onClicked: { mouse.accepted=false }
-
-        onDoubleClicked: { colorDialog.color=layerFrame.color; colorDialog.visible=true }
-        //onPositionChanged: { }
-        //onReleased: { layerFrame.state="normal" }
-        //onEntered: { layerFrame.state="hover" }
-        //onExited: { layerFrame.state="normal" }
-    }
-
-    Component.onCompleted: {
-        console.log("layer id=" + layerId)
-        /*layerFrame.state="normal"*/
-    }
-
 }

@@ -25,9 +25,9 @@
 
 LayerModel::LayerModel(QObject* parent) : QAbstractListModel(parent)
 {
-    addLayer(0,"Base",QColor("blue"),true,false);
-    addLayer(1,"A",QColor("blue"),true,false);
-    addLayer(2,"B",QColor("blue"),true,false);
+    addLayer(0,"Base",QColor("grey"),true,false);
+    addLayer(1,"A",QColor("grey"),true,false);
+    addLayer(2,"B",QColor("grey"),true,false);
 
     //updateLayers();
 }
@@ -84,7 +84,7 @@ void LayerModel::clear()
 void LayerModel::addLayer(int id, QString name, QColor color, bool visible, bool locked)
 {
     // this will create a new layer with not uids
-    feather::FLayer l(name.toStdString(),feather::FColorRGB());
+    feather::FLayer l(name.toStdString(),feather::FColorRGB( static_cast<float>(color.red())/255.0, static_cast<float>(color.green())/255.0, static_cast<float>(color.blue())/255.0 ), visible, locked);
     feather::qml::command::add_layer(l);
     updateLayers();
 }
@@ -99,7 +99,7 @@ void LayerModel::updateLayers()
     for(uint i=0; i < size; i++){
         feather::FLayer l;
         feather::qml::command::get_layer(i,l);
-        m_layers.append(new LayerInfo(i,QString(l.name.c_str()),QColor("red")));
+        m_layers.append(new LayerInfo(i,QString(l.name.c_str()),QColor(l.color.int_red(),l.color.int_green(),l.color.int_blue())));
     }
     layoutChanged();
 }
