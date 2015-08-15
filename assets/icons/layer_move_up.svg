@@ -17,7 +17,7 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    viewBox="0 0 64 64"
-   sodipodi:docname="layers.svg">
+   sodipodi:docname="layer_move_up.svg">
   <defs
      id="defs4154">
     <linearGradient
@@ -167,7 +167,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -215,7 +215,7 @@
        sodipodi:nodetypes="ccccc" />
   </g>
   <g
-     style="display:none"
+     style="display:inline"
      inkscape:label="layer 3 move up"
      id="g4190"
      inkscape:groupmode="layer"
@@ -231,7 +231,7 @@
      inkscape:groupmode="layer"
      id="g4194"
      inkscape:label="layer 3 move down"
-     style="display:inline"
+     style="display:none"
      sodipodi:insensitive="true">
     <path
        style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
@@ -257,7 +257,7 @@
      inkscape:groupmode="layer"
      id="g4198"
      inkscape:label="layer 4 move up"
-     style="display:none"
+     style="display:inline"
      sodipodi:insensitive="true">
     <path
        style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
@@ -270,7 +270,7 @@
      inkscape:label="layer 4 move down"
      id="g4202"
      inkscape:groupmode="layer"
-     style="display:inline"
+     style="display:none"
      sodipodi:insensitive="true">
     <path
        sodipodi:nodetypes="ccccc"
@@ -332,7 +332,7 @@
      inkscape:label="move down"
      id="g4182"
      inkscape:groupmode="layer"
-     style="display:inline"
+     style="display:none"
      sodipodi:insensitive="true">
     <path
        sodipodi:nodetypes="cccccccc"
@@ -345,7 +345,7 @@
      inkscape:groupmode="layer"
      id="g4186"
      inkscape:label="move up"
-     style="display:none"
+     style="display:inline"
      sodipodi:insensitive="true">
     <path
        style="fill:#ff00ff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
