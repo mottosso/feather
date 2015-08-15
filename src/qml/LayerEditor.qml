@@ -50,6 +50,21 @@ Window {
         onTriggered: {}
     }
 
+    Action {
+        id: moveLayerUpAction
+        text: "Move Layer Up"
+        tooltip: "move the selected layer up the Layer Editor stack"
+        onTriggered: {}
+    }
+
+    Action {
+        id: moveLayerDownAction
+        text: "Move Layer Down"
+        tooltip: "move the selected layer down the Layer Editor stack"
+        onTriggered: {}
+    }
+
+
 
     Rectangle {
         id: toolBar
@@ -80,6 +95,21 @@ Window {
                 iconName: "remove layer"
                 action: removeLayerAction 
             }
+
+            ToolButton {
+                width: 32; height: 32
+                iconSource: "/usr/local/feather/ui/icons/layer_move_up.svg"
+                iconName: "move layer up"
+                action: moveLayerUpAction 
+            }
+
+            ToolButton {
+                width: 32; height: 32
+                iconSource: "/usr/local/feather/ui/icons/layer_move_down.svg"
+                iconName: "move layer down"
+                action: moveLayerDownAction 
+            }
+
         }
     }    
 
