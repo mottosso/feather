@@ -54,14 +54,14 @@ Window {
         id: moveLayerUpAction
         text: "Move Layer Up"
         tooltip: "move the selected layer up the Layer Editor stack"
-        onTriggered: {}
+        onTriggered: { layerModel.moveLayer(view.currentIndex,view.currentIndex+1) }
     }
 
     Action {
         id: moveLayerDownAction
         text: "Move Layer Down"
         tooltip: "move the selected layer down the Layer Editor stack"
-        onTriggered: {}
+        onTriggered: { layerModel.moveLayer(view.currentIndex,view.currentIndex-1) }
     }
 
 
@@ -116,6 +116,20 @@ Window {
 
     LayerModel { id: layerModel }
 
+    Component {
+        id: layerBar
+        LayerBar { 
+            id: bar
+            width: parent.width
+            barId: layerId
+            barName: layerName
+            barColor: layerColor
+            barVisible: layerVisible
+            barLocked: layerLocked
+            barSelected: layerSelected
+        }
+    }
+ 
     Rectangle {
         id: layerFrame
         anchors.top: toolBar.bottom
@@ -129,11 +143,12 @@ Window {
         radius: 2
  
         ListView {
+            id: view
             spacing: 0
             anchors.fill: parent
             //anchors.margins: 1
             model: layerModel
-            delegate: LayerBar { width: parent.width; barId: layerId; barName: layerName; barColor: layerColor; barVisible: layerVisible; barLocked: layerLocked }
+            delegate: layerBar
         }
 
     }
@@ -141,16 +156,19 @@ Window {
     function updateColor() {
         console.log("update node color")
         layerFrame.color = properties.getColor("panel")        
-        //nodeTitle.color = properties.getColor("labelBg")        
-        //nodeBaseTitle.color = properties.getColor("labelBg")        
         layerEditor.color = properties.getColor("windowBg")
         toolBar.color = properties.getColor("menu")
         
     }
 
+    function layout_changed(){
+        view.update()
+    }
+
     Component.onCompleted: {
         updateColor()
         properties.colorsChanged.connect(updateColor)
+        layerModel.layoutChanged.connect(layout_changed)
     }    
 
 }

@@ -122,14 +122,25 @@ status qml::command::run_command_string(std::string str)
 
 status qml::command::add_layer(feather::FLayer layer)
 {
-    layers.add_layer(layer);
+    layers.add(layer);
     return status();
 }
 
 status qml::command::remove_layer(int id)
 {
-    bool p = layers.remove_layer(id);
+    bool p = layers.remove(id);
     return (!p) ? status(FAILED,"failed to remover layer: id out of range") : status();
+}
+
+status qml::command::move_layer(int sid, int tid)
+{
+    std::cout << "begin\n";
+    layers.print();
+    layers.move(sid,tid);
+    std::cout << "end\n";
+    layers.print();
+
+    return status();
 }
 
 status qml::command::get_layer(int id, feather::FLayer &layer)

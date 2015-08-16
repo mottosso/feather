@@ -34,17 +34,20 @@ class LayerInfo {
                 const QString _name,
                 const QColor _color=QColor(0,0,0),
                 const bool _visible=true,
-                const bool _locked=false ):
+                const bool _locked=false,
+                const bool _selected=false ):
             id(_id),
             name(_name),
             color(_color),
             visible(_visible),
-            locked(_locked) {}
+            locked(_locked),
+            selected(_selected) {}
         int id;
         QString name;
         QColor color;
         bool visible;
         bool locked;
+        bool selected;
 };
 
 class LayerModel : public QAbstractListModel
@@ -62,7 +65,8 @@ class LayerModel : public QAbstractListModel
             NameRole,
             ColorRole,
             VisibleRole,
-            LockedRole
+            LockedRole,
+            SelectedRole
         };
 
         Q_INVOKABLE int rowCount(const QModelIndex& parent = QModelIndex()) const;
@@ -78,8 +82,12 @@ class LayerModel : public QAbstractListModel
 
         QList<LayerInfo*> layers() { return m_layers; };
         Q_INVOKABLE void addLayer(int id, QString name, QColor color, bool visible, bool locked);
+        Q_INVOKABLE void moveLayerUp();
+        Q_INVOKABLE void moveLayerDown();
+        Q_INVOKABLE void moveLayer(int sid, int tid);
         Q_INVOKABLE void updateLayers();
- 
+        Q_INVOKABLE void test() { std::cout << "this is a test\n"; };
+
     signals:
         void layersChanged();
 

@@ -44,6 +44,7 @@ QHash<int, QByteArray> LayerModel::roleNames() const
     roles.insert(ColorRole, QByteArray("layerColor"));
     roles.insert(VisibleRole, QByteArray("layerVisible"));
     roles.insert(LockedRole, QByteArray("layerLocked"));
+    roles.insert(SelectedRole, QByteArray("layerSelected"));
     return roles;
 }
 
@@ -71,6 +72,8 @@ QVariant LayerModel::data(const QModelIndex& index, int role) const
             return QVariant::fromValue(dobj->visible);
         case LockedRole:
             return QVariant::fromValue(dobj->locked);
+        case SelectedRole:
+            return QVariant::fromValue(dobj->selected);
         default:
             return QVariant();
     }
@@ -86,6 +89,32 @@ void LayerModel::addLayer(int id, QString name, QColor color, bool visible, bool
     // this will create a new layer with not uids
     feather::FLayer l(name.toStdString(),feather::FColorRGB( static_cast<float>(color.red())/255.0, static_cast<float>(color.green())/255.0, static_cast<float>(color.blue())/255.0 ), visible, locked);
     feather::qml::command::add_layer(l);
+    updateLayers();
+}
+
+void LayerModel::moveLayerUp()
+{
+    for(uint i=0; i < m_layers.size()-1; i++){
+        if(m_layers.at(1)->selected){
+            moveLayer(i,i+1);
+            break;
+        }
+    }       
+}
+
+void LayerModel::moveLayerDown()
+{
+
+}
+
+void LayerModel::moveLayer(int sid, int tid)
+{
+    //clear(); 
+    feather::qml::command::move_layer(sid,tid);
+    std::cout << "LayerModel\n";
+    for(int i=0; i < m_layers.size(); i++){
+        std::cout << "layer " << i << " name: " << m_layers[i]->name.toStdString().c_str() << std::endl;
+    }
     updateLayers();
 }
 

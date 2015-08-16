@@ -38,7 +38,11 @@ Rectangle {
     property alias barColor: layerFrame.color 
     property bool barVisible: true  
     property bool barLocked: false
-    property bool selected: false
+    property bool barSelected: layerSelected 
+
+    signal selected(int id)
+    signal deselected(int id)
+
 
     // LABEL
     ColorDialog {
@@ -63,7 +67,7 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: 4
 
-        // Bar Locking 
+        // Bar Selecting 
         Item { 
             id: selectIcon
             visible: true 
@@ -92,20 +96,43 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    if(!selected) {
-                        layerFrame.selected = true
+                    layerFrame.ListView.view.currentIndex = index 
+                    layerFrame.border.color = "hotpink"
+                    selectIcon.deselectColor = barColor
+                    barColor = "limegreen"
+                    layerFrame.border.width = 2
+                    select_on_icon.visible = true 
+                    select_off_icon.visible = false
+
+                    /* 
+                    if(!layerSelected) {
+                        layerSelected = true
+                        console.log("layerSelected = " + layerSelected)
+                        //layerFrame.selected = true
                         layerFrame.border.color = "hotpink"
                         selectIcon.deselectColor = barColor
                         barColor = "limegreen"
                         layerFrame.border.width = 2
+                        selected(barId)
                     } else {
-                        layerFrame.selected = false 
+                        layerSelected = false
+                        console.log("layerSelected = " + layerSelected)
+                        //layerFrame.selected = false 
                         layerFrame.border.color = "black"
                         barColor = selectIcon.deselectColor 
                         layerFrame.border.width = 1
+                        deselected(barId)
                     }
-                    select_on_icon.visible = (select_on_icon.visible) ? false : true
-                    select_off_icon.visible = (select_off_icon.visible) ? false : true
+                    console.log("index = " + index) 
+                    console.log("model = " + model)
+                    layerFrame.ListView.view.currentIndex = index 
+                    console.log("isCurrent = " + layerFrame.ListView.isCurrentItem) 
+                    console.log("currentIndex = " + layerFrame.ListView.view.currentIndex) 
+                    select_on_icon.visible = (layerSelected) ? true : false 
+                    select_off_icon.visible = (layerSelected) ? false : true
+                    //select_on_icon.visible = (select_on_icon.visible) ? false : true
+                    //select_off_icon.visible = (select_off_icon.visible) ? false : true
+                    */
                 }
             }
         }
@@ -271,4 +298,6 @@ Rectangle {
             }
         }
     }
+
+    //Component.onCompleted: { console.log("Layer Bar Current Index = " + currentIndex) }
 }

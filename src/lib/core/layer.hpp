@@ -35,12 +35,36 @@ namespace feather
             Layers(){};
             ~Layers(){ clear(); };
 
-            inline void add_layer(FLayer l) { m_apLayers.push_back(l); };
-            inline bool remove_layer(int id) { return false; }; // TODO
+            inline void add(FLayer l) { m_apLayers.push_back(l); };
+            inline bool remove(int id) { return false; }; // TODO
+            inline void move(int sid, int tid) {
+                /*
+                std::vector<FLayer> layers;
+                FLayer l = m_apLayers.at(sid);
+                for(int i=0; i < m_apLayers.size(); i++){
+                    if(tid==i)
+                        layers.push_back(l);
+                    else if(sid==i){}
+                    else
+                        layers.push_back(m_apLayers.at(i));
+                }
+                m_apLayers.clear();
+                m_apLayers = layers;
+                //m_apLayers.at(sid);
+                */
+                if(sid < tid){
+                    m_apLayers.insert(m_apLayers.begin()+(tid+1),std::move(m_apLayers.at(sid)));
+                    m_apLayers.erase(m_apLayers.begin()+sid);
+                } else {
+                    m_apLayers.insert(m_apLayers.begin()+(sid+1),std::move(m_apLayers.at(tid)));
+                    m_apLayers.erase(m_apLayers.begin()+tid);
+                }
+            };
             inline int count() { return m_apLayers.size(); };
             inline void clear() { m_apLayers.clear(); };
             inline bool layer(int id, FLayer& l) { if(count() > id){ l=m_apLayers.at(id); return true; } return false; };
- 
+            inline void print() { std::for_each(m_apLayers.begin(),m_apLayers.end(),[](FLayer l){ std::cout << "name: " << l.name << std::endl; }); };
+
         private:   
             std::vector<FLayer> m_apLayers;
     };

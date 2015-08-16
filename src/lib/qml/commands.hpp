@@ -58,6 +58,7 @@ namespace feather
             // Layer
             status add_layer(FLayer layer);
             status remove_layer(int id);
+            status move_layer(int sid, int tid);
             status get_layer(int id, FLayer &layer);
             int layer_count();
 
