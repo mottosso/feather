@@ -30,12 +30,11 @@ Rectangle {
     id: layerFrame
     height: 24
     radius: 2
-    //color: "hotpink"
+    color: (ListView.view.currentIndex==index) ? "hotpink" : layerColor 
     border.width: 1
-
+    border.color: (ListView.view.currentIndex==index) ? "limegreen" : "black" 
     property int barId: 0
     property alias barName: label.text
-    property alias barColor: layerFrame.color 
     property bool barVisible: true  
     property bool barLocked: false
     property bool barSelected: layerSelected 
@@ -45,20 +44,18 @@ Rectangle {
 
 
     // LABEL
+
     ColorDialog {
         id: colorDialog
         title: "Layer Color"
+
         onAccepted: {
-            //console.log("You chose: " + colorDialog.color)
             layerFrame.color = colorDialog.color
             colorDialog.visible = false;
-            //Qt.quit()
         }
-        onRejected: {
-            //console.log("Canceled")
-            colorDialog.visible = false;
-            //Qt.quit()
-        }
+
+        onRejected: { colorDialog.visible = false; }
+
         Component.onCompleted: visible = false 
     }
 
@@ -68,17 +65,18 @@ Rectangle {
         anchors.margins: 4
 
         // Bar Selecting 
+
         Item { 
             id: selectIcon
             visible: true 
             width: 20
             height: parent.height 
-            property color deselectColor: barColor
+            property color deselectColor: layerColor
 
             Image {
                 id: select_on_icon
                 anchors.fill: parent
-                visible: false 
+                visible: (layerFrame.ListView.view.currentIndex==index) ? true : false 
                 sourceSize.width: 18
                 sourceSize.height: 18
                 source: "icons/select_bubble_on.svg"
@@ -87,7 +85,7 @@ Rectangle {
             Image {
                 id: select_off_icon
                 anchors.fill: parent
-                visible: true 
+                visible: (layerFrame.ListView.view.currentIndex==index) ? false : true 
                 sourceSize.width: 18
                 sourceSize.height: 18
                 source: "icons/select_bubble_off.svg"
@@ -95,45 +93,7 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: {
-                    layerFrame.ListView.view.currentIndex = index 
-                    layerFrame.border.color = "hotpink"
-                    selectIcon.deselectColor = barColor
-                    barColor = "limegreen"
-                    layerFrame.border.width = 2
-                    select_on_icon.visible = true 
-                    select_off_icon.visible = false
-
-                    /* 
-                    if(!layerSelected) {
-                        layerSelected = true
-                        console.log("layerSelected = " + layerSelected)
-                        //layerFrame.selected = true
-                        layerFrame.border.color = "hotpink"
-                        selectIcon.deselectColor = barColor
-                        barColor = "limegreen"
-                        layerFrame.border.width = 2
-                        selected(barId)
-                    } else {
-                        layerSelected = false
-                        console.log("layerSelected = " + layerSelected)
-                        //layerFrame.selected = false 
-                        layerFrame.border.color = "black"
-                        barColor = selectIcon.deselectColor 
-                        layerFrame.border.width = 1
-                        deselected(barId)
-                    }
-                    console.log("index = " + index) 
-                    console.log("model = " + model)
-                    layerFrame.ListView.view.currentIndex = index 
-                    console.log("isCurrent = " + layerFrame.ListView.isCurrentItem) 
-                    console.log("currentIndex = " + layerFrame.ListView.view.currentIndex) 
-                    select_on_icon.visible = (layerSelected) ? true : false 
-                    select_off_icon.visible = (layerSelected) ? false : true
-                    //select_on_icon.visible = (select_on_icon.visible) ? false : true
-                    //select_off_icon.visible = (select_off_icon.visible) ? false : true
-                    */
-                }
+                onClicked: { layerFrame.ListView.view.currentIndex = index }
             }
         }
 
@@ -192,13 +152,13 @@ Rectangle {
                 label.visible = true
             }
 
-            Component.onCompleted: {
-                labelEdit.accepted.connect(setLabelName)
-            } 
+            Component.onCompleted: { labelEdit.accepted.connect(setLabelName) } 
  
         }
 
+
         // Bar Color 
+
         Item { 
             id: barColorIcon
             visible: true 
@@ -226,7 +186,9 @@ Rectangle {
             }
         }
 
+
         // Bar Visiblity 
+
         Item { 
             id: barVisibleIcon
             visible: true 
@@ -298,6 +260,4 @@ Rectangle {
             }
         }
     }
-
-    //Component.onCompleted: { console.log("Layer Bar Current Index = " + currentIndex) }
 }

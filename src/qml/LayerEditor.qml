@@ -123,7 +123,7 @@ Window {
             width: parent.width
             barId: layerId
             barName: layerName
-            barColor: layerColor
+            //barColor: layerColor
             barVisible: layerVisible
             barLocked: layerLocked
             barSelected: layerSelected
