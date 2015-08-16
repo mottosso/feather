@@ -60,6 +60,10 @@ namespace feather
             status remove_layer(int id);
             status move_layer(int sid, int tid);
             status get_layer(int id, FLayer &layer);
+            void set_layer_name(std::string name, int id);
+            void set_layer_color(int r, int g, int b, int id);
+            void set_layer_visible(bool v, int id);
+            void set_layer_locked(bool l, int id);
             int layer_count();
 
 

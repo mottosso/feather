@@ -94,7 +94,7 @@ void LayerModel::addLayer(int id, QString name, QColor color, bool visible, bool
 
 void LayerModel::moveLayerUp()
 {
-    for(uint i=0; i < m_layers.size()-1; i++){
+    for(int i=0; i < m_layers.size()-1; i++){
         if(m_layers.at(1)->selected){
             moveLayer(i,i+1);
             break;
@@ -128,8 +128,36 @@ void LayerModel::updateLayers()
     for(uint i=0; i < size; i++){
         feather::FLayer l;
         feather::qml::command::get_layer(i,l);
-        m_layers.append(new LayerInfo(i,QString(l.name.c_str()),QColor(l.color.int_red(),l.color.int_green(),l.color.int_blue())));
+        m_layers.append(new LayerInfo(i,QString(l.name.c_str()),QColor(l.color.int_red(),l.color.int_green(),l.color.int_blue()),l.visible,l.locked));
     }
+    layoutChanged();
+}
+
+void LayerModel::setName(QString name, int id)
+{
+    m_layers.at(id)->name = name;
+    feather::qml::command::set_layer_name(name.toStdString(),id);
+    layoutChanged();
+}
+
+void LayerModel::setColor(QColor color, int id)
+{
+    m_layers.at(id)->color = color;
+    feather::qml::command::set_layer_color(color.red(), color.green(), color.blue(), id);
+    layoutChanged();
+}
+
+void LayerModel::setVisible(bool v, int id)
+{
+    m_layers.at(id)->visible = v;
+    feather::qml::command::set_layer_visible(v,id);
+    layoutChanged();
+}
+
+void LayerModel::setLocked(bool l, int id)
+{
+    m_layers.at(id)->locked = l;
+    feather::qml::command::set_layer_locked(l,id);
     layoutChanged();
 }
 

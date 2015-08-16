@@ -149,6 +149,26 @@ status qml::command::get_layer(int id, feather::FLayer &layer)
     return (!p) ? status(FAILED,"failed to get layer: id out of range") :status();
 }
 
+void qml::command::set_layer_name(std::string name, int id)
+{
+    layers.set_name(name,id);
+}
+
+void qml::command::set_layer_color(int r, int g, int b, int id)
+{
+    layers.set_color(FColorRGB(static_cast<float>(r)/255.0,static_cast<float>(g)/255.0,static_cast<float>(b)/255.0),id);
+}
+
+void qml::command::set_layer_visible(bool v, int id)
+{
+    layers.set_visible(v,id);
+}
+
+void qml::command::set_layer_locked(bool l, int id)
+{
+    layers.set_locked(l,id);
+}
+
 int qml::command::layer_count()
 {
     return layers.count();

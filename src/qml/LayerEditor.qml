@@ -54,14 +54,14 @@ Window {
         id: moveLayerUpAction
         text: "Move Layer Up"
         tooltip: "move the selected layer up the Layer Editor stack"
-        onTriggered: { layerModel.moveLayer(view.currentIndex,view.currentIndex+1) }
+        onTriggered: { layerModel.moveLayer(view.currentIndex,view.currentIndex+1); view.currentIndex = view.currentIndex+1 }
     }
 
     Action {
         id: moveLayerDownAction
         text: "Move Layer Down"
         tooltip: "move the selected layer down the Layer Editor stack"
-        onTriggered: { layerModel.moveLayer(view.currentIndex,view.currentIndex-1) }
+        onTriggered: { layerModel.moveLayer(view.currentIndex,view.currentIndex-1); view.currentIndex = view.currentIndex-1 }
     }
 
 
@@ -121,12 +121,12 @@ Window {
         LayerBar { 
             id: bar
             width: parent.width
-            barId: layerId
-            barName: layerName
+            //barId: layerId
+            //barName: layerName
             //barColor: layerColor
-            barVisible: layerVisible
-            barLocked: layerLocked
-            barSelected: layerSelected
+            //barVisible: layerVisible
+            //barLocked: layerLocked
+            //barSelected: layerSelected
         }
     }
  

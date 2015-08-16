@@ -86,7 +86,10 @@ class LayerModel : public QAbstractListModel
         Q_INVOKABLE void moveLayerDown();
         Q_INVOKABLE void moveLayer(int sid, int tid);
         Q_INVOKABLE void updateLayers();
-        Q_INVOKABLE void test() { std::cout << "this is a test\n"; };
+        Q_INVOKABLE void setName(QString n, int id);
+        Q_INVOKABLE void setColor(QColor c, int id);
+        Q_INVOKABLE void setVisible(bool v, int id);
+        Q_INVOKABLE void setLocked(bool l, int id);
 
     signals:
         void layersChanged();

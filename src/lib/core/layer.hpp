@@ -64,6 +64,10 @@ namespace feather
             inline void clear() { m_apLayers.clear(); };
             inline bool layer(int id, FLayer& l) { if(count() > id){ l=m_apLayers.at(id); return true; } return false; };
             inline void print() { std::for_each(m_apLayers.begin(),m_apLayers.end(),[](FLayer l){ std::cout << "name: " << l.name << std::endl; }); };
+            inline void set_name(std::string name, int id){ m_apLayers.at(id).name = name; };
+            inline void set_color(FColorRGB color, int id){ m_apLayers.at(id).color = color; };
+            inline void set_visible(bool v, int id){ m_apLayers.at(id).visible = v; };
+            inline void set_locked(bool l, int id){ m_apLayers.at(id).locked = l; };
 
         private:   
             std::vector<FLayer> m_apLayers;

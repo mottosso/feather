@@ -30,18 +30,10 @@ Rectangle {
     id: layerFrame
     height: 24
     radius: 2
-    color: (ListView.view.currentIndex==index) ? "hotpink" : layerColor 
+    //color: (ListView.view.currentIndex==index) ? "hotpink" : layerColor.name(0) 
+    color: layerColor 
     border.width: 1
     border.color: (ListView.view.currentIndex==index) ? "limegreen" : "black" 
-    property int barId: 0
-    property alias barName: label.text
-    property bool barVisible: true  
-    property bool barLocked: false
-    property bool barSelected: layerSelected 
-
-    signal selected(int id)
-    signal deselected(int id)
-
 
     // LABEL
 
@@ -50,7 +42,7 @@ Rectangle {
         title: "Layer Color"
 
         onAccepted: {
-            layerFrame.color = colorDialog.color
+            layerFrame.ListView.view.model.setColor(colorDialog.color,index)
             colorDialog.visible = false;
         }
 
@@ -110,7 +102,7 @@ Rectangle {
                 verticalAlignment: Text.AlignVCenter
                 font.pixelSize: 14
                 font.bold: false
-
+                text: layerName
             }
 
             TextField {
@@ -147,7 +139,7 @@ Rectangle {
             }
 
             function setLabelName(){
-                label.text = labelEdit.text
+                layerFrame.ListView.view.model.setName(labelEdit.text,index);
                 labelEdit.visible = false
                 label.visible = true
             }
@@ -177,9 +169,10 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    colorDialog.color = layerFrame.color
-                    colorDialog.visible = (!colorDialog.visible) ? true : false
-                    layerFrame.color = colorDialog.color
+                    colorDialog.color = layerColor
+                    colorDialog.visible = true //(!colorDialog.visible) ? true : false
+                    //layerFrame.color = colorDialog.color
+                    //layerFrame.ListView.view.model.setColor(colorDialog.color,index)
                     // TODO - set the core layer color
                     mouse.accepted = false
                 }
@@ -198,7 +191,7 @@ Rectangle {
             Image {
                 id: visible_icon
                 anchors.fill: parent
-                visible: true 
+                visible: (layerVisible) ? true : false 
                 sourceSize.width: 18
                 sourceSize.height: 18
                 source: "icons/visible.svg"
@@ -207,7 +200,7 @@ Rectangle {
             Image {
                 id: not_visible_icon
                 anchors.fill: parent
-                visible: false 
+                visible: (layerVisible) ? false : true 
                 sourceSize.width: 18
                 sourceSize.height: 18
                 source: "icons/not_visible.svg"
@@ -216,8 +209,10 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    visible_icon.visible = (visible_icon.visible) ? false : true
-                    not_visible_icon.visible = (not_visible_icon.visible) ? false : true
+                    if(layerVisible)
+                        layerFrame.ListView.view.model.setVisible(false,index);   
+                    else
+                        layerFrame.ListView.view.model.setVisible(true,index);   
                     mouse.accepted = false
                 }
             }
@@ -235,7 +230,7 @@ Rectangle {
             Image {
                 id: locked_icon
                 anchors.fill: parent
-                visible: true 
+                visible: (layerLocked) ? true : false
                 sourceSize.width: 18
                 sourceSize.height: 18
                 source: "icons/locked.svg"
@@ -244,7 +239,7 @@ Rectangle {
             Image {
                 id: unlocked_icon
                 anchors.fill: parent
-                visible: false 
+                visible: (layerLocked) ? false : true 
                 sourceSize.width: 18
                 sourceSize.height: 18
                 source: "icons/unlocked.svg"
@@ -253,8 +248,10 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    locked_icon.visible = (locked_icon.visible) ? false : true
-                    unlocked_icon.visible = (unlocked_icon.visible) ? false : true
+                    if(layerLocked)
+                        layerFrame.ListView.view.model.setLocked(false,index);   
+                    else
+                        layerFrame.ListView.view.model.setLocked(true,index);   
                     mouse.accepted = false;
                 }
             }
