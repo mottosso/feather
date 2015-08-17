@@ -1,10 +1,9 @@
 Feather
 =======
 
-3d polygon modeller based off of Wings3d
-
 ![Feather Logo](https://raw.githubusercontent.com/richardlayman/feather/master/assets/images/logo.png)
 
+3d polygon modeller based off of Wings3d
 
 ![Feather UI](https://raw.githubusercontent.com/richardlayman/feather/master/assets/images/ui_v0_1.png)
 
