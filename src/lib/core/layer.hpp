@@ -38,20 +38,11 @@ namespace feather
             inline void add(FLayer l) { m_apLayers.push_back(l); };
             inline bool remove(int id) { return false; }; // TODO
             inline void move(int sid, int tid) {
-                /*
-                std::vector<FLayer> layers;
-                FLayer l = m_apLayers.at(sid);
-                for(int i=0; i < m_apLayers.size(); i++){
-                    if(tid==i)
-                        layers.push_back(l);
-                    else if(sid==i){}
-                    else
-                        layers.push_back(m_apLayers.at(i));
-                }
-                m_apLayers.clear();
-                m_apLayers = layers;
-                //m_apLayers.at(sid);
-                */
+                // check
+                if(sid < 0 || sid >= (int)m_apLayers.size() || tid < 0 || tid >= (int)m_apLayers.size() || sid == tid)
+                    return;
+
+                // move
                 if(sid < tid){
                     m_apLayers.insert(m_apLayers.begin()+(tid+1),std::move(m_apLayers.at(sid)));
                     m_apLayers.erase(m_apLayers.begin()+sid);

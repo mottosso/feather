@@ -54,14 +54,14 @@ Window {
         id: moveLayerUpAction
         text: "Move Layer Up"
         tooltip: "move the selected layer up the Layer Editor stack"
-        onTriggered: { layerModel.moveLayer(view.currentIndex,view.currentIndex+1); view.currentIndex = view.currentIndex+1 }
+        onTriggered: { if(view.currentIndex < layerModel.rowCount()-1){ layerModel.moveLayer(view.currentIndex,view.currentIndex+1); view.currentIndex = view.currentIndex+1 } }
     }
 
     Action {
         id: moveLayerDownAction
         text: "Move Layer Down"
         tooltip: "move the selected layer down the Layer Editor stack"
-        onTriggered: { layerModel.moveLayer(view.currentIndex,view.currentIndex-1); view.currentIndex = view.currentIndex-1 }
+        onTriggered: { if(view.currentIndex > 0){ layerModel.moveLayer(view.currentIndex,view.currentIndex-1); view.currentIndex = view.currentIndex-1 } }
     }
 
 
@@ -121,18 +121,13 @@ Window {
         LayerBar { 
             id: bar
             width: parent.width
-            //barId: layerId
-            //barName: layerName
-            //barColor: layerColor
-            //barVisible: layerVisible
-            //barLocked: layerLocked
-            //barSelected: layerSelected
         }
     }
  
     Rectangle {
         id: layerFrame
         anchors.top: toolBar.bottom
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         height: parent.height
@@ -146,7 +141,7 @@ Window {
             id: view
             spacing: 0
             anchors.fill: parent
-            //anchors.margins: 1
+            verticalLayoutDirection: ListView.BottomToTop
             model: layerModel
             delegate: layerBar
         }
@@ -154,7 +149,6 @@ Window {
     }
 
     function updateColor() {
-        console.log("update node color")
         layerFrame.color = properties.getColor("panel")        
         layerEditor.color = properties.getColor("windowBg")
         toolBar.color = properties.getColor("menu")

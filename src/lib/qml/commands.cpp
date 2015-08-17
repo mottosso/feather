@@ -134,12 +134,7 @@ status qml::command::remove_layer(int id)
 
 status qml::command::move_layer(int sid, int tid)
 {
-    std::cout << "begin\n";
-    layers.print();
     layers.move(sid,tid);
-    std::cout << "end\n";
-    layers.print();
-
     return status();
 }
 

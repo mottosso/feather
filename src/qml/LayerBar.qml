@@ -30,10 +30,9 @@ Rectangle {
     id: layerFrame
     height: 24
     radius: 2
-    //color: (ListView.view.currentIndex==index) ? "hotpink" : layerColor.name(0) 
-    color: layerColor 
+    color: (layerFrame.ListView.view.currentIndex==index) ? "hotpink" : layerColor 
     border.width: 1
-    border.color: (ListView.view.currentIndex==index) ? "limegreen" : "black" 
+    border.color: (ListView.view.currentIndex==index) ? "hotpink" : "black" 
 
     // LABEL
 
@@ -119,12 +118,11 @@ Rectangle {
                 acceptedButtons: Qt.LeftButton // | Qt.RightButton
 
 
-                //onPressed: { console.log("text pressed"); /*mouse.accepted = false*/ }
+                //onPressed: { /*mouse.accepted = false*/ }
 
                 //onClicked: { mouse.accepted = false }
 
                 onClicked: {
-                    console.log("text clicked");
                     mouse.accepted = false
                     if(label.visible){
                         label.visible = false
@@ -134,7 +132,7 @@ Rectangle {
                     }
                 }
     
-                onDoubleClicked: { console.log("text double clicked");  mouse.accepted = false }
+                onDoubleClicked: { mouse.accepted = false }
 
             }
 
@@ -171,9 +169,6 @@ Rectangle {
                 onClicked: {
                     colorDialog.color = layerColor
                     colorDialog.visible = true //(!colorDialog.visible) ? true : false
-                    //layerFrame.color = colorDialog.color
-                    //layerFrame.ListView.view.model.setColor(colorDialog.color,index)
-                    // TODO - set the core layer color
                     mouse.accepted = false
                 }
             }

@@ -111,10 +111,12 @@ void LayerModel::moveLayer(int sid, int tid)
 {
     //clear(); 
     feather::qml::command::move_layer(sid,tid);
+    /*
     std::cout << "LayerModel\n";
     for(int i=0; i < m_layers.size(); i++){
         std::cout << "layer " << i << " name: " << m_layers[i]->name.toStdString().c_str() << std::endl;
     }
+    */
     updateLayers();
 }
 
