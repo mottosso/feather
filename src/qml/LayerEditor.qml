@@ -33,7 +33,7 @@ Window {
     visible: true
     flags: Qt.Tool
     width: 200
-    height: 500
+    height: 200
     property SceneGraph scenegraph: Null
 
     Action {
@@ -65,7 +65,6 @@ Window {
     }
 
 
-
     Rectangle {
         id: toolBar
         anchors.top: parent.top
@@ -73,9 +72,9 @@ Window {
         anchors.right: parent.right
         height: 34
         border.color: "black"
-        border.width: 1
+        border.width: 2
         color: properties.getColor("menu")
-        radius: 2
+        radius: 4
 
         Row {
             spacing: 4
@@ -111,6 +110,7 @@ Window {
             }
 
         }
+
     }    
 
 
@@ -147,6 +147,7 @@ Window {
         }
 
     }
+
 
     function updateColor() {
         layerFrame.color = properties.getColor("panel")        

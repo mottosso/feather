@@ -29,9 +29,9 @@ import QtQuick.Controls 1.4
 Rectangle {
     id: layerFrame
     height: 24
-    radius: 2
-    color: (layerFrame.ListView.view.currentIndex==index) ? "hotpink" : layerColor 
-    border.width: 1
+    radius: 4
+    color: (layerFrame.ListView.view.currentIndex==index) ? "lime" : layerColor 
+    border.width: (ListView.view.currentIndex==index) ? 2 : 1 
     border.color: (ListView.view.currentIndex==index) ? "hotpink" : "black" 
 
     // I might add later but I'm not sure
@@ -140,10 +140,16 @@ Rectangle {
                     mouse.accepted = false
                     if(label.visible){
                         label.visible = false
-                        labelEdit.visible = true
+                        labelEdit.text = layerName
                         labelEdit.placeholderText = "Enter Layer Name" 
+                        labelEdit.visible = true
                         labelEdit.forceActiveFocus()
                     }
+                }
+
+                onExited: {
+                    label.visible = true
+                    labelEdit.visible = false
                 }
     
                 onDoubleClicked: { mouse.accepted = false }
