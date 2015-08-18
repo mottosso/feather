@@ -36,11 +36,13 @@ Window {
     height: 200
     property SceneGraph scenegraph: Null
 
+    AddLayerDialog { id: addLayerDialog }
+
     Action {
         id: addLayerAction
         text: "Add Layer"
         tooltip: "Add a new layer to the Layer Editor"
-        onTriggered: {}
+        onTriggered: { addLayerDialog.visible = true }
     }
 
     Action {
@@ -160,10 +162,16 @@ Window {
         view.update()
     }
 
+    function add_layer(name){
+        if(name!="")
+            layerModel.addLayer(view.currentIndex,name,properties.getColor("windowBg"),true,false)
+    }
+
     Component.onCompleted: {
         updateColor()
         properties.colorsChanged.connect(updateColor)
         layerModel.layoutChanged.connect(layout_changed)
+        addLayerDialog.addLayer.connect(add_layer)
     }    
 
 }
