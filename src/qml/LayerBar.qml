@@ -34,6 +34,10 @@ Rectangle {
     border.width: 1
     border.color: (ListView.view.currentIndex==index) ? "hotpink" : "black" 
 
+    // I might add later but I'm not sure
+    // POPUP
+    //LayerPopupMenu { id: popup; z: 1 }
+
     // LABEL
 
     ColorDialog {
@@ -84,7 +88,17 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: { layerFrame.ListView.view.currentIndex = index }
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                onClicked: { 
+                    if(mouse.button==Qt.LeftButton)
+                        layerFrame.ListView.view.currentIndex = index
+                    if(mouse.button==Qt.RightButton){
+                        //popup.x = mouse.x - 10
+                        //popup.y = mouse.y - popup.height + 10
+                        //popup.visible=true 
+                    }
+                }
             }
         }
 
