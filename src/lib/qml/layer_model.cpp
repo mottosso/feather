@@ -92,6 +92,12 @@ void LayerModel::addLayer(int id, QString name, QColor color, bool visible, bool
     updateLayers();
 }
 
+void LayerModel::removeLayer(int id)
+{
+    feather::qml::command::remove_layer(id);
+    updateLayers();
+}
+
 void LayerModel::moveLayerUp()
 {
     for(int i=0; i < m_layers.size()-1; i++){

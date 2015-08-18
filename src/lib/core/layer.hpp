@@ -36,7 +36,7 @@ namespace feather
             ~Layers(){ clear(); };
 
             inline void add(FLayer l) { m_apLayers.push_back(l); };
-            inline bool remove(int id) { return false; }; // TODO
+            inline bool remove(int id) { m_apLayers.erase(m_apLayers.begin()+id); return true; }; // need to add error checking for when an id is passed that doesn't exist
             inline void move(int sid, int tid) {
                 // check
                 if(sid < 0 || sid >= (int)m_apLayers.size() || tid < 0 || tid >= (int)m_apLayers.size() || sid == tid)

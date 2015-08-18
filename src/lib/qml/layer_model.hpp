@@ -82,6 +82,7 @@ class LayerModel : public QAbstractListModel
 
         QList<LayerInfo*> layers() { return m_layers; };
         Q_INVOKABLE void addLayer(int id, QString name, QColor color, bool visible, bool locked);
+        Q_INVOKABLE void removeLayer(int id);
         Q_INVOKABLE void moveLayerUp();
         Q_INVOKABLE void moveLayerDown();
         Q_INVOKABLE void moveLayer(int sid, int tid);

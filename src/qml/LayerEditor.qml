@@ -47,7 +47,7 @@ Window {
         id: removeLayerAction
         text: "Remove Layer"
         tooltip: "Remove selected layer from the Layer Editor"
-        onTriggered: {}
+        onTriggered: { if(view.currentIndex){ layerModel.removeLayer(view.currentIndex); view.currentIndex = view.currentIndex-1 } }
     }
 
     Action {
@@ -70,7 +70,7 @@ Window {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 34
+        height: 36
         border.color: "black"
         border.width: 2
         color: properties.getColor("menu")
