@@ -36,7 +36,8 @@ Menu {
         id: importDialog
         title: "Import Obj"
         onAccepted: {
-            console.log("picked: " + importDialog.fileUrls)
+            importObjFilename.stringValue = importDialog.fileUrls[0]
+            importObj.exec()       
         }
         onRejected: {} 
     }
@@ -53,9 +54,10 @@ Menu {
         name: "import_obj"
         parameters: [
             Parameter { 
+                id: importObjFilename
                 name: "filename"
                 type: Parameter.String
-                stringValue: "test"
+                stringValue: ""
             },
             Parameter { 
                 name: "selection"
@@ -89,7 +91,7 @@ Menu {
         id: importObjAction
         text: "Obj"
         tooltip: "Import models in the Obj format"
-        onTriggered: { importObj.exec() }
+        onTriggered: { importDialog.visible = true }
     }
 
     // Properties
@@ -148,4 +150,5 @@ Menu {
     MenuItem {
         action: closeAction
     }
+
 }
