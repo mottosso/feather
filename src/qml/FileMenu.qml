@@ -25,12 +25,15 @@ import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.0 
 import feather.command 1.0
+import feather.scenegraph 1.0
 
 Menu {
     id: fileMenu 
     title: "File"
     visible: true
     property Properties properties: Null
+
+    SceneGraph { id: sg }
 
     FileDialog {
         id: importDialog
@@ -66,7 +69,6 @@ Menu {
             }
         ]
     }
-
 
     // ACTIONS
 
