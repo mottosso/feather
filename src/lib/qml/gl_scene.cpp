@@ -137,7 +137,7 @@ void gl::glLight::draw(QMatrix4x4& view)
     m_Program.setAttributeValue(m_PositionId, m_Position);
     m_Program.setUniformValue(m_Matrix, view);
     m_Program.enableAttributeArray(m_Vertex);
-    m_Program.setAttributeArray(m_Vertex, GL_FLOAT, &m_aModel[0], 3);
+    m_Program.setAttributeArray(m_Vertex, GL_DOUBLE, &m_aModel[0], 3);
     glLineWidth(1.5);
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDrawArrays(GL_LINES, 0, m_aModel.size());
@@ -256,8 +256,8 @@ void gl::glMesh::draw(QMatrix4x4& view)
     m_Program.setUniformValue(m_Matrix, view);
     m_Program.enableAttributeArray(m_Vertex);
     m_Program.enableAttributeArray(m_Normal);
-    m_Program.setAttributeArray(m_Vertex, GL_FLOAT, &m_apV[0], 3);
-    m_Program.setAttributeArray(m_Normal, GL_FLOAT, &m_apVn[0],3);
+    m_Program.setAttributeArray(m_Vertex, GL_DOUBLE, &m_apV[0], 3);
+    m_Program.setAttributeArray(m_Normal, GL_DOUBLE, &m_apVn[0],3);
 
     m_ShaderDiffuse.setRgb(100,100,100);
     m_Program.setAttributeValue(m_ShaderDiffuseId, m_ShaderDiffuse);
@@ -448,7 +448,7 @@ void gl::glScene::draw(int width, int height)
 void gl::glScene::draw_grid()
 {
     m_GridProgram.enableAttributeArray(m_GridVAttr);
-    m_GridProgram.setAttributeArray(m_GridVAttr, GL_FLOAT, &m_aGrid[0], 3);
+    m_GridProgram.setAttributeArray(m_GridVAttr, GL_DOUBLE, &m_aGrid[0], 3);
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glDrawArrays(GL_LINES, 0, 84);
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
@@ -458,7 +458,7 @@ void gl::glScene::draw_grid()
 void gl::glScene::draw_axis()
 {
     m_AxisProgram.enableAttributeArray(m_AxisVAttr);
-    m_AxisProgram.setAttributeArray(m_AxisVAttr, GL_FLOAT, &m_aAxis[0], 3);
+    m_AxisProgram.setAttributeArray(m_AxisVAttr, GL_DOUBLE, &m_aAxis[0], 3);
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glLineWidth(2.25);
     glColor3f(1.0,0.0,0.0);

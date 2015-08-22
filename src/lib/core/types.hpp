@@ -43,9 +43,9 @@ namespace feather
     struct FVertex3D
     {
         FVertex3D(FFloat _x=0, FFloat _y=0, FFloat _z=0) { x=_x; y=_y; z=_z; };
-        FFloat x;
-        FFloat y;
-        FFloat z;
+        FDouble x;
+        FDouble y;
+        FDouble z;
     };
 
     typedef struct{double x; double y; double z;} FNormal3D;
