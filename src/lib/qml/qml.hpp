@@ -365,4 +365,14 @@ class Plugins : public QAbstractListModel
         QList<PluginObject*> m_items;
 };
 
+class Tools : public QObject
+{
+    Q_OBJECT
+
+    public:
+        Tools(QObject* parent=0){};
+        ~Tools(){};
+        Q_INVOKABLE QString urlToString(QUrl url) { return url.path(); };
+};
+
 #endif

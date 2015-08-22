@@ -26,6 +26,8 @@ import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.0 
 import feather.command 1.0
 import feather.scenegraph 1.0
+import feather.tools 1.0
+
 
 Menu {
     id: fileMenu 
@@ -34,12 +36,13 @@ Menu {
     property Properties properties: Null
 
     SceneGraph { id: sg }
-
+    
+    Tools { id: tools }
     FileDialog {
         id: importDialog
         title: "Import Obj"
         onAccepted: {
-            importObjFilename.stringValue = importDialog.fileUrls[0]
+            importObjFilename.stringValue = tools.urlToString(importDialog.fileUrl)
             importObj.exec()       
         }
         onRejected: {} 

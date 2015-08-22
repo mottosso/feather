@@ -47,6 +47,7 @@ int main(int argc, char **argv)
     qmlRegisterType<Parameter>("feather.command", 1, 0, "Parameter");
     qmlRegisterType<Command>("feather.command", 1, 0, "Command");
     qmlRegisterType<Plugins>("feather.plugin", 1, 0, "Plugins");
+    qmlRegisterType<Tools>("feather.tools", 1, 0, "Tools");
 
 
     // Add the Root ndoe to the scenegraph and setup the scene
