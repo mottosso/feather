@@ -34,6 +34,7 @@ namespace feather
 {
     typedef bool FBool;
     typedef int FInt;
+    typedef unsigned int FUInt;
     typedef float FFloat;
     typedef double FDouble;
     typedef std::string FString;
@@ -53,26 +54,26 @@ namespace feather
 
     struct FColorRGB
     {
-        FColorRGB(float _r=1.0, float _g=1.0, float _b=1.0, float _a=1.0):r(_r),g(_g),b(_b){};
-        inline int int_red() { return 255 * r; };
-        inline int int_green() { return 255 * g; };
-        inline int int_blue() { return 255 * b; };
-        inline void set_red(int _r) { r = _r / 255.0; };
-        inline void set_green(int _g) { r = _g / 255.0; };
-        inline void set_blue(int _b) { r = _b / 255.0; };
-        float r;
-        float g;
-        float b;
-        float a;
+        FColorRGB(FFloat _r=1.0, FFloat _g=1.0, FFloat _b=1.0, FFloat _a=1.0):r(_r),g(_g),b(_b){};
+        inline FInt int_red() { return 255 * r; };
+        inline FInt int_green() { return 255 * g; };
+        inline FInt int_blue() { return 255 * b; };
+        inline void set_red(FInt _r) { r = _r / 255.0; };
+        inline void set_green(FInt _g) { r = _g / 255.0; };
+        inline void set_blue(FInt _b) { r = _b / 255.0; };
+        FFloat r;
+        FFloat g;
+        FFloat b;
+        FFloat a;
     };
 
     struct FColorRGBA
     {
-        FColorRGBA(float _r=1.0, float _g=1.0, float _b=1.0, float _a=1.0):r(_r),g(_g),b(_b),a(_a){};
-        float r;
-        float g;
-        float b;
-        float a;
+        FColorRGBA(FFloat _r=1.0, FFloat _g=1.0, FFloat _b=1.0, FFloat _a=1.0):r(_r),g(_g),b(_b),a(_a){};
+        FFloat r;
+        FFloat g;
+        FFloat b;
+        FFloat a;
     };
 
     struct FTransform
@@ -91,10 +92,10 @@ namespace feather
 
     struct FFacePoint
     {
-        FFacePoint(uint _v=0, uint _vt=0, uint _vn=0): v(_v), vt(_vt), vn(_vn) {};
-        uint v;
-        uint vt;
-        uint vn;
+        FFacePoint(FUInt _v=0, FUInt _vt=0, FUInt _vn=0): v(_v), vt(_vt), vn(_vn) {};
+        FUInt v;
+        FUInt vt;
+        FUInt vn;
     };
 
     //typedef struct{std::vector<FFacePoint> f; } FFace;
@@ -104,6 +105,7 @@ namespace feather
     // Arrays
     typedef std::vector<FBool> FBoolArray;
     typedef std::vector<FInt> FIntArray;
+    typedef std::vector<FUInt> FUIntArray;
     typedef std::vector<FDouble> FDoubleArray;
     typedef std::vector<FString> FStringArray;
     typedef std::vector<FVertex3D> FVertex3DArray;
