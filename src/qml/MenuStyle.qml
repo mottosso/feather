@@ -1,8 +1,8 @@
 /***********************************************************************
  *
- * Filename: EditMenu.qml 
+ * Filename: MenuStyle.qml 
  *
- * Description: Holds menu items that will edit scenegraph items.
+ * Description: look for the menus. 
  *
  * Copyright (C) 2015 Richard Layman, rlayman2000@yahoo.com 
  *
@@ -22,36 +22,33 @@
  ***********************************************************************/
 
 import QtQuick 2.3
-import QtQuick.Controls 1.2
-import QtQuick.Dialogs 1.0 
+import QtQuick.Controls.Styles 1.4
 
-Menu {
-    id: editMenu 
-    title: "Edit"
-    visible: true
-    style: MenuStyle {}
+MenuStyle {
+    id: item
+    frame: Rectangle { color: "darkgrey"; border.color: "black"; border.width: 1; radius: 4 }
+    itemDelegate.background: menuItem 
+    itemDelegate.label: menuText
 
-
-    // ACTIONS
-
-
-    // Undo 
-    Action {
-        id: undoAction
-        text: "Undo"
-        tooltip: "Erase previous action"
-        onTriggered: {}
+    Component {
+        id: menuText
+        Text {
+            //anchors.fill: parent
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            font.bold: false 
+            font.pixelSize: 12
+            color: "black"
+            text: styleData.text
+        }
     }
 
-
-    // MENU
-
-
-    // Undo 
-    MenuItem {
-        action: undoAction
+    Component {
+        id: menuItem
+        Rectangle {
+            color: (styleData.selected) ? "lightgrey" : "darkgrey"
+            radius: 2
+        }
     }
-
-    MenuSeparator {}
-
 }
+

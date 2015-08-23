@@ -28,6 +28,7 @@ Menu {
     id: toolsMenu 
     title: "Tools"
     visible: true
+    style: MenuStyle {}
 
 
     // ACTIONS

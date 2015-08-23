@@ -27,6 +27,7 @@ import QtQuick.Layouts 1.1
 
 ToolBar {
     height: 32
+    style: ToolBarStyle {}
 
     // ACTIONS
 

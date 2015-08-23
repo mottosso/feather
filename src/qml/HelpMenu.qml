@@ -28,6 +28,7 @@ Menu {
     id: helpMenu 
     title: "Help"
     visible: true
+    style: MenuStyle {}
 
 
     // ACTIONS

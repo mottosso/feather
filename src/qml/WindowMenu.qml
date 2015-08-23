@@ -28,6 +28,7 @@ Menu {
     id: windowMenu 
     title: "Window"
     visible: true
+    style: MenuStyle {}
 
 
     // ACTIONS

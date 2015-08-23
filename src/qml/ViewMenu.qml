@@ -28,6 +28,7 @@ Menu {
     id: viewMenu 
     title: "View"
     visible: true
+    style: MenuStyle {}
 
 
     // ACTIONS

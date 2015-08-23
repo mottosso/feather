@@ -29,10 +29,11 @@ import feather.node 1.0
 import feather.command 1.0
 
 Menu {
-
     id: addMenu
     title: "Add"
     visible: true
+    style: MenuStyle {}
+
 
     SceneGraph {
         id: sg

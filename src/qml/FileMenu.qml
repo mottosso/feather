@@ -34,6 +34,7 @@ Menu {
     title: "File"
     visible: true
     property Properties properties: Null
+    style: MenuStyle {}
 
     SceneGraph { id: sg }
     

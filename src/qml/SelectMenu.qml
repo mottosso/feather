@@ -28,6 +28,7 @@ Menu {
     id: selectMenu 
     title: "Select"
     visible: true
+    style: MenuStyle {}
 
 
     // ACTIONS

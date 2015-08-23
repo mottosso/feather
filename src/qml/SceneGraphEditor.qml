@@ -58,6 +58,7 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 36
+        style: ToolBarStyle {}
 
         RowLayout {
             spacing: 6

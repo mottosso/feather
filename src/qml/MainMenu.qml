@@ -23,11 +23,14 @@
 
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import QtQuick.Controls.Styles 1.4
 
 MenuBar {
     id: menu
     property Properties properties: Null
-    
+
+    style: MenuBarStyle { background: Rectangle { color: "darkgrey"; border.color: "black"; border.width: 1; radius: 4 } }
+ 
     FileMenu{ properties: menu.properties }
 
     EditMenu{}
