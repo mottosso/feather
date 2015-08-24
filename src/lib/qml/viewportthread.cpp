@@ -78,9 +78,9 @@ QSGNode *ViewportThread::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *
     if (!node) {
         node = new TextureNode(window());
 
-        connect(m_renderThread, SIGNAL(textureReady(int,QSize)), node, SLOT(newTexture(int,QSize)), Qt::DirectConnection);
+        connect(m_renderThread, SIGNAL(textureReady(int,QSize)), node, SLOT(newTexture(int,QSize)), Qt::QueuedConnection);
         connect(node, SIGNAL(pendingNewTexture()), window(), SLOT(update()), Qt::QueuedConnection);
-        connect(window(), SIGNAL(beforeRendering()), node, SLOT(prepareNode()), Qt::DirectConnection);
+        connect(window(), SIGNAL(beforeRendering()), node, SLOT(prepareNode()), Qt::QueuedConnection);
         connect(node, SIGNAL(textureInUse()), m_renderThread, SLOT(renderNext()), Qt::QueuedConnection);
 
         QMetaObject::invokeMethod(m_renderThread, "renderNext", Qt::QueuedConnection);
