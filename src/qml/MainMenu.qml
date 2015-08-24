@@ -24,14 +24,16 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.4
+import feather.scenegraph 1.0
 
 MenuBar {
     id: menu
     property Properties properties: Null
+    property SceneGraph scenegraph: Null
 
-    style: MenuBarStyle { background: Rectangle { color: "darkgrey"; border.color: "black"; border.width: 1; radius: 4 } }
+    style: MenuBarStyle { background: Rectangle { color: "darkgrey"; border.color: "black"; border.width: 1 } }
  
-    FileMenu{ properties: menu.properties }
+    FileMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
 
     EditMenu{}
 

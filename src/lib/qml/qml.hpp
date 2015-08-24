@@ -50,11 +50,12 @@ class SceneGraph : public QObject
         Q_INVOKABLE int add_selection(int type, int uid, int nid, int fid) { status p = qml::command::add_selection(type,uid,nid,fid); emit selectionChanged(type,uid,nid,fid); return p.state; };
         Q_INVOKABLE int node_selection(int type, int uid, int nid) { status p = qml::command::node_selection(type,uid,nid); emit nodeSelection(type,uid,nid); return p.state; };
         Q_INVOKABLE int run_command_string(QString str) { status p = qml::command::run_command_string(str.toStdString()); emit commandMessageChanged(p.state,QString(p.msg.c_str())); std::cout << "run command string msg='" << p.msg << "'\n"; return p.state; };
-
+        Q_INVOKABLE void triggerUpdate() { emit update(); };
     signals:
         void selectionChanged(int type, int uid, int nid, int fid);
         void nodeSelection(int type, int uid, int nid);
         void commandMessageChanged(int code, QString msg);
+        void update();
 };
 
 // FIELD 

@@ -60,5 +60,9 @@ Window {
         style: OutlinerLeafNode {}
    }
 
-    Component.onCompleted: {}
+   function updateSg(){
+        tree.model.updateTree()
+   } 
+
+   Component.onCompleted: { scenegraph.update.connect(updateSg) }
 }

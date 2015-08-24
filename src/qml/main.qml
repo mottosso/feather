@@ -37,7 +37,7 @@ ApplicationWindow {
 
     Properties { id: properties }
 
-    menuBar: MainMenu { properties: properties }
+    menuBar: MainMenu { scenegraph: sg; properties: properties }
 
     toolBar: MainToolBar {}
 

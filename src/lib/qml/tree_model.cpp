@@ -204,6 +204,7 @@ void TreeModel::updateTree()
 {
     rootItem->clear();
     loadChildren(0,rootItem);
+    emit layoutChanged(); // model will not update without this 
 }
 
 void TreeModel::loadChildren(const int uid, Leaf* parent)
@@ -219,7 +220,7 @@ void TreeModel::loadChildren(const int uid, Leaf* parent)
     data.append(icon.c_str()); // icon 
     data.append(uid); // uid
     data.append(0); // nid
- 
+
     parent->appendChild(new Leaf(data,parent)); 
 
     // recursive loop through each child node

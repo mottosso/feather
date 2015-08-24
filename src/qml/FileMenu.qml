@@ -35,9 +35,8 @@ Menu {
     visible: true
     property Properties properties: Null
     style: MenuStyle {}
+    property SceneGraph scenegraph: Null
 
-    SceneGraph { id: sg }
-    
     Tools { id: tools }
     FileDialog {
         id: importDialog
@@ -45,6 +44,7 @@ Menu {
         onAccepted: {
             importObjFilename.stringValue = tools.urlToString(importDialog.fileUrl)
             importObj.exec()       
+            scenegraph.triggerUpdate()
         }
         onRejected: {} 
     }

@@ -26,7 +26,7 @@ import QtQuick.Controls.Styles 1.4
 
 MenuStyle {
     id: item
-    frame: Rectangle { color: "darkgrey"; border.color: "black"; border.width: 1; radius: 4 }
+    frame: Rectangle { color: "darkgrey"; border.color: "black"; border.width: 1 }
     itemDelegate.background: menuItem 
     itemDelegate.label: menuText
 
@@ -47,7 +47,7 @@ MenuStyle {
         id: menuItem
         Rectangle {
             color: (styleData.selected) ? "lightgrey" : "darkgrey"
-            radius: 2
+            //radius: 2
         }
     }
 }

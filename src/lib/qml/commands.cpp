@@ -37,8 +37,9 @@ status qml::command::init() {
     cstate.sgState.maxUid=0;
     //add_node(node::Null,null::Root);
     add_node(node::Polygon,322,"Cube01"); // PolyCube
-    add_node(node::Polygon,320,"CubeShape"); // PolyShape
-    scenegraph::connect(0,4,1,1); // connect PolyCube.out to PolyShape.in
+    int uid1 = add_node(node::Polygon,320,"CubeShape"); // PolyShape
+
+    scenegraph::connect(0,4,uid1,1); // connect PolyCube.out to PolyShape.in
 
     smg::Instance()->add_state(selection::Node,0,0,0);
  
