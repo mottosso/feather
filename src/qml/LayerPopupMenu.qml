@@ -32,7 +32,6 @@ Rectangle {
     border.color: "black"
     border.width: 1
     color: "grey"
-    radius: 4
 
     ListModel {
         id: layerModel
@@ -64,7 +63,6 @@ Rectangle {
             color: "lightgrey"
             border.color: "black"
             border.width: 1
-            radius: 4
         }
  
         delegate: Item {
@@ -73,7 +71,6 @@ Rectangle {
             //color: "grey"
             //border.color: "black"
             //border.width: 1
-            //radius: 4
             Text {
                 anchors.fill: parent
                 text: name

@@ -29,7 +29,7 @@ import QtQuick.Controls 1.4
 Rectangle {
     id: layerFrame
     height: 24
-    radius: 4
+    //radius: 4
     color: (layerFrame.ListView.view.currentIndex==index) ? "lime" : layerColor 
     border.width: (ListView.view.currentIndex==index) ? 2 : 1 
     border.color: (ListView.view.currentIndex==index) ? "hotpink" : "black" 

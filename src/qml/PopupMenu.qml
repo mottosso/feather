@@ -32,7 +32,6 @@ Rectangle {
     border.color: "black"
     border.width: 1
     color: "grey"
-    radius: 2
 
     property alias model: view.model 
 

@@ -29,12 +29,6 @@ import feather.node 1.0
 
 Menu {
     SceneGraph { id: sg }
-    /*
-    style: MenuStyle {
-        frame: Rectangle { color: "red"; border.color: "black"; border.width: 1; radius: 10 }
-        //itemDelegate.background: Rectangle { border.color: "black"; border.width: 1; radius: 10 }
-    }
-    */
 
     // ACTIONS
 

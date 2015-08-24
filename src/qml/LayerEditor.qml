@@ -76,7 +76,6 @@ Window {
         border.color: "black"
         border.width: 1
         color: properties.getColor("menu")
-        radius: 2
 
         Row {
             spacing: 4
@@ -137,7 +136,6 @@ Window {
         border.color: "black"
         border.width: 1
         color: properties.getColor("windowBg")
-        radius: 2
  
         ListView {
             id: view

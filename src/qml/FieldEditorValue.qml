@@ -27,7 +27,6 @@ import feather.field 1.0
 Rectangle {
     id: intField
     height: 14
-    radius: 2
    
     property alias uId: field.uid // this is a unique of the node 
     property alias nodeKey: field.node // this if the node's number assigned by the plugin
@@ -69,7 +68,6 @@ Rectangle {
         width: 80
         border.color: "black"
         border.width: 1
-        radius: 2
 
         Text {
             id: valueText

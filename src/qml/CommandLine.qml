@@ -47,7 +47,6 @@ Rectangle {
             color: "white"
             border.color: "black"
             border.width: 1
-            radius: 2
             anchors.margins: 2
 
             TextInput {
@@ -72,7 +71,6 @@ Rectangle {
             color: "grey"
             border.color: "black"
             border.width: 1
-            radius: 2
             anchors.margins: 2
 
             Text {

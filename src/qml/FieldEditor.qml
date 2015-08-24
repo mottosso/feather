@@ -48,7 +48,6 @@ Window {
         border.color: "black"
         border.width: 1
         color: properties.getColor("windowBg")
-        radius: 2
  
         // Node Title
         Rectangle {
@@ -59,7 +58,6 @@ Window {
             height: 15
             border.color: "black"
             border.width: 1
-            radius: 2
             color: properties.getColor("windowBg")
  
             Text {
@@ -96,7 +94,6 @@ Window {
         anchors.margins: 1
         border.color: "black"
         border.width: 1
-        radius: 4
 
         // Node Base Title
         Rectangle {
@@ -107,7 +104,6 @@ Window {
             height: 15
             border.color: "black"
             border.width: 1
-            radius: 2
             //color: "slategrey"
  
             Text {

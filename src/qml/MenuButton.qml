@@ -38,7 +38,6 @@ Rectangle {
     color: "lightgrey"
     border.color: "black"
     border.width: 1
-    radius: 2
 
     signal connectionButtonPressed(int button, int uid, int nid, int fid)
     signal connectionButtonReleased(int button, int uid, int nid, int fid)

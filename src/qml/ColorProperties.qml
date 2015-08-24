@@ -42,7 +42,6 @@ Rectangle {
             color: "lightgrey" 
             border.color: "black"
             border.width: 1
-            radius: 2
             
             Text {
                 text: "UI"
@@ -78,7 +77,6 @@ Rectangle {
             color: "lightgrey" 
             border.color: "black"
             border.width: 1
-            radius: 2
             
             Text {
                 text: "TYPES"
@@ -114,7 +112,6 @@ Rectangle {
             color: "lightgrey" 
             border.color: "black"
             border.width: 1
-            radius: 2
             
             Text {
                 text: "NODES"
