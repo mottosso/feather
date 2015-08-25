@@ -46,12 +46,14 @@ void gl::glCamera::init()
 void gl::glCamera::draw(int width, int height)
 {
     const qreal fov=25.0,near=0.5, far=30.0;
-    qreal aspect=(float)width/(float)height;
+    qreal aspect=-(float)width/(float)height;
 
     m_View.setToIdentity();
     m_View.perspective(fov,aspect,near,far); 
     //m_View.ortho(-1.0/aspect,1.0/aspect,-1.0*aspect,1.0*aspect,1.0,20.0);
-    m_View.translate(0.0,1.0,m_CamZoom);
+    // fix location
+    m_View.rotate(180,0.0,0.0,1.0);
+    m_View.translate(0.0,-1.0,m_CamZoom);
     m_View.rotate(m_CamTiltAngle,1.0,0.0,0.0);
     m_View.rotate(m_CamPitchAngle,0.0,1.0,0.0);
     m_View.rotate(0,0.0,0.0,1.0);
