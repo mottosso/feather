@@ -165,6 +165,12 @@ namespace feather
         FIntArray glei; // edge indics
  
         inline void add_face(const FFace face) { f.push_back(face); };
+
+        inline void assign_v(const FVertex3DArray& _v) { v.assign(_v.begin(),_v.end()); };
+        inline void assign_st(const FTextureCoordArray& _st) { st.assign(_st.begin(),_st.end()); };
+        inline void assign_vn(const FVertex3DArray& _vn) { vn.assign(_vn.begin(),_vn.end()); };
+        inline void assign_f(const FFaceArray& _f) { f.assign(_f.begin(),_f.end()); };
+
         inline void build_gl() {
             glv.clear();
             glvn.clear();
