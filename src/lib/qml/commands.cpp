@@ -35,11 +35,9 @@ status qml::command::init() {
     load_plugins();
     cstate.sgState.minUid=0;
     cstate.sgState.maxUid=0;
-    //add_node(node::Null,null::Root);
     add_node(node::Polygon,322,"Cube01"); // PolyCube
-    int uid1 = add_node(node::Polygon,320,"CubeShape"); // PolyShape
-
-    scenegraph::connect(0,4,uid1,1); // connect PolyCube.out to PolyShape.in
+    //int uid1 = add_node(node::Polygon,320,"CubeShape"); // PolyShape
+    //scenegraph::connect(0,4,uid1,1); // connect PolyCube.out to PolyShape.in
 
     smg::Instance()->add_state(selection::Node,0,0,0);
  
@@ -276,8 +274,22 @@ void qml::command::get_node_connections(int uid, std::vector<int>& nodes)
 {
     typedef boost::graph_traits<FSceneGraph>::out_edge_iterator OutConn;
     std::pair<OutConn,OutConn> out = boost::out_edges(uid,sg);
-    boost::graph_traits<FSceneGraph>::edge_descriptor c = *out.first;
-    nodes.push_back(sg[boost::target(c,sg)].uid);
+
+    // this is a simple hack to check if a edge exist, I'm sure there's a better way to do this
+    if(out.first==out.second){
+        std::cout << "first and second edges match for " << uid << std::endl; 
+        return;
+    } else {
+        std::cout << "edges don't match for " << uid << std::endl;
+        boost::graph_traits<FSceneGraph>::edge_descriptor c = *out.first;
+        nodes.push_back(sg[boost::target(c,sg)].uid);
+    }
+}
+
+int qml::command::get_node_connection_count(int uid)
+{
+    // TODO - currently not used but would be helpful
+    return 0; 
 }
 
 std::string qml::command::get_node_name(int uid)

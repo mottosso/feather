@@ -50,6 +50,7 @@ SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type
     setAcceptedMouseButtons(Qt::AllButtons);
     setAcceptHoverEvents(true);
 
+    //int nedges = feather::qml::command::get_node_connection_count(0);
     std::vector<int> edges;
     feather::qml::command::get_node_connections(0,edges);
     //feather::FNodeDescriptor n = 0;
