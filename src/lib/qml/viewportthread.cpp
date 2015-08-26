@@ -114,6 +114,10 @@ void ViewportThread::zoomCamera(int z)
     m_renderThread->zoomCamera(z);
 }
 
+void ViewportThread::initialize()
+{
+    m_renderThread->init();
+}
 
 
     RenderViewportThread::RenderViewportThread(const QSize &size)

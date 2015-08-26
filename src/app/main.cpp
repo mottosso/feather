@@ -36,7 +36,7 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
-    qmlRegisterType<ViewportThread>("FeatherViewport", 1, 0, "Viewport");
+    qmlRegisterType<ViewportThread>("feather.viewport", 1, 0, "Viewport");
     qmlRegisterType<SceneGraphEditor>("feather.editors", 1, 0, "SceneGraphEditor");
     qmlRegisterType<SceneGraph>("feather.scenegraph", 1, 0, "SceneGraph");
     qmlRegisterType<TreeModel>("feather.scenegraph", 1, 0, "TreeModel");

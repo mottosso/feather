@@ -22,14 +22,16 @@
  ***********************************************************************/
 
 import QtQuick 2.3
-import FeatherViewport 1.0
+import feather.viewport 1.0
+import feather.scenegraph 1.0
 
 Rectangle {
     //anchors.fill: parent
     color: "orange"
     border.color: "black"
     border.width: 1
-
+    property SceneGraph scenegraph: Null
+    
     Viewport {
         id: renderer
         anchors.fill: parent
@@ -59,4 +61,7 @@ Rectangle {
 
     }
 
+    function update() { /*renderer.initialize()*/ } // This needs to be fixed so that only the gl items that need to be updated are
+
+    Component.onCompleted: { scenegraph.update.connect(update) }
 }

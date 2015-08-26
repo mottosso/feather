@@ -55,6 +55,7 @@ ApplicationWindow {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: cmdLineId.top
+            scenegraph: sg
         }
 
         CommandLine {

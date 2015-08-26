@@ -39,9 +39,10 @@ class ViewportThread : public QQuickItem
         ~ViewportThread();
 
         static QList<QThread *> threads;
-       Q_INVOKABLE void mousePressed(int x, int y);
-       Q_INVOKABLE void moveCamera(int x, int y);
-       Q_INVOKABLE void zoomCamera(int z);
+        Q_INVOKABLE void mousePressed(int x, int y);
+        Q_INVOKABLE void moveCamera(int x, int y);
+        Q_INVOKABLE void zoomCamera(int z);
+        Q_INVOKABLE void initialize();
 
         public Q_SLOTS:
             void ready();
@@ -73,6 +74,7 @@ class RenderViewportThread : public QThread
         QOpenGLContext *context;
         void moveCamera(int x, int y);
         void zoomCamera(int z);
+        void init() { m_viewport->initialize(m_width,m_height); };
 
         public slots:
             void renderNext();
