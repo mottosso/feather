@@ -119,6 +119,11 @@ void ViewportThread::initialize()
     m_renderThread->init();
 }
 
+void ViewportThread::nodeInitialize(int uid)
+{
+    m_renderThread->nodeInit(uid);
+}
+
 
     RenderViewportThread::RenderViewportThread(const QSize &size)
     : surface(0)

@@ -45,7 +45,7 @@ class SceneGraph : public QObject
         ~SceneGraph();
 
         // commands
-        Q_INVOKABLE int add_node(int type, int node, QString name) { return qml::command::add_node(type,node,name.toStdString()); };
+        Q_INVOKABLE int add_node(int type, int node, QString name) { int uid = qml::command::add_node(type,node,name.toStdString()); nodeAdded(uid); return uid; };
         Q_INVOKABLE int connect_nodes(int n1, int f1, int n2, int f2) { status p = qml::command::connect_nodes(n1,f1,n2,f2); return p.state; };
         Q_INVOKABLE int add_selection(int type, int uid, int nid, int fid) { status p = qml::command::add_selection(type,uid,nid,fid); emit selectionChanged(type,uid,nid,fid); return p.state; };
         Q_INVOKABLE int node_selection(int type, int uid, int nid) { status p = qml::command::node_selection(type,uid,nid); emit nodeSelection(type,uid,nid); return p.state; };
@@ -56,6 +56,7 @@ class SceneGraph : public QObject
         void nodeSelection(int type, int uid, int nid);
         void commandMessageChanged(int code, QString msg);
         void update();
+        void nodeAdded(int uid);
 };
 
 // FIELD 

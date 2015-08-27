@@ -289,6 +289,10 @@ gl::glScene::glScene()
     m_apCameras.push_back(new gl::glCamera());
     m_apLights.push_back(new gl::glLight());
     m_apMeshes.push_back(new gl::glMesh(m_apLights.at(0)));
+    
+    m_GlInfo.view = m_pView;
+    m_GlInfo.program = m_pProgram;
+    m_GlInfo.view = &m_apCameras.at(0)->view();
 }
 
 gl::glScene::~glScene()
@@ -370,16 +374,24 @@ void gl::glScene::init()
     int minUid = qml::command::get_min_uid();
     int maxUid = qml::command::get_max_uid();
 
+    /*
     feather::FGlInfo info;
     info.view = m_pView;
     info.program = m_pProgram;
     info.view = &m_apCameras.at(0)->view();
+    */
 
     while(maxUid > minUid) {
         if(qml::command::node_exists(maxUid))
-            qml::command::gl_init(maxUid,info);
+            nodeInit(maxUid);
         --maxUid;
     }
+}
+
+void gl::glScene::nodeInit(int uid)
+{
+    m_GlInfo.uid = uid;
+    qml::command::gl_init(uid,m_GlInfo);
 }
 
 void gl::glScene::draw(int width, int height)

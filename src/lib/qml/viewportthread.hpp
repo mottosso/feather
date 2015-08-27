@@ -43,6 +43,8 @@ class ViewportThread : public QQuickItem
         Q_INVOKABLE void moveCamera(int x, int y);
         Q_INVOKABLE void zoomCamera(int z);
         Q_INVOKABLE void initialize();
+        Q_INVOKABLE void nodeInitialize(int uid);
+
 
         public Q_SLOTS:
             void ready();
@@ -75,6 +77,7 @@ class RenderViewportThread : public QThread
         void moveCamera(int x, int y);
         void zoomCamera(int z);
         void init() { m_viewport->initialize(m_width,m_height); };
+        void nodeInit(int uid) { m_viewport->nodeInitialize(uid); };
 
         public slots:
             void renderNext();

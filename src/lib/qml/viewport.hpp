@@ -37,6 +37,7 @@ class Viewport
         ~Viewport();
 
         void initialize(int width, int height);
+        void nodeInitialize(int uid);
         void render(int width, int height);
         void rotateCamera(int x, int y);
         void zoomCamera(int z);

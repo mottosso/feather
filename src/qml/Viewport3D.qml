@@ -61,7 +61,13 @@ Rectangle {
 
     }
 
-    function update() { /*renderer.initialize()*/ } // This needs to be fixed so that only the gl items that need to be updated are
+    //function update() { }
 
-    Component.onCompleted: { scenegraph.update.connect(update) }
+    function nodeAdded(uid) { console.log("node " + uid + " added"); renderer.nodeInitialize(uid) }
+
+
+    Component.onCompleted: {
+        //scenegraph.update.connect(update)
+        scenegraph.nodeAdded.connect(nodeAdded)
+    }
 }

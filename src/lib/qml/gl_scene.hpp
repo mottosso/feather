@@ -108,6 +108,7 @@ namespace feather
                 glScene();
                 ~glScene();
                 void init();
+                void nodeInit(int uid);
                 void draw(int width, int height);
                 void draw_grid();
                 void make_grid();
@@ -128,6 +129,7 @@ namespace feather
                 int m_GridMAttr;
                 std::vector<FVertex3D> m_aGrid;
                 std::vector<FVertex3D> m_aAxis;
+                feather::FGlInfo m_GlInfo;
         };
 
     } // namespace gl

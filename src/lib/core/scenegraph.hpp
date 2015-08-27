@@ -116,6 +116,10 @@ namespace feather
             // do the selection in a seperate command
             //node_selection.push_back(n); 
 
+            // if the new node's uid is now highest uid, replace the state's maxUid
+            if(static_cast<int>(uid) > cstate.sgState.maxUid)
+                cstate.sgState.maxUid = uid;
+
             // Return the node number
             return static_cast<int>(uid);
         };
