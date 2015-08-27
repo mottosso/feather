@@ -43,6 +43,7 @@ namespace feather
                 ~glCamera();
                 void init();
                 void draw(int width, int height);
+                void move(double x, double y, double z);
                 void rotate(int x, int y);
                 void zoom(int z);
                 QMatrix4x4& view() { return m_View; };
@@ -52,6 +53,7 @@ namespace feather
                 float m_CamTiltAngle;
                 float m_CamZoom;
                 float m_Scale;
+                FVertex3D m_Translate;
                 QMatrix4x4 m_View;
         };
 

@@ -57,6 +57,14 @@ void gl::glCamera::draw(int width, int height)
     m_View.rotate(m_CamTiltAngle,-1.0,0.0,0.0);
     m_View.rotate(m_CamPitchAngle,0.0,1.0,0.0);
     m_View.rotate(0,0.0,0.0,1.0);
+    m_View.translate(m_Translate.x,m_Translate.y,m_Translate.z);
+}
+
+void gl::glCamera::move(double x, double y, double z)
+{
+    m_Translate.x += x;
+    m_Translate.y += y;
+    m_Translate.z += z;
 }
 
 void gl::glCamera::rotate(int x, int y)

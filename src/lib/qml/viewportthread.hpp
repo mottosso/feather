@@ -40,7 +40,8 @@ class ViewportThread : public QQuickItem
 
         static QList<QThread *> threads;
         Q_INVOKABLE void mousePressed(int x, int y);
-        Q_INVOKABLE void moveCamera(int x, int y);
+        Q_INVOKABLE void moveCamera(double x, double y, double z);
+        Q_INVOKABLE void rotateCamera(int x, int y);
         Q_INVOKABLE void zoomCamera(int z);
         Q_INVOKABLE void initialize();
         Q_INVOKABLE void nodeInitialize(int uid);
@@ -55,8 +56,10 @@ class ViewportThread : public QQuickItem
 
     private:
         RenderViewportThread *m_renderThread;
-        int m_x;
-        int m_y;
+        //double m_x;
+        //double m_y;
+        int m_rx;
+        int m_ry;
 };
 
 
@@ -74,7 +77,8 @@ class RenderViewportThread : public QThread
         void setSize(const QSize& size) { m_size=size; };
         QOffscreenSurface *surface;
         QOpenGLContext *context;
-        void moveCamera(int x, int y);
+        void moveCamera(double x, double y, double z);
+        void rotateCamera(int x, int y);
         void zoomCamera(int z);
         void init() { m_viewport->initialize(m_width,m_height); };
         void nodeInit(int uid) { m_viewport->nodeInitialize(uid); };

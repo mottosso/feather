@@ -27,7 +27,7 @@ QList<QThread *> ViewportThread::threads;
 
 
 ViewportThread::ViewportThread()
-: m_renderThread(0), m_x(0), m_y(0)
+: m_renderThread(0), m_rx(0), m_ry(0)
 {
     setFlag(ItemHasContents, true);
     m_renderThread = new RenderViewportThread(QSize(0, 0));
@@ -98,15 +98,20 @@ QSGNode *ViewportThread::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *
 
 void ViewportThread::mousePressed(int x, int y)
 {
-    m_x=x;
-    m_y=y;
+    m_rx=x;
+    m_ry=y;
 }
 
-void ViewportThread::moveCamera(int x, int y)
+void ViewportThread::moveCamera(double x, double y, double z)
 {
-    m_renderThread->moveCamera(x-m_x, y-m_y);
-    m_x=x;
-    m_y=y;
+    m_renderThread->moveCamera(x,y,z);
+}
+
+void ViewportThread::rotateCamera(int x, int y)
+{
+    m_renderThread->rotateCamera(x-m_rx, y-m_ry);
+    m_rx=x;
+    m_ry=y;
 }
 
 void ViewportThread::zoomCamera(int z)
@@ -153,7 +158,12 @@ RenderViewportThread::~RenderViewportThread()
     context=0;
 }
 
-void RenderViewportThread::moveCamera(int x, int y)
+void RenderViewportThread::moveCamera(double x, double y, double z)
+{
+    m_viewport->moveCamera(x,y,z);
+}
+
+void RenderViewportThread::rotateCamera(int x, int y)
 {
     m_viewport->rotateCamera(x,y);
 }

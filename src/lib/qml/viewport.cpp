@@ -51,6 +51,11 @@ void Viewport::render(int width, int height)
     m_pScene->draw(width,height);
 }
 
+void Viewport::moveCamera(double x, double y, double z)
+{
+    m_pScene->camera(m_CurrentCamera)->move(x,y,z);
+}
+
 void Viewport::rotateCamera(int x, int y)
 {
     m_pScene->camera(m_CurrentCamera)->rotate(x,y);

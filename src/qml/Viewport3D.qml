@@ -39,6 +39,8 @@ Rectangle {
         //width: 500
         //height: 500
 
+        //Keys { id: keys }
+
         MouseArea {
             id: mouseArea
             anchors.fill: parent
@@ -52,13 +54,38 @@ Rectangle {
                 renderer.mousePressed(mouse.x,mouse.y)
 
             }
-            onPositionChanged: { renderer.moveCamera(mouse.x,mouse.y) }
+            onPositionChanged: { renderer.rotateCamera(mouse.x,mouse.y) }
             //onReleased: { console.log("released") }
             onWheel: { renderer.zoomCamera(wheel.angleDelta.y); }
+            onEntered: { renderer.focus = true }
         }
 
-    MainPopup { id: main_popup; visible: true }
+        Keys.onPressed: {
+            switch(event.key){
+                case Qt.Key_Up:
+                    renderer.moveCamera(0,-1,0);
+                    break
+                case Qt.Key_Down:
+                    renderer.moveCamera(0,1,0);
+                    break
+                case Qt.Key_Left:
+                    renderer.moveCamera(1,0,0);
+                    break
+                case Qt.Key_Right:
+                    renderer.moveCamera(-1,0,0);
+                    break
+            }
+        }
 
+        MainPopup { id: main_popup; visible: true }
+
+        /*
+        function keyPressed(event){
+            console.log("key pressed")
+        }
+
+        Component.onCompleted: { keys.onPressed.connected(keyPressed); }
+        */
     }
 
     //function update() { }
