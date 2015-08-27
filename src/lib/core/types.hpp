@@ -193,26 +193,31 @@ namespace feather
                         glc.push_back(FColorRGBA());
                     }
 
+                    std::cout << "v" << id << ":" << _face.at(id).v << ",";
                     //glv.push_back(v.at(_face.at(id).v));
                     //glvn.push_back(vn.at(_face.at(id).vn));
                     gli.push_back(_face.at(id).v);
  
+                    std::cout << "v" << id+1 << ":" << _face.at(id+1).v << ",";
                     //glv.push_back(v.at(_face.at(id+1).v));
                     //glvn.push_back(vn.at(_face.at(id+1).vn));
                     gli.push_back(_face.at(id+1).v);
 
                     if(id+2 < _face.size()) {
+                        std::cout << "v" << id+2 << ":" << _face.at(id+2).v << ",";
                         //glv.push_back(v.at(_face.at(id+2).v));
                         //glvn.push_back(vn.at(_face.at(id+2).vn));
                         gli.push_back(_face.at(id+2).v);
                     } else {
-                       //glv.push_back(v.at(_face.at(0).v));
-                       //glvn.push_back(vn.at(_face.at(0).vn));
-                       gli.push_back(_face.at(0).v);
+                        std::cout << "v" << 0 << ":" << _face.at(0).v << ",";
+                        //glv.push_back(v.at(_face.at(0).v));
+                        //glvn.push_back(vn.at(_face.at(0).vn));
+                        gli.push_back(_face.at(0).v);
                     }
 
                     id=id+2;
                 }
+                std::cout << "\n";
                 fcount++;
                 id=0;
             });
