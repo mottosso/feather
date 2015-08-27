@@ -147,6 +147,10 @@ RenderViewportThread::~RenderViewportThread()
     surface->deleteLater();
     //exit();
     //moveToThread(QGuiApplication::instance()->thread());
+    delete surface;
+    surface=0;
+    delete context;
+    context=0;
 }
 
 void RenderViewportThread::moveCamera(int x, int y)
