@@ -45,8 +45,9 @@ void gl::glCamera::init()
 
 void gl::glCamera::draw(int width, int height)
 {
-    const qreal fov=25.0,near=0.5, far=30.0;
-    qreal aspect=-(float)width/(float)height;
+    const qreal fov=25.0,near=0.5, far=100.0;
+    qreal aspect=-(double)width/(double)height;
+    //std::cout << "camera width=" << width << " height=" << height << " aspect ratio=" << aspect << std::endl;
 
     m_View.setToIdentity();
     m_View.perspective(fov,aspect,near,far); 
@@ -69,13 +70,13 @@ void gl::glCamera::move(double x, double y, double z)
 
 void gl::glCamera::rotate(int x, int y)
 {
-    m_CamPitchAngle += x;
-    m_CamTiltAngle -= y;
+    m_CamPitchAngle += (double)x;
+    m_CamTiltAngle -= (double)y;
 }
 
 void gl::glCamera::zoom(int z)
 {
-    m_CamZoom += (float)z/240.0;
+    m_CamZoom += (double)z/240.0;
 }
 
 // GL LIGHT
@@ -405,6 +406,7 @@ void gl::glScene::nodeInit(int uid)
 void gl::glScene::draw(int width, int height)
 {
     glViewport(0,0,width,height);
+    //std::cout << "viewport width=" << width << " height=" << height << std::endl;
 
     glDepthMask(true);
 

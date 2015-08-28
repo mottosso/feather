@@ -91,6 +91,7 @@ QSGNode *ViewportThread::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *
     //std::cout << "thread x=" << node->rect().width() << ", y= " << node->rect().height() << std::endl;
 
     m_renderThread->setSize(QSize(node->rect().width(), node->rect().height()));
+    //std::cout << "renderThread->setSize w=" << node->rect().width() << " h=" << node->rect().height() << std::endl;
 
     return node;
 }
@@ -145,8 +146,11 @@ RenderViewportThread::~RenderViewportThread()
 {
     //context->makeCurrent(surface);
     delete m_renderFbo;
+    m_renderFbo=0;
     delete m_displayFbo;
+    m_displayFbo=0;
     delete m_viewport;
+    m_viewport=0;
     //context->doneCurrent();
     //delete context;
     surface->deleteLater();
@@ -178,7 +182,7 @@ void RenderViewportThread::renderNext()
 {
     context->makeCurrent(surface);
     
-    if (!m_renderFbo) {
+    if (!m_renderFbo || !m_displayFbo) {
         // Initialize the buffers and renderer
         QOpenGLFramebufferObjectFormat format;
         format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
@@ -187,8 +191,8 @@ void RenderViewportThread::renderNext()
         m_viewport= new Viewport();
         //m_viewport->setContext(context);
         m_viewport->initialize(m_size.width(), m_size.height());
-        m_width = m_size.width();
-        m_height = m_size.height();
+        //m_width = m_size.width();
+        //m_height = m_size.height();
     }
 
     if(m_size.width() != m_width || m_size.height() != m_height) {
@@ -200,27 +204,126 @@ void RenderViewportThread::renderNext()
 
     m_renderFbo->bind();
 
+    m_width = m_size.width();
+    m_height = m_size.height();
+ 
+    glViewport(0, 0, m_size.width(), m_size.height());
+    m_viewport->render(m_size.width(),m_size.height());
+
+    /*
+    glViewport(0, 0, m_renderFbo->width(), m_renderFbo->height());
+    m_viewport->render(m_renderFbo->width(),m_renderFbo->height());
+    */
+
+    if(m_renderFbo->width() != m_displayFbo->width() || m_renderFbo->height() != m_displayFbo->height()) {
+    //if(m_size.width() != m_width || m_size.height() != m_height) {
+        delete m_displayFbo;
+        QOpenGLFramebufferObjectFormat format;
+        format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+        m_displayFbo = new QOpenGLFramebufferObject(QSize(m_renderFbo->width(),m_renderFbo->height()), format);
+    }
+
+    glFlush();
+    m_renderFbo->bindDefault();
+    qSwap(m_renderFbo, m_displayFbo);
+
+    /*
+    if(m_size.width() != m_width || m_size.height() != m_height) {
+        delete m_renderFbo;
+        QOpenGLFramebufferObjectFormat format;
+        format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+        m_renderFbo = new QOpenGLFramebufferObject(m_size, format);
+    }
+    */
+
+    //glFlush();
+ 
+    /*
+    if(m_size.width() != m_width || m_size.height() != m_height) {
+        delete m_renderFbo;
+        delete m_displayFbo;
+        QOpenGLFramebufferObjectFormat format;
+        format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+        //m_renderFbo = new QOpenGLFramebufferObject(m_size, format);
+        m_renderFbo = new QOpenGLFramebufferObject(QSize(m_width,m_height), format);
+        m_displayFbo = new QOpenGLFramebufferObject(m_size, format);
+        m_renderFbo->bind();
+
+        glViewport(0, 0, m_size.width(), m_size.height());
+        m_viewport->render(m_size.width(),m_size.height());
+        glFlush();
+        qSwap(m_renderFbo, m_displayFbo);
+        //glViewport(0, 0, m_size.width(), m_size.height());
+        //m_viewport->render(m_size.width(),m_size.height());
+    } else {
+        m_renderFbo->bind();
+        //glViewport(0, 0, m_size.width(), m_size.height());
+        //m_viewport->render(m_size.width(),m_size.height());
+        glViewport(0, 0, m_size.width(), m_size.height());
+        m_viewport->render(m_size.width(),m_size.height());
+        glFlush();
+        qSwap(m_renderFbo, m_displayFbo);
+     }
+    */
+
+    // START
+    /*
+    int width = m_size.width();
+    int height = m_size.height();
+    QSize size(width,height);
+
+    //if(m_size.width() != m_width || m_size.height() != m_height) {
+    if(width != m_width || height != m_height) {
+        delete m_renderFbo;
+        QOpenGLFramebufferObjectFormat format;
+        format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+        //m_renderFbo = new QOpenGLFramebufferObject(m_size, format);
+        m_renderFbo = new QOpenGLFramebufferObject(size, format);
+    }
+
+    m_renderFbo->bind();
+
     //int side = qMin(m_size.width(),m_size.height());
+    std::cout << "m_size w=" << m_size.width() << " h=" << m_size.height() << std::endl;
+    std::cout << "m_width=" << m_width << " m_height=" << m_height << std::endl;
+
     glViewport(0, 0, m_size.width(), m_size.height());
 
     m_viewport->render(m_size.width(),m_size.height());
 
     glFlush();
 
-    m_renderFbo->bindDefault();
-
-    if(m_size.width() != m_width || m_size.height() != m_height) {
+    qSwap(m_renderFbo, m_displayFbo);
+ 
+    //m_renderFbo->bindDefault();
+    
+    //if(m_size.width() != m_width || m_size.height() != m_height) {
+    if(width != m_width || height != m_height) {
         delete m_displayFbo;
         QOpenGLFramebufferObjectFormat format;
         format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
-        m_displayFbo = new QOpenGLFramebufferObject(m_size, format);
+        //m_displayFbo = new QOpenGLFramebufferObject(m_size, format);
+        m_displayFbo = new QOpenGLFramebufferObject(size, format);
     }
+    */
+    // END
 
-    qSwap(m_renderFbo, m_displayFbo);
+    //std::cout << "m_renderFbo w=" << m_renderFbo->width() << " m_renderFbo h=" << m_renderFbo->height() << std::endl;
+    //std::cout << "m_displayFbo w=" << m_displayFbo->width() << " m_displayFbo h=" << m_displayFbo->height() << std::endl;
+
+    /*
+    glViewport(0, 0, m_size.width(), m_size.height());
+
+    m_viewport->render(m_size.width(),m_size.height());
+    */
+
+    //glFlush();
+    //qSwap(m_renderFbo, m_displayFbo);
 
     m_width = m_size.width();
     m_height = m_size.height();
 
+    //std::cout << "w=" << m_size.width() << " h=" << m_size.height() << std::endl;
     emit textureReady(m_displayFbo->texture(), m_size);
 }
 

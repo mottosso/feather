@@ -49,10 +49,10 @@ namespace feather
                 QMatrix4x4& view() { return m_View; };
 
             private:
-                float m_CamPitchAngle;
-                float m_CamTiltAngle;
-                float m_CamZoom;
-                float m_Scale;
+                double m_CamPitchAngle;
+                double m_CamTiltAngle;
+                double m_CamZoom;
+                double m_Scale;
                 FVertex3D m_Translate;
                 QMatrix4x4 m_View;
         };
