@@ -34,6 +34,11 @@ class ViewportThread : public QQuickItem
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool axis READ axis WRITE setAxis NOTIFY axisChanged)
+    Q_PROPERTY(bool grid READ grid WRITE setGrid NOTIFY gridChanged)
+    Q_PROPERTY(int shadingMode READ shadingMode WRITE setShadingMode NOTIFY shadingModeChanged)
+    Q_PROPERTY(int selectionMode READ selectionMode WRITE setSelectionMode NOTIFY selectionModeChanged)
+ 
     public:
         ViewportThread();
         ~ViewportThread();
@@ -46,6 +51,51 @@ class ViewportThread : public QQuickItem
         Q_INVOKABLE void initialize();
         Q_INVOKABLE void nodeInitialize(int uid);
 
+        // axis 
+        void setAxis(bool& s) {
+            if(m_axis!= s) {
+                m_axis=s;
+                emit axisChanged();
+             }
+        }
+
+        bool axis() { return m_axis; }
+
+        // grid
+        void setGrid(bool& s) {
+            if(m_grid!= s) {
+                m_grid=s;
+                emit gridChanged();
+            }
+        }
+
+        bool grid() { return m_grid; }
+
+        // shadingMode
+        void setShadingMode(int& m) {
+            if(m_shadingMode!= m) {
+                m_shadingMode=m;
+                emit shadingModeChanged(m);
+             }
+        }
+
+        bool shadingMode() { return m_shadingMode; }
+
+        // selectionMode 
+        void setSelectionMode(int& m) {
+            if(m_selectionMode!= m) {
+                m_selectionMode=m;
+                emit selectionModeChanged(m);
+             }
+        }
+
+        bool selectionMode() { return m_selectionMode; }
+
+    signals:
+        void axisChanged();
+        void gridChanged();
+        void shadingModeChanged(int m);
+        void selectionModeChanged(int m);
 
         public Q_SLOTS:
             void ready();
@@ -60,6 +110,11 @@ class ViewportThread : public QQuickItem
         //double m_y;
         int m_rx;
         int m_ry;
+        // states
+        bool m_axis;
+        bool m_grid;
+        bool m_shadingMode;
+        bool m_selectionMode;
 };
 
 
@@ -82,6 +137,10 @@ class RenderViewportThread : public QThread
         void zoomCamera(int z);
         void init() { m_viewport->initialize(m_width,m_height); };
         void nodeInit(int uid) { m_viewport->nodeInitialize(uid); };
+        void showAxix(bool s) { m_viewport->showAxis(s); };
+        void showGrid(bool s) { m_viewport->showAxis(s); };
+        void setShadingState(uint m) { m_viewport->setShadingMode((uint)m); };
+        void setSelectionState(uint m) { m_viewport->setSelectionMode((uint)m); };
 
         public slots:
             void renderNext();

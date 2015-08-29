@@ -107,6 +107,9 @@ namespace feather
         class glScene
         {
             public:
+                enum ShadingMode { FLAT, SHADED };
+                enum SelectionMode { OBJECT, FACE, EDGE, VERTEX };
+
                 glScene();
                 ~glScene();
                 void init();
@@ -116,6 +119,10 @@ namespace feather
                 void make_grid();
                 void draw_axis();
                 glCamera* camera(int camera) { return m_apCameras.at(camera); };
+                void showAxis(bool s) { m_showAxis = s; };
+                void showGrid(bool s) { m_showGrid = s; };
+                void setShadingMode(ShadingMode m) { m_ShadingMode = m; };
+                void setSelectionMode(SelectionMode m) { m_SelectionMode = m; };
 
             private:
                 std::vector<glCamera*> m_apCameras;
@@ -132,6 +139,10 @@ namespace feather
                 std::vector<FVertex3D> m_aGrid;
                 std::vector<FVertex3D> m_aAxis;
                 feather::FGlInfo m_GlInfo;
+                bool m_showAxis;
+                bool m_showGrid;
+                ShadingMode m_ShadingMode;
+                SelectionMode m_SelectionMode;
         };
 
     } // namespace gl

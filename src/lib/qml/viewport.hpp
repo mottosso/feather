@@ -31,7 +31,7 @@
 
 class Viewport
 {
-
+    
     public:
         Viewport();
         ~Viewport();
@@ -42,8 +42,14 @@ class Viewport
         void moveCamera(double x, double y, double z);
         void rotateCamera(int x, int y);
         void zoomCamera(int z);
+        void showAxis(bool s) { m_pScene->showAxis(s); };
+        void showGrid(bool s) { m_pScene->showGrid(s); };
+        void setShadingMode(uint m) { m_pScene->setShadingMode(static_cast<feather::gl::glScene::ShadingMode>(m)); };
+        void setSelectionMode(uint m) { m_pScene->setSelectionMode(static_cast<feather::gl::glScene::SelectionMode>(m)); };
 
-    private:
+
+
+   private:
         QSize m_viewportSize;
         feather::gl::glScene* m_pScene;    
         int m_CurrentCamera;
