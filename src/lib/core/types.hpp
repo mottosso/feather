@@ -176,11 +176,17 @@ namespace feather
             glvn.clear();
             gli.clear();
             glc.clear();
+            glei.clear();
             uint id=0;
             int fcount=0; // this is a temp value to test selection
             std::for_each(f.begin(), f.end(), [this,&id,&fcount](FFace _face){
 
                 for_each(_face.begin(),_face.end(),[this](FFacePoint _fp){ glei.push_back(_fp.v); });
+                /*
+                std::cout << "build glei\n";
+                for_each(glei.begin(),glei.end(),[this](int _v){ std::cout << _v << " "; });
+                std::cout << std::endl;
+                */
 
                 while(id+2 <= _face.size()) {
                     if(fcount==3) {
