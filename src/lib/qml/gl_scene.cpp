@@ -150,7 +150,7 @@ void gl::glLight::draw(QMatrix4x4& view)
     m_Program.enableAttributeArray(m_Vertex);
     m_Program.setAttributeArray(m_Vertex, GL_DOUBLE, &m_aModel[0], 3);
     glLineWidth(1.5);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT, GL_LINE);
     glDrawArrays(GL_LINES, 0, m_aModel.size());
     m_Program.disableAttributeArray(m_Vertex);
     m_Program.release();
@@ -395,6 +395,29 @@ void gl::glScene::init()
             nodeInit(maxUid);
         --maxUid;
     }
+
+    glFrontFace(GL_CW);
+    glCullFace(GL_BACK);
+
+    // smoothing
+    glShadeModel(GL_FLAT);                    // shading mathod: GL_SMOOTH or GL_FLAT
+    //glPixelStorei(GL_UNPACK_ALIGNMENT, 4);      // 4-byte pixel alignment
+
+    // enable /disable features
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
+    //glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_BLEND);
+     //glClearColor(0.75, 0.75, 0.75, 0.0);
+    glClearStencil(0);                          // clear stencil buffer
+    glClearDepth(1.0f);                         // 0 is near, 1 is far
+    glDepthFunc(GL_LEQUAL);
 }
 
 void gl::glScene::nodeInit(int uid)
@@ -408,23 +431,61 @@ void gl::glScene::draw(int width, int height)
     glViewport(0,0,width,height);
     //std::cout << "viewport width=" << width << " height=" << height << std::endl;
 
-    glDepthMask(true);
+    glClear(GL_STENCIL_BUFFER_BIT);
+    glStencilFunc(GL_ALWAYS, 0x1, 0x1);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
 
+    glDepthMask(true);
+    glFrontFace(GL_CW);
+    glCullFace(GL_BACK);
+ 
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-
-    glFrontFace(GL_CW);
-    glCullFace(GL_FRONT);
-    //glEnable(GL_CULL_FACE);
+    glClearStencil(0);                          // clear stencil buffer
+    glClearDepth(1.0f);                         // 0 is near, 1 is far
+ 
+    // smoothing
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
+    //glEnable(GL_LIGHTING);
+    //glEnable(GL_TEXTURE_2D);
+    glEnable(GL_CULL_FACE);
     glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_POLYGON_SMOOTH);
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+    glDepthFunc(GL_LEQUAL);
+
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   //glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE);
+
+    /*
+    // turn off smoothing
+    if ( m_GlMode_Enum != SELECTION ) {
+        glEnable(GL_LINE_SMOOTH);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
+        glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
+    }
+    */
+
+    //glFrontFace(GL_CW);
+    //glCullFace(GL_BACK);
+    //glEnable(GL_CULL_FACE);
+    //glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_LINE_SMOOTH);
+    //glEnable(GL_BLEND);
+
     //glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
 
+    glShadeModel(GL_SMOOTH);                    // shading mathod: GL_SMOOTH or GL_FLAT
+ 
     int minUid = qml::command::get_min_uid();
     int maxUid = qml::command::get_max_uid();
 
@@ -475,7 +536,7 @@ void gl::glScene::draw_grid()
     m_GridProgram.setAttributeArray(m_GridVAttr, GL_DOUBLE, &m_aGrid[0], 3);
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glDrawArrays(GL_LINES, 0, 84);
-    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    glPolygonMode( GL_FRONT, GL_FILL );
     m_GridProgram.disableAttributeArray(m_GridVAttr);
 }
 
@@ -484,7 +545,7 @@ void gl::glScene::draw_axis()
     m_AxisProgram.enableAttributeArray(m_AxisVAttr);
     m_AxisProgram.setAttributeArray(m_AxisVAttr, GL_DOUBLE, &m_aAxis[0], 3);
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-    glLineWidth(2.25);
+    glLineWidth(4.25);
     glColor3f(1.0,0.0,0.0);
     glDrawArrays(GL_LINES, 0, 2);
     glColor3f(0.0,1.0,0.0);
@@ -492,7 +553,7 @@ void gl::glScene::draw_axis()
     glColor3f(0.0,0.0,1.0);
     glDrawArrays(GL_LINES, 4, 2);
     glLineWidth(1.25);
-    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    glPolygonMode( GL_FRONT, GL_FILL );
     m_AxisProgram.disableAttributeArray(m_AxisVAttr);
 }
 

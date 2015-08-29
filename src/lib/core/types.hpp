@@ -199,23 +199,23 @@ namespace feather
                         glc.push_back(FColorRGBA());
                     }
 
-                    std::cout << "v" << id << ":" << _face.at(id).v << ",";
+                    //std::cout << "v" << id << ":" << _face.at(id).v << ",";
                     //glv.push_back(v.at(_face.at(id).v));
                     //glvn.push_back(vn.at(_face.at(id).vn));
                     gli.push_back(_face.at(id).v);
  
-                    std::cout << "v" << id+1 << ":" << _face.at(id+1).v << ",";
+                    //std::cout << "v" << id+1 << ":" << _face.at(id+1).v << ",";
                     //glv.push_back(v.at(_face.at(id+1).v));
                     //glvn.push_back(vn.at(_face.at(id+1).vn));
                     gli.push_back(_face.at(id+1).v);
 
                     if(id+2 < _face.size()) {
-                        std::cout << "v" << id+2 << ":" << _face.at(id+2).v << ",";
+                        //std::cout << "v" << id+2 << ":" << _face.at(id+2).v << ",";
                         //glv.push_back(v.at(_face.at(id+2).v));
                         //glvn.push_back(vn.at(_face.at(id+2).vn));
                         gli.push_back(_face.at(id+2).v);
                     } else {
-                        std::cout << "v" << 0 << ":" << _face.at(0).v << ",";
+                        //std::cout << "v" << 0 << ":" << _face.at(0).v << ",";
                         //glv.push_back(v.at(_face.at(0).v));
                         //glvn.push_back(vn.at(_face.at(0).vn));
                         gli.push_back(_face.at(0).v);
@@ -223,13 +223,15 @@ namespace feather
 
                     id=id+2;
                 }
-                std::cout << "\n";
+                //std::cout << "\n";
                 fcount++;
                 id=0;
             });
         };
+
         // remove all the vertex, normals, tex coords and faces from the mesh
         inline void clear() { v.clear(); st.clear(); vn.clear(); glv.clear(); glvn.clear(); gli.clear(); };
+
         // cut the face along two edges
         inline bool split_face(const uint face, const uint v1, const uint v2) {
             // verify the face and edges

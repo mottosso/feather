@@ -199,7 +199,7 @@ void RenderViewportThread::renderNext()
         delete m_renderFbo;
         QOpenGLFramebufferObjectFormat format;
         format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
-        m_renderFbo = new QOpenGLFramebufferObject(m_size, format);
+        m_renderFbo = new QOpenGLFramebufferObject(QSize(m_size.width(),m_size.height()), format);
     }
 
     m_renderFbo->bind();
@@ -347,8 +347,6 @@ TextureNode::~TextureNode()
 {
     delete m_texture;
     m_texture=0;
-    //delete m_window;
-    //m_window=0;
 }
 
 
