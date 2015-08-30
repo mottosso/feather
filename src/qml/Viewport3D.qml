@@ -26,20 +26,20 @@ import feather.viewport 1.0
 import feather.scenegraph 1.0
 
 Rectangle {
-    //anchors.fill: parent
     color: "orange"
     border.color: "black"
     border.width: 1
     property SceneGraph scenegraph: Null
-    
+    property alias showAxis: renderer.axis
+    property alias showGrid: renderer.grid
+    property alias shadingMode: renderer.shadingMode
+    property alias selectionMode: renderer.selectionMode
+   
+   
     Viewport {
         id: renderer
-        anchors.fill: parent
+        anchors.fill: parent 
         anchors.margins: 2
-        //width: 500
-        //height: 500
-
-        //Keys { id: keys }
 
         MouseArea {
             id: mouseArea
@@ -78,23 +78,11 @@ Rectangle {
         }
 
         MainPopup { id: main_popup; visible: true }
-
-        /*
-        function keyPressed(event){
-            console.log("key pressed")
-        }
-
-        Component.onCompleted: { keys.onPressed.connected(keyPressed); }
-        */
     }
-
-    //function update() { }
 
     function nodeAdded(uid) { console.log("node " + uid + " added"); renderer.nodeInitialize(uid) }
 
-
     Component.onCompleted: {
-        //scenegraph.update.connect(update)
         scenegraph.nodeAdded.connect(nodeAdded)
     }
 }

@@ -28,8 +28,8 @@ import feather.scenegraph 1.0
 
 ApplicationWindow {
     id: window
-    width: 1200
-    height: 700
+    width: 500
+    height: 70
     visible: true
     title: "Feather 0.1"
 
@@ -39,33 +39,21 @@ ApplicationWindow {
 
     menuBar: MainMenu { scenegraph: sg; properties: properties }
 
-    toolBar: MainToolBar {}
+    //toolBar: MainToolBar {}
 
     statusBar: StatusBar {
         RowLayout { BusyIndicator { implicitWidth: 10; implicitHeight: 10; running: true } Label { text: "Feather 0.1" } }
     }
 
-    Item {
-        id: centralWidgetId
+    CommandLine {
+        id: cmdLineId
         anchors.fill: parent
+        scenegraph: sg
+    }
 
-        Viewport3D {
-            id: vp3d
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: cmdLineId.top
-            scenegraph: sg
-        }
-
-        CommandLine {
-            id: cmdLineId
-            scenegraph: sg
-            height: 30
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-        }
+    ViewportEditor {
+        id: viewportEditor
+        scenegraph: sg
     }
 
     SceneGraphDialog {
