@@ -41,7 +41,8 @@ Window {
         text: "Show Axis"
         tooltip: "show the axis"
         checkable: true
-        onTriggered: { }
+        checked: true
+        onTriggered: { (checked) ? viewport.showAxis=true : viewport.showAxis=false }
     }
 
     Action {
@@ -49,7 +50,8 @@ Window {
         text: "Show Grid"
         tooltip: "show the grid"
         checkable: true
-        onTriggered: { }
+        checked: true
+        onTriggered: { (checked) ? viewport.showGrid=true : viewport.showGrid=false }
     }
 
     ExclusiveGroup {

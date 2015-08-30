@@ -27,21 +27,35 @@
 #include "deps.hpp"
 #include "qml_deps.hpp"
 #include "viewport.hpp"
+#include "gl_scene.hpp"
 
 class RenderViewportThread;
 
 class ViewportThread : public QQuickItem
 {
     Q_OBJECT
-
+    Q_ENUMS(ShadingMode);
+    Q_ENUMS(SelectionMode);
     Q_PROPERTY(bool axis READ axis WRITE setAxis NOTIFY axisChanged)
     Q_PROPERTY(bool grid READ grid WRITE setGrid NOTIFY gridChanged)
-    Q_PROPERTY(int shadingMode READ shadingMode WRITE setShadingMode NOTIFY shadingModeChanged)
-    Q_PROPERTY(int selectionMode READ selectionMode WRITE setSelectionMode NOTIFY selectionModeChanged)
+    Q_PROPERTY(ShadingMode shadingMode READ shadingMode WRITE setShadingMode NOTIFY shadingModeChanged)
+    Q_PROPERTY(SelectionMode selectionMode READ selectionMode WRITE setSelectionMode NOTIFY selectionModeChanged)
  
     public:
         ViewportThread();
         ~ViewportThread();
+
+        enum ShadingMode {
+            FLAT = feather::gl::glScene::FLAT,
+            SHADED = feather::gl::glScene::SHADED
+        };
+
+        enum SelectionMode {
+            OBJECT = feather::gl::glScene::OBJECT,
+            FACE = feather::gl::glScene::FACE,
+            EDGE = feather::gl::glScene::EDGE,
+            VERTEX = feather::gl::glScene::VERTEX
+        };
 
         static QList<QThread *> threads;
         Q_INVOKABLE void mousePressed(int x, int y);
@@ -52,50 +66,26 @@ class ViewportThread : public QQuickItem
         Q_INVOKABLE void nodeInitialize(int uid);
 
         // axis 
-        void setAxis(bool& s) {
-            if(m_axis!= s) {
-                m_axis=s;
-                emit axisChanged();
-             }
-        }
-
-        bool axis() { return m_axis; }
+        void setAxis(bool& s);
+        bool axis() { return m_axis; };
 
         // grid
-        void setGrid(bool& s) {
-            if(m_grid!= s) {
-                m_grid=s;
-                emit gridChanged();
-            }
-        }
-
-        bool grid() { return m_grid; }
+        void setGrid(bool& s);
+        bool grid() { return m_grid; };
 
         // shadingMode
-        void setShadingMode(int& m) {
-            if(m_shadingMode!= m) {
-                m_shadingMode=m;
-                emit shadingModeChanged(m);
-             }
-        }
-
-        bool shadingMode() { return m_shadingMode; }
+        void setShadingMode(ShadingMode& m);
+        ShadingMode shadingMode() { return m_shadingMode; };
 
         // selectionMode 
-        void setSelectionMode(int& m) {
-            if(m_selectionMode!= m) {
-                m_selectionMode=m;
-                emit selectionModeChanged(m);
-             }
-        }
-
-        bool selectionMode() { return m_selectionMode; }
+        void setSelectionMode(SelectionMode& m);
+        SelectionMode selectionMode() { return m_selectionMode; };
 
     signals:
         void axisChanged();
         void gridChanged();
-        void shadingModeChanged(int m);
-        void selectionModeChanged(int m);
+        void shadingModeChanged(ShadingMode m);
+        void selectionModeChanged(SelectionMode m);
 
         public Q_SLOTS:
             void ready();
@@ -113,8 +103,8 @@ class ViewportThread : public QQuickItem
         // states
         bool m_axis;
         bool m_grid;
-        bool m_shadingMode;
-        bool m_selectionMode;
+        ShadingMode m_shadingMode;
+        SelectionMode m_selectionMode;
 };
 
 
@@ -137,10 +127,10 @@ class RenderViewportThread : public QThread
         void zoomCamera(int z);
         void init() { m_viewport->initialize(m_width,m_height); };
         void nodeInit(int uid) { m_viewport->nodeInitialize(uid); };
-        void showAxix(bool s) { m_viewport->showAxis(s); };
-        void showGrid(bool s) { m_viewport->showAxis(s); };
-        void setShadingState(uint m) { m_viewport->setShadingMode((uint)m); };
-        void setSelectionState(uint m) { m_viewport->setSelectionMode((uint)m); };
+        void showAxis(bool s) { m_viewport->showAxis(s); };
+        void showGrid(bool s) { m_viewport->showGrid(s); };
+        void setShadingState(feather::gl::glScene::ShadingMode m) { m_viewport->setShadingMode(m); };
+        void setSelectionState(feather::gl::glScene::SelectionMode m) { m_viewport->setSelectionMode(m); };
 
         public slots:
             void renderNext();

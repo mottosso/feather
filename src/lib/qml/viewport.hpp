@@ -44,10 +44,8 @@ class Viewport
         void zoomCamera(int z);
         void showAxis(bool s) { m_pScene->showAxis(s); };
         void showGrid(bool s) { m_pScene->showGrid(s); };
-        void setShadingMode(uint m) { m_pScene->setShadingMode(static_cast<feather::gl::glScene::ShadingMode>(m)); };
-        void setSelectionMode(uint m) { m_pScene->setSelectionMode(static_cast<feather::gl::glScene::SelectionMode>(m)); };
-
-
+        void setShadingMode(feather::gl::glScene::ShadingMode m) { m_pScene->setShadingMode(m); };
+        void setSelectionMode(feather::gl::glScene::SelectionMode m) { m_pScene->setSelectionMode(m); };
 
    private:
         QSize m_viewportSize;

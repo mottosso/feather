@@ -513,16 +513,20 @@ void gl::glScene::draw(int width, int height)
     */
 
     // draw the axis 
-    m_AxisProgram.bind();
-    m_AxisProgram.setUniformValue(m_AxisMAttr, m_apCameras.at(0)->view());
-    draw_axis();
-    m_AxisProgram.release();
+    if(m_showAxis){
+        m_AxisProgram.bind();
+        m_AxisProgram.setUniformValue(m_AxisMAttr, m_apCameras.at(0)->view());
+        draw_axis();
+        m_AxisProgram.release();
+    }
 
     // draw the grid
-    m_GridProgram.bind();
-    m_GridProgram.setUniformValue(m_GridMAttr, m_apCameras.at(0)->view());
-    draw_grid();
-    m_GridProgram.release();
+    if(m_showGrid){
+        m_GridProgram.bind();
+        m_GridProgram.setUniformValue(m_GridMAttr, m_apCameras.at(0)->view());
+        draw_grid();
+        m_GridProgram.release();
+    }
 
     // draw each node
     //feather::qml::command::draw_sg(m_apCameras.at(0)->view());

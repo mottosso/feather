@@ -27,10 +27,10 @@ QList<QThread *> ViewportThread::threads;
 
 
 ViewportThread::ViewportThread()
-: m_renderThread(0), m_rx(0), m_ry(0)
+: m_renderThread(new RenderViewportThread(QSize(0, 0))), m_rx(0), m_ry(0)
 {
     setFlag(ItemHasContents, true);
-    m_renderThread = new RenderViewportThread(QSize(0, 0));
+    //m_renderThread = new RenderViewportThread(QSize(0, 0));
 }
 
 ViewportThread::~ViewportThread()
@@ -129,6 +129,44 @@ void ViewportThread::nodeInitialize(int uid)
 {
     m_renderThread->nodeInit(uid);
 }
+
+// axis
+void ViewportThread::setAxis(bool& s) {
+    std::cout << "Set Axis:" << s << std::endl;
+    if(m_axis!= s) {
+        m_axis=s;
+        m_renderThread->showAxis(s);                
+        emit axisChanged();
+    }
+}
+
+// grid
+void ViewportThread::setGrid(bool& s) {
+    if(m_grid!= s) {
+        m_grid=s;
+        m_renderThread->showGrid(s);
+        emit gridChanged();
+    }
+}
+
+// shadingMode
+void ViewportThread::setShadingMode(ShadingMode& m) {
+    if(m_shadingMode!= m) {
+        m_shadingMode=m;
+        m_renderThread->setShadingState(static_cast<feather::gl::glScene::ShadingMode>(m));
+        emit shadingModeChanged(m);
+    }
+}
+
+// selectionMode 
+void ViewportThread::setSelectionMode(SelectionMode& m) {
+    if(m_selectionMode!= m) {
+        m_selectionMode=m;
+        m_renderThread->setSelectionState(static_cast<feather::gl::glScene::SelectionMode>(m));
+        emit selectionModeChanged(m);
+    }
+}
+
 
 
     RenderViewportThread::RenderViewportThread(const QSize &size)
