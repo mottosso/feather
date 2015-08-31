@@ -190,4 +190,7 @@ Window {
         scenegraph: editor.scenegraph 
     }
 
+    function updateGL() { viewport.updateGL() }
+
+    Component.onCompleted: { updateGL() }
 }

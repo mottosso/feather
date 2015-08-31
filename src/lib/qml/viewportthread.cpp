@@ -37,8 +37,9 @@ ViewportThread::~ViewportThread()
 {
     m_renderThread->quit();
     m_renderThread->wait();
-    delete m_renderThread;
-    m_renderThread=0;
+    // fixed seq fault
+    //delete m_renderThread;
+    //m_renderThread=0;
 }
 
 void ViewportThread::ready()
@@ -49,8 +50,7 @@ void ViewportThread::ready()
 
     m_renderThread->moveToThread(m_renderThread);
 
-    connect(window(), SIGNAL(sceneGraphInvalidated()), m_renderThread, SLOT(shutDown()), Qt::QueuedConnection);
-
+    connect(window(), SIGNAL(sceneGraphInvalidated()), m_renderThread, SLOT(shutDown()), Qt::DirectConnection);
     m_renderThread->start();
     update();
 }
@@ -79,7 +79,7 @@ QSGNode *ViewportThread::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *
         node = new TextureNode(window());
 
         connect(m_renderThread, SIGNAL(textureReady(int,QSize)), node, SLOT(newTexture(int,QSize)), Qt::QueuedConnection);
-        connect(node, SIGNAL(pendingNewTexture()), window(), SLOT(update()), Qt::QueuedConnection);
+        //connect(node, SIGNAL(pendingNewTexture()), window(), SLOT(update()), Qt::QueuedConnection);
         connect(window(), SIGNAL(beforeRendering()), node, SLOT(prepareNode()), Qt::QueuedConnection);
         connect(node, SIGNAL(textureInUse()), m_renderThread, SLOT(renderNext()), Qt::QueuedConnection);
 
@@ -106,6 +106,7 @@ void ViewportThread::mousePressed(int x, int y)
 void ViewportThread::moveCamera(double x, double y, double z)
 {
     m_renderThread->moveCamera(x,y,z);
+    update();
 }
 
 void ViewportThread::rotateCamera(int x, int y)
@@ -113,11 +114,13 @@ void ViewportThread::rotateCamera(int x, int y)
     m_renderThread->rotateCamera(x-m_rx, y-m_ry);
     m_rx=x;
     m_ry=y;
+    update();
 }
 
 void ViewportThread::zoomCamera(int z)
 {
     m_renderThread->zoomCamera(z);
+    update();
 }
 
 void ViewportThread::initialize()
@@ -130,9 +133,13 @@ void ViewportThread::nodeInitialize(int uid)
     m_renderThread->nodeInit(uid);
 }
 
+void ViewportThread::updateGL()
+{
+    update();
+}
+
 // axis
 void ViewportThread::setAxis(bool& s) {
-    std::cout << "Set Axis:" << s << std::endl;
     if(m_axis!= s) {
         m_axis=s;
         m_renderThread->showAxis(s);                
@@ -169,15 +176,18 @@ void ViewportThread::setSelectionMode(SelectionMode& m) {
 
 
 
-    RenderViewportThread::RenderViewportThread(const QSize &size)
-    : surface(0)
-    , context(0)
-    , m_renderFbo(0)
-    , m_displayFbo(0)
-    , m_viewport(0)
-      , m_size(size)
+RenderViewportThread::RenderViewportThread(const QSize &size):
+    surface(0),
+    context(0),
+    m_renderFbo(0),
+    m_displayFbo(0),
+    m_viewport(0),
+    m_size(size)
+    //m_update(false),
+    //m_textureReady(false)
 {
     ViewportThread::threads << this;
+    //updateLoop();
 }
 
 RenderViewportThread::~RenderViewportThread()
@@ -202,22 +212,57 @@ RenderViewportThread::~RenderViewportThread()
 
 void RenderViewportThread::moveCamera(double x, double y, double z)
 {
+    //emit textureReady(m_displayFbo->texture(), m_size);
     m_viewport->moveCamera(x,y,z);
+    //m_update=true;
+    //emit textureReady(m_displayFbo->texture(), m_size);
 }
 
 void RenderViewportThread::rotateCamera(int x, int y)
 {
+    //emit textureReady(m_displayFbo->texture(), m_size);
     m_viewport->rotateCamera(x,y);
+    //m_update=true;
+    //emit textureReady(m_displayFbo->texture(), m_size);
 }
 
 void RenderViewportThread::zoomCamera(int z)
 {
+    //emit textureReady(m_displayFbo->texture(), m_size);
     m_viewport->zoomCamera(z);
+    //m_update=true;
+    //emit textureReady(m_displayFbo->texture(), m_size);
 }
 
+/*
+void RenderViewportThread::updateLoop()
+{
+    if(m_update && m_textureReady){
+        //emit textureReady(m_displayFbo->texture(), m_size);
+        m_update=false;
+    }
+    updateLoop();
+}
+*/
 
 void RenderViewportThread::renderNext()
 {
+    std::cout << "renderNext\n";
+    /*
+    if(m_update){
+    */
+
+    /*
+    std::cout << "start update rendering\n";
+
+    if(!m_update){
+        emit textureReady(m_displayFbo->texture(), m_size);
+        return;
+    }
+    
+    std::cout << "updating rendering\n";
+    */
+
     context->makeCurrent(surface);
     
     if (!m_renderFbo || !m_displayFbo) {
@@ -234,7 +279,8 @@ void RenderViewportThread::renderNext()
     }
 
     if(m_size.width() != m_width || m_size.height() != m_height) {
-        delete m_renderFbo;
+        std::cout << "delete renderFbo\n";
+         delete m_renderFbo;
         QOpenGLFramebufferObjectFormat format;
         format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
         m_renderFbo = new QOpenGLFramebufferObject(QSize(m_size.width(),m_size.height()), format);
@@ -255,6 +301,7 @@ void RenderViewportThread::renderNext()
 
     if(m_renderFbo->width() != m_displayFbo->width() || m_renderFbo->height() != m_displayFbo->height()) {
     //if(m_size.width() != m_width || m_size.height() != m_height) {
+        std::cout << "delete displayFbo\n";
         delete m_displayFbo;
         QOpenGLFramebufferObjectFormat format;
         format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
@@ -363,6 +410,13 @@ void RenderViewportThread::renderNext()
 
     //std::cout << "w=" << m_size.width() << " h=" << m_size.height() << std::endl;
     emit textureReady(m_displayFbo->texture(), m_size);
+    //m_update=false;
+    //m_textureReady=true;
+    /*
+    }
+    emit textureReady(m_displayFbo->texture(), m_size);
+    */
+   //updateLoop();
 }
 
 void RenderViewportThread::shutDown()
@@ -370,11 +424,11 @@ void RenderViewportThread::shutDown()
     // this never gets called
 }
 
-    TextureNode::TextureNode(QQuickWindow *window)
-    : m_id(0)
-    , m_size(0, 0)
-    , m_texture(0)
-      , m_window(window)
+TextureNode::TextureNode(QQuickWindow *window) :
+    m_id(0),
+    m_size(0, 0),
+    m_texture(0),
+    m_window(window)
 {
     m_texture = m_window->createTextureFromId(0, QSize(1, 1));
     setTexture(m_texture);
@@ -402,10 +456,12 @@ void TextureNode::prepareNode() {
     QSize size = m_size;
     m_id = 0;
     m_mutex.unlock();
+    std::cout << "newId=" << newId << std::endl;
     if (newId) {
         delete m_texture;
         m_texture = m_window->createTextureFromId(newId, size);
         setTexture(m_texture);
-        emit textureInUse();
+        //emit textureInUse();
     }
+    emit textureInUse();
 }

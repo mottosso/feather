@@ -50,7 +50,7 @@ int main(int argc, char **argv)
     qmlRegisterType<Tools>("feather.tools", 1, 0, "Tools");
 
 
-    // Add the Root ndoe to the scenegraph and setup the scene
+    // Add the Root node to the scenegraph and setup the scene
     feather::qml::command::init();
 
     int execReturn = 0;

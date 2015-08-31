@@ -75,12 +75,15 @@ Rectangle {
                     renderer.moveCamera(-1,0,0);
                     break
             }
+            //updateGL()
         }
 
         MainPopup { id: main_popup; visible: true }
     }
 
     function nodeAdded(uid) { console.log("node " + uid + " added"); renderer.nodeInitialize(uid) }
+
+    function updateGL() { renderer.updateGL() }
 
     Component.onCompleted: {
         scenegraph.nodeAdded.connect(nodeAdded)

@@ -343,7 +343,7 @@ void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::
     m_connection->clear();
  
     while(pfield!=NULL)
-    { 
+    {
         if(conn == SceneGraphConnection::In) {
             if(pfield->conn_type == feather::field::connection::In)
                 m_connection->addField(uid,nid,i,pfield->type,true); 

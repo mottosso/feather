@@ -537,7 +537,6 @@ void gl::glScene::draw(int width, int height)
     glDisable(GL_LINE_SMOOTH);
     glDisable(GL_DEPTH_TEST);
     //glDisable(GL_CULL_FACE);
-
 }
 
 void gl::glScene::draw_grid()

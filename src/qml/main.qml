@@ -42,7 +42,7 @@ ApplicationWindow {
     //toolBar: MainToolBar {}
 
     statusBar: StatusBar {
-        RowLayout { BusyIndicator { implicitWidth: 10; implicitHeight: 10; running: true } Label { text: "Feather 0.1" } }
+        RowLayout { BusyIndicator { implicitWidth: 10; implicitHeight: 10; running: false } Label { text: "Feather 0.1" } }
     }
 
     CommandLine {

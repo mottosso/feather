@@ -64,6 +64,8 @@ class ViewportThread : public QQuickItem
         Q_INVOKABLE void zoomCamera(int z);
         Q_INVOKABLE void initialize();
         Q_INVOKABLE void nodeInitialize(int uid);
+        Q_INVOKABLE void updateGL();
+
 
         // axis 
         void setAxis(bool& s);
@@ -86,6 +88,7 @@ class ViewportThread : public QQuickItem
         void gridChanged();
         void shadingModeChanged(ShadingMode m);
         void selectionModeChanged(SelectionMode m);
+        //void updateGL();
 
         public Q_SLOTS:
             void ready();
@@ -131,6 +134,7 @@ class RenderViewportThread : public QThread
         void showGrid(bool s) { m_viewport->showGrid(s); };
         void setShadingState(feather::gl::glScene::ShadingMode m) { m_viewport->setShadingMode(m); };
         void setSelectionState(feather::gl::glScene::SelectionMode m) { m_viewport->setSelectionMode(m); };
+        void updateGL() { emit textureReady(m_displayFbo->texture(), m_size); };
 
         public slots:
             void renderNext();
@@ -146,6 +150,8 @@ signals:
         int m_height;
         Viewport *m_viewport;
         QSize m_size;
+        //bool m_update;
+        //bool m_textureReady;
 };
 
 
