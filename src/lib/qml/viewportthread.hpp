@@ -89,9 +89,11 @@ class ViewportThread : public QQuickItem
         void shadingModeChanged(ShadingMode m);
         void selectionModeChanged(SelectionMode m);
         //void updateGL();
+        void updateGLWindow();
 
         public Q_SLOTS:
             void ready();
+            void updateWindow();
 
     protected:
         QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
@@ -142,6 +144,7 @@ class RenderViewportThread : public QThread
 
 signals:
         void textureReady(int id, const QSize &size);
+        void glFinished();
 
     private:
         QOpenGLFramebufferObject *m_renderFbo;

@@ -51,8 +51,20 @@ void ViewportThread::ready()
     m_renderThread->moveToThread(m_renderThread);
 
     connect(window(), SIGNAL(sceneGraphInvalidated()), m_renderThread, SLOT(shutDown()), Qt::DirectConnection);
+    //connect(this, SIGNAL(updateGLWindow()), this, SLOT(updateWindow()), Qt::DirectConnection);
     m_renderThread->start();
     update();
+}
+
+void ViewportThread::updateWindow()
+{
+    //update();
+    std::cout << "updating window\n";
+    //window()->blockSignals(true);
+    m_renderThread->eventDispatcher()->processEvents(QEventLoop::AllEvents);
+    //processEvents();
+    std::cout << "past blocking\n";
+    //window()->update();
 }
 
 QSGNode *ViewportThread::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
@@ -77,13 +89,32 @@ QSGNode *ViewportThread::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *
 
     if (!node) {
         node = new TextureNode(window());
+ 
+        connect(m_renderThread, SIGNAL(textureReady(int,QSize)), node, SLOT(newTexture(int,QSize)), Qt::QueuedConnection);
+        connect(m_renderThread, SIGNAL(glFinished()), this, SLOT(updateWindow()), Qt::QueuedConnection);
+        //connect(node, SIGNAL(pendingNewTexture()), window(), SLOT(update()), Qt::DirectConnection);
+        connect(window(), SIGNAL(beforeRendering()), node, SLOT(prepareNode()), Qt::DirectConnection);
+        connect(node, SIGNAL(textureInUse()), m_renderThread, SLOT(renderNext()), Qt::QueuedConnection);
 
+        QMetaObject::invokeMethod(m_renderThread, "renderNext", Qt::QueuedConnection);
+ 
+        /*
+        connect(m_renderThread, SIGNAL(textureReady(int,QSize)), node, SLOT(newTexture(int,QSize)), Qt::DirectConnection);
+        //connect(node, SIGNAL(pendingNewTexture()), window(), SLOT(update()), Qt::QueuedConnection);
+        connect(window(), SIGNAL(beforeRendering()), node, SLOT(prepareNode()), Qt::DirectConnection);
+        connect(node, SIGNAL(textureInUse()), m_renderThread, SLOT(renderNext()), Qt::DirectConnection);
+
+        QMetaObject::invokeMethod(m_renderThread, "renderNext", Qt::DirectConnection);
+        */
+
+        /*
         connect(m_renderThread, SIGNAL(textureReady(int,QSize)), node, SLOT(newTexture(int,QSize)), Qt::QueuedConnection);
         //connect(node, SIGNAL(pendingNewTexture()), window(), SLOT(update()), Qt::QueuedConnection);
         connect(window(), SIGNAL(beforeRendering()), node, SLOT(prepareNode()), Qt::QueuedConnection);
         connect(node, SIGNAL(textureInUse()), m_renderThread, SLOT(renderNext()), Qt::QueuedConnection);
 
         QMetaObject::invokeMethod(m_renderThread, "renderNext", Qt::QueuedConnection);
+        */
     }
 
     node->setRect(boundingRect());
@@ -107,6 +138,7 @@ void ViewportThread::moveCamera(double x, double y, double z)
 {
     m_renderThread->moveCamera(x,y,z);
     update();
+    //emit updateGLWindow();
 }
 
 void ViewportThread::rotateCamera(int x, int y)
@@ -115,12 +147,14 @@ void ViewportThread::rotateCamera(int x, int y)
     m_rx=x;
     m_ry=y;
     update();
+    //emit updateGLWindow();
 }
 
 void ViewportThread::zoomCamera(int z)
 {
     m_renderThread->zoomCamera(z);
     update();
+    //emit updateGLWindow();
 }
 
 void ViewportThread::initialize()
@@ -408,6 +442,7 @@ void RenderViewportThread::renderNext()
     m_width = m_size.width();
     m_height = m_size.height();
 
+    
     //std::cout << "w=" << m_size.width() << " h=" << m_size.height() << std::endl;
     emit textureReady(m_displayFbo->texture(), m_size);
     //m_update=false;
@@ -416,6 +451,8 @@ void RenderViewportThread::renderNext()
     }
     emit textureReady(m_displayFbo->texture(), m_size);
     */
+
+    emit glFinished();
    //updateLoop();
 }
 
@@ -442,7 +479,8 @@ TextureNode::~TextureNode()
 }
 
 
-void TextureNode::newTexture(int id, const QSize &size) {
+void TextureNode::newTexture(int id, const QSize &size)
+{
     m_mutex.lock();
     m_id = id;
     m_size = size;
@@ -450,7 +488,8 @@ void TextureNode::newTexture(int id, const QSize &size) {
     emit pendingNewTexture();
 }
 
-void TextureNode::prepareNode() {
+void TextureNode::prepareNode()
+{
     m_mutex.lock();
     int newId = m_id;
     QSize size = m_size;
