@@ -335,7 +335,8 @@ gl::glScene::~glScene()
 
 void gl::glScene::init()
 {
-    m_GridProgram.addShaderFromSourceCode(QOpenGLShader::Vertex,
+     std::cout << "glScene::init\n";
+     m_GridProgram.addShaderFromSourceCode(QOpenGLShader::Vertex,
             "attribute highp vec4 vertex;\n"
             "uniform mediump mat4 matrix;\n"
             "varying mediump vec4 color;\n"
@@ -444,12 +445,13 @@ void gl::glScene::draw(int width, int height)
     glDepthMask(true);
     glFrontFace(GL_CW);
     glCullFace(GL_BACK);
- 
+
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearStencil(0);                          // clear stencil buffer
     glClearDepth(1.0f);                         // 0 is near, 1 is far
- 
+
     // smoothing
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_STENCIL_TEST);
@@ -467,7 +469,7 @@ void gl::glScene::draw(int width, int height)
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    //glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE);
 
     /*
@@ -497,10 +499,11 @@ void gl::glScene::draw(int width, int height)
 
     // Draw SG Nodes
     feather::FGlInfo info;
-    info.view = m_pView;
+    //info.view = m_pView;
     info.program = m_pProgram;
-    info.view = &m_apCameras.at(0)->view();
-
+    m_pView = &m_apCameras.at(0)->view();
+    info.view = m_pView;
+ 
     while(maxUid > minUid) {
         if(qml::command::node_exists(maxUid))
             qml::command::gl_draw(maxUid,info);
@@ -530,12 +533,20 @@ void gl::glScene::draw(int width, int height)
 
     // draw each node
     //feather::qml::command::draw_sg(m_apCameras.at(0)->view());
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_STENCIL_TEST);
+    //glDisable(GL_LIGHTING);
+    //glDisable(GL_TEXTURE_2D);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_LINE_SMOOTH);
+    glDisable(GL_POLYGON_SMOOTH);
+    glDisable(GL_BLEND);
  
     m_apCameras.at(0)->draw(width,height);
 
-    glDisable(GL_BLEND);
-    glDisable(GL_LINE_SMOOTH);
-    glDisable(GL_DEPTH_TEST);
+    //glDisable(GL_BLEND);
+    //glDisable(GL_LINE_SMOOTH);
+    //glDisable(GL_DEPTH_TEST);
     //glDisable(GL_CULL_FACE);
 }
 

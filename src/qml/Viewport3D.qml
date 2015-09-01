@@ -34,17 +34,18 @@ Rectangle {
     property alias showGrid: renderer.grid
     property alias shadingMode: renderer.shadingMode
     property alias selectionMode: renderer.selectionMode
-   
+    //focus: true   
    
     Viewport {
         id: renderer
         anchors.fill: parent 
         anchors.margins: 2
+        //focus: true
 
         MouseArea {
             id: mouseArea
             anchors.fill: parent
-            hoverEnabled: false
+            hoverEnabled: false 
             acceptedButtons: Qt.LeftButton | Qt.RightButton
 
             onPressed: {
@@ -56,7 +57,7 @@ Rectangle {
             }
             onPositionChanged: { renderer.rotateCamera(mouse.x,mouse.y) }
             //onReleased: { console.log("released") }
-            onWheel: { renderer.zoomCamera(wheel.angleDelta.y); }
+            onWheel: { renderer.zoomCamera(wheel.angleDelta.y) }
             onEntered: { renderer.focus = true }
         }
 
@@ -64,18 +65,23 @@ Rectangle {
             switch(event.key){
                 case Qt.Key_Up:
                     renderer.moveCamera(0,-1,0);
+                    event.accepted = true;
                     break
                 case Qt.Key_Down:
                     renderer.moveCamera(0,1,0);
+                    event.accepted = true;
                     break
                 case Qt.Key_Left:
                     renderer.moveCamera(1,0,0);
+                    event.accepted = true;
                     break
                 case Qt.Key_Right:
                     renderer.moveCamera(-1,0,0);
+                    event.accepted = true;
                     break
             }
-            //updateGL()
+            updateGL()
+            //update()
         }
 
         MainPopup { id: main_popup; visible: true }
@@ -87,5 +93,7 @@ Rectangle {
 
     Component.onCompleted: {
         scenegraph.nodeAdded.connect(nodeAdded)
+        scenegraph.update.connect(updateGL)
+        renderer.updateGL()
     }
 }

@@ -94,12 +94,15 @@ class ViewportThread : public QQuickItem
         public Q_SLOTS:
             void ready();
             void updateWindow();
+            void setGlToUpdate();
 
     protected:
         QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
         //void mousePressEvent(QMouseEvent* event);
 
     private:
+        bool m_update;
+        int m_ucount;
         RenderViewportThread *m_renderThread;
         //double m_x;
         //double m_y;
@@ -119,6 +122,7 @@ class ViewportThread : public QQuickItem
  * to use for rendering
  */
 class RenderViewportThread : public QThread
+//class RenderViewportThread : public QObject
 {
     Q_OBJECT
     public:

@@ -31,6 +31,7 @@ Window {
     id: editor 
     title: "Viewport Editor"
     visible: true
+    //flags: Qt.SubWindow
     flags: Qt.Tool
     width: 600
     height: 600
@@ -188,9 +189,20 @@ Window {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         scenegraph: editor.scenegraph 
+
+        /*
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+        }
+        */
     }
 
     function updateGL() { viewport.updateGL() }
 
-    Component.onCompleted: { updateGL() }
+
+    Component.onCompleted: { 
+        //editor.update(); updateGL()
+    }
+
 }
