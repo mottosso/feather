@@ -32,10 +32,14 @@ uniform mediump mat4 matrix;
 
 varying vec3 n;
 varying vec3 position;
+varying vec3 lposition;
 
 void main(void)
 {
     n = normalize(gl_NormalMatrix * normal); 
     position = vec3(matrix * vertex); 
+    //lposition = vec3(matrix * vec4(-LightPosition,1.0));
+    lposition = vec3(matrix * vertex * vec4(LightPosition,1.0));
+    //lposition = vec3(matrix);
     gl_Position = matrix * vertex;
 }

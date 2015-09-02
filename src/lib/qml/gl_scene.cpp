@@ -53,7 +53,7 @@ void gl::glCamera::draw(int width, int height)
     m_View.perspective(fov,aspect,near,far); 
     //m_View.ortho(-1.0/aspect,1.0/aspect,-1.0*aspect,1.0*aspect,1.0,20.0);
     // fix location
-    m_View.rotate(180,0.0,0.0,1.0);
+    m_View.rotate(180,0.0,0.0,1.0); // match qt's view to gl
     m_View.translate(0.0,-1.0,m_CamZoom);
     m_View.rotate(m_CamTiltAngle,-1.0,0.0,0.0);
     m_View.rotate(m_CamPitchAngle,0.0,1.0,0.0);
@@ -262,9 +262,10 @@ void gl::glScene::draw(int width, int height)
 
     // Draw SG Nodes
     feather::FGlInfo info;
+    info.view = m_pView;
     info.program = m_pProgram;
     m_pView = &m_apCameras.at(0)->view();
-    info.view = m_pView;
+    //info.view = m_pView;
  
     while(maxUid > minUid) {
         if(qml::command::node_exists(maxUid))
