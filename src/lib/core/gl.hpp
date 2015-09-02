@@ -50,7 +50,8 @@
     node.glMatrix = info.program->uniformLocation("matrix");\
     node.glNormal = info.program->attributeLocation("normal");\
     node.glView = info.program->uniformLocation("modelview");\
-    node.glLightPosition = info.program->attributeLocation("lightposition");\
-    node.glShaderDiffuse = info.program->attributeLocation("shader_diffuse");\
+    node.glLightPosition = info.program->attributeLocation("LightPosition");\
+    node.glCameraPosition = info.program->attributeLocation("CameraPosition");\
+    node.glShaderDiffuse = info.program->attributeLocation("ShaderDiffuse");\
 
 #endif

@@ -25,72 +25,17 @@ attribute highp vec4 vertex;
 attribute highp vec4 color;
 attribute highp vec3 normal;
 uniform mediump int modelview;
-attribute highp vec3 lightposition;
-attribute highp vec4 shader_diffuse;
+attribute highp vec3 LightPosition;
+attribute highp vec3 CameraPosition;
+attribute highp vec4 ShaderDiffuse;
 uniform mediump mat4 matrix;
 
-uniform mat3 m_3x3_inv_transp;
-varying vec4 c;
 varying vec3 n;
-varying vec3 lposition;
-varying vec4 vcolor;
-//uniform int view;
-
-/*
-struct lightSource
-{
-    vec4 position;
-    vec4 diffuse;
-    float constantAttenuation, linearAttenuation, quadraticAttenuation;
-    float spotCutoff, spotExponent;
-    vec3 spotDirection;
-};
-
-    lightSource light0 = lightSource(
-            vec4(0.0,  1.0,  2.0, 1.0),
-            vec4(1.0, 1.0, 1.0, 1.0),
-            0.0, 1.0, 0.0,
-            80.0, 20.0,
-            vec3(-1.0, -0.5, -1.0)
-            );
-*/
- 
-struct lightSource
-{
-  vec4 position;
-  vec4 diffuse;
-};
-
-lightSource light0 = lightSource(lightposition, vec4(1,1,1,1));
-
-struct material
-{
-    vec4 diffuse;
-};
-
-material mymaterial = material(shader_diffuse);
+varying vec3 position;
 
 void main(void)
 {
-    //view = modelview;
-
-    //vec4 lightDirection = vec4(10.0, 10.0, 10.0, 1.0);
-
-    //n = normalize(gl_NormalMatrix * gl_Normal); 
     n = normalize(gl_NormalMatrix * normal); 
-    /*
-    float ndot;
-    ndot = max(dot(normal,vec3(light0.position)),0.0);
-    */
-
-    //vec3 normalDirection = normalize(m_3x3_inv_transp * gl_Normal);
-
-    //vec3 diffuseReflection = vec3(light0.diffuse) * vec3(mymaterial.diffuse) * ndot;
-    //vec3 diffuseReflection = vec3(light0.diffuse) * vec3(1,1,1) * ndot;
-
-    //c = vec4(diffuseReflection, 1.0);
-    lposition = lightposition;
-    vcolor = color;
-
+    position = vec3(matrix * vertex); 
     gl_Position = matrix * vertex;
 }

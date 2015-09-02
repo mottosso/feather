@@ -22,56 +22,42 @@
  ***********************************************************************/
 
 #version 120
-#extension GL_EXT_gpu_shader4 : enable
-#extension GL_EXT_fragment_shader4 : enable
+//#extension GL_EXT_gpu_shader4 : enable
+//#extension GL_EXT_fragment_shader4 : enable
 
-//varying vec4 c;
-varying vec4 vcolor;
 varying vec3 n;
-varying vec3 lposition;
-//varying int view;
 
-uniform vec3 Ambient;
-//uniform vec3 LightColor;
-uniform vec3 LightDirection;
-uniform vec3 HalfVector;
+varying vec3 position;
+uniform vec3 LightPosition;
+uniform vec3 CameraPosition;
+uniform vec4 ShaderDiffuse;
+
+uniform vec3 LightIntensity;
+uniform vec3 Kd;
+uniform vec3 Ka;
+uniform vec3 Ks;
 uniform float Shininess;
-uniform float Strength;
-uniform int modelview;
 
+vec3 ads()
+{
+    //vec3 _lposition = LightPosition;
+    //vec3 _lposition = n;
+    vec3 _lposition = vec3(0,20,20);
+    vec3 _lintensity = vec3(1.0,1.0,1.0);
+    vec3 _Ka = vec3(0.25);
+    vec3 _Kd = vec3(0.75);
+    vec3 _Ks = vec3(0.0);
+    float _shininess = 0.1;
 
+    vec3 _n = normalize(n);
+    vec3 _s = normalize(vec3(_lposition) - position);
+    vec3 _v = normalize(vec3(-position));
+    vec3 _r = reflect(-_s,_n);
+    
+    return _lintensity * (_Ka + _Kd * max(dot(_s,_n),0.0));
+    //return _lintensity * (_Ka + _Kd * max(dot(_s,_n),0.0) + _Ks * pow(max(dot(_r,_v),0.0), _shininess));
+}
 
 void main(void) {
-    //float diffuse = max(0.0, dot(n, LightDirection));
-    //float specular = max(0.0, dot(n, HalfVector));
-    float diffuse = max(0.0, dot(n, lposition));
-    float specular = max(0.0, dot(n, vec3(1,1,1)));
-
-
-    // faces away from the light won't be lit
-    if(diffuse == 0.0)
-        specular = 0.0;
-    else
-        specular = pow(specular, 1.0); // sharpen highlight
-
-    //specular = pow(specular, Shininess); // sharpen highlight
-
-    //vec3 scatteredLight = Ambient + LightColor * diffuse;
-    //vec3 reflectedLight = LightColor * specular * Strength;
-    vec3 scatteredLight = 0.2 + vec3(1.0,1.0,1.0) * diffuse;
-    vec3 reflectedLight = vec3(1.0,1.0,1.0) * specular * 1.0;
-
-
-    vec3 rgb = min(vcolor.rgb * scatteredLight + reflectedLight, vec3(1.0));
-
-    if(modelview==0) {
-        gl_FragColor = vec4(rgb, vcolor.a);
-    }
-    else if(modelview==1) {
-        gl_FragColor = vec4(0,0,0,1);
-    } else {
-        gl_FragColor = vec4(1,0,1,1);
-    }
-
-    //gl_FragColor = vec4(reflectedLight, 1);
+    gl_FragColor = vec4(ads(),1.0);
 }
