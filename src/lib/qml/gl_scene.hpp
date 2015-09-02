@@ -57,52 +57,6 @@ namespace feather
                 QMatrix4x4 m_View;
         };
 
-        enum LightType { Ambient, Point, Spot, Direct };
-
-        class glLight
-        {
-            public:
-                glLight();
-                ~glLight();
-                void init();
-                void draw(QMatrix4x4& view);
-                QVector3D& position() { return m_Position; };
-
-            private:
-                QOpenGLShader* m_pFragShader;
-                QOpenGLShader* m_pVertShader;
-                QOpenGLShaderProgram m_Program;
-                QVector3D m_Position;
-                std::vector<FVertex3D> m_aModel;
-                LightType m_Type;
-                int m_Vertex;
-                int m_Matrix;
-                int m_PositionId;
-        };
-
-        class glMesh
-        {
-            public:
-                glMesh(glLight* light);
-                ~glMesh();
-                void init();
-                void draw(QMatrix4x4& view);
-
-            private:
-                QOpenGLShaderProgram m_Program;
-                QOpenGLShader* m_pFillShader;
-                QOpenGLShader* m_pEdgeShader;
-                QOpenGLShader* m_pVertShader;
-                int m_Vertex;
-                int m_Matrix;
-                int m_Normal;
-                int m_LightPositionId;
-                int m_ShaderDiffuseId; 
-                std::vector<FVertex3D> m_apV;
-                std::vector<FVertex3D> m_apVn;
-                QColor m_ShaderDiffuse;
-                glLight* m_pLight;
-        };
 
         class glScene
         {
@@ -126,8 +80,8 @@ namespace feather
 
             private:
                 std::vector<glCamera*> m_apCameras;
-                std::vector<glMesh*> m_apMeshes;
-                std::vector<glLight*> m_apLights;
+                //std::vector<glMesh*> m_apMeshes;
+                //std::vector<glLight*> m_apLights;
                 QMatrix4x4* m_pView;
                 QOpenGLShaderProgram* m_pProgram;
                 QOpenGLShaderProgram m_GridProgram;

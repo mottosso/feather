@@ -79,215 +79,6 @@ void gl::glCamera::zoom(int z)
     m_CamZoom += (double)z/240.0;
 }
 
-// GL LIGHT
-
-gl::glLight::glLight()
-{
-    m_Position.setX(4);
-    m_Position.setY(4);
-    m_Position.setZ(4);
-
-    m_pFragShader = new QOpenGLShader(QOpenGLShader::Fragment);
-    m_pVertShader = new QOpenGLShader(QOpenGLShader::Vertex);
-}
-
-gl::glLight::~glLight()
-{
-    delete m_pFragShader;
-    m_pFragShader=0;
-    delete m_pVertShader;
-    m_pVertShader=0;
-}
-
-void gl::glLight::init()
-{
-    m_pFragShader->compileSourceFile("shaders/frag/wireframe.glsl");
-    m_pVertShader->compileSourceFile("shaders/vert/light.glsl");
-
-    m_Program.addShader(m_pFragShader);
-    m_Program.addShader(m_pVertShader);
-
-    m_Program.link();
-
-    m_Vertex = m_Program.attributeLocation("vertex");
-    m_Matrix = m_Program.uniformLocation("matrix");
-    m_PositionId = m_Program.attributeLocation("position");
- 
-    // Point Mesh 
-    m_aModel.push_back(FVertex3D(0.0,1.0,0.0));
-    m_aModel.push_back(FVertex3D(0.0,-1.0,0.0));
-    m_aModel.push_back(FVertex3D(1.0,0.0,0.0));
-    m_aModel.push_back(FVertex3D(-1.0,0.0,0.0));
-    m_aModel.push_back(FVertex3D(0.0,0.0,1.0));
-    m_aModel.push_back(FVertex3D(0.0,0.0,-1.0));
-    m_aModel.push_back(FVertex3D(0.75,0.0,-0.75));
-    m_aModel.push_back(FVertex3D(-0.75,0.0,0.75));
-    m_aModel.push_back(FVertex3D(-0.75,0.0,0.75));
-    m_aModel.push_back(FVertex3D(0.75,0.0,-0.75));
-    m_aModel.push_back(FVertex3D(0.75,0.75,0.0));
-    m_aModel.push_back(FVertex3D(-0.75,-0.75,0.0));
-    m_aModel.push_back(FVertex3D(0.0,0.75,0.75));
-    m_aModel.push_back(FVertex3D(0.0,-0.75,-0.75));
-    m_aModel.push_back(FVertex3D(-0.75,0.75,0.0));
-    m_aModel.push_back(FVertex3D(0.75,-0.75,0.0));
-    m_aModel.push_back(FVertex3D(0.0,0.75,-0.75));
-    m_aModel.push_back(FVertex3D(0.0,-0.75,0.75));
-    m_aModel.push_back(FVertex3D(0.75,0.75,0.75));
-    m_aModel.push_back(FVertex3D(-0.75,-0.75,-0.75));
-    m_aModel.push_back(FVertex3D(-0.75,0.75,-0.75));
-    m_aModel.push_back(FVertex3D(0.75,-0.75,0.75));
-    m_aModel.push_back(FVertex3D(0.75,0.75,-0.75));
-    m_aModel.push_back(FVertex3D(-0.75,-0.75,0.75));
-    m_aModel.push_back(FVertex3D(-0.75,0.75,0.75));
-    m_aModel.push_back(FVertex3D(0.75,-0.75,-0.75));
-}
-
-void gl::glLight::draw(QMatrix4x4& view)
-{
-    m_Program.bind();
-    m_Program.setAttributeValue(m_PositionId, m_Position);
-    m_Program.setUniformValue(m_Matrix, view);
-    m_Program.enableAttributeArray(m_Vertex);
-    m_Program.setAttributeArray(m_Vertex, GL_DOUBLE, &m_aModel[0], 3);
-    glLineWidth(1.5);
-    glPolygonMode(GL_FRONT, GL_LINE);
-    glDrawArrays(GL_LINES, 0, m_aModel.size());
-    m_Program.disableAttributeArray(m_Vertex);
-    m_Program.release();
-}
-
-// GL MESH
-
-gl::glMesh::glMesh(glLight* light)
-{
-    m_pLight = light;
-    m_pFillShader = new QOpenGLShader(QOpenGLShader::Fragment);
-    m_pEdgeShader = new QOpenGLShader(QOpenGLShader::Fragment);
-    m_pVertShader = new QOpenGLShader(QOpenGLShader::Vertex);
-    m_ShaderDiffuse = QColor(175,175,175);
-}
-
-gl::glMesh::~glMesh()
-{
-    delete m_pFillShader;
-    m_pFillShader=0;
-    delete m_pEdgeShader;
-    m_pEdgeShader=0;
-    delete m_pVertShader;
-    m_pVertShader=0;
-    // the light will be deleted by the scenegraph
-}
-
-void gl::glMesh::init()
-{
-    m_pFillShader->compileSourceFile("shaders/frag/lambert.glsl");
-    m_pVertShader->compileSourceFile("shaders/vert/mesh.glsl");
-
-    m_Program.addShader(m_pFillShader);
-    m_Program.addShader(m_pVertShader);
-
-    m_Program.link();
-
-    m_Vertex = m_Program.attributeLocation("vertex");
-    m_Matrix = m_Program.uniformLocation("matrix");
-    m_Normal = m_Program.attributeLocation("normal");
-    m_LightPositionId = m_Program.attributeLocation("lightposition");
-    m_ShaderDiffuseId = m_Program.attributeLocation("shader_diffuse");
-
-    // test Cube Vertex
-    // Front 
-    m_apV.push_back(FVertex3D(1.0,1.0,1.0));
-    m_apV.push_back(FVertex3D(1.0,-1.0,1.0));
-    m_apV.push_back(FVertex3D(-1.0,-1.0,1.0));
-    m_apV.push_back(FVertex3D(-1.0,1.0,1.0));
-    // R Side
-    m_apV.push_back(FVertex3D(1.0,1.0,1.0));
-    m_apV.push_back(FVertex3D(1.0,1.0,-1.0));
-    m_apV.push_back(FVertex3D(1.0,-1.0,-1.0));
-    m_apV.push_back(FVertex3D(1.0,-1.0,1.0));
-    // L Side
-    m_apV.push_back(FVertex3D(-1.0,1.0,1.0));
-    m_apV.push_back(FVertex3D(-1.0,-1.0,1.0));
-    m_apV.push_back(FVertex3D(-1.0,-1.0,-1.0));
-    m_apV.push_back(FVertex3D(-1.0,1.0,-1.0));
-    // Back 
-    m_apV.push_back(FVertex3D(1.0,1.0,-1.0));
-    m_apV.push_back(FVertex3D(-1.0,1.0,-1.0));
-    m_apV.push_back(FVertex3D(-1.0,-1.0,-1.0));
-    m_apV.push_back(FVertex3D(1.0,-1.0,-1.0));
-    // Top
-    m_apV.push_back(FVertex3D(1.0,1.0,1.0));
-    m_apV.push_back(FVertex3D(-1.0,1.0,1.0));
-    m_apV.push_back(FVertex3D(-1.0,1.0,-1.0));
-    m_apV.push_back(FVertex3D(1.0,1.0,-1.0));
-    // Bottom 
-    m_apV.push_back(FVertex3D(1.0,-1.0,1.0));
-    m_apV.push_back(FVertex3D(1.0,-1.0,-1.0));
-    m_apV.push_back(FVertex3D(-1.0,-1.0,-1.0));
-    m_apV.push_back(FVertex3D(-1.0,-1.0,1.0));
-
-    // test Cube Normals
-    // Front
-    m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
-    m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
-    m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
-    m_apVn.push_back(FVertex3D(0.0,0.0,1.0));
-    // Left
-    m_apVn.push_back(FVertex3D(-1.0,0.0,0.0));
-    m_apVn.push_back(FVertex3D(-1.0,0.0,0.0));
-    m_apVn.push_back(FVertex3D(-1.0,0.0,0.0));
-    m_apVn.push_back(FVertex3D(-1.0,0.0,0.0));
-    // Right 
-    m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
-    m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
-    m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
-    m_apVn.push_back(FVertex3D(1.0,0.0,0.0));
-    // Back 
-    m_apVn.push_back(FVertex3D(0.0,0.0,-1.0));
-    m_apVn.push_back(FVertex3D(0.0,0.0,-1.0));
-    m_apVn.push_back(FVertex3D(0.0,0.0,-1.0));
-    m_apVn.push_back(FVertex3D(0.0,0.0,-1.0));
-    // Top 
-    m_apVn.push_back(FVertex3D(0.0,1.0,0.0));
-    m_apVn.push_back(FVertex3D(0.0,1.0,0.0));
-    m_apVn.push_back(FVertex3D(0.0,1.0,0.0));
-    m_apVn.push_back(FVertex3D(0.0,1.0,0.0));
-    // Bottom 
-    m_apVn.push_back(FVertex3D(0.0,-1.0,0.0));
-    m_apVn.push_back(FVertex3D(0.0,-1.0,0.0));
-    m_apVn.push_back(FVertex3D(0.0,-1.0,0.0));
-    m_apVn.push_back(FVertex3D(0.0,-1.0,0.0));
-}
-
-void gl::glMesh::draw(QMatrix4x4& view)
-{
-    m_Program.bind();
-    m_Program.setAttributeValue(m_LightPositionId, m_pLight->position());
- 
-    m_Program.setUniformValue(m_Matrix, view);
-    m_Program.enableAttributeArray(m_Vertex);
-    m_Program.enableAttributeArray(m_Normal);
-    m_Program.setAttributeArray(m_Vertex, GL_DOUBLE, &m_apV[0], 3);
-    m_Program.setAttributeArray(m_Normal, GL_DOUBLE, &m_apVn[0],3);
-
-    m_ShaderDiffuse.setRgb(100,100,100);
-    m_Program.setAttributeValue(m_ShaderDiffuseId, m_ShaderDiffuse);
-    glPolygonMode(GL_FRONT, GL_FILL);
-    glPolygonMode(GL_BACK, GL_LINE);
-    glDrawArrays(GL_QUADS, 0, m_apV.size());
-
-    m_ShaderDiffuse.setRgb(0,0,0);
-    m_Program.setAttributeValue(m_ShaderDiffuseId, m_ShaderDiffuse);
-    glLineWidth(4.5);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glDrawArrays(GL_QUADS, 0, m_apV.size());
-
-    m_Program.disableAttributeArray(m_Vertex);
-    m_Program.disableAttributeArray(m_Normal);
-    m_Program.release();
-
-}
-
 
 // GL SCENE
 
@@ -299,11 +90,7 @@ gl::glScene::glScene() :
     m_ShadingMode(SHADED),
     m_SelectionMode(OBJECT)
 {
-    //m_pProgram = new QOpenGLShaderProgram();
-    //m_pView = new QMatrix4x4();
     m_apCameras.push_back(new gl::glCamera());
-    m_apLights.push_back(new gl::glLight());
-    m_apMeshes.push_back(new gl::glMesh(m_apLights.at(0)));
     
     m_GlInfo.view = m_pView;
     m_GlInfo.program = m_pProgram;
@@ -317,16 +104,6 @@ gl::glScene::~glScene()
     }
     m_apCameras.clear();
 
-    for(uint i=0; i < m_apMeshes.size(); i++) {
-        delete m_apMeshes[i];
-    }
-    m_apMeshes.clear();
-
-    for(uint i=0; i < m_apLights.size(); i++) {
-        delete m_apLights[i];
-    }
-    m_apLights.clear();
-
     delete m_pView;
     m_pView=0;
     delete m_pProgram;
@@ -335,7 +112,6 @@ gl::glScene::~glScene()
 
 void gl::glScene::init()
 {
-     std::cout << "glScene::init\n";
      m_GridProgram.addShaderFromSourceCode(QOpenGLShader::Vertex,
             "attribute highp vec4 vertex;\n"
             "uniform mediump mat4 matrix;\n"
@@ -383,9 +159,6 @@ void gl::glScene::init()
 
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-
-    //m_apLights.at(0)->init();
-    //m_apMeshes.at(0)->init();
 
     int minUid = qml::command::get_min_uid();
     int maxUid = qml::command::get_max_uid();
@@ -436,7 +209,6 @@ void gl::glScene::nodeInit(int uid)
 void gl::glScene::draw(int width, int height)
 {
     glViewport(0,0,width,height);
-    //std::cout << "viewport width=" << width << " height=" << height << std::endl;
 
     glClear(GL_STENCIL_BUFFER_BIT);
     glStencilFunc(GL_ALWAYS, 0x1, 0x1);
@@ -483,15 +255,6 @@ void gl::glScene::draw(int width, int height)
     }
     */
 
-    //glFrontFace(GL_CW);
-    //glCullFace(GL_BACK);
-    //glEnable(GL_CULL_FACE);
-    //glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_LINE_SMOOTH);
-    //glEnable(GL_BLEND);
-
-    //glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
-
     glShadeModel(GL_SMOOTH);                    // shading mathod: GL_SMOOTH or GL_FLAT
  
     int minUid = qml::command::get_min_uid();
@@ -499,7 +262,6 @@ void gl::glScene::draw(int width, int height)
 
     // Draw SG Nodes
     feather::FGlInfo info;
-    //info.view = m_pView;
     info.program = m_pProgram;
     m_pView = &m_apCameras.at(0)->view();
     info.view = m_pView;
@@ -509,11 +271,6 @@ void gl::glScene::draw(int width, int height)
             qml::command::gl_draw(maxUid,info);
         --maxUid;
     }
-
-    /*
-    m_apMeshes.at(0)->draw(m_apCameras.at(0)->view());
-    m_apLights.at(0)->draw(m_apCameras.at(0)->view());
-    */
 
     // draw the axis 
     if(m_showAxis){
@@ -543,11 +300,6 @@ void gl::glScene::draw(int width, int height)
     glDisable(GL_BLEND);
  
     m_apCameras.at(0)->draw(width,height);
-
-    //glDisable(GL_BLEND);
-    //glDisable(GL_LINE_SMOOTH);
-    //glDisable(GL_DEPTH_TEST);
-    //glDisable(GL_CULL_FACE);
 }
 
 void gl::glScene::draw_grid()
@@ -556,7 +308,6 @@ void gl::glScene::draw_grid()
     m_GridProgram.setAttributeArray(m_GridVAttr, GL_DOUBLE, &m_aGrid[0], 3);
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     glDrawArrays(GL_LINES, 0, 84);
-    glPolygonMode( GL_FRONT, GL_FILL );
     m_GridProgram.disableAttributeArray(m_GridVAttr);
 }
 
@@ -573,7 +324,6 @@ void gl::glScene::draw_axis()
     glColor3f(0.0,0.0,1.0);
     glDrawArrays(GL_LINES, 4, 2);
     glLineWidth(1.25);
-    glPolygonMode( GL_FRONT, GL_FILL );
     m_AxisProgram.disableAttributeArray(m_AxisVAttr);
 }
 
@@ -596,6 +346,4 @@ void gl::glScene::make_grid() {
         m_aGrid.push_back(FVertex3D(pos,0,10));
         pos += 1;
     }
- 
 }
-
