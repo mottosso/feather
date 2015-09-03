@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="64"
+   height="64"
+   id="svg4152"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   viewBox="0 0 64 64"
+   sodipodi:docname="display_shaded.svg">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="11"
+     inkscape:cx="29.549098"
+     inkscape:cy="35.898901"
+     inkscape:current-layer="g8208"
+     showgrid="true"
+     inkscape:document-units="px"
+     inkscape:grid-bbox="true"
+     inkscape:window-width="2556"
+     inkscape:window-height="1041"
+     inkscape:window-x="0"
+     inkscape:window-y="18"
+     inkscape:window-maximized="0" />
+  <defs
+     id="defs4154" />
+  <metadata
+     id="metadata4157">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="g8208"
+     inkscape:label="faces"
+     inkscape:groupmode="layer"
+     style="display:inline">
+    <g
+       transform="matrix(0.95480902,0,0,0.95480902,31.999996,31.999991)"
+       inkscape:label="dodec:x19.90:y-25.50:z0.00:x0.00:y0.00:z0.00"
+       id="g8210">
+      <path
+         d="M 28.687498,6.5343072 25.610217,-13.211744 13.336329,-12.636172 8.8279317,7.4656005 18.315474,19.313609 Z"
+         style="fill:#950000;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-opacity:0"
+         inkscape:label="Face:3"
+         id="path8212"
+         inkscape:connector-curvature="0" />
+      <path
+         d="M 3.4392173,29.186634 18.315474,19.313609 8.8279317,7.4656005 -11.91195,10.016154 -15.242358,23.440491 Z"
+         style="fill:#9b0000;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-opacity:0"
+         inkscape:label="Face:10"
+         id="path8214"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 25.610217,-13.211744 -10.367859,-10.228747 -18.6815753,-5.746143 -1.1779906,6.677436 17.9535369,9.873026 z"
+         style="fill:#a30000;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-opacity:0"
+         inkscape:label="Face:4"
+         id="path8216"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m -4.6172079,-22.509198 1.1779906,-6.677436 -14.8762567,9.873025 -10.372024,12.7793018 8.465995,-1.9749828 z"
+         style="fill:#b40000;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-opacity:0"
+         inkscape:label="Face:7"
+         id="path8218"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m -20.221503,-8.50929 -8.465995,1.9749828 3.077281,19.7460512 10.367859,10.228747 3.330408,-13.424337 z"
+         style="fill:#af0000;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-opacity:0"
+         inkscape:label="Face:0"
+         id="path8220"
+         inkscape:connector-curvature="0" />
+      <path
+         d="M 8.8279317,7.4656005 13.336329,-12.636172 -4.6172079,-22.509198 -20.221503,-8.50929 -11.91195,10.016154 Z"
+         style="fill:#ee0000;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-opacity:0"
+         inkscape:label="Face:11"
+         id="path8222"
+         inkscape:connector-curvature="0" />
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="wireframe"
+     style="display:none">
+    <g
+       id="g8224-1"
+       inkscape:label="dodec:x19.90:y-25.50:z0.00:x0.00:y0.00:z0.00"
+       transform="matrix(0.95480902,0,0,0.95480902,31.999996,31.999991)">
+      <path
+         inkscape:connector-curvature="0"
+         id="path8226-9"
+         inkscape:label="Face:3"
+         style="fill:#950000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-opacity:1"
+         d="M 28.687498,6.5343072 25.610217,-13.211744 13.336329,-12.636172 8.8279317,7.4656005 18.315474,19.313609 Z" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path8228-6"
+         inkscape:label="Face:10"
+         style="fill:#9b0000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-opacity:1"
+         d="M 3.4392173,29.186634 18.315474,19.313609 8.8279317,7.4656005 -11.91195,10.016154 -15.242358,23.440491 Z" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path8230-8"
+         inkscape:label="Face:4"
+         style="fill:#a30000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-opacity:1"
+         d="m 25.610217,-13.211744 -10.367859,-10.228747 -18.6815753,-5.746143 -1.1779906,6.677436 17.9535369,9.873026 z" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path8232-7"
+         inkscape:label="Face:7"
+         style="fill:#b40000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-opacity:1"
+         d="m -4.6172079,-22.509198 1.1779906,-6.677436 -14.8762567,9.873025 -10.372024,12.7793018 8.465995,-1.9749828 z" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path8234-0"
+         inkscape:label="Face:0"
+         style="fill:#af0000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-opacity:1"
+         d="m -20.221503,-8.50929 -8.465995,1.9749828 3.077281,19.7460512 10.367859,10.228747 3.330408,-13.424337 z" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path8236-6"
+         inkscape:label="Face:11"
+         style="fill:#ee0000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.8279317,7.4656005 13.336329,-12.636172 -4.6172079,-22.509198 -20.221503,-8.50929 -11.91195,10.016154 Z" />
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="points"
+     style="display:none">
+    <g
+       transform="matrix(0.95480902,0,0,0.95480902,32,32)"
+       inkscape:label="dodec:x19.90:y-25.50:z0.00:x0.00:y0.00:z0.00"
+       id="g8238-9"
+       style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-opacity:1">
+      <circle
+         cx="-11.91195"
+         cy="10.016154"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point0"
+         id="circle8240-3" />
+      <circle
+         cx="3.4392173"
+         cy="29.186634"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point2"
+         id="circle8244-5" />
+      <circle
+         cx="-4.617208"
+         cy="-22.509197"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point3"
+         id="circle8246-6" />
+      <circle
+         cx="15.242358"
+         cy="-23.440491"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point5"
+         id="circle8250-3" />
+      <circle
+         cx="18.315474"
+         cy="19.313608"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point6"
+         id="circle8252-0" />
+      <circle
+         cx="13.336329"
+         cy="-12.636172"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point7"
+         id="circle8254-8" />
+      <circle
+         cx="-25.610218"
+         cy="13.211743"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point8"
+         id="circle8256-6" />
+      <circle
+         cx="-28.687498"
+         cy="-6.534307"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point9"
+         id="circle8258-6" />
+      <circle
+         cx="28.687498"
+         cy="6.534307"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point10"
+         id="circle8260-3" />
+      <circle
+         cx="25.610218"
+         cy="-13.211743"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point11"
+         id="circle8262-3" />
+      <circle
+         cx="-15.242358"
+         cy="23.440491"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point13"
+         id="circle8266-0" />
+      <circle
+         cx="-20.221502"
+         cy="-8.5092897"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point14"
+         id="circle8268-8" />
+      <circle
+         cx="8.8279314"
+         cy="7.4656005"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point15"
+         id="circle8270-2" />
+      <circle
+         cx="-18.315474"
+         cy="-19.313608"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point17"
+         id="circle8274-9" />
+      <circle
+         cx="-3.4392173"
+         cy="-29.186634"
+         r="2"
+         style="fill:#ff00f0;fill-opacity:1;stroke:#f700ff;stroke-width:2;stroke-opacity:1"
+         inkscape:label="Point19"
+         id="circle8278-8" />
+    </g>
+  </g>
+</svg>
