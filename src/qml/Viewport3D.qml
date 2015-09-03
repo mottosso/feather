@@ -89,10 +89,13 @@ Rectangle {
 
     function nodeAdded(uid) { console.log("node " + uid + " added"); renderer.nodeInitialize(uid) }
 
+    function nodesAdded() { renderer.nodesAdded() }
+
     function updateGL() { renderer.updateGL() }
 
     Component.onCompleted: {
         scenegraph.nodeAdded.connect(nodeAdded)
+        scenegraph.nodesAdded.connect(nodesAdded)
         scenegraph.update.connect(updateGL)
         renderer.updateGL()
     }

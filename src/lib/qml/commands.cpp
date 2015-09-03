@@ -75,10 +75,25 @@ int qml::command::add_node(int type, int node, std::string name)
     //return status();
 }
 
+bool qml::command::nodes_added(std::vector<int>& uids)
+{
+    uids.assign(cstate.uid_update.begin(),cstate.uid_update.end());
+    //cstate.clear_uid_update();
+
+    std::cout << "there are " << cstate.uid_update.size() << "  in the added nodes\n";
+
+    if(!uids.size())
+        return false;
+    
+    return true;
+}
+
 bool qml::command::node_exists(int uid)
 {
-    // TODO
-    return true;
+    // TODO - this is a temp fix for the minute
+    // This will need to be fixed in the future since nodes will be taken away
+    // so the indics could jump
+    return ( scenegraph::get_max_uid() >= uid) ? true : false;
 }
 
 status qml::command::connect_nodes(int n1, int f1, int n2, int f2)

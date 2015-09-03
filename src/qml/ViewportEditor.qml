@@ -37,6 +37,8 @@ Window {
     height: 600
     property SceneGraph scenegraph: Null
 
+    // Show Viewport Components
+
     Action {
         id: showAxisAction
         text: "Show Axis"
@@ -54,6 +56,40 @@ Window {
         checked: true
         onTriggered: { (checked) ? viewport.showGrid=true : viewport.showGrid=false }
     }
+
+
+    // TODO - saving this for selections with the idea that the toolbutton's state will represenct the state of the selected mesh
+    /*
+    // Show Mesh Components
+
+    Action {
+        id: showShadedAction
+        text: "Show Shaded"
+        tooltip: "show the grid"
+        checkable: true
+        checked: true
+        onTriggered: { (checked) ? viewport.showShaded=true : viewport.showShaded=false }
+    }
+
+    Action {
+        id: showWireframeAction
+        text: "Show Wireframe"
+        tooltip: "show the grid"
+        checkable: true
+        checked: false 
+        onTriggered: { (checked) ? viewport.showWireframe=true : viewport.showWireframe=false }
+    }
+
+    Action {
+        id: showPointsGridAction
+        text: "Show Points"
+        tooltip: "show the grid"
+        checkable: true
+        checked: false 
+        onTriggered: { (checked) ? viewport.showPoints=true : viewport.showPoints=false }
+    }
+
+    */
 
     ExclusiveGroup {
         id: selectionGroup

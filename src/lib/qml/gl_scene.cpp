@@ -91,10 +91,12 @@ gl::glScene::glScene() :
     m_SelectionMode(OBJECT)
 {
     m_apCameras.push_back(new gl::glCamera());
-    
+   
+    /* 
     m_GlInfo.view = m_pView;
     m_GlInfo.program = m_pProgram;
     m_GlInfo.view = &m_apCameras.at(0)->view();
+    */
 }
 
 gl::glScene::~glScene()
@@ -170,6 +172,9 @@ void gl::glScene::init()
     info.view = &m_apCameras.at(0)->view();
     */
 
+    // clear out all the instances of GlInfo
+    m_aGlInfo.clear();
+
     while(maxUid > minUid) {
         if(qml::command::node_exists(maxUid))
             nodeInit(maxUid);
@@ -202,8 +207,25 @@ void gl::glScene::init()
 
 void gl::glScene::nodeInit(int uid)
 {
-    m_GlInfo.uid = uid;
-    qml::command::gl_init(uid,m_GlInfo);
+    feather::FGlInfo info;
+    //info.view = m_pView;
+    //info.program = m_pProgram;
+    info.program = new QOpenGLShaderProgram;
+    info.view = &m_apCameras.at(0)->view();
+    info.uid = uid;
+ 
+    qml::command::gl_init(uid,info);
+    m_aGlInfo.push_back(info);
+}
+
+void gl::glScene::nodesAddedInit()
+{
+    std::vector<int> uids;
+    qml::command::nodes_added(uids);
+    for_each(uids.begin(), uids.end(), [this](int& uid){
+        std::cout << "gl init for uid:" << uid << std::endl;
+        nodeInit(uid);
+    });
 }
 
 void gl::glScene::draw(int width, int height)
@@ -257,21 +279,31 @@ void gl::glScene::draw(int width, int height)
 
     glShadeModel(GL_SMOOTH);                    // shading mathod: GL_SMOOTH or GL_FLAT
  
-    int minUid = qml::command::get_min_uid();
-    int maxUid = qml::command::get_max_uid();
+    //int minUid = qml::command::get_min_uid();
+    //int maxUid = qml::command::get_max_uid();
 
     // Draw SG Nodes
+    /*
     feather::FGlInfo info;
     info.view = m_pView;
     info.program = m_pProgram;
     m_pView = &m_apCameras.at(0)->view();
+    */
     //info.view = m_pView;
- 
+
+    /* 
     while(maxUid > minUid) {
         if(qml::command::node_exists(maxUid))
             qml::command::gl_draw(maxUid,info);
         --maxUid;
     }
+    */
+
+    for_each(m_aGlInfo.begin(), m_aGlInfo.end(), [](FGlInfo& info){
+        // sanity check
+        if(qml::command::node_exists(info.uid))
+            qml::command::gl_draw(info.uid,info);
+    });
 
     // draw the axis 
     if(m_showAxis){

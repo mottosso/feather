@@ -46,6 +46,11 @@ void Viewport::nodeInitialize(int uid)
     m_pScene->nodeInit(uid);
 }
 
+void Viewport::nodesAdded()
+{
+    m_pScene->nodesAddedInit();
+}
+
 void Viewport::render(int width, int height)
 {
     m_pScene->draw(width,height);

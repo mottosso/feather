@@ -57,6 +57,7 @@ class SceneGraph : public QObject
         void commandMessageChanged(int code, QString msg);
         void update();
         void nodeAdded(int uid);
+        void nodesAdded();
 };
 
 // FIELD 

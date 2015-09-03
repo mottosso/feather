@@ -146,6 +146,11 @@ void ViewportThread::nodeInitialize(int uid)
     m_renderThread->nodeInit(uid);
 }
 
+void ViewportThread::nodesAdded()
+{
+    m_renderThread->nodesAdded();
+}
+
 void ViewportThread::updateGL()
 {
     setGlToUpdate();

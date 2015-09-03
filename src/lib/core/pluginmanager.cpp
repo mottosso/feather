@@ -237,6 +237,9 @@ int PluginManager::min_uid()
 int PluginManager::max_uid()
 {
     // TODO - need to get the real max uid
+    // This is current not being called.
+    // Could get rid of but will keep here
+    // for the time being.
     return 2;
 }
 
