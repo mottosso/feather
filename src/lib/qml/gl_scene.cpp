@@ -213,7 +213,7 @@ void gl::glScene::nodeInit(int uid)
     info.program = new QOpenGLShaderProgram;
     info.view = &m_apCameras.at(0)->view();
     info.uid = uid;
- 
+
     qml::command::gl_init(uid,info);
     m_aGlInfo.push_back(info);
 }
@@ -226,6 +226,10 @@ void gl::glScene::nodesAddedInit()
         std::cout << "gl init for uid:" << uid << std::endl;
         nodeInit(uid);
     });
+    // since we only have one viewport now, this will do
+    // but later we will need to move this for multiple
+    // viewports
+    qml::command::nodes_updated();
 }
 
 void gl::glScene::draw(int width, int height)

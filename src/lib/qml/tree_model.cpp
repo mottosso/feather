@@ -227,13 +227,15 @@ void TreeModel::loadChildren(const int uid, Leaf* parent)
     std::vector<int> children;
 
     feather::qml::command::get_node_connected_uids(uid,children);
-
+    
+    std::cout << "loadChildren\n";
     if(!children.size())
         return;
 
     QList<Leaf*> parents;
 
     for_each(children.begin(), children.end(), [this,&parent](int uid){
+        std::cout << "loadChildren->Recursion for " << uid << std::endl;
         loadChildren(uid,parent->lastChild());
     });
 }

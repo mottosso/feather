@@ -55,7 +55,8 @@ namespace feather
             VectorArray=14,
             RGBArray=15,
             RGBAArray=16,
-            START=17
+            Node=17,
+            START=18
         };
 
         struct FieldBase

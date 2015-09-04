@@ -85,6 +85,9 @@ namespace feather
         };
 
         void gl_draw(FNode& node, FGlInfo& info) {
+            std::cout << "scenegraph::gl_draw(), uid=" << node.uid 
+                << ", node=" << node.node << std::endl;
+
             plugins.gl_draw(node,info); 
         };
 
@@ -120,9 +123,25 @@ namespace feather
             // if the new node's uid is now highest uid, replace the state's maxUid
             if(static_cast<int>(uid) > cstate.sgState.maxUid)
                 cstate.sgState.maxUid = uid;
+            
+            // several nodes can be added at a time so we'll add this node
+            // to the list of nodes that have already been added but haven't
+            // been updated.
+            // An example of this is the viewport editor which needs to create
+            // glinfo for each node. If a command adds several nodes, the
+            // viewport wll use these uids in the state to generate the glinfo
+            cstate.add_uid_to_update(uid);
 
             // Return the node number
             return static_cast<int>(uid);
+        };
+
+        /* This gets called when all the nodes have been updated.
+         * This currently being used by the viewports to update their
+         * glinfo
+         */
+        void nodes_updated() {
+            cstate.clear_uid_update();
         };
 
         /*  Get Node Connections 

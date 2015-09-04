@@ -35,7 +35,7 @@ status qml::command::init() {
     load_plugins();
     cstate.sgState.minUid=0;
     cstate.sgState.maxUid=0;
-    add_node(node::Polygon,322,"root"); // PolyCube
+    add_node(node::Empty,1,"root"); // PolyCube
     //int uid1 = add_node(node::Polygon,320,"CubeShape"); // PolyShape
     //scenegraph::connect(0,4,uid1,1); // connect PolyCube.out to PolyShape.in
 
@@ -43,6 +43,7 @@ status qml::command::init() {
  
     // just testing the do_it plugin calls
     scenegraph::update();
+    scenegraph::nodes_updated(); // clear out the uids to update
     return status();
 }
 
@@ -86,6 +87,11 @@ bool qml::command::nodes_added(std::vector<int>& uids)
         return false;
     
     return true;
+}
+
+void qml::command::nodes_updated()
+{
+    scenegraph::nodes_updated();
 }
 
 bool qml::command::node_exists(int uid)

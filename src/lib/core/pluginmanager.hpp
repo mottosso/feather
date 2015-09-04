@@ -298,7 +298,7 @@ namespace feather
         static  status exec(int id, field::Fields& fields) { return find_create_fields<_Id-1>::exec(id,fields); };
     };
 
-    template <> struct find_create_fields<0> { static status exec(int id, field::Fields& fields) { return status(FAILED,"No matching node fould to create fields in"); }; };
+    template <> struct find_create_fields<0> { static status exec(int id, field::Fields& fields) { return status(FAILED,"No matching node found to create fields in"); }; };
 
     // NODE ICON IMAGE 
 
