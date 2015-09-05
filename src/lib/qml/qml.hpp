@@ -198,11 +198,17 @@ class Node: public QObject
         QQmlListProperty<Field> outFields();
 
         enum Type {
+            Empty = node::Empty,
             Camera = node::Camera,
             Light = node::Light,
             Texture = node::Texture,
+            Modifier = node::Modifier,
+            Deformer = node::Deformer,
+            Manipulator = node::Manipulator,
             Shader = node::Shader,
-            Object = node::Object 
+            Object = node::Object,
+            Curve = node::Curve,
+            Polygon = node::Polygon 
         };
 
     private:

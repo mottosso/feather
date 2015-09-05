@@ -94,11 +94,15 @@ namespace feather
         template <int _Type1, int _Type2>
         static bool can_connect() { return false; };
 
+        // NOTE!!!!
+        // THIS IS INCOMPLETE!!!!
+        // I need to add all the instances for each type.
+        // Currently this is just a brief list for testing.
         template <> bool can_connect<Bool,Bool>() { return true; };
         template <> bool can_connect<Int,Int>() { return true; };
         template <> bool can_connect<Float,Float>() { return true; };
         template <> bool can_connect<Mesh,Mesh>() { return true; };
-
+        template <> bool can_connect<Node,Node>() { return true; };
 
        
         template <int _Type1, int _Type2>

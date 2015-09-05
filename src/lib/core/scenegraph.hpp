@@ -162,9 +162,12 @@ namespace feather
         };
 
 
+        /* This will return all the node uids connected to node */
         status get_node_connected_uids(int uid, std::vector<int>& uids) {
             typedef typename boost::graph_traits<FSceneGraph>::out_edge_iterator ei;
             std::pair<ei,ei> p = boost::out_edges(uid,sg);
+ 
+            //std::cout << "TEST edge iter " << *p.first << std::endl;
  
             for(;p.first!=p.second;++p.first){
                 std::cout << "edge iter " << *p.first << std::endl;

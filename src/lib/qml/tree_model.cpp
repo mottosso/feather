@@ -202,6 +202,7 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation, int rol
 
 void TreeModel::updateTree()
 {
+    std::cout << "UPDATE OUTLINER TREE\n";
     rootItem->clear();
     loadChildren(0,rootItem);
     emit layoutChanged(); // model will not update without this 
