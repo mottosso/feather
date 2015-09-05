@@ -25,48 +25,8 @@
 //#extension GL_EXT_gpu_shader4 : enable
 //#extension GL_EXT_fragment_shader4 : enable
 
-varying vec3 n;
+varying vec3 LightIntensity;
 
-varying vec3 position;
-varying vec3 lposition;
-
-uniform vec3 LightPosition;
-uniform vec3 CameraPosition;
-uniform vec4 ShaderDiffuse;
-
-uniform vec3 LightIntensity;
-uniform vec3 Kd;
-uniform vec3 Ka;
-uniform vec3 Ks;
-uniform float Shininess;
-
-uniform int modelview;
-
-vec3 ads()
-{
-    //vec3 _lposition = LightPosition;
-    //vec3 _lposition = n;
-    vec3 _lposition = vec3(20,20,0);
-    //vec3 _lposition = lposition;
-
-    vec3 _lintensity = vec3(1.0,1.0,1.0);
-    vec3 _Ka = vec3(0.25);
-    vec3 _Kd = vec3(0.75);
-    vec3 _Ks = vec3(0.0);
-    float _shininess = 0.1;
-
-    vec3 _n = normalize(n);
-    vec3 _s = normalize(vec3(_lposition) - position);
-    vec3 _v = normalize(vec3(-position));
-    vec3 _r = reflect(-_s,_n);
-    
-    return _lintensity * (_Ka + _Kd * max(dot(_s,_n),0.0));
-    //return _lintensity * (_Ka + _Kd * max(dot(_s,_n),0.0) + _Ks * pow(max(dot(_r,_v),0.0), _shininess));
-}
-
-void main(void) {
-    if(modelview == 0)
-        gl_FragColor = vec4(ads(),1.0);
-    else
-        gl_FragColor = vec4(vec3(1,0,1),1);
+void main(){
+    gl_FragColor = vec4(LightIntensity, 1.0);
 }

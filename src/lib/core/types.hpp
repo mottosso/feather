@@ -308,6 +308,13 @@ namespace feather
         int glNormal;
         int glView; // 0=face, 1=edge, 2=point
         int glLightPosition;
+        int glLightAmbient;
+        int glLightDiffuse;
+        int glLightSpecular;
+        int glMaterialAmbient;
+        int glMaterialDiffuse;
+        int glMaterialSpecular;
+        int glMaterialShininess;
         int glCameraPosition;
         int glShaderDiffuse;
     };

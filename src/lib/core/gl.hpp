@@ -51,6 +51,13 @@
     node.glNormal = info.program->attributeLocation("normal");\
     node.glView = info.program->uniformLocation("modelview");\
     node.glLightPosition = info.program->attributeLocation("LightPosition");\
+    node.glLightAmbient = info.program->attributeLocation("LightAmbient");\
+    node.glLightDiffuse = info.program->attributeLocation("LightDiffuse");\
+    node.glLightSpecular = info.program->attributeLocation("LightSpecular");\
+    node.glMaterialAmbient = info.program->attributeLocation("MaterialAmbient");\
+    node.glMaterialDiffuse = info.program->attributeLocation("MaterialDiffuse");\
+    node.glMaterialSpecular = info.program->attributeLocation("MaterialSpecular");\
+    node.glMaterialShininess = info.program->attributeLocation("MaterialShininess");\
     node.glCameraPosition = info.program->attributeLocation("CameraPosition");\
     node.glShaderDiffuse = info.program->attributeLocation("ShaderDiffuse");\
 

@@ -85,9 +85,7 @@ namespace feather
         };
 
         void gl_draw(FNode& node, FGlInfo& info) {
-            std::cout << "scenegraph::gl_draw(), uid=" << node.uid 
-                << ", node=" << node.node << std::endl;
-
+            //std::cout << "scenegraph::gl_draw(), uid=" << node.uid << ", node=" << node.node << std::endl;
             plugins.gl_draw(node,info); 
         };
 

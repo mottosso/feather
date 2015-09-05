@@ -26,20 +26,29 @@ attribute highp vec4 color;
 attribute highp vec3 normal;
 uniform mediump int modelview;
 attribute highp vec3 LightPosition;
+attribute highp vec3 LightAmbient;
+attribute highp vec3 LightDiffuse;
+attribute highp vec3 LightSpecular;
+attribute highp vec3 MaterialAmbient;
+attribute highp vec3 MaterialDiffuse;
+attribute highp vec3 MaterialSpecular;
+attribute highp float MaterialShininess;
 attribute highp vec3 CameraPosition;
 attribute highp vec4 ShaderDiffuse;
 uniform mediump mat4 matrix;
 
-varying vec3 n;
-varying vec3 position;
-varying vec3 lposition;
+varying vec3 LightIntensity;
 
-void main(void)
+void main()
 {
-    n = normalize(gl_NormalMatrix * normal); 
-    position = vec3(matrix * vertex); 
-    //lposition = vec3(matrix * vec4(-LightPosition,1.0));
-    lposition = vec3(matrix * vertex * vec4(LightPosition,1.0));
-    //lposition = vec3(matrix);
+    vec3 norm = normalize(gl_NormalMatrix * normal);
+    vec4 position = matrix * vertex;
+
+    vec4 lposition = vec4(20,20,0,0);
+    
+    vec3 s = normalize(vec3(lposition-position));
+
+    LightIntensity = LightDiffuse * MaterialDiffuse * max(dot(s,norm),0.0);
+
     gl_Position = matrix * vertex;
 }

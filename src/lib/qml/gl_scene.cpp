@@ -185,10 +185,11 @@ void gl::glScene::init()
     glCullFace(GL_BACK);
 
     // smoothing
-    glShadeModel(GL_FLAT);                    // shading mathod: GL_SMOOTH or GL_FLAT
+    //glShadeModel(GL_FLAT);                    // shading mathod: GL_SMOOTH or GL_FLAT
     //glPixelStorei(GL_UNPACK_ALIGNMENT, 4);      // 4-byte pixel alignment
 
     // enable /disable features
+    /*
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
@@ -201,6 +202,7 @@ void gl::glScene::init()
     glEnable(GL_BLEND);
      //glClearColor(0.75, 0.75, 0.75, 0.0);
     glClearStencil(0);                          // clear stencil buffer
+    */
     glClearDepth(1.0f);                         // 0 is near, 1 is far
     glDepthFunc(GL_LEQUAL);
 }
@@ -223,7 +225,7 @@ void gl::glScene::nodesAddedInit()
     std::vector<int> uids;
     qml::command::nodes_added(uids);
     for_each(uids.begin(), uids.end(), [this](int& uid){
-        std::cout << "gl init for uid:" << uid << std::endl;
+        //std::cout << "gl init for uid:" << uid << std::endl;
         nodeInit(uid);
     });
     // since we only have one viewport now, this will do
@@ -236,9 +238,11 @@ void gl::glScene::draw(int width, int height)
 {
     glViewport(0,0,width,height);
 
+    /*
     glClear(GL_STENCIL_BUFFER_BIT);
     glStencilFunc(GL_ALWAYS, 0x1, 0x1);
     glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    */
 
     glDepthMask(true);
     glFrontFace(GL_CW);
@@ -247,11 +251,12 @@ void gl::glScene::draw(int width, int height)
     glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearStencil(0);                          // clear stencil buffer
+    //glClearStencil(0);                          // clear stencil buffer
     glClearDepth(1.0f);                         // 0 is near, 1 is far
 
     // smoothing
     glEnable(GL_DEPTH_TEST);
+    /*
     glEnable(GL_STENCIL_TEST);
     //glEnable(GL_LIGHTING);
     //glEnable(GL_TEXTURE_2D);
@@ -268,6 +273,7 @@ void gl::glScene::draw(int width, int height)
     //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    */
    //glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE);
 
     /*
@@ -281,7 +287,8 @@ void gl::glScene::draw(int width, int height)
     }
     */
 
-    glShadeModel(GL_SMOOTH);                    // shading mathod: GL_SMOOTH or GL_FLAT
+    // this does nothing
+    //glShadeModel(GL_SMOOTH);                    // shading mathod: GL_SMOOTH or GL_FLAT
  
     //int minUid = qml::command::get_min_uid();
     //int maxUid = qml::command::get_max_uid();
@@ -328,6 +335,7 @@ void gl::glScene::draw(int width, int height)
     // draw each node
     //feather::qml::command::draw_sg(m_apCameras.at(0)->view());
     glDisable(GL_DEPTH_TEST);
+    /*
     glDisable(GL_STENCIL_TEST);
     //glDisable(GL_LIGHTING);
     //glDisable(GL_TEXTURE_2D);
@@ -335,7 +343,8 @@ void gl::glScene::draw(int width, int height)
     glDisable(GL_LINE_SMOOTH);
     glDisable(GL_POLYGON_SMOOTH);
     glDisable(GL_BLEND);
- 
+    */
+
     m_apCameras.at(0)->draw(width,height);
 }
 
