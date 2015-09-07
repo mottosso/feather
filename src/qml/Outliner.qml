@@ -24,6 +24,7 @@
 import QtQuick 2.5
 import QtQuick.Window 2.2
 import QtQuick.Controls 1.4
+import QtQml.Models 2.2
 import feather.scenegraph 1.0
 
 Window {
@@ -54,15 +55,22 @@ Window {
         }
 
         model: treeModel
+        selection: ItemSelectionModel { model: treeModel }
+        selectionMode: SelectionMode.ContiguousSelection
         sortIndicatorVisible: true
         headerVisible: false
 
         style: OutlinerLeafNode {}
+ 
+        onActivated: { console.log("item activated " + model.data(index,260)) }
+        onClicked: { console.log("item clicked " + model.data(index,260)); scenegraph.clear_selection(); scenegraph.select_node(0,model.data(index,260)); }
    }
 
    function updateSg(){
         tree.model.updateTree()
    } 
 
-   Component.onCompleted: { scenegraph.update.connect(updateSg) }
+   Component.onCompleted: {
+        scenegraph.update.connect(updateSg)
+    }
 }

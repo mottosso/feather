@@ -25,6 +25,7 @@ attribute highp vec4 vertex;
 attribute highp vec4 color;
 attribute highp vec3 normal;
 uniform mediump int modelview;
+uniform mediump int Selected;
 attribute highp vec3 LightPosition;
 attribute highp vec3 LightAmbient;
 attribute highp vec3 LightDiffuse;

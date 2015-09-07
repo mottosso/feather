@@ -184,6 +184,13 @@ void gl::glScene::init()
     glFrontFace(GL_CW);
     glCullFace(GL_BACK);
 
+    // This is for multisample - but it currently doesn't work
+    int bufs;
+    int samples;
+    glHint(GL_SAMPLES, 8);
+    glGetIntegerv(GL_SAMPLE_BUFFERS, &bufs);
+    glGetIntegerv(GL_SAMPLES, &samples);
+
     // smoothing
     //glShadeModel(GL_FLAT);                    // shading mathod: GL_SMOOTH or GL_FLAT
     //glPixelStorei(GL_UNPACK_ALIGNMENT, 4);      // 4-byte pixel alignment
@@ -310,6 +317,8 @@ void gl::glScene::draw(int width, int height)
     }
     */
 
+    glEnable(GL_MULTISAMPLE);
+
     for_each(m_aGlInfo.begin(), m_aGlInfo.end(), [](FGlInfo& info){
         // sanity check
         if(qml::command::node_exists(info.uid))
@@ -331,6 +340,8 @@ void gl::glScene::draw(int width, int height)
         draw_grid();
         m_GridProgram.release();
     }
+
+    glDisable(GL_MULTISAMPLE);
 
     // draw each node
     //feather::qml::command::draw_sg(m_apCameras.at(0)->view());

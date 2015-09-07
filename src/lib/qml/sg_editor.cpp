@@ -325,7 +325,7 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
 
     // for testing purposes I'm selecting the node from here.
     // later this will be done from the viewport or outliner
-    feather::qml::command::select_node(0);
+    feather::qml::command::select_node(0,0);
     updateGraph();
 }
 

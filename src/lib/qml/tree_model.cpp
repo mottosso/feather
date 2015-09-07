@@ -168,6 +168,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
         case NameRole:
+            std::cout << "Name role enum value:" << NameRole << std::endl;
             return item->data(0);
         case VisibleRole:
             return item->data(1);
@@ -202,7 +203,6 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation, int rol
 
 void TreeModel::updateTree()
 {
-    std::cout << "UPDATE OUTLINER TREE\n";
     rootItem->clear();
     loadChildren(0,rootItem);
     emit layoutChanged(); // model will not update without this 
@@ -229,14 +229,12 @@ void TreeModel::loadChildren(const int uid, Leaf* parent)
 
     feather::qml::command::get_node_connected_uids(uid,children);
     
-    std::cout << "loadChildren\n";
     if(!children.size())
         return;
 
     QList<Leaf*> parents;
 
     for_each(children.begin(), children.end(), [this,&parent](int uid){
-        std::cout << "loadChildren->Recursion for " << uid << std::endl;
         loadChildren(uid,parent->lastChild());
     });
 }

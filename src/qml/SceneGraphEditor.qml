@@ -104,7 +104,7 @@ Rectangle {
         connMenu.connectionButtonPressed.connect(connectionButtonPressed)
         connMenu.connectionButtonReleased.connect(connectionButtonReleased)
         connMenu.connectionButtonClicked.connect(connectionButtonClicked)
-        scenegraph.selectionChanged.connect(setSelection)
+        scenegraph.nodeSelected.connect(setSelection)
     }
 
     function openConnectionMenu() {
@@ -116,12 +116,12 @@ Rectangle {
     }
 
     function nodeSelection(type,uid,nid) {
-        scenegraph.node_selection(type,uid,nid);
+        scenegraph.select_node(type,uid,nid);
     }
 
     function connectionButtonPressed(button,uid,nid,fid) {
         sg_editor.connectionMousePressed(button,uid,nid,fid);
-        scenegraph.add_selection(0,uid,nid,fid);
+        scenegraph.select_node(0,uid,nid,fid);
     }
 
     function connectionButtonReleased(button,uid,nid,fid) {

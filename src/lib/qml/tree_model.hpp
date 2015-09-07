@@ -59,22 +59,22 @@ class TreeModel : public QAbstractItemModel
     Q_OBJECT
 
     public:
-        explicit TreeModel(QObject *parent = 0);
+        TreeModel(QObject *parent = 0);
         ~TreeModel();
 
         enum ERoles
         {
-            NameRole = Qt::UserRole + 1,
-            VisibleRole,
-            IconRole,
-            UidRole,
-            NidRole
+            NameRole = Qt::UserRole + 1, // 257
+            VisibleRole, // 258
+            IconRole, // 259
+            UidRole, // 260
+            NidRole // 261
         };
 
-        QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+        Q_INVOKABLE QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
         Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
         QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-        QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+        Q_INVOKABLE QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
         QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
         int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
         int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;

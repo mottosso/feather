@@ -36,6 +36,46 @@ SceneGraph::~SceneGraph()
 {
 }
 
+int SceneGraph::add_node(int type, int node, QString name)
+{
+    int uid = qml::command::add_node(type,node,name.toStdString());
+    nodeAdded(uid);
+    return uid;
+}
+
+int SceneGraph::connect_nodes(int n1, int f1, int n2, int f2)
+{
+    status p = qml::command::connect_nodes(n1,f1,n2,f2);
+    return p.state;
+}
+  
+int SceneGraph::select_node(int type, int uid)
+{
+    status p = qml::command::select_node(type,uid);
+    emit nodeSelected(uid);
+    return p.state;
+}
+
+int SceneGraph::select_field(int type, int uid, int fid)
+{
+    status p = qml::command::select_node(type,uid,fid);
+    emit fieldSelected(uid,fid);
+    return p.state;
+}
+
+void SceneGraph::clear_selection()
+{
+    qml::command::clear_selection();
+}
+
+int SceneGraph::run_command_string(QString str)
+{
+    status p = qml::command::run_command_string(str.toStdString());
+    emit commandMessageChanged(p.state,QString(p.msg.c_str()));
+    std::cout << "run command string msg='" << p.msg << "'\n";
+    return p.state;
+}
+
 
 // Field
 Field::Field(QObject* parent): m_uid(0),m_node(0),m_field(0),m_boolVal(false),m_intVal(0),m_floatVal(0.0),m_connected(false)

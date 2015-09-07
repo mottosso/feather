@@ -27,6 +27,7 @@
 #include "deps.hpp"
 #include "qml_deps.hpp"
 #include "types.hpp"
+#include "selection.hpp"
 #include "status.hpp"
 #include "commands.hpp"
 #include "node.hpp"
@@ -36,6 +37,24 @@
 
 using namespace feather;
 
+// SELECTION 
+class Selection: public QObject
+{
+    Q_OBJECT
+        Q_ENUMS(Type)
+    public:
+        Selection(){};
+        ~Selection(){};
+        enum Type {
+            Vertex = selection::Vertex,
+            Edge = selection::Edge,
+            Face = selection::Face,
+            Object = selection::Object,
+            Field = selection::Field,
+        };
+};
+
+// SCENEGRAPH 
 class SceneGraph : public QObject
 {
     Q_OBJECT
@@ -45,15 +64,17 @@ class SceneGraph : public QObject
         ~SceneGraph();
 
         // commands
-        Q_INVOKABLE int add_node(int type, int node, QString name) { int uid = qml::command::add_node(type,node,name.toStdString()); nodeAdded(uid); return uid; };
-        Q_INVOKABLE int connect_nodes(int n1, int f1, int n2, int f2) { status p = qml::command::connect_nodes(n1,f1,n2,f2); return p.state; };
-        Q_INVOKABLE int add_selection(int type, int uid, int nid, int fid) { status p = qml::command::add_selection(type,uid,nid,fid); emit selectionChanged(type,uid,nid,fid); return p.state; };
-        Q_INVOKABLE int node_selection(int type, int uid, int nid) { status p = qml::command::node_selection(type,uid,nid); emit nodeSelection(type,uid,nid); return p.state; };
-        Q_INVOKABLE int run_command_string(QString str) { status p = qml::command::run_command_string(str.toStdString()); emit commandMessageChanged(p.state,QString(p.msg.c_str())); std::cout << "run command string msg='" << p.msg << "'\n"; return p.state; };
+        Q_INVOKABLE int add_node(int type, int node, QString name);
+        Q_INVOKABLE int connect_nodes(int n1, int f1, int n2, int f2);
+        Q_INVOKABLE int select_node(int type, int uid);
+        Q_INVOKABLE int select_field(int type, int uid, int fid);
+        Q_INVOKABLE void clear_selection();
+        Q_INVOKABLE int run_command_string(QString str);
         Q_INVOKABLE void triggerUpdate() { emit update(); };
+
     signals:
-        void selectionChanged(int type, int uid, int nid, int fid);
-        void nodeSelection(int type, int uid, int nid);
+        void nodeSelected(int uid);
+        void fieldSelected(int uid, int fid);
         void commandMessageChanged(int code, QString msg);
         void update();
         void nodeAdded(int uid);

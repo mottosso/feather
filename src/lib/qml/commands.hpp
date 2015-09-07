@@ -69,13 +69,6 @@ namespace feather
             int layer_count();
 
 
-            // Selection
-
-            status select_node(int uid);
-            status get_selected_nodes(std::vector<int>& uids);
-            void clear_selection();
-
-
             // Fields
  
             // get field base 
@@ -104,9 +97,12 @@ namespace feather
             void get_plugins(std::vector<PluginInfo>& list);
 
             // SG SELECTION
-            status add_selection(int type, int uid, int nid, int fid);
-            status node_selection(int type, int uid, int nid);
-    
+            status select_node(int type, int uid);
+            status select_node(int type, int uid, int nid);
+            status select_node(int type, int uid, int nid, int fid);
+            status get_selected_nodes(std::vector<int>& uids);
+            void clear_selection();
+   
         } // namespace command
 
     } // namespace qml

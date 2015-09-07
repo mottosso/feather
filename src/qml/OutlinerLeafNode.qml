@@ -29,8 +29,8 @@ import QtQuick.Controls.Styles 1.4
 TreeViewStyle {
     id: style
 
-    backgroundColor: "#848482"
-    alternateBackgroundColor: "#848482"
+    backgroundColor: "#848484"
+    alternateBackgroundColor: "#949494"
 
     itemDelegate: Item {
         Item { id: nodeName; visible: false; Row { Image { sourceSize.width: 18; sourceSize.height: 18; source: "icons/"+model.icon } Text { elide: styleData.elideMode; font.pixelSize: 12; text: model.name } } }

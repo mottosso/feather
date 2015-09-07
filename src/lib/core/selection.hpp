@@ -30,7 +30,7 @@ namespace feather
 
     namespace selection {
 
-        enum Type { Node, Field, Component };
+        enum Type { Vertex, Edge, Face, Object, Node, Field };
 
         // Selection State
         struct SelectionState {

@@ -190,24 +190,6 @@ int qml::command::layer_count()
 }
 
 
-// Selection
-
-status qml::command::select_node(int uid)
-{
-    return scenegraph::add_selection(uid);
-}
-
-status qml::command::get_selected_nodes(std::vector<int>& uids)
-{
-    return scenegraph::get_selected_nodes(uids);
-}
-
-void qml::command::clear_selection()
-{
-    scenegraph::clear_selection();
-}
-
-
 // FIELDS
 
 // GET FIELD BASE
@@ -345,13 +327,28 @@ void qml::command::get_plugins(std::vector<PluginInfo>& list)
 
 // SG SELECTION
 
-status qml::command::add_selection(int type, int uid, int nid, int fid)
+status qml::command::select_node(int type, int uid)
+{
+    return scenegraph::add_selection(type,uid);
+}
+
+status qml::command::select_node(int type, int uid, int nid)
+{
+    return scenegraph::add_selection(type,uid,nid);
+}
+
+status qml::command::select_node(int type, int uid, int nid, int fid)
 {
     return scenegraph::add_selection(type,uid,nid,fid);
 }
 
-status qml::command::node_selection(int type, int uid, int nid)
+status qml::command::get_selected_nodes(std::vector<int>& uids)
 {
-    return scenegraph::node_selection(type,uid,nid);
+    return scenegraph::get_selected_nodes(uids);
+}
+
+void qml::command::clear_selection()
+{
+    scenegraph::clear_selection();
 }
 

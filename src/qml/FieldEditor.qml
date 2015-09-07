@@ -122,8 +122,10 @@ Window {
         
  
     Component.onCompleted: {
-        scenegraph.selectionChanged.connect(setSelection)        
-        scenegraph.nodeSelection.connect(nodeSelect)
+        // This was removed to fix seq fault during outliner selection
+        // It needs to be enabled again once the outliner is working
+        //scenegraph.nodeSelected.connect(setSelection)        
+        //scenegraph.nodeSelected.connect(nodeSelect)
         fieldEditor.properties.colorsChanged.connect(updateColor)
         updateColor()
     }    
