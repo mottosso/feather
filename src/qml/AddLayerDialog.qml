@@ -34,10 +34,20 @@ Window {
     visible: false 
     flags: Qt.Tool
     width: 300
-    height: 100
+    height: 40
+    property Properties properties: Null
+
     color: properties.getColor("windowBg")
 
     signal addLayer(string name)
+
+    Action {
+        id: addLayerAction
+        text: "Add Layer"
+        tooltip: "Add layer bar to the layer editor"
+        onTriggered: { addLayer(labelEdit.text); editor.visible=false }
+    }
+
 
     Item {
         anchors.fill: parent
@@ -68,25 +78,41 @@ Window {
             }
         }
 
+ 
         Row {
             spacing: 4
+ 
+            PushButton {
+                id: cancelButton
+                text: "Cancel"
+                properties: editor.properties
+                action: Action {
+                    onTriggered: { editor.visible=false }
+                }
+            }
             
             PushButton {
-                id: okBtn
+                id: okButton
                 text: "Ok"
+                properties: editor.properties
+                action: addLayerAction
             }
 
         }
+
     }
 
     }
 
     //onAccepted: { add_layer() }
 
+    /*
     function add_layer(){
         addLayer(labelEdit.text)
     }
+    */
 
+    /*
     function updateColor(){
         editor.color = properties.getColor("windowBg")
     }
@@ -96,4 +122,5 @@ Window {
         updateColor()
         properties.colorsChanged.connect(updateColor)
     }
+    */
 }

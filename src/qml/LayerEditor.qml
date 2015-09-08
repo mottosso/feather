@@ -37,7 +37,10 @@ Window {
     property SceneGraph scenegraph: Null
     property Properties properties: Null
 
-    AddLayerDialog { id: addLayerDialog }
+    AddLayerDialog {
+        id: addLayerDialog
+        properties: layerEditor.properties
+    }
 
     Action {
         id: addLayerAction
@@ -150,12 +153,14 @@ Window {
     }
 
 
+    /*
     function updateColor() {
         layerFrame.color = properties.getColor("panel")        
         layerEditor.color = properties.getColor("windowBg")
         toolBar.color = properties.getColor("toolBarBg")
         
     }
+    */
 
     function layout_changed(){
         view.update()
@@ -167,8 +172,8 @@ Window {
     }
 
     Component.onCompleted: {
-        updateColor()
-        properties.colorsChanged.connect(updateColor)
+        //updateColor()
+        //properties.colorsChanged.connect(updateColor)
         layerModel.layoutChanged.connect(layout_changed)
         addLayerDialog.addLayer.connect(add_layer)
     }    
