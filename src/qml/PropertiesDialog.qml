@@ -33,6 +33,8 @@ Window {
     height: 400
     property Properties properties: Null
 
+    color: properties.getColor("windowBg")
+
     Plugins { id: pluginsModule }
 
     TabView {

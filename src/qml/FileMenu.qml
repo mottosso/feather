@@ -33,9 +33,12 @@ Menu {
     id: fileMenu 
     title: "File"
     visible: true
-    property Properties properties: Null
-    style: MenuStyle {}
+
     property SceneGraph scenegraph: Null
+    property Properties properties: Null
+
+    style: MenuStyle { properties: fileMenu.properties }
+
 
     Tools { id: tools }
     FileDialog {

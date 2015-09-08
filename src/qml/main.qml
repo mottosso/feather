@@ -49,17 +49,20 @@ ApplicationWindow {
         id: cmdLineId
         anchors.fill: parent
         scenegraph: sg
+        properties: properties
     }
 
     ViewportEditor {
         id: viewportEditor
         scenegraph: sg
+        properties: properties
     }
-
+ 
     SceneGraphDialog {
         id: sgEditor
         scenegraph: sg
-    }
+        properties: properties
+     }
 
     FieldEditor {
         id: fieldEditor
@@ -70,11 +73,13 @@ ApplicationWindow {
     LayerEditor {
         id: layerEditor
         scenegraph: sg
+        properties: properties
     }
 
     Outliner {
         id: outliner
         scenegraph: sg
+        properties: properties
     }
 
     //Material {}

@@ -34,6 +34,8 @@ Rectangle {
     color: "black" 
     
     property SceneGraph scenegraph: Null
+    property Properties properties: Null
+
 
     // Actions
 
@@ -58,7 +60,14 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 36
-        style: ToolBarStyle {}
+        style: ToolBarStyle {
+            background: Rectangle {
+                color: properties.getColor("toolBarBg")
+                border.color: "black"
+                border.width: 1
+            }
+        }
+
 
         RowLayout {
             spacing: 6

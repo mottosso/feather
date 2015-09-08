@@ -54,19 +54,30 @@ Rectangle {
             }
         }
 
-        GridLayout {
-            width: colorProperties.width
-            height: rows * 20
-            rows: 2 
-            columns: 4
+        Column {
+            spacing: 4
 
-            ColorProperty { properties: colorProperties.properties; width: 130; name: "windowBg"; label: "Window BG" }
-            ColorProperty { properties: colorProperties.properties; width: 130; name: "panel"; label: "Panel" }
-            ColorProperty { properties: colorProperties.properties; width: 130; name: "labelBg"; label: "Label BG" }
-            ColorProperty { properties: colorProperties.properties; width: 130; name: "label"; label: "Label" }
-            ColorProperty { properties: colorProperties.properties; width: 130; name: "textBg"; label: "Text BG" }
-            ColorProperty { properties: colorProperties.properties; width: 130; name: "text"; label: "Text" }
-            ColorProperty { properties: colorProperties.properties; width: 130; name: "menu"; label: "Menu" }
+            ColorProperty { properties: colorProperties.properties; name: "windowBg"; label: "Window BG" }
+            ColorProperty { properties: colorProperties.properties; name: "panel"; label: "Panel" }
+            ColorProperty { properties: colorProperties.properties; name: "labelBg"; label: "Label BG" }
+            ColorProperty { properties: colorProperties.properties; name: "label"; label: "Label" }
+            ColorProperty { properties: colorProperties.properties; name: "textBg"; label: "Text BG" }
+            ColorProperty { properties: colorProperties.properties; name: "text"; label: "Text" }
+
+            // menu
+            ColorProperty { properties: colorProperties.properties; name: "menuBarBg"; label: "Menu Bar BG" }
+            ColorProperty { properties: colorProperties.properties; name: "menuPanelBg"; label: "Menu Panel BG" }
+            ColorProperty { properties: colorProperties.properties; name: "menuItemEnabledBg"; label: "Menu Item Enabled BG" }
+            ColorProperty { properties: colorProperties.properties; name: "menuItemEnabledText"; label: "Menu Item Enabled Text" }
+            ColorProperty { properties: colorProperties.properties; name: "menuItemEnabledHoverText"; label: "Menu Item Enabled Hover Text" }
+            // toolbar 
+            ColorProperty { properties: colorProperties.properties; name: "toolBarBg"; label: "Toolbar BG" }
+
+            // buttons
+            ColorProperty { properties: colorProperties.properties; name: "buttonEnabledBg"; label: "Button Enabled BG" }
+            ColorProperty { properties: colorProperties.properties; name: "buttonEnabledPressedBg"; label: "Button Enabled Pressed BG" }
+            ColorProperty { properties: colorProperties.properties; name: "buttonDisabledBg"; label: "Button Disabled BG" }
+ 
         } 
 
         // TYPES
@@ -89,11 +100,8 @@ Rectangle {
             }
         }
 
-        GridLayout {
-            width: colorProperties.width
-            height: rows * 20 
-            rows: 2 
-            columns: 4
+        Column {
+            spacing: 4
 
             ColorProperty { properties: colorProperties.properties; name: "boolType"; label: "Boolean" }
             ColorProperty { properties: colorProperties.properties; name: "intType"; label: "Int" }
@@ -124,11 +132,8 @@ Rectangle {
             }
         }
 
-        GridLayout {
-            width: colorProperties.width
-            height: rows * 20 
-            rows: 1 
-            columns: 4
+        Column {
+            spacing: 4
 
             ColorProperty { properties: colorProperties.properties; name: "cameraNode"; label: "Camera" }
             ColorProperty { properties: colorProperties.properties; name: "lightNode"; label: "Light" }

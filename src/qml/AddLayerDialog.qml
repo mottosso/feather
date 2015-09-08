@@ -26,30 +26,33 @@ import QtQuick.Window 2.2
 import feather.scenegraph 1.0
 import feather.layer 1.0
 import QtQuick.Controls 1.4
-import QtQuick.Dialogs 1.2
+//import QtQuick.Dialogs 1.2
 
-Dialog {
+Window {
     id: editor 
     title: "Add Layer"
     visible: false 
-    //flags: Qt.Tool
-    width: 200
-    height: 80
-    standardButtons: StandardButton.Ok | StandardButton.Cancel
+    flags: Qt.Tool
+    width: 300
+    height: 100
+    color: properties.getColor("windowBg")
 
     signal addLayer(string name)
 
-    Rectangle {
-        color: "grey"
+    Item {
         anchors.fill: parent
- 
+        anchors.margins: 4
+
+    Column {
+        spacing: 4
+
         Row {
             spacing: 4
- 
+
             Text {
                 id: label
                 height: 20
-                width: 80
+                width: 140 
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignVCenter
                 font.pixelSize: 14
@@ -61,14 +64,36 @@ Dialog {
                 id: labelEdit
                 readOnly: false
                 height: 20
-                width: 100 
+                width: 140 
             }
         }
+
+        Row {
+            spacing: 4
+            
+            PushButton {
+                id: okBtn
+                text: "Ok"
+            }
+
+        }
     }
+
+    }
+
+    //onAccepted: { add_layer() }
 
     function add_layer(){
         addLayer(labelEdit.text)
     }
-    
-    Component.onCompleted: { accepted.connect(add_layer) }
+
+    function updateColor(){
+        editor.color = properties.getColor("windowBg")
+    }
+
+    Component.onCompleted: {
+        //accepted.connect(add_layer)
+        updateColor()
+        properties.colorsChanged.connect(updateColor)
+    }
 }

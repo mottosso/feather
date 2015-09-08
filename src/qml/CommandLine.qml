@@ -33,6 +33,7 @@ Rectangle {
     width: 500
     height: 20
     property SceneGraph scenegraph: Null
+    property Properties properties: Null
 
     Item {
         anchors.fill: parent

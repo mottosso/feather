@@ -34,10 +34,13 @@ Window {
     height: 500
 
     property SceneGraph scenegraph: null
+    property Properties properties: Null
+
 
     SceneGraphEditor {
         id: sg
         anchors.fill: parent
         scenegraph: sgEditor.scenegraph
+        properties: sgEditor.properties
     }
 }

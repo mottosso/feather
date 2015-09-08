@@ -36,6 +36,7 @@ Window {
     width: 600
     height: 600
     property SceneGraph scenegraph: Null
+    property Properties properties: Null
 
     // Show Viewport Components
 
@@ -134,7 +135,13 @@ Window {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 72
-        style: ToolBarStyle {}
+        style: ToolBarStyle {
+            background: Rectangle {
+                color: properties.getColor("toolBarBg")
+                border.color: "black"
+                border.width: 1
+            }
+        }
 
         RowLayout {
             spacing: 6

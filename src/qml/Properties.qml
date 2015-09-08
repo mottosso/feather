@@ -37,7 +37,22 @@ Item {
         ListElement { name: "panel"; color: "#303030" }
         ListElement { name: "labelBg"; color: "#F0F8FF" }
         ListElement { name: "label"; color: "#000000" }
-        ListElement { name: "menu"; color: "#848482" }
+
+        // MENU
+        ListElement { name: "menuBarBg"; color: "#848482" }
+        ListElement { name: "menuPanelBg"; color: "#848482" }
+        ListElement { name: "menuItemEnabledBg"; color: "#F0F8FF" }
+        ListElement { name: "menuItemEnabledText"; color: "#000000" }
+        ListElement { name: "menuItemEnabledHoverText"; color: "#000000" }
+
+        // TOOLBAR 
+        ListElement { name: "toolBarBg"; color: "#848482" }
+ 
+        // BUTTON
+        ListElement { name: "buttonEnabledBg"; color: "#F0F8FF" }
+        ListElement { name: "buttonEnabledPressedBg"; color: "#FFFFFF" }
+        ListElement { name: "buttonDisabledBg"; color: "#303030" }
+ 
         // TYPES
         ListElement { name: "boolType"; color: "#008080" }
         ListElement { name: "intType"; color: "#E2725B" }

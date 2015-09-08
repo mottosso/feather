@@ -27,7 +27,8 @@ import QtQuick.Dialogs 1.2
 
 Item {
     id: colorProperty
-    width: 100
+    //width: 100
+    width: label.width + colorBox.width
     height: 20
     property alias label: label.text
     property string name: ""
@@ -47,16 +48,6 @@ Item {
         spacing: 10
         anchors.fill: parent
 
-        Text {
-            id: label
-            width: colorProperty.width-colorBox.width
-            horizontalAlignment: Text.AlignRight
-            verticalAlignment: Text.AlignVCenter
-            font.bold: false 
-            font.pixelSize: 12
-            color: "black"
-        }
-
         Rectangle {
             id: colorBox
             width: 40
@@ -75,6 +66,16 @@ Item {
                 }
             }
         }
+
+        Text {
+            id: label
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignVCenter
+            font.bold: false 
+            font.pixelSize: 12 
+            color: "black"
+        }
+
     }
     
     Component.onCompleted: {

@@ -31,21 +31,27 @@ MenuBar {
     property Properties properties: Null
     property SceneGraph scenegraph: Null
 
-    style: MenuBarStyle { background: Rectangle { color: "darkgrey"; border.color: "black"; border.width: 1 } }
+    style: MenuBarStyle {
+        background: Rectangle {
+            color: properties.getColor("menuBarBg")
+            border.color: "black"
+            border.width: 1
+        }
+    }
  
     FileMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
 
-    EditMenu{}
+    EditMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
 
-    AddMenu{}
+    AddMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
 
-    ViewMenu{}
+    ViewMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
 
-    SelectMenu{}
+    SelectMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
 
-    ToolsMenu{}
+    ToolsMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
 
-    WindowMenu{}
+    WindowMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
 
-    HelpMenu{}
+    HelpMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
 }

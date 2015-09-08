@@ -26,9 +26,14 @@ import QtQuick.Controls.Styles 1.4
 
 MenuStyle {
     id: item
-    frame: Rectangle { color: "darkgrey"; border.color: "black"; border.width: 1 }
+    frame: Rectangle {
+        color: properties.getColor("menuPanelBg") 
+        border.color: "black"
+        border.width: 1
+    }
     itemDelegate.background: menuItem 
     itemDelegate.label: menuText
+    property Properties properties: Null
 
     Component {
         id: menuText
@@ -46,9 +51,13 @@ MenuStyle {
     Component {
         id: menuItem
         Rectangle {
-            color: (styleData.selected) ? "lightgrey" : "darkgrey"
+            color: (styleData.selected) ? properties.getColor("menuItemEnabledBg") : properties.getColor("menuPanelBg")
             //radius: 2
         }
+    }
+
+    function updateColors() {
+        
     }
 }
 

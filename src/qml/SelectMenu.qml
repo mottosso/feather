@@ -23,12 +23,17 @@
 
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import feather.scenegraph 1.0
 
 Menu {
     id: selectMenu 
     title: "Select"
     visible: true
-    style: MenuStyle {}
+
+    property SceneGraph scenegraph: Null
+    property Properties properties: Null
+
+    style: MenuStyle { properties: selectMenu.properties }
 
 
     // ACTIONS

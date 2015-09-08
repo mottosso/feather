@@ -35,6 +35,7 @@ Window {
     width: 200
     height: 200
     property SceneGraph scenegraph: Null
+    property Properties properties: Null
 
     AddLayerDialog { id: addLayerDialog }
 
@@ -75,7 +76,7 @@ Window {
         height: 36
         border.color: "black"
         border.width: 1
-        color: properties.getColor("menu")
+        color: properties.getColor("toolBarBg")
 
         Row {
             spacing: 4
@@ -152,7 +153,7 @@ Window {
     function updateColor() {
         layerFrame.color = properties.getColor("panel")        
         layerEditor.color = properties.getColor("windowBg")
-        toolBar.color = properties.getColor("menu")
+        toolBar.color = properties.getColor("toolBarBg")
         
     }
 

@@ -32,7 +32,11 @@ Menu {
     id: addMenu
     title: "Add"
     visible: true
-    style: MenuStyle {}
+
+    property SceneGraph scenegraph: Null
+    property Properties properties: Null
+
+    style: MenuStyle { properties: addMenu.properties }
 
 
     SceneGraph {
