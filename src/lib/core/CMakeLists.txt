@@ -49,7 +49,6 @@ SET(feather_core_HDRS
     types.hpp
     singleton.hpp
     scenegraph.hpp
-    layer.hpp
     pluginmanager.hpp
     types.hpp
     state.hpp

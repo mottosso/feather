@@ -38,7 +38,6 @@
 #include "shader.hpp"
 #include "pluginmanager.hpp"
 #include "state.hpp"
-//#include "layers.hpp"
 
 namespace feather
 {
