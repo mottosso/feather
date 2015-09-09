@@ -126,12 +126,11 @@ namespace feather
     // Layer Properties
     struct FLayer
     {
-        FLayer(std::string _n="", FColorRGB _c=FColorRGB(), bool _v=true, bool _l=true, std::vector<uint> _u=std::vector<uint>()): name(_n),color(_c),visible(_v),locked(_l),uids(_u) {};
+        FLayer(std::string _n="", FColorRGB _c=FColorRGB(), bool _v=true, bool _l=true) : name(_n),color(_c),visible(_v),locked(_l) {};
         std::string name;
         FColorRGB color;
         bool visible;
         bool locked;
-        std::vector<uint> uids;            
     };
 
 
@@ -299,6 +298,7 @@ namespace feather
         field::Fields fields; // this holds the field data
         std::string name;
         node::Type type; // this is the node group type
+        int layer; // what layer is the node stored in
         DataObject* parent; // ??still used??
         FAttributeArray* attrs; // ??still used??
         // GL

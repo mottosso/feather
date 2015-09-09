@@ -38,6 +38,7 @@
 #include "shader.hpp"
 #include "pluginmanager.hpp"
 #include "state.hpp"
+//#include "layers.hpp"
 
 namespace feather
 {
@@ -67,6 +68,7 @@ namespace feather
      */
 
     static state::FState cstate;
+    static std::vector<FLayer> layers;
     static FSceneGraph sg;
 
     static PluginManager plugins;
@@ -114,6 +116,7 @@ namespace feather
             sg[uid].uid = uid;
             sg[uid].node = n;
             sg[uid].name = name;
+            sg[uid].layer = 0;
             plugins.create_fields(n,sg[uid].fields);
             // do the selection in a seperate command
             //node_selection.push_back(n); 
@@ -190,6 +193,52 @@ namespace feather
                 //std::cout << "field is not connected, returning the default field\n";
                 return f;
             }
+        };
+
+
+        // LAYER
+        
+        int layer_count() { return layers.size(); };
+
+        FLayer* layer(int _id) { return &layers.at(_id); };
+        bool layer(int _id, FLayer& l) { l=layers.at(_id); return true; };
+ 
+        void set_layer(int uid, int layer) {
+            sg[uid].layer = layer;
+        };
+
+        bool remove_layer(int id) {
+            if(id>=(int)layers.size() || id==0)
+                return false;
+
+            layers.erase(layers.begin()+id);
+            return true;
+        };
+
+        void move_layer(int sid, int tid) {
+            // check
+            if(sid < 0 || sid >= (int)layers.size() || tid < 0 || tid >= (int)layers.size() || sid == tid)
+                return;
+
+            // move
+            if(sid < tid){
+                layers.insert(layers.begin()+(tid+1),std::move(layers.at(sid)));
+                layers.erase(layers.begin()+sid);
+            } else {
+                layers.insert(layers.begin()+(sid+1),std::move(layers.at(tid)));
+                layers.erase(layers.begin()+tid);
+
+            }
+        }
+
+        void add_layer(FLayer layer) { layers.push_back(layer); };
+
+        void add_layer(std::string _name, FColorRGB _color=FColorRGB(1,1,1), bool _visible=true, bool _locked=false) {
+            layers.push_back(FLayer(_name,_color,_visible,_locked));
+        };
+
+        FLayer get_layer(int uid) {
+            return layers.at(sg[uid].layer);
         };
 
 

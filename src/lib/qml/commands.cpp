@@ -25,7 +25,6 @@
 #include "field.hpp"
 #include "scenegraph.hpp"
 #include "selection.hpp"
-#include "layer.hpp"
 
 using namespace feather;
 
@@ -142,51 +141,51 @@ status qml::command::run_command_string(std::string str)
 
 status qml::command::add_layer(feather::FLayer layer)
 {
-    layers.add(layer);
+    scenegraph::add_layer(layer);
     return status();
 }
 
 status qml::command::remove_layer(int id)
 {
-    bool p = layers.remove(id);
+    bool p = scenegraph::remove_layer(id);
     return (!p) ? status(FAILED,"failed to remover layer: id out of range") : status();
 }
 
 status qml::command::move_layer(int sid, int tid)
 {
-    layers.move(sid,tid);
+    scenegraph::move_layer(sid,tid);
     return status();
 }
 
 status qml::command::get_layer(int id, feather::FLayer &layer)
 {
-    bool p = layers.layer(id,layer);
+    bool p = scenegraph::layer(id,layer);
     return (!p) ? status(FAILED,"failed to get layer: id out of range") :status();
 }
 
 void qml::command::set_layer_name(std::string name, int id)
 {
-    layers.set_name(name,id);
+    scenegraph::layer(id)->name = name;
 }
 
 void qml::command::set_layer_color(int r, int g, int b, int id)
 {
-    layers.set_color(FColorRGB(static_cast<float>(r)/255.0,static_cast<float>(g)/255.0,static_cast<float>(b)/255.0),id);
+    scenegraph::layer(id)->color = FColorRGB(static_cast<float>(r)/255.0,static_cast<float>(g)/255.0,static_cast<float>(b)/255.0);
 }
 
 void qml::command::set_layer_visible(bool v, int id)
 {
-    layers.set_visible(v,id);
+    scenegraph::layer(id)->visible = v;
 }
 
 void qml::command::set_layer_locked(bool l, int id)
 {
-    layers.set_locked(l,id);
+    scenegraph::layer(id)->locked = l;
 }
 
 int qml::command::layer_count()
 {
-    return layers.count();
+    return scenegraph::layer_count();
 }
 
 
