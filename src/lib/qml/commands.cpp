@@ -145,9 +145,9 @@ status qml::command::add_layer(feather::FLayer layer)
     return status();
 }
 
-status qml::command::remove_layer(int id)
+status qml::command::remove_layer(int lid)
 {
-    bool p = scenegraph::remove_layer(id);
+    bool p = scenegraph::remove_layer(lid);
     return (!p) ? status(FAILED,"failed to remover layer: id out of range") : status();
 }
 
@@ -157,35 +157,40 @@ status qml::command::move_layer(int sid, int tid)
     return status();
 }
 
-status qml::command::get_layer(int id, feather::FLayer &layer)
+status qml::command::get_layer(int lid, feather::FLayer &layer)
 {
-    bool p = scenegraph::layer(id,layer);
+    bool p = scenegraph::layer(lid,layer);
     return (!p) ? status(FAILED,"failed to get layer: id out of range") :status();
 }
 
-void qml::command::set_layer_name(std::string name, int id)
+void qml::command::set_layer_name(std::string name, int lid)
 {
-    scenegraph::layer(id)->name = name;
+    scenegraph::layer(lid)->name = name;
 }
 
-void qml::command::set_layer_color(int r, int g, int b, int id)
+void qml::command::set_layer_color(int r, int g, int b, int lid)
 {
-    scenegraph::layer(id)->color = FColorRGB(static_cast<float>(r)/255.0,static_cast<float>(g)/255.0,static_cast<float>(b)/255.0);
+    scenegraph::layer(lid)->color = FColorRGB(static_cast<float>(r)/255.0,static_cast<float>(g)/255.0,static_cast<float>(b)/255.0);
 }
 
-void qml::command::set_layer_visible(bool v, int id)
+void qml::command::set_layer_visible(bool v, int lid)
 {
-    scenegraph::layer(id)->visible = v;
+    scenegraph::layer(lid)->visible = v;
 }
 
-void qml::command::set_layer_locked(bool l, int id)
+void qml::command::set_layer_locked(bool l, int lid)
 {
-    scenegraph::layer(id)->locked = l;
+    scenegraph::layer(lid)->locked = l;
 }
 
 int qml::command::layer_count()
 {
     return scenegraph::layer_count();
+}
+
+void qml::command::add_node_to_layer(int uid, int lid)
+{
+    scenegraph::add_node_to_layer(uid,lid);
 }
 
 

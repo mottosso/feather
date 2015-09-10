@@ -199,18 +199,21 @@ namespace feather
         
         int layer_count() { return layers.size(); };
 
-        FLayer* layer(int _id) { return &layers.at(_id); };
-        bool layer(int _id, FLayer& l) { l=layers.at(_id); return true; };
+        FLayer* layer(int lid) { return &layers.at(lid); };
+
+        bool layer(int lid, FLayer& l) { l=layers.at(lid); return true; };
  
+        FLayer* node_layer(int uid) { return &layers.at(sg[uid].layer); };
+
         void set_layer(int uid, int layer) {
             sg[uid].layer = layer;
         };
 
-        bool remove_layer(int id) {
-            if(id>=(int)layers.size() || id==0)
+        bool remove_layer(int lid) {
+            if(lid>=(int)layers.size() || lid==0)
                 return false;
 
-            layers.erase(layers.begin()+id);
+            layers.erase(layers.begin()+lid);
             return true;
         };
 
@@ -240,6 +243,9 @@ namespace feather
             return layers.at(sg[uid].layer);
         };
 
+        void add_node_to_layer(int uid, int lid) {
+            sg[uid].layer=lid;
+        }
 
         // SELECTION
 

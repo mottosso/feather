@@ -158,11 +158,11 @@ Window {
         layerFrame.color = properties.getColor("panel")        
         layerEditor.color = properties.getColor("windowBg")
         toolBar.color = properties.getColor("toolBarBg")
-        
     }
     */
 
     function layout_changed(){
+        scenegraph.update()
         view.update()
     }
 
