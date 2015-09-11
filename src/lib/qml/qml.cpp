@@ -48,7 +48,14 @@ int SceneGraph::connect_nodes(int n1, int f1, int n2, int f2)
     status p = qml::command::connect_nodes(n1,f1,n2,f2);
     return p.state;
 }
-  
+   
+int SceneGraph::select_node(int uid)
+{
+    status p = qml::command::select_node(uid);
+    emit nodeSelected(uid);
+    return p.state;
+}
+ 
 int SceneGraph::select_node(int type, int uid)
 {
     status p = qml::command::select_node(type,uid);
