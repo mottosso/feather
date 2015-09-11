@@ -63,8 +63,8 @@ Window {
 
         style: OutlinerLeafNode {}
  
-        onActivated: { console.log("item activated " + model.data(index,260)) }
-        onClicked: { console.log("item clicked " + model.data(index,260)); scenegraph.clear_selection(); scenegraph.select_node(0,model.data(index,260)); }
+        onActivated: { console.log("item activated " + model.data(index,260)); scenegraph.clear_selection(); scenegraph.select_node(model.data(index,260)) }
+        onClicked: { console.log("item clicked " + model.data(index,260)); scenegraph.clear_selection(); scenegraph.select_node(model.data(index,260)) }
    }
 
    function updateSg(){
