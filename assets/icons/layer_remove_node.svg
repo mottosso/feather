@@ -17,7 +17,7 @@
    version="1.1"
    inkscape:version="0.91 r13725"
    viewBox="0 0 64 64"
-   sodipodi:docname="layers.svg">
+   sodipodi:docname="layer_remove_node.svg">
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -167,7 +167,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -352,7 +352,7 @@
   </g>
   <g
      sodipodi:insensitive="true"
-     style="display:inline"
+     style="display:none"
      inkscape:label="add"
      id="layer6"
      inkscape:groupmode="layer">
@@ -364,7 +364,7 @@
   </g>
   <g
      sodipodi:insensitive="true"
-     style="display:none"
+     style="display:inline"
      inkscape:groupmode="layer"
      id="g6931"
      inkscape:label="substract">
