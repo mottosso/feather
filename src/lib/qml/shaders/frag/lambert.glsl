@@ -25,8 +25,8 @@
 //#extension GL_EXT_gpu_shader4 : enable
 //#extension GL_EXT_fragment_shader4 : enable
 
-varying vec3 LightIntensity;
+varying vec3 lightintensity;
 
 void main(){
-    gl_FragColor = vec4(LightIntensity, 1.0);
+    gl_FragColor = vec4(lightintensity, 1.0);
 }

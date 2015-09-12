@@ -51,6 +51,7 @@
     node.glNormal = info.program->attributeLocation("normal");\
     node.glView = info.program->uniformLocation("modelview");\
     node.glSelected = info.program->uniformLocation("Selected");\
+    node.glLayerColor = info.program->attributeLocation("LayerColor");\
     node.glLightPosition = info.program->attributeLocation("LightPosition");\
     node.glLightAmbient = info.program->attributeLocation("LightAmbient");\
     node.glLightDiffuse = info.program->attributeLocation("LightDiffuse");\

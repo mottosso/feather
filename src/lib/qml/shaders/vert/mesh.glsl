@@ -26,6 +26,7 @@ attribute highp vec4 color;
 attribute highp vec3 normal;
 uniform mediump int modelview;
 uniform mediump int Selected;
+attribute highp vec3 LayerColor;
 attribute highp vec3 LightPosition;
 attribute highp vec3 LightAmbient;
 attribute highp vec3 LightDiffuse;
@@ -38,7 +39,7 @@ attribute highp vec3 CameraPosition;
 attribute highp vec4 ShaderDiffuse;
 uniform mediump mat4 matrix;
 
-varying vec3 LightIntensity;
+varying vec3 lightintensity;
 
 void main()
 {
@@ -49,7 +50,10 @@ void main()
     
     vec3 s = normalize(vec3(lposition-position));
 
-    LightIntensity = LightDiffuse * MaterialDiffuse * max(dot(s,norm),0.0);
+    if(modelview==0)
+        lightintensity = LightDiffuse * MaterialDiffuse * max(dot(s,norm),0.0);
+    else
+        lightintensity= LayerColor;
 
     gl_Position = matrix * vertex;
 }
