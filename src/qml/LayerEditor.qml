@@ -70,6 +70,19 @@ Window {
         onTriggered: { if(view.currentIndex > 0){ layerModel.moveLayer(view.currentIndex,view.currentIndex-1); view.currentIndex = view.currentIndex-1 } }
     }
 
+    Action {
+        id: addNodeToLayerAction
+        text: "Add Node To Layer"
+        tooltip: "add selected node to selected layer"
+        onTriggered: {
+            var uid = scenegraph.selected_node()
+            var lid = view.currentIndex 
+            if(uid){
+                scenegraph.add_node_to_layer(uid,lid)
+            }
+        }
+    }
+
 
     Rectangle {
         id: toolBar
@@ -112,6 +125,13 @@ Window {
                 iconSource: "/usr/local/feather/ui/icons/layer_move_down.svg"
                 iconName: "move layer down"
                 action: moveLayerDownAction 
+            }
+
+            ToolButton {
+                width: 32; height: 32
+                iconSource: "/usr/local/feather/ui/icons/layer_add_node.svg"
+                iconName: "add node to layer"
+                action: addNodeToLayerAction 
             }
 
         }

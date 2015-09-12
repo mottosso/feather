@@ -48,6 +48,11 @@ int SceneGraph::connect_nodes(int n1, int f1, int n2, int f2)
     status p = qml::command::connect_nodes(n1,f1,n2,f2);
     return p.state;
 }
+
+int SceneGraph::selected_node()
+{
+    return qml::command::selected_node();
+}
    
 int SceneGraph::select_node(int uid)
 {
@@ -83,6 +88,10 @@ int SceneGraph::run_command_string(QString str)
     return p.state;
 }
 
+void SceneGraph::add_node_to_layer(int uid, int lid)
+{
+    qml::command::add_node_to_layer(uid,lid);
+}
 
 // Field
 Field::Field(QObject* parent): m_uid(0),m_node(0),m_field(0),m_boolVal(false),m_intVal(0),m_floatVal(0.0),m_connected(false)

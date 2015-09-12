@@ -331,6 +331,11 @@ void qml::command::get_plugins(std::vector<PluginInfo>& list)
 
 // SG SELECTION
 
+int qml::command::selected_node()
+{
+    return scenegraph::get_selected_node();
+}
+
 status qml::command::select_node(int uid)
 {
     return scenegraph::add_selection(uid);

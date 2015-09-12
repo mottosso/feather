@@ -249,6 +249,13 @@ namespace feather
 
         // SELECTION
 
+        int get_selected_node() {
+            if(smg::Instance()->count()>0)
+                return smg::Instance()->get_uid(smg::Instance()->count()-1);
+            else
+                return -1; // nothing selected
+        };
+
         status add_selection(int uid) {
             smg::Instance()->add_state(static_cast<selection::Type>(sg[uid].type),uid,sg[uid].node);
             return status();

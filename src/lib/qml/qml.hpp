@@ -66,12 +66,14 @@ class SceneGraph : public QObject
         // commands
         Q_INVOKABLE int add_node(int type, int node, QString name);
         Q_INVOKABLE int connect_nodes(int n1, int f1, int n2, int f2);
+        Q_INVOKABLE int selected_node();
         Q_INVOKABLE int select_node(int uid);
         Q_INVOKABLE int select_node(int type, int uid);
         Q_INVOKABLE int select_field(int type, int uid, int fid);
         Q_INVOKABLE void clear_selection();
         Q_INVOKABLE int run_command_string(QString str);
         Q_INVOKABLE void triggerUpdate() { emit update(); };
+        Q_INVOKABLE void add_node_to_layer(int uid, int lid);
 
     signals:
         void nodeSelected(int uid);

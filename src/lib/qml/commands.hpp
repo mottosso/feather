@@ -98,6 +98,7 @@ namespace feather
             void get_plugins(std::vector<PluginInfo>& list);
 
             // SG SELECTION
+            int selected_node();
             status select_node(int uid);
             status select_node(int type, int uid);
             status select_node(int type, int uid, int nid);
