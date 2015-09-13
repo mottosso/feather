@@ -43,6 +43,11 @@ int SceneGraph::add_node(int type, int node, QString name)
     return uid;
 }
 
+QString SceneGraph::node_name(int uid)
+{
+    return qml::command::get_node_name(uid).c_str();
+}
+
 int SceneGraph::connect_nodes(int n1, int f1, int n2, int f2)
 {
     status p = qml::command::connect_nodes(n1,f1,n2,f2);

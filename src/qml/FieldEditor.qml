@@ -62,7 +62,6 @@ Window {
  
             Text {
                 id: nodeLabel
-                text: "cube01"
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -108,7 +107,6 @@ Window {
  
             Text {
                 id: nodeBaseLabel
-                text: "cube01->Base"
                 anchors.fill: parent
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -125,7 +123,7 @@ Window {
         // This was removed to fix seq fault during outliner selection
         // It needs to be enabled again once the outliner is working
         //scenegraph.nodeSelected.connect(setSelection)        
-        //scenegraph.nodeSelected.connect(nodeSelect)
+        scenegraph.nodeSelected.connect(nodeSelect)
         fieldEditor.properties.colorsChanged.connect(updateColor)
         updateColor()
     }    
@@ -137,7 +135,8 @@ Window {
         fieldModel.layoutChanged()
     }
 
-    function nodeSelect(type,uid,nid) {
+    function nodeSelect(uid) {
+        nodeLabel.text = scenegraph.node_name(uid);
         fieldModel.addFields(uid,nid)
     }
 
