@@ -32,7 +32,9 @@ TreeViewStyle {
     backgroundColor: "#848484"
     alternateBackgroundColor: "#949494"
 
-    itemDelegate: Item {
+    itemDelegate: Rectangle {
+        color: (styleData.selected)?"#7070FF":"#00000000"
+
         Item { id: nodeName; visible: false; Row { Image { sourceSize.width: 18; sourceSize.height: 18; source: "icons/"+model.icon } Text { elide: styleData.elideMode; font.pixelSize: 12; text: model.name } } }
         Item { 
             id: nodeVisible
