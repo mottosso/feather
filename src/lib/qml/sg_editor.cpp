@@ -400,6 +400,9 @@ void SceneGraphEditor::updateGraph()
     int xpos = 100;
     int ypos = 50;
 
+    m_nodes.clear();
+    m_links.clear();
+
     std::vector<int> uids;
     feather::qml::command::get_selected_nodes(uids);
 
@@ -439,9 +442,11 @@ void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int 
     std::vector<int> cuids;
     // update each connected node as a separate leaf 
     feather::qml::command::get_node_connected_uids(uid,cuids);
-    std::for_each(cuids.begin(),cuids.end(),[&xpos,&ypos,this,node](int key){
+    int ystep = 0;
+    std::for_each(cuids.begin(),cuids.end(),[&xpos,&ypos,this,node,&ystep](int key){
         std::cout << "drawing leaf " << key << std::endl;
-        updateLeaf(node,key,xpos+100,ypos+100);
+        updateLeaf(node,key,xpos+100,ypos+ystep+100);
+        ystep+=40;
     });
 }
 

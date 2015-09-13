@@ -159,7 +159,7 @@ class SceneGraphEditor : public QQuickPaintedItem
         ~SceneGraphEditor();
 
         void paint(QPainter* painter);
-        Q_INVOKABLE void update_sg() { update(); }; 
+        Q_INVOKABLE void update_sg() { updateGraph(); update(); }; 
         Q_INVOKABLE void startConnection() { SGState::mode=SGState::FieldConnection; };
         Q_INVOKABLE void connectionMousePressed(int button, int uid, int nid, int fid);
         Q_INVOKABLE void connectionMouseReleased(int button, int uid, int nid, int fid);
