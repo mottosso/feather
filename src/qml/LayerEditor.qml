@@ -75,11 +75,12 @@ Window {
         text: "Add Node To Layer"
         tooltip: "add selected node to selected layer"
         onTriggered: {
+            console.log("addNodeToLayerAction selected node=" + scenegraph.selected_node())
             var uid = scenegraph.selected_node()
             var lid = view.currentIndex 
             if(uid){
                 scenegraph.add_node_to_layer(uid,lid)
-            }
+             }
         }
     }
 
@@ -182,7 +183,12 @@ Window {
     */
 
     function layout_changed(){
-        scenegraph.update()
+        // updating the scenegraph here will cause a seg fault when an item
+        // in the Outliner is selected. This happends because updating the 
+        // the scenegraph will trigger a update telling the Outliner to clear
+        // it's root node and setup again which destroys the items displayed
+        // making them invalid
+        //scenegraph.update()
         view.update()
     }
 

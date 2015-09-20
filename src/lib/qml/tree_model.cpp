@@ -87,6 +87,7 @@ Leaf *Leaf::parentItem()
 
 TreeModel::~TreeModel()
 {
+    std::cout << "delete tree model\n";
     delete rootItem;
 }
 
@@ -221,6 +222,8 @@ void TreeModel::loadChildren(const int uid, Leaf* parent)
     data.append(icon.c_str()); // icon 
     data.append(uid); // uid
     data.append(0); // nid
+
+    //std::cout << "load child for " << uid << std::endl;
 
     parent->appendChild(new Leaf(data,parent)); 
 

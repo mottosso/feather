@@ -63,11 +63,12 @@ Window {
 
         style: OutlinerLeafNode {}
  
-        onActivated: { console.log("item activated " + model.data(index,260)); scenegraph.clear_selection(); scenegraph.select_node(model.data(index,260)) }
-        onClicked: { console.log("item clicked " + model.data(index,260)); scenegraph.clear_selection(); scenegraph.select_node(model.data(index,260)) }
+        //onActivated: { console.log("item activated " + model.data(index,260)); scenegraph.clear_selection(); scenegraph.select_node(model.data(index,260)) }
+        onClicked: { if(!model){ console.log("no model found") } else { console.log("item clicked for index " + index + " model " + model.data(index,260)); scenegraph.clear_selection(); scenegraph.select_node(model.data(index,260)) } }
    }
 
    function updateSg(){
+        console.log("updateSg() model" + tree.model)
         tree.model.updateTree()
    } 
 

@@ -414,7 +414,6 @@ void SceneGraphEditor::updateGraph()
     for(uint i=0; i < uids.size(); i++) {
         updateLeaf(NULL,uids[i],xpos,ypos+=100);
     }
-
 }
 
 

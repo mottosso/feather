@@ -252,7 +252,7 @@ namespace feather
         int get_selected_node() {
             if(smg::Instance()->count()>0)
                 return smg::Instance()->get_uid(smg::Instance()->count()-1);
-            else
+            else 
                 return -1; // nothing selected
         };
 

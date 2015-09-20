@@ -224,6 +224,7 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
+                    //console.log("layerbar visible model=" + layerFrame.ListView.view.model)
                     if(layerVisible)
                         layerFrame.ListView.view.model.setVisible(false,index);   
                     else
