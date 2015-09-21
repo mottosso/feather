@@ -27,13 +27,14 @@ import feather.scenegraph 1.0
 import feather.layer 1.0
 import QtQuick.Controls 1.4
 
-Window {
+Item {
+//Window {
     id: layerEditor 
-    title: "Layer Editor"
-    visible: true
-    flags: Qt.Tool
-    width: 200
-    height: 200
+    //title: "Layer Editor"
+    //visible: true
+    //flags: Qt.Tool
+    //width: 200
+    //height: 200
     property SceneGraph scenegraph: Null
     property Properties properties: Null
 

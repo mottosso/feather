@@ -27,13 +27,14 @@ import QtQuick.Controls 1.4
 import QtQml.Models 2.2
 import feather.scenegraph 1.0
 
-Window {
+Item {
+//Window {
     id: outliner
-    title: "Outliner"
-    visible: true
-    flags: Qt.Tool
-    width: 300
-    height: 600
+    //title: "Outliner"
+    //visible: true
+    //flags: Qt.Tool
+    //width: 300
+    //height: 600
     property SceneGraph scenegraph: Null
     property Properties properties: Null
    
@@ -60,7 +61,7 @@ Window {
         selectionMode: SelectionMode.ContiguousSelection
         sortIndicatorVisible: true
         headerVisible: false
-
+        horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
         style: OutlinerLeafNode {}
  
         //onActivated: { console.log("item activated " + model.data(index,260)); scenegraph.clear_selection(); scenegraph.select_node(model.data(index,260)) }

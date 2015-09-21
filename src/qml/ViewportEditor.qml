@@ -27,14 +27,15 @@ import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.2
 import feather.scenegraph 1.0
 
-Window {
+Item {
+//Window {
     id: editor 
-    title: "Viewport Editor"
-    visible: true
+    //title: "Viewport Editor"
+    //visible: true
     //flags: Qt.SubWindow
-    flags: Qt.Tool
-    width: 600
-    height: 600
+    //flags: Qt.Tool
+    //width: 600
+    //height: 600
     property SceneGraph scenegraph: Null
     property Properties properties: Null
 

@@ -28,8 +28,8 @@ import feather.scenegraph 1.0
 
 ApplicationWindow {
     id: window
-    width: 500
-    height: 70
+    width: 1200
+    height: 800
     visible: true
     title: "Feather 0.1"
 
@@ -41,46 +41,70 @@ ApplicationWindow {
 
     //toolBar: MainToolBar {}
 
+    SplitView {
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: cmdLineId.top
+        orientation: Qt.Horizontal
+
+        SceneGraphEditor{
+            id: sgEditor
+            width: 200
+            scenegraph: sg
+            properties: properties
+        }
+
+        ViewportEditor {
+            id: viewportEditor
+            Layout.fillWidth: true 
+            scenegraph: sg
+            properties: properties
+        }
+
+        SplitView {
+            width: 200
+            //anchors.fill: parent
+            orientation: Qt.Vertical
+
+            Outliner {
+                id: outliner
+                height: 200
+                scenegraph: sg
+                properties: properties
+            }
+
+            FieldEditor {
+                id: fieldEditor
+                height: 200
+                scenegraph: sg
+                properties: properties
+            }
+
+            LayerEditor {
+                id: layerEditor
+                scenegraph: sg
+                properties: properties
+            }
+
+        }
+
+    }
+ 
+    CommandLine {
+        id: cmdLineId
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: 25
+        scenegraph: sg
+        properties: properties
+    }
+
     statusBar: StatusBar {
         RowLayout { BusyIndicator { implicitWidth: 10; implicitHeight: 10; running: false } Label { text: "Feather 0.1" } }
     }
 
-    CommandLine {
-        id: cmdLineId
-        anchors.fill: parent
-        scenegraph: sg
-        properties: properties
-    }
-
-    ViewportEditor {
-        id: viewportEditor
-        scenegraph: sg
-        properties: properties
-    }
- 
-    SceneGraphDialog {
-        id: sgEditor
-        scenegraph: sg
-        properties: properties
-     }
-
-    FieldEditor {
-        id: fieldEditor
-        scenegraph: sg
-        properties: properties
-    }
-
-    LayerEditor {
-        id: layerEditor
-        scenegraph: sg
-        properties: properties
-    }
-
-    Outliner {
-        id: outliner
-        scenegraph: sg
-        properties: properties
-    }
-
     //Material {}
+
 }

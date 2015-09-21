@@ -26,13 +26,14 @@ import QtQuick.Window 2.2
 import feather.scenegraph 1.0
 import feather.field 1.0
 
-Window {
+Item {
+//Window {
     id: fieldEditor 
-    title: "FieldEditor"
-    visible: true
-    flags: Qt.Tool
-    width: 200
-    height: 500
+    //title: "FieldEditor"
+    //visible: true
+    //flags: Qt.Tool
+    //width: 200
+    //height: 500
     property SceneGraph scenegraph: Null
     property Properties properties: Null
 
@@ -146,7 +147,7 @@ Window {
         baseFrame.color = properties.getColor("panel")        
         nodeTitle.color = properties.getColor("labelBg")        
         nodeBaseTitle.color = properties.getColor("labelBg")        
-        fieldEditor.color = properties.getColor("windowBg")
+        //fieldEditor.color = properties.getColor("windowBg")
 
     }
 }

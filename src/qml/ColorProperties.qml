@@ -28,6 +28,7 @@ import QtQuick.Layouts 1.1
 Rectangle {
     id: colorProperties
     visible: true
+    anchors.fill: parent
     color: "grey"
     property Properties properties: Null
 
