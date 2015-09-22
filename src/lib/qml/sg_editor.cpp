@@ -400,6 +400,9 @@ void SceneGraphEditor::updateGraph()
     int xpos = 100;
     int ypos = 50;
 
+    std::for_each(m_nodes.begin(), m_nodes.end(), [](SceneGraphNode* node){ delete node; });
+    std::for_each(m_links.begin(), m_links.end(), [](SceneGraphLink* link){ delete link; });
+
     m_nodes.clear();
     m_links.clear();
 
