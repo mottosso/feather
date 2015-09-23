@@ -87,16 +87,75 @@ Rectangle {
         MainPopup { id: main_popup; visible: true }
     }
 
+    // info box for top right corner
+    Rectangle {
+        id: infoBox
+        anchors.top: parent.top
+        anchors.right: parent.right
+        color: "#33000000"
+        width:  100 
+        height: 58 
+
+        Column {
+            anchors.fill: parent
+            anchors.margins: 4
+            spacing: 4
+
+            Text {
+                id: selectedLabel
+                width: parent.width
+                height: 14
+                visible: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 12
+                font.bold: false
+                text: "Selected Item" 
+            }
+
+            Text {
+                id: selectedNameLabel
+                width: parent.width
+                height: 14
+                visible: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 12
+                font.bold: false
+                text: "Name: ---" 
+            }
+
+            Text {
+                id: selectedUidLabel
+                width: parent.width
+                height: 14
+                visible: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 12
+                font.bold: false
+                text: "UID: ---" 
+            }
+
+        }
+    }
+
     function nodeAdded(uid) { console.log("node " + uid + " added"); renderer.nodeInitialize(uid) }
 
     function nodesAdded() { renderer.nodesAdded() }
 
     function updateGL() { renderer.updateGL() }
 
+    function updateSelectionInfo(uid) {
+        selectedNameLabel.text = "Name: " + scenegraph.node_name(uid)
+        selectedUidLabel.text = "UID: " + uid
+    }
+
     Component.onCompleted: {
         scenegraph.nodeAdded.connect(nodeAdded)
         scenegraph.nodesAdded.connect(nodesAdded)
         scenegraph.update.connect(updateGL)
+        scenegraph.nodeSelected.connect(updateSelectionInfo)
         renderer.updateGL()
     }
 }
