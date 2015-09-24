@@ -143,8 +143,8 @@ Item {
 
     function updateColor() {
         console.log("update node color")
-        nodeFrame.color = properties.getColor("panel")        
-        baseFrame.color = properties.getColor("panel")        
+        nodeFrame.color = properties.getColor("windowBg")        
+        baseFrame.color = properties.getColor("windowBg")        
         nodeTitle.color = properties.getColor("labelBg")        
         nodeBaseTitle.color = properties.getColor("labelBg")        
         //fieldEditor.color = properties.getColor("windowBg")
