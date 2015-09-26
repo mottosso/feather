@@ -79,6 +79,7 @@ class TreeModel : public QAbstractItemModel
         int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
         int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
         Q_INVOKABLE void updateTree();
+        Q_INVOKABLE QModelIndex setCurrentNode(int uid);
 
     protected:
         QHash<int,QByteArray> roleNames() const;

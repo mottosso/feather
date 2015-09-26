@@ -25,7 +25,6 @@
 #include "commands.hpp"
 #include "selection.hpp"
 
-
 int MouseInfo::clickX=0;
 int MouseInfo::clickY=0;
 
@@ -364,7 +363,10 @@ void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::
 
 void SceneGraphEditor::nodePressed(Qt::MouseButton button, int uid, int nid)
 {
-    nodeSelection(0,uid,nid); 
+    // for now we'll have it so only one node can be selected at a time
+    feather::qml::command::clear_selection();
+    feather::qml::command::select_node(uid);
+    nodeSelection(0,uid,nid);
 }
 
 void SceneGraphEditor::connectionMousePressed(int button, int uid, int nid, int fid)

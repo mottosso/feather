@@ -44,6 +44,16 @@ Item {
         id: tree
         anchors.fill: parent
 
+        Component {
+            id: rowDeleg
+            
+            Rectangle{
+                height: 20
+                width: parent.width
+                color: (styleData.selected) ? "red" : "blue"
+            }
+        }
+
         TableViewColumn {
             title: "name"
             role: "name"
@@ -57,8 +67,9 @@ Item {
         }
 
         model: treeModel
-        selection: ItemSelectionModel { model: treeModel }
+        selection: ItemSelectionModel { id: treeSelection; model: treeModel }
         selectionMode: SelectionMode.ContiguousSelection
+        //rowDelegate: rowDeleg
         sortIndicatorVisible: true
         headerVisible: false
         horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
@@ -68,12 +79,21 @@ Item {
         onClicked: { if(!model){ console.log("no model found") } else { console.log("item clicked for index " + index + " model " + model.data(index,260)); scenegraph.clear_selection(); scenegraph.select_node(model.data(index,260)) } }
    }
 
-   function updateSg(){
+    function updateSg(){
         console.log("updateSg() model" + tree.model)
         tree.model.updateTree()
-   } 
+    } 
 
-   Component.onCompleted: {
+    function selectNode(uid){
+        //tree.selection.select(tree.model.setCurrentNode(uid),Qt.Select)
+        //tree.model.setCurrentNode(uid)
+        //var index = tree.model.setCurrentNode(uid)
+        //console.log("selected index:" + index)
+        treeSelection.select(tree.model.index(0,0),Qt.ClearAndSelect)
+    }
+
+    Component.onCompleted: {
         scenegraph.update.connect(updateSg)
+        scenegraph.nodeSelected.connect(selectNode)
     }
 }

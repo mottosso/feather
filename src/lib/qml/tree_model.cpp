@@ -209,6 +209,27 @@ void TreeModel::updateTree()
     emit layoutChanged(); // model will not update without this 
 }
 
+QModelIndex TreeModel::setCurrentNode(int uid)
+{
+    QModelIndex parent = index(0,0);
+    int childCount = columnCount(parent);    
+    std::cout << "uid " << uid << " child count " << childCount  << std::endl;
+ 
+    for(int i=0; i<childCount; i++){
+        //Leaf* leaf = static_cast<Leaf*>(index(1,i).internalPointer());
+        std::cout << "Leaf " << i << " values are " 
+            << data(index(i,0,parent),257).toInt() << " "
+            << data(index(i,0,parent),258).toInt() << " "
+            << data(index(i,0,parent),259).toInt() << " "
+            << data(index(i,0,parent),260).toInt() << " "
+            << data(index(i,0,parent),261).toInt() << " "
+            << std::endl;  
+        //if(i==data(index(i,0,parent),260).toInt())
+        //    return index(i,0,parent);
+    }
+    return index(0,0);
+}
+
 void TreeModel::loadChildren(const int uid, Leaf* parent)
 {
     QList<QVariant> data;
