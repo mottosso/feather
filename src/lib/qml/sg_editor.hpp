@@ -101,6 +101,7 @@ class SceneGraphNode : public QQuickPaintedItem
     
     protected slots:
         void ConnPressed(Qt::MouseButton button,SceneGraphConnection::Connection conn);
+        void setNodeSelection(int type, int uid, int nid);
  
     signals:
         void ConnClicked(Qt::MouseButton button, SceneGraphConnection::Connection conn, int uid, int nid);

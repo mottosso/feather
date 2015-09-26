@@ -151,6 +151,16 @@ void SceneGraphNode::ConnPressed(Qt::MouseButton button, SceneGraphConnection::C
     ConnClicked(button,conn,m_uid,m_node); 
 }
 
+void SceneGraphNode::setNodeSelection(int type, int uid, int nid)
+{
+    if(feather::smg::Instance()->selected(m_uid))
+        m_nodeFillBrush.setColor(QColor("#FF007F"));
+    else 
+        m_nodeFillBrush.setColor(QColor("#6A5ACD"));
+
+    update();
+}
+
 void SceneGraphNode::paint(QPainter* painter)
 {
     painter->setRenderHints(QPainter::Antialiasing, true);
@@ -202,16 +212,7 @@ void SceneGraphNode::mousePressEvent(QMouseEvent* event)
 
 void SceneGraphNode::mouseReleaseEvent(QMouseEvent* event)
 {
-    // clear selection
-    //feather::qml::command::clear_selection();
-
-    if(feather::smg::Instance()->selected(m_uid)){
-        m_nodeFillBrush.setColor(QColor("#FF007F"));
-        update();
-    } else {
-        m_nodeFillBrush.setColor(QColor("#6A5ACD"));
-        update();
-    }
+    // this is triggered but not currently used
 }
 
 void SceneGraphNode::hoverEnterEvent(QHoverEvent* event)
@@ -434,6 +435,7 @@ void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int 
 
     connect(node,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
     connect(node,SIGNAL(nodePressed(Qt::MouseButton,int,int)),this,SLOT(nodePressed(Qt::MouseButton,int,int)));
+    connect(this,SIGNAL(nodeSelection(int,int,int)),node,SLOT(setNodeSelection(int,int,int)));
 
     m_nodes.push_back(node);
     

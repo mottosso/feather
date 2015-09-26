@@ -44,16 +44,6 @@ Item {
         id: tree
         anchors.fill: parent
 
-        Component {
-            id: rowDeleg
-            
-            Rectangle{
-                height: 20
-                width: parent.width
-                color: (styleData.selected) ? "red" : "blue"
-            }
-        }
-
         TableViewColumn {
             title: "name"
             role: "name"
@@ -67,16 +57,24 @@ Item {
         }
 
         model: treeModel
-        selection: ItemSelectionModel { id: treeSelection; model: treeModel }
-        selectionMode: SelectionMode.ContiguousSelection
-        //rowDelegate: rowDeleg
+        selection: ItemSelectionModel { model: treeModel }
+        //selectionMode: SelectionMode.ContiguousSelection
+        selectionMode: SelectionMode.SingleSelection
         sortIndicatorVisible: true
         headerVisible: false
         horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
         style: OutlinerLeafNode {}
  
         //onActivated: { console.log("item activated " + model.data(index,260)); scenegraph.clear_selection(); scenegraph.select_node(model.data(index,260)) }
-        onClicked: { if(!model){ console.log("no model found") } else { console.log("item clicked for index " + index + " model " + model.data(index,260)); scenegraph.clear_selection(); scenegraph.select_node(model.data(index,260)) } }
+        onClicked: {
+            if(!model)
+                console.log("no model found")
+            else {
+                console.log("item clicked for index " + index + " model " + model.data(index,260))
+                scenegraph.clear_selection()
+                scenegraph.select_node(model.data(index,260))
+            }
+        }
    }
 
     function updateSg(){
@@ -85,15 +83,18 @@ Item {
     } 
 
     function selectNode(uid){
-        //tree.selection.select(tree.model.setCurrentNode(uid),Qt.Select)
-        //tree.model.setCurrentNode(uid)
-        //var index = tree.model.setCurrentNode(uid)
+        var index = tree.model.setCurrentNode(uid)
         //console.log("selected index:" + index)
-        treeSelection.select(tree.model.index(0,0),Qt.ClearAndSelect)
+        //tree.selection.clear()
+        // this does work
+        tree.selection.setCurrentIndex(index,Qt.ClearAndSelect)
+        // this does not work for some reason
+        //tree.selection.select(index,Qt.ClearAndSelect)
     }
 
     Component.onCompleted: {
         scenegraph.update.connect(updateSg)
+        // when we only want to update the tree's selected node, not the scenegraph's
         scenegraph.nodeSelected.connect(selectNode)
     }
 }

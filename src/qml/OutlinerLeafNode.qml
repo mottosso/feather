@@ -25,17 +25,34 @@ import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 
-
 TreeViewStyle {
     id: style
 
     backgroundColor: "#848484"
     alternateBackgroundColor: "#949494"
 
-    itemDelegate: Rectangle {
+    itemDelegate:  Rectangle {
         color: (styleData.selected)?"#7070FF":"#00000000"
 
-        Item { id: nodeName; visible: false; Row { Image { sourceSize.width: 18; sourceSize.height: 18; source: "icons/"+model.icon } Text { elide: styleData.elideMode; font.pixelSize: 12; text: model.name } } }
+        Item {
+            id: nodeName
+            visible: false
+            
+            Row {
+                Image {
+                    sourceSize.width: 18
+                    sourceSize.height: 18
+                    source: "icons/"+model.icon
+                }
+            Text {
+                //elide: styleData.elideMode
+                font.pixelSize: 12
+                text: model.name
+            }
+        }
+
+        }
+
         Item { 
             id: nodeVisible
             visible: false
