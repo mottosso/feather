@@ -74,6 +74,12 @@ Leaf *Leaf::parentItem()
     return m_parentItem;
 }
 
+void Leaf::clear()
+{
+    m_childItems.clear();
+    std::cout << "childItems cleared and are now " << m_childItems.count() << std::endl;
+ 
+}
 
 // TREE MODEL
     TreeModel::TreeModel(QObject *parent)
@@ -89,6 +95,7 @@ TreeModel::~TreeModel()
 {
     std::cout << "delete tree model\n";
     delete rootItem;
+    rootItem=0;
 }
 
 QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) const
@@ -158,6 +165,7 @@ int TreeModel::columnCount(const QModelIndex &parent) const
         return static_cast<Leaf*>(parent.internalPointer())->columnCount();
     else
         return rootItem->columnCount();
+
 }
 
 QVariant TreeModel::data(const QModelIndex &index, int role) const
@@ -204,8 +212,20 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation, int rol
 
 void TreeModel::updateTree()
 {
-    rootItem->clear();
-    loadChildren(0,rootItem);
+    emit layoutAboutToBeChanged();
+
+    QModelIndex parent = index(0,0);
+    Leaf* root;    
+    if(parent.isValid())
+        root=static_cast<Leaf*>(parent.internalPointer());
+    else
+        root=rootItem;
+
+    root->clear();
+    loadChildren(0,root);
+    int childCount = columnCount(parent);    
+    std::cout << "updateTree child count " << childCount  << std::endl;
+    // changePersistentIndex(index(0,0),index(4,0));
     emit layoutChanged(); // model will not update without this 
 }
 
@@ -252,11 +272,10 @@ void TreeModel::loadChildren(const int uid, Leaf* parent)
     std::vector<int> children;
 
     feather::qml::command::get_node_connected_uids(uid,children);
-    
+    std::cout << "tree model loadChildren uid " << uid << " has " << children.size() << " children " << std::endl;
+   
     if(!children.size())
         return;
-
-    QList<Leaf*> parents;
 
     for_each(children.begin(), children.end(), [this,&parent](int uid){
         loadChildren(uid,parent->lastChild());

@@ -77,6 +77,37 @@ namespace feather
     namespace scenegraph
     {
 
+        /* clear the scenegraph */
+        void clear() {
+            // clear the selection
+            smg::Instance()->clear();
+
+            int v = boost::num_vertices(sg);
+            std::cout << "v count " << v << std::endl;
+            v-=1;
+
+            while(v>0){
+                std::cout  << "clearing v " << v << std::endl;
+                // clear the edges
+                boost::clear_vertex(v,sg);
+                // clear the vertexes
+                boost::remove_vertex(v,sg);
+                v-=1;
+            }
+
+            // this is currently needed to update sg
+            smg::Instance()->add_state(static_cast<selection::Type>(sg[0].type),0,sg[0].node);
+ 
+            /* 
+            for_each(sg.begin(); sg.end(); [](int v){
+                    // clear the edges
+                    boost::clear_vertex(v,sg);
+                    // clear the vertexes
+                    boost::remove_vertex(v,sg);
+                    });
+            */
+        };
+
         int get_min_uid() { return plugins.min_uid(); };
         //int get_max_uid() { return plugins.max_uid(); };
         int get_max_uid() { return num_vertices(sg)-1; };

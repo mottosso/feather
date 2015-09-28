@@ -114,7 +114,7 @@ Rectangle {
         connMenu.connectionButtonReleased.connect(connectionButtonReleased)
         connMenu.connectionButtonClicked.connect(connectionButtonClicked)
         scenegraph.nodeSelected.connect(setSelection)
-        scenegraph.update.connect(sg_editor.update_sg)
+        scenegraph.updateGraph.connect(sg_editor.update_sg)
     }
 
     function openConnectionMenu() {

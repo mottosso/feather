@@ -87,7 +87,7 @@ namespace feather
 
 
             // SG EDITOR
-
+            void clear();
             void get_node_connections(int uid, std::vector<int>& nodes);
             int get_node_connection_count(int uid);
             std::string get_node_name(int uid);

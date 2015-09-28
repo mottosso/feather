@@ -93,7 +93,7 @@ Item {
     }
 
     Component.onCompleted: {
-        scenegraph.update.connect(updateSg)
+        scenegraph.updateGraph.connect(updateSg)
         // when we only want to update the tree's selected node, not the scenegraph's
         scenegraph.nodeSelected.connect(selectNode)
     }

@@ -154,7 +154,7 @@ Rectangle {
     Component.onCompleted: {
         scenegraph.nodeAdded.connect(nodeAdded)
         scenegraph.nodesAdded.connect(nodesAdded)
-        scenegraph.update.connect(updateGL)
+        scenegraph.updateGraph.connect(updateGL)
         scenegraph.nodeSelected.connect(updateSelectionInfo)
         renderer.updateGL()
     }

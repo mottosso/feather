@@ -43,7 +43,7 @@ class Leaf
         QVariant data(int column) const;
         int row() const;
         Leaf *parentItem();
-        void clear() { m_childItems.clear(); };
+        void clear();
 
     private:
         QList<Leaf*> m_childItems;

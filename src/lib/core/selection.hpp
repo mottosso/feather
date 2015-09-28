@@ -65,6 +65,7 @@ namespace feather
                     }
                     return false;
                 };
+
             private:
                 std::vector<SelectionState> m_aStates;
         };

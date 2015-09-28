@@ -85,7 +85,7 @@ Menu {
         id: newAction
         text: "New"
         tooltip: "Clear the scene"
-        onTriggered: {}
+        onTriggered: { scenegraph.clear() }
     }
 
     // Open

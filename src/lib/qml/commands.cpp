@@ -277,6 +277,11 @@ status qml::command::get_fid_list(int uid, int nid, field::connection::Type conn
 
 // SCENEGRAPH EDITOR
 
+void qml::command::clear()
+{
+    scenegraph::clear();
+}
+
 void qml::command::get_node_connections(int uid, std::vector<int>& nodes)
 {
     typedef boost::graph_traits<FSceneGraph>::out_edge_iterator OutConn;
