@@ -76,10 +76,42 @@ Leaf *Leaf::parentItem()
 
 void Leaf::clear()
 {
+    std::for_each(m_childItems.begin(), m_childItems.end(), [](Leaf* leaf){
+        delete leaf;
+        leaf=0;
+    });
+
     m_childItems.clear();
     std::cout << "childItems cleared and are now " << m_childItems.count() << std::endl;
  
 }
+
+bool Leaf::removeChildren(int position, int count)
+{
+    if (position < 0 || position + count > m_childItems.size())
+        return false;
+
+    for (int row = 0; row < count; ++row)
+        delete m_childItems.takeAt(position);
+
+    return true;
+}
+
+bool Leaf::removeColumns(int position, int columns)
+{
+    if (position < 0 || position + columns > m_itemData.size())
+        return false;
+
+    for (int column = 0; column < columns; ++column)
+        m_itemData.removeAt(position);
+
+    std::for_each (m_childItems.begin(), m_childItems.end(), [position,columns](Leaf* child){
+        child->removeColumns(position, columns);
+    });
+
+    return true;
+}
+
 
 // TREE MODEL
     TreeModel::TreeModel(QObject *parent)
@@ -87,6 +119,17 @@ void Leaf::clear()
 {
     QList<QVariant> rootData;
     rootData << "name" << "visible" << "icon" << "uid" << "nid";
+
+    /*
+    QModelIndex root = index(0,0);
+ 
+    Leaf* rootItem;    
+    if(root.isValid())
+        rootItem=static_cast<Leaf*>(root.internalPointer());
+    else
+        rootItem=new Leaf(rootData);
+    */
+
     rootItem = new Leaf(rootData);
     updateTree();
 }
@@ -170,6 +213,8 @@ int TreeModel::columnCount(const QModelIndex &parent) const
 
 QVariant TreeModel::data(const QModelIndex &index, int role) const
 {
+    std::cout << "tree data update\n";
+
     if (!index.isValid())
         return QVariant();
 
@@ -199,7 +244,7 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return 0;
 
-    return QAbstractItemModel::flags(index);
+    return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 }
 
 QVariant TreeModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -212,21 +257,37 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation, int rol
 
 void TreeModel::updateTree()
 {
-    emit layoutAboutToBeChanged();
 
+    /*
     QModelIndex parent = index(0,0);
     Leaf* root;    
     if(parent.isValid())
         root=static_cast<Leaf*>(parent.internalPointer());
     else
         root=rootItem;
+    */
 
-    root->clear();
-    loadChildren(0,root);
-    int childCount = columnCount(parent);    
-    std::cout << "updateTree child count " << childCount  << std::endl;
+    /*
+    QModelIndex parent = index(0,0);
+    if(parent.isValid())
+        static_cast<Leaf*>(parent.internalPointer())->clear();
+    */
+ 
+    emit layoutAboutToBeChanged();
+    rootItem->clear();
+    loadChildren(0,rootItem);
+    emit layoutChanged();
+
+    // model will not update without this 
+    //int childCount = columnCount(parent);    
+    //removeColumns(0,childCount,parent);
+    //std::cout << "updateTree child count " << childCount  << std::endl;
     // changePersistentIndex(index(0,0),index(4,0));
-    emit layoutChanged(); // model will not update without this 
+}
+
+void TreeModel::test()
+{
+    removeRows(0,4,index(0,0));
 }
 
 QModelIndex TreeModel::setCurrentNode(int uid)
@@ -248,6 +309,42 @@ QModelIndex TreeModel::setCurrentNode(int uid)
             return index(i,0,parent);
     }
     return index(0,0);
+}
+
+bool TreeModel::removeColumns(int position, int columns, const QModelIndex &parent)
+{
+    bool success;
+
+    beginRemoveColumns(parent, position, position + columns - 1);
+    success = rootItem->removeColumns(position, columns);
+    endRemoveColumns();
+
+    if (rootItem->columnCount() == 0)
+        removeRows(0, rowCount());
+
+    return success;
+}
+
+bool TreeModel::removeRows(int position, int rows, const QModelIndex &parent)
+{
+    Leaf* parentItem = getLeaf(parent);
+    bool success = true;
+
+    beginRemoveRows(parent, position, position + rows - 1);
+    success = parentItem->removeChildren(position, rows);
+    endRemoveRows();
+
+    return success;
+}
+
+Leaf* TreeModel::getLeaf(const QModelIndex& index) const
+{
+    if (index.isValid()) {
+        Leaf* item = static_cast<Leaf*>(index.internalPointer());
+        if (item)
+            return item;
+    }
+    return rootItem;
 }
 
 void TreeModel::loadChildren(const int uid, Leaf* parent)

@@ -44,6 +44,8 @@ class Leaf
         int row() const;
         Leaf *parentItem();
         void clear();
+        bool removeChildren(int position, int count);
+        bool removeColumns(int position, int columns);
 
     private:
         QList<Leaf*> m_childItems;
@@ -79,7 +81,11 @@ class TreeModel : public QAbstractItemModel
         int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
         int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
         Q_INVOKABLE void updateTree();
+        Q_INVOKABLE void test();
         Q_INVOKABLE QModelIndex setCurrentNode(int uid);
+        bool removeColumns(int position, int columns, const QModelIndex &parent);
+        bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
+        Leaf* getLeaf(const QModelIndex& index) const;
 
     protected:
         QHash<int,QByteArray> roleNames() const;

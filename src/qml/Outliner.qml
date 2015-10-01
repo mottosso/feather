@@ -40,9 +40,47 @@ Item {
    
     TreeModel { id: treeModel }
 
+    Action {
+        id: testAction 
+        text: "TEST"
+        onTriggered: {
+            console.log("test feature")
+            treeModel.test()
+            tree.update()
+        }
+    }
+
+    Rectangle {
+        id: toolBar
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 36
+        border.color: "black"
+        border.width: 1
+        color: properties.getColor("toolBarBg")
+
+        Row {
+            spacing: 4
+            anchors.fill: parent
+            anchors.margins: 2
+
+            ToolButton {
+                width: 32; height: 32
+                //iconSource: "/usr/local/feather/ui/icons/layer_add.svg"
+                iconName: "test"
+                action: testAction 
+            }
+
+        }
+    }
+
     TreeView {
         id: tree
-        anchors.fill: parent
+        anchors.top: toolBar.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
 
         TableViewColumn {
             title: "name"
