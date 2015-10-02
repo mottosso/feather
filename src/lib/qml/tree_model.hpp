@@ -43,9 +43,11 @@ class Leaf
         QVariant data(int column) const;
         int row() const;
         Leaf *parentItem();
+        QList<Leaf*>& childItems() { return m_childItems; };
         void clear();
         bool removeChildren(int position, int count);
         bool removeColumns(int position, int columns);
+        bool removeNode(int uid);
 
     private:
         QList<Leaf*> m_childItems;
@@ -75,17 +77,18 @@ class TreeModel : public QAbstractItemModel
 
         Q_INVOKABLE QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
         Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-        QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-        Q_INVOKABLE QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+        QVariant headerData(int section, Qt::Orientation orientation, int role=Qt::DisplayRole) const Q_DECL_OVERRIDE;
+        Q_INVOKABLE QModelIndex index(int row, int column, const QModelIndex &parent=QModelIndex()) const Q_DECL_OVERRIDE;
         QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
-        int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-        int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+        int rowCount(const QModelIndex &parent=QModelIndex()) const Q_DECL_OVERRIDE;
+        int columnCount(const QModelIndex &parent=QModelIndex()) const Q_DECL_OVERRIDE;
         Q_INVOKABLE void updateTree();
         Q_INVOKABLE void test();
         Q_INVOKABLE QModelIndex setCurrentNode(int uid);
         bool removeColumns(int position, int columns, const QModelIndex &parent);
-        bool removeRows(int position, int rows, const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
+        bool removeRows(int position, int rows, const QModelIndex &parent=QModelIndex()) Q_DECL_OVERRIDE;
         Leaf* getLeaf(const QModelIndex& index) const;
+        Q_INVOKABLE void removeNode(int uid, const QModelIndex &parent=QModelIndex());
 
     protected:
         QHash<int,QByteArray> roleNames() const;
