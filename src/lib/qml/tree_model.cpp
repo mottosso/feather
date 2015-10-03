@@ -301,7 +301,8 @@ void TreeModel::test()
 {
     //removeRows(0,1); // this deletes everything
     //removeRows(0,4,index(0,0)); // this only deletes the first four nodes under root
-    removeNode(2,index(0,0));
+    //removeNode(2,index(0,0));
+    clearTree();
 }
 
 QModelIndex TreeModel::setCurrentNode(int uid)
@@ -366,12 +367,21 @@ void TreeModel::removeNode(int uid, const QModelIndex& parent)
     std::cout << "looking at parent " << data(parent,260).toInt() << " children\n";
     QList<Leaf*> children = getLeaf(parent)->childItems();
     std::for_each(children.begin(), children.end(), [this,&parent,uid](Leaf* leaf){
-        std::cout << "looking at child " << leaf->data(3).toInt() << std::endl;
+        //std::cout << "looking at child " << leaf->data(3).toInt() << std::endl;
         if(uid == leaf->data(3).toInt())
             removeRows(leaf->row(),1,parent);
-            //removeNode(uid,parent->lastChild());
     });
     
+}
+
+void TreeModel::clearTree()
+{
+    QModelIndex parent = index(0,0);
+    QList<Leaf*> children = getLeaf(parent)->childItems();
+    std::for_each(children.begin(), children.end(), [this,&parent](Leaf* leaf){
+        //std::cout << "looking at child " << leaf->data(3).toInt() << std::endl;
+        removeRows(leaf->row(),1,parent);
+    });
 }
 
 void TreeModel::loadChildren(const int uid, Leaf* parent)
