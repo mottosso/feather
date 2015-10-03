@@ -39,7 +39,7 @@ SceneGraph::~SceneGraph()
 void SceneGraph::clear()
 {
     qml::command::clear();
-    emit updateGraph();
+    emit cleared();
 }
 
 int SceneGraph::add_node(int type, int node, QString name)

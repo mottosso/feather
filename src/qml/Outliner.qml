@@ -130,9 +130,14 @@ Item {
         //tree.selection.select(index,Qt.ClearAndSelect)
     }
 
+    function clear(){
+        tree.model.clearTree()
+    }
+
     Component.onCompleted: {
         scenegraph.updateGraph.connect(updateSg)
         // when we only want to update the tree's selected node, not the scenegraph's
         scenegraph.nodeSelected.connect(selectNode)
+        scenegraph.cleared.connect(clear)
     }
 }

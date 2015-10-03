@@ -84,6 +84,7 @@ class SceneGraph : public QObject
         void updateGraph();
         void nodeAdded(int uid);
         void nodesAdded();
+        void cleared();
 };
 
 // FIELD 
