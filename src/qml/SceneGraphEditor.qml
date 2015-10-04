@@ -36,6 +36,8 @@ Rectangle {
     property SceneGraph scenegraph: Null
     property Properties properties: Null
 
+    // Dialogs
+    AddNodeDialog{ id: addNodeDialog; properties: sgWindow.properties }
 
     // Actions
 
@@ -43,7 +45,7 @@ Rectangle {
     Action {
         id: addNode
         tooltip: "Add a node to the scenegraph"
-        onTriggered: {}
+        onTriggered: { addNodeDialog.visible=true }
     }
 
     // Delete Node 

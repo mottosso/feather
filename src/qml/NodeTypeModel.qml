@@ -1,8 +1,8 @@
 /***********************************************************************
  *
- * Filename: PushButton.qml 
+ * Filename: NodeTypeModel.qml 
  *
- * Description: A standard button used for dialog boxes and other misc items.
+ * Description: Holds all the type of all the different nodes that can be stored in the scenegraph. This is not to be the specific node - this model will hold a type like Light but many different light nodes can be under this type. 
  *
  * Copyright (C) 2015 Richard Layman, rlayman2000@yahoo.com 
  *
@@ -22,24 +22,12 @@
  ***********************************************************************/
 
 import QtQuick 2.3
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
+import feather.node 1.0
 
+ListModel {
+    id: typeModel
+    ListElement { text: "Empty"; type: Node.Empty }
+    ListElement { text: "Camera"; type: Node.Camera}
+    ListElement { text: "Light"; type: Node.Light}
 
-Button {
-    id: button
-    width: 100
-    height: 20
-    property Properties properties: Null
- 
-    style: ButtonStyle { 
-        Rectangle {
-            id: styleFrame
-            implicitWidth: 100
-            implicitHeight: 20
-            border.width: 1
-            color: properties.getColor("buttonEnabledBg") 
-            radius: 2
-        }
-    }
 }

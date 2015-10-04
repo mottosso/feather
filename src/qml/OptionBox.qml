@@ -1,8 +1,8 @@
 /***********************************************************************
  *
- * Filename: PushButton.qml 
+ * Filename: OptionBox.qml 
  *
- * Description: A standard button used for dialog boxes and other misc items.
+ * Description: Feather version of the Qt ComboBox.
  *
  * Copyright (C) 2015 Richard Layman, rlayman2000@yahoo.com 
  *
@@ -25,21 +25,23 @@ import QtQuick 2.3
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 
-
-Button {
-    id: button
+ComboBox {
+    id: combobox
     width: 100
-    height: 20
-    property Properties properties: Null
- 
-    style: ButtonStyle { 
-        Rectangle {
-            id: styleFrame
-            implicitWidth: 100
-            implicitHeight: 20
+    height: 30
+    property alias model: combobox.model
+
+    style: ComboBoxStyle {
+        id: comboStyle
+        background: Rectangle {
+            id: bgFrame
+            color: "red"
+            border.color: "black"
             border.width: 1
-            color: properties.getColor("buttonEnabledBg") 
             radius: 2
         }
+        selectionColor: "blue" 
     }
+
+    Component.onCompleted: { }
 }
