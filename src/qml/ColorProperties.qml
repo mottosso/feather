@@ -78,6 +78,12 @@ Rectangle {
             ColorProperty { properties: colorProperties.properties; name: "buttonEnabledBg"; label: "Button Enabled BG" }
             ColorProperty { properties: colorProperties.properties; name: "buttonEnabledPressedBg"; label: "Button Enabled Pressed BG" }
             ColorProperty { properties: colorProperties.properties; name: "buttonDisabledBg"; label: "Button Disabled BG" }
+
+            // options
+            ColorProperty { properties: colorProperties.properties; name: "optionSelectedBg"; label: "Option Selected BG" }
+            ColorProperty { properties: colorProperties.properties; name: "optionSelectedText"; label: "Option Selected Text" }
+            ColorProperty { properties: colorProperties.properties; name: "optionPanelBg"; label: "Option Panel BG" }
+            ColorProperty { properties: colorProperties.properties; name: "optionPanelText"; label: "Option Panel Text" }
  
         } 
 

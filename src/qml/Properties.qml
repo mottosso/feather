@@ -52,6 +52,12 @@ Item {
         ListElement { name: "buttonEnabledBg"; color: "#F0F8FF" }
         ListElement { name: "buttonEnabledPressedBg"; color: "#FFFFFF" }
         ListElement { name: "buttonDisabledBg"; color: "#303030" }
+
+        // OPTIONS 
+        ListElement { name: "optionSelectedBg"; color: "#303030" }
+        ListElement { name: "optionSelectedText"; color: "#000000" }
+        ListElement { name: "optionPanelBg"; color: "#848482" }
+        ListElement { name: "optionPanelText"; color: "#000000" }
  
         // TYPES
         ListElement { name: "boolType"; color: "#008080" }

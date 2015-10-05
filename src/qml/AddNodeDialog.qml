@@ -30,7 +30,7 @@ Window {
     id: dialog
     title: "Add Node"
     width: 300
-    height: 150
+    height: 130
     modality: Qt.WindowModal
     flags: Qt.Dialog
     visible: false
@@ -93,7 +93,8 @@ Window {
                 width: 200
                 height: 30
                 model: NodeTypeModel{}
-            }
+                properties: dialog.properties 
+             }
         }        
 
         // Id 
@@ -119,7 +120,8 @@ Window {
                 height: 30
                 // I need to make the NodeIdModel in C++
                 //model: NodeTypeModel{}
-            }
+                properties: dialog.properties 
+             }
         }        
 
         Row {

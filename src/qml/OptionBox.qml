@@ -30,13 +30,14 @@ ComboBox {
     width: 100
     height: 30
     property alias model: combobox.model
+    property Properties properties: Null
 
     style: ComboBoxStyle {
         id: comboStyle
 
         background: Rectangle {
             id: bgFrame
-            color: "red"
+            color: properties.getColor("optionSelectedBg") 
             border.color: "black"
             border.width: 1
             radius: 2
@@ -48,11 +49,13 @@ ComboBox {
                 verticalAlignment: Text.AlignVCenter
                 font.pixelSize: 14
                 font.bold: false
+                color: properties.getColor("optionSelectedText")
                 text: currentText
         }
 
         dropDownButtonWidth: 30
-        selectionColor: "blue" 
+        selectionColor: properties.getColor("optionSelectedBg") 
+        selectedTextColor: properties.getColor("optionSelectedText") 
     }
 
     Component.onCompleted: { }
