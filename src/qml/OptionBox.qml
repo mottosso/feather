@@ -33,6 +33,7 @@ ComboBox {
 
     style: ComboBoxStyle {
         id: comboStyle
+
         background: Rectangle {
             id: bgFrame
             color: "red"
@@ -40,6 +41,17 @@ ComboBox {
             border.width: 1
             radius: 2
         }
+
+        label: Text {
+                id: optionLabel
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 14
+                font.bold: false
+                text: currentText
+        }
+
+        dropDownButtonWidth: 30
         selectionColor: "blue" 
     }
 

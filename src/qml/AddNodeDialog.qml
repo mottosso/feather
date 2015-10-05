@@ -30,7 +30,7 @@ Window {
     id: dialog
     title: "Add Node"
     width: 300
-    height: 100
+    height: 150
     modality: Qt.WindowModal
     flags: Qt.Dialog
     visible: false
@@ -45,6 +45,7 @@ Window {
         spacing: 4
         anchors.fill: parent
 
+        // Name 
         Row {
             spacing: 4
             width: parent.width
@@ -70,6 +71,7 @@ Window {
             }
         }
 
+        // Type
         Row {
             spacing: 4
             width: parent.width
@@ -91,6 +93,32 @@ Window {
                 width: 200
                 height: 30
                 model: NodeTypeModel{}
+            }
+        }        
+
+        // Id 
+        Row {
+            spacing: 4
+            width: parent.width
+
+            Text {
+                id: idLabel
+                width: 70
+                height: 30
+                visible: true
+                horizontalAlignment: Text.AlignRight
+                verticalAlignment: Text.AlignVCenter
+                font.pixelSize: 14
+                font.bold: false
+                text: "Id" 
+            }
+        
+            OptionBox {
+                id: idOption
+                width: 200
+                height: 30
+                // I need to make the NodeIdModel in C++
+                //model: NodeTypeModel{}
             }
         }        
 
@@ -116,9 +144,16 @@ Window {
         }
     }
 
-    MouseArea {
-        anchors.fill: parent
+    function hide(){
+        dialog.visible = false
+    }
 
-        onClicked: dialog.visible=false
+    function addNode(){
+
+    }
+
+    Component.onCompleted: {
+        cancelButton.clicked.connect(hide)
+        acceptButton.clicked.connect(addNode)
     }
 }
