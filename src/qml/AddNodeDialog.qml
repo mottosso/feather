@@ -30,7 +30,7 @@ Window {
     id: dialog
     title: "Add Node"
     width: 300
-    height: 130
+    height: 140
     modality: Qt.WindowModal
     flags: Qt.Dialog
     visible: false
@@ -44,7 +44,7 @@ Window {
     Column {
         spacing: 4
         anchors.fill: parent
-
+        
         // Name 
         Row {
             spacing: 4
@@ -126,7 +126,7 @@ Window {
 
         Row {
             spacing: 4
-            width: parent.width
+            anchors.horizontalCenter: parent.horizontalCenter
 
             PushButton {
                 id: cancelButton
