@@ -25,6 +25,7 @@ import QtQuick 2.3
 import QtQuick.Window 2.2
 import feather.scenegraph 1.0
 import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.4
 
 Window {
     id: dialog
@@ -44,7 +45,7 @@ Window {
     Column {
         spacing: 4
         anchors.fill: parent
-        
+        anchors.margins: 4 
         // Name 
         Row {
             spacing: 4
@@ -66,8 +67,20 @@ Window {
                 id: nameEdit
                 width: 200
                 height: 30
-                visible: false
+                horizontalAlignment: TextInput.AlignHCenter
+                verticalAlignment: TextInput.AlignVCenter
                 readOnly: false
+                placeholderText: "Enter Node Name"
+                style: TextFieldStyle {
+                    background: Rectangle {
+                        color: properties.getColor("textBg")
+                        border.color: "black"
+                        border.width: 1
+                        radius: 2
+                    }
+
+                    textColor: properties.getColor("text")
+                }
             }
         }
 
@@ -118,8 +131,7 @@ Window {
                 id: idOption
                 width: 200
                 height: 30
-                // I need to make the NodeIdModel in C++
-                //model: NodeTypeModel{}
+                model: NodeIdModel{}
                 properties: dialog.properties 
              }
         }        
