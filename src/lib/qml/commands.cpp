@@ -103,7 +103,9 @@ bool qml::command::node_exists(int uid)
 
 status qml::command::connect_nodes(int n1, int f1, int n2, int f2)
 {
-    return scenegraph::connect(n1,f1,n2,f2);
+    status p = scenegraph::connect(n1,f1,n2,f2);
+    //scenegraph::update();
+    return p;
 }
 
 status qml::command::get_node_icon(int nid, std::string& file)

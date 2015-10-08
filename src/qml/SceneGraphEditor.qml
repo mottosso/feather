@@ -107,19 +107,6 @@ Rectangle {
     }    
 
     PopupMenu { id: connMenu; model: connModel }
-
-    Component.onCompleted: {
-        sg_editor.update_sg()
-        sg_editor.openConnMenu.connect(openConnectionMenu)
-        sg_editor.nodeSelection.connect(nodeSelection)
-        connMenu.connectionButtonPressed.connect(connectionButtonPressed)
-        connMenu.connectionButtonReleased.connect(connectionButtonReleased)
-        connMenu.connectionButtonClicked.connect(connectionButtonClicked)
-        scenegraph.nodeSelected.connect(setSelection)
-        scenegraph.updateGraph.connect(sg_editor.update_sg)
-        scenegraph.cleared.connect(sg_editor.update_sg)
-    }
-
     function openConnectionMenu() {
         connMenu.x = sg_editor.clickX
         connMenu.y = sg_editor.clickY
@@ -149,4 +136,26 @@ Rectangle {
         console.log("sg triggered");
         console.log("sg editor triggered for uid " + uid + " nid " + nid + " fid " + fid);
     }
+
+    function add_node(name,type,nid) {
+        console.log("Add node: " + name + " type: " + type + " nid: " + nid)
+        var uid = scenegraph.add_node(type,nid,name)
+        console.log("added node as uid: " + uid)
+        var p = scenegraph.connect_nodes(0,2,uid,1)
+        console.log("connection status was: " + p)
+    }
+
+    Component.onCompleted: {
+        sg_editor.update_sg()
+        sg_editor.openConnMenu.connect(openConnectionMenu)
+        sg_editor.nodeSelection.connect(nodeSelection)
+        connMenu.connectionButtonPressed.connect(connectionButtonPressed)
+        connMenu.connectionButtonReleased.connect(connectionButtonReleased)
+        connMenu.connectionButtonClicked.connect(connectionButtonClicked)
+        scenegraph.nodeSelected.connect(setSelection)
+        scenegraph.updateGraph.connect(sg_editor.update_sg)
+        scenegraph.cleared.connect(sg_editor.update_sg)
+        addNodeDialog.addNode.connect(add_node)
+    }
+
 }

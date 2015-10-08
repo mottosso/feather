@@ -39,8 +39,17 @@ Window {
     y: (Screen.desktopAvailableHeight - height)/2
 
     property Properties properties: Null
+    property string name: "" 
+    property int nid: 0
+    property int type: 0
 
     color: properties.getColor("windowBg")
+
+    signal addNode(string name, int type, int nid)
+
+    NodeTypeModel{ id: typeModel }
+
+    NodeIdModel{ id: nidModel }
 
     Column {
         spacing: 4
@@ -105,7 +114,7 @@ Window {
                 id: typeOption
                 width: 200
                 height: 30
-                model: NodeTypeModel{}
+                model: typeModel
                 properties: dialog.properties 
              }
         }        
@@ -116,7 +125,7 @@ Window {
             width: parent.width
 
             Text {
-                id: idLabel
+                id: nidLabel
                 width: 70
                 height: 30
                 visible: true
@@ -128,10 +137,10 @@ Window {
             }
         
             OptionBox {
-                id: idOption
+                id: nidOption
                 width: 200
                 height: 30
-                model: NodeIdModel{}
+                model: nidModel 
                 properties: dialog.properties 
              }
         }        
@@ -162,12 +171,29 @@ Window {
         dialog.visible = false
     }
 
-    function addNode(){
+    function add_node(){
+        dialog.name = nameEdit.text
+        addNode(name, type, nid)
+        dialog.visible = false
+    }
 
+    function set_name(name){
+        dialog.name = name
+    }
+
+    function set_type(index) {
+        dialog.type = typeOption.model.get(index).type
+    }
+
+    function set_nid(index){
+        dialog.nid = nidOption.model.get(index).nid
     }
 
     Component.onCompleted: {
         cancelButton.clicked.connect(hide)
-        acceptButton.clicked.connect(addNode)
+        acceptButton.clicked.connect(add_node)
+        typeOption.activated.connect(nidOption.model.set_type)
+        typeOption.activated.connect(set_type)
+        nidOption.activated.connect(set_nid)
     }
 }
