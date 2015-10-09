@@ -630,6 +630,7 @@ namespace feather
                 tfield->pn = src_node;
                 tfield->pf = f1;
             } else {
+                std::cout << "could not connect node " << n1 << " and node " << n2 << std::endl;
                 return status(FAILED,"field types can not be connected");
             }
 

@@ -140,9 +140,10 @@ Rectangle {
     function add_node(name,type,nid) {
         console.log("Add node: " + name + " type: " + type + " nid: " + nid)
         var uid = scenegraph.add_node(type,nid,name)
-        console.log("added node as uid: " + uid)
+        //console.log("added node as uid: " + uid)
         var p = scenegraph.connect_nodes(0,2,uid,1)
-        console.log("connection status was: " + p)
+        //console.log("connection status was: " + p)
+        scenegraph.triggerUpdate()
     }
 
     Component.onCompleted: {
