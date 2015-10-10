@@ -65,6 +65,7 @@ class ViewportThread : public QQuickItem
         Q_INVOKABLE void initialize();
         Q_INVOKABLE void nodeInitialize(int uid);
         Q_INVOKABLE void nodesAdded();
+        Q_INVOKABLE void nodesRemoved();
         Q_INVOKABLE void updateGL();
 
 
@@ -138,6 +139,7 @@ class RenderViewportThread : public QThread
         void init() { m_viewport->initialize(m_width,m_height); };
         void nodeInit(int uid) { m_viewport->nodeInitialize(uid); };
         void nodesAdded() { m_viewport->nodesAdded(); };
+        void nodesRemoved() { m_viewport->nodesRemoved(); };
         void showAxis(bool s) { m_viewport->showAxis(s); };
         void showGrid(bool s) { m_viewport->showGrid(s); };
         void setShadingState(feather::gl::glScene::ShadingMode m) { m_viewport->setShadingMode(m); };

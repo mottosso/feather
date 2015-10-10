@@ -144,6 +144,8 @@ Rectangle {
 
     function nodesAdded() { renderer.nodesAdded() }
 
+    function nodesRemoved() { renderer.nodesRemoved() }
+
     function updateGL() { renderer.updateGL() }
 
     function updateSelectionInfo(uid) {
@@ -154,6 +156,7 @@ Rectangle {
     Component.onCompleted: {
         scenegraph.nodeAdded.connect(nodeAdded)
         scenegraph.nodesAdded.connect(nodesAdded)
+        scenegraph.nodesRemoved.connect(nodesRemoved)
         scenegraph.updateGraph.connect(updateGL)
         scenegraph.nodeSelected.connect(updateSelectionInfo)
         renderer.updateGL()

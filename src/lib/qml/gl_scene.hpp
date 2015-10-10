@@ -69,6 +69,7 @@ namespace feather
                 void init();
                 void nodeInit(int uid);
                 void nodesAddedInit();
+                void nodesRemovedInit();
                 void draw(int width, int height);
                 void draw_grid();
                 void make_grid();

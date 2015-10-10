@@ -134,10 +134,17 @@ Item {
         tree.model.clearTree()
     }
 
+    function remove_node(uid){
+        tree.selection.setCurrentIndex(tree.model.setCurrentNode(0),Qt.ClearAndSelect)
+        console.log("remove node called")
+        tree.model.removeNode(uid,tree.model.index(0,0))
+    }
+
     Component.onCompleted: {
         scenegraph.updateGraph.connect(updateSg)
         // when we only want to update the tree's selected node, not the scenegraph's
         scenegraph.nodeSelected.connect(selectNode)
         scenegraph.cleared.connect(clear)
+        scenegraph.nodeRemoved.connect(remove_node)
     }
 }

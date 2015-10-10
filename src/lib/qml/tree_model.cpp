@@ -367,9 +367,11 @@ void TreeModel::removeNode(int uid, const QModelIndex& parent)
     std::cout << "looking at parent " << data(parent,260).toInt() << " children\n";
     QList<Leaf*> children = getLeaf(parent)->childItems();
     std::for_each(children.begin(), children.end(), [this,&parent,uid](Leaf* leaf){
-        //std::cout << "looking at child " << leaf->data(3).toInt() << std::endl;
-        if(uid == leaf->data(3).toInt())
+        std::cout << "looking at child " << leaf->data(3).toInt() << std::endl;
+        if(uid == leaf->data(3).toInt()){
+            std::cout << "REMOVING NODE " << uid << std::endl;
             removeRows(leaf->row(),1,parent);
+        }
     });
     
 }

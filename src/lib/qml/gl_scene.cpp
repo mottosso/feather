@@ -241,6 +241,20 @@ void gl::glScene::nodesAddedInit()
     qml::command::nodes_updated();
 }
 
+void gl::glScene::nodesRemovedInit()
+{
+    std::vector<int> uids;
+    qml::command::nodes_added(uids);
+    for_each(uids.begin(), uids.end(), [this](int& uid){
+        //std::cout << "gl init for uid:" << uid << std::endl;
+        nodeInit(uid);
+    });
+    // since we only have one viewport now, this will do
+    // but later we will need to move this for multiple
+    // viewports
+    qml::command::nodes_updated();
+}
+
 void gl::glScene::draw(int width, int height)
 {
     glViewport(0,0,width,height);

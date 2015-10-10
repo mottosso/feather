@@ -151,6 +151,11 @@ void ViewportThread::nodesAdded()
     m_renderThread->nodesAdded();
 }
 
+void ViewportThread::nodesRemoved()
+{
+    m_renderThread->nodesRemoved();
+}
+
 void ViewportThread::updateGL()
 {
     setGlToUpdate();

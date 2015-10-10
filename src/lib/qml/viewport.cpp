@@ -51,6 +51,11 @@ void Viewport::nodesAdded()
     m_pScene->nodesAddedInit();
 }
 
+void Viewport::nodesRemoved()
+{
+    m_pScene->nodesRemovedInit();
+}
+
 void Viewport::render(int width, int height)
 {
     m_pScene->draw(width,height);
