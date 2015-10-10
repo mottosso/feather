@@ -5,3 +5,5 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 FILE(GLOB QML_FILES "*.qml")
 
 INSTALL(FILES ${QML_FILES} DESTINATION /usr/local/feather/ui)
+
+add_subdirectory(node_models)

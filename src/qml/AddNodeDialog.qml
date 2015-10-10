@@ -24,8 +24,10 @@
 import QtQuick 2.3
 import QtQuick.Window 2.2
 import feather.scenegraph 1.0
+import feather.node 1.0
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
+import "node_models"
 
 Window {
     id: dialog
@@ -49,7 +51,9 @@ Window {
 
     NodeTypeModel{ id: typeModel }
 
-    NodeIdModel{ id: nidModel }
+    // Nodes
+    NodeCommonModel { id: commonModel }
+    NodePolygonModel { id: polygonModel }
 
     Column {
         spacing: 4
@@ -128,7 +132,7 @@ Window {
                 id: nidLabel
                 width: 70
                 height: 30
-                visible: true
+                visible: true 
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignVCenter
                 font.pixelSize: 14
@@ -140,7 +144,7 @@ Window {
                 id: nidOption
                 width: 200
                 height: 30
-                model: nidModel 
+                model: polygonModel
                 properties: dialog.properties 
              }
         }        
@@ -183,6 +187,19 @@ Window {
 
     function set_type(index) {
         dialog.type = typeOption.model.get(index).type
+        switch(dialog.type){
+            case Node.Object:
+                nidOption.model = null
+                nidOption.model = commonModel
+                break; 
+            case Node.Polygon:
+                nidOption.model = null
+                nidOption.model = polygonModel
+                break;
+            default:
+                nidOption.model = null
+                nidOption.model = polygonModel
+        }
     }
 
     function set_nid(index){
@@ -192,7 +209,7 @@ Window {
     Component.onCompleted: {
         cancelButton.clicked.connect(hide)
         acceptButton.clicked.connect(add_node)
-        typeOption.activated.connect(nidOption.model.set_type)
+        //typeOption.activated.connect(nidOption.model.set_type)
         typeOption.activated.connect(set_type)
         nidOption.activated.connect(set_nid)
     }

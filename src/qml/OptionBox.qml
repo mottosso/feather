@@ -29,7 +29,6 @@ ComboBox {
     id: combobox
     width: 100
     height: 30
-    property alias model: combobox.model
     property Properties properties: Null
 
     style: ComboBoxStyle {
@@ -45,6 +44,7 @@ ComboBox {
 
         label: Text {
                 id: optionLabel
+                
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 font.pixelSize: 14
@@ -57,6 +57,4 @@ ComboBox {
         selectionColor: properties.getColor("optionSelectedBg") 
         selectedTextColor: properties.getColor("optionSelectedText") 
     }
-
-    Component.onCompleted: { }
 }

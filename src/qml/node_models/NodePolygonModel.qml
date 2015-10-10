@@ -22,19 +22,9 @@
  ***********************************************************************/
 
 import QtQuick 2.3
-import feather.node 1.0
 
 ListModel {
-    id: model
-    ListElement { text: "Empty"; type: Node.Empty; nid: 0 }
-    ListElement { text: "Transform"; type: Node.Modifier; nid: 2 }
-    // Polygons
-    ListElement { text: "Shape"; type: Node.Polygon; nid: 320 }
-    ListElement { text: "Plane"; type: Node.Polygon; nid: 321 }
-    ListElement { text: "Cube"; type: Node.Polygon; nid: 322 }
-
-    function set_type(type){
-        console.log("set type " + type)
-        //console.log(model.get(type).nid)
-    }
+    ListElement { text: "Shape"; nid: 320 }
+    ListElement { text: "Plane"; nid: 321 }
+    ListElement { text: "Cube"; nid: 322 }
 }
