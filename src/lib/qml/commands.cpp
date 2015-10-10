@@ -284,20 +284,9 @@ void qml::command::clear()
     scenegraph::clear();
 }
 
-void qml::command::get_node_connections(int uid, std::vector<int>& nodes)
+void qml::command::get_node_out_connections(int uid, std::vector<int>& nodes)
 {
-    typedef boost::graph_traits<FSceneGraph>::out_edge_iterator OutConn;
-    std::pair<OutConn,OutConn> out = boost::out_edges(uid,sg);
-
-    // this is a simple hack to check if a edge exist, I'm sure there's a better way to do this
-    if(out.first==out.second){
-        std::cout << "first and second edges match for " << uid << std::endl; 
-        return;
-    } else {
-        std::cout << "edges don't match for " << uid << std::endl;
-        boost::graph_traits<FSceneGraph>::edge_descriptor c = *out.first;
-        nodes.push_back(sg[boost::target(c,sg)].uid);
-    }
+    scenegraph::get_node_out_connections(uid,nodes);
 }
 
 int qml::command::get_node_connection_count(int uid)

@@ -24,6 +24,7 @@
 #include "sg_editor.hpp"
 #include "commands.hpp"
 #include "selection.hpp"
+#include "field.hpp"
 
 int MouseInfo::clickX=0;
 int MouseInfo::clickY=0;
@@ -51,7 +52,7 @@ SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type
 
     //int nedges = feather::qml::command::get_node_connection_count(0);
     std::vector<int> edges;
-    feather::qml::command::get_node_connections(0,edges);
+    feather::qml::command::get_node_out_connections(0,edges);
     //feather::FNodeDescriptor n = 0;
     //feather::FFieldConnection connection = boost::edge(n);
     //std::cout << "EDGE for node 0 is " << feather::sg[connection.first].n1 << "=>" << feather::sg[connection.first].n2 << std::endl;

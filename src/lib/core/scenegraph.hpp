@@ -167,6 +167,13 @@ namespace feather
             return static_cast<int>(uid);
         };
 
+        /* Remove node from scenegraph */
+        status remove_node(int uid) {
+            // remove all in and out edges for the node
+            // get add connected nodes
+            return status(); 
+        };
+
         /* This gets called when all the nodes have been updated.
          * This currently being used by the viewports to update their
          * glinfo
@@ -179,9 +186,19 @@ namespace feather
          *  will add all the nodes connected to the
          *  uid to the nodes reference
          */
-        void get_node_connections(int uid, std::vector<int>& nodes) {
-            // TODO
-            //boost::edges(sg);    
+        void get_node_out_connections(int uid, std::vector<int>& nodes) {
+            typedef boost::graph_traits<FSceneGraph>::out_edge_iterator OutConn;
+            std::pair<OutConn,OutConn> out = boost::out_edges(uid,sg);
+
+            // this is a simple hack to check if a edge exist, I'm sure there's a better way to do this
+            if(out.first==out.second){
+                std::cout << "first and second edges match for " << uid << std::endl; 
+                return;
+            } else {
+                std::cout << "edges don't match for " << uid << std::endl;
+                boost::graph_traits<FSceneGraph>::edge_descriptor c = *out.first;
+                nodes.push_back(sg[boost::target(c,sg)].uid);
+            }
         };
 
         status get_node_icon(int nid, std::string& file) {
