@@ -66,6 +66,7 @@ class SceneGraph : public QObject
         // commands
         Q_INVOKABLE void clear();
         Q_INVOKABLE int add_node(int type, int node, QString name);
+        Q_INVOKABLE bool remove_node(int uid);
         Q_INVOKABLE QString node_name(int uid);
         Q_INVOKABLE int connect_nodes(int n1, int f1, int n2, int f2);
         Q_INVOKABLE int selected_node();

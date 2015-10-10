@@ -52,7 +52,7 @@ Rectangle {
     Action {
         id: deleteNode
         tooltip: "Remove selected node from scenegraph"
-        onTriggered: {}
+        onTriggered: { var uid = scenegraph.selected_node(); scenegraph.remove_node(uid); scenegraph.triggerUpdate() }
     }
 
 

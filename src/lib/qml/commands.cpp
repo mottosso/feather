@@ -88,6 +88,11 @@ bool qml::command::nodes_added(std::vector<int>& uids)
     return true;
 }
 
+status qml::command::remove_node(int uid)
+{
+    return scenegraph::remove_node(uid);
+}
+
 void qml::command::nodes_updated()
 {
     scenegraph::nodes_updated();
