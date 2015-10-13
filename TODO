@@ -1,0 +1,13 @@
+Known Issues:
+    fids don't show up in field editor
+    can only connect nodes to the root not to another node or the program will crash
+    when you click and drag and node connection all the other connections disappear
+    errors show up in the scenegraph editor node's fid list
+    items in the addnode dialoge need to be first selected and changed before their correct value is known
+    the viewport flickers when it's size is adjusted and distorts
+ 
+Tasks:
+    move scenegraph node from one parent node to another via dnd
+    may have to redesign the parent/child relation graph
+    make commands to add, remove, and move nodes around the graph
+        

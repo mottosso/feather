@@ -120,15 +120,6 @@ Item {
     }
         
  
-    Component.onCompleted: {
-        // This was removed to fix seq fault during outliner selection
-        // It needs to be enabled again once the outliner is working
-        //scenegraph.nodeSelected.connect(setSelection)        
-        scenegraph.nodeSelected.connect(nodeSelect)
-        fieldEditor.properties.colorsChanged.connect(updateColor)
-        updateColor()
-    }    
-
     function setSelection(type,uid,nid,fid) {
         console.log("fed triggered");
         console.log("field editor triggered for uid " + uid + " nid " + nid + " fid " + fid);
@@ -150,4 +141,13 @@ Item {
         //fieldEditor.color = properties.getColor("windowBg")
 
     }
+
+    Component.onCompleted: {
+        // This was removed to fix seq fault during outliner selection
+        // It needs to be enabled again once the outliner is working
+        //scenegraph.nodeSelected.connect(setSelection)        
+        scenegraph.nodeSelected.connect(nodeSelect)
+        fieldEditor.properties.colorsChanged.connect(updateColor)
+        updateColor()
+    }    
 }
