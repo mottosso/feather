@@ -171,9 +171,9 @@ namespace feather
         status remove_node(int uid) {
              // this is currently needed to update sg
             smg::Instance()->clear();
+            smg::Instance()->add_state(static_cast<selection::Type>(sg[0].type),0,sg[0].node);
             boost::clear_vertex(uid,sg);
             boost::remove_vertex(uid,sg);
-            smg::Instance()->add_state(static_cast<selection::Type>(sg[0].type),0,sg[0].node);
             return status(); 
         };
 

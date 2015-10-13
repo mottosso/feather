@@ -364,16 +364,20 @@ Leaf* TreeModel::getLeaf(const QModelIndex& index) const
 
 void TreeModel::removeNode(int uid, const QModelIndex& parent)
 {
+
     std::cout << "looking at parent " << data(parent,260).toInt() << " children\n";
     QList<Leaf*> children = getLeaf(parent)->childItems();
     std::for_each(children.begin(), children.end(), [this,&parent,uid](Leaf* leaf){
         std::cout << "looking at child " << leaf->data(3).toInt() << std::endl;
-        if(uid == leaf->data(3).toInt()){
+        // TODO for now I have to remove all the children of a parent
+        // because when just one item is deleted all the other child
+        // nodes get moved out of root and new nodes take their place
+        //if(uid == leaf->data(3).toInt()){
             std::cout << "REMOVING NODE " << uid << std::endl;
             removeRows(leaf->row(),1,parent);
-        }
+        //}
     });
-    
+
 }
 
 void TreeModel::clearTree()
