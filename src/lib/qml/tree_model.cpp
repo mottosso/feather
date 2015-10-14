@@ -38,6 +38,7 @@ Leaf::~Leaf()
 
 void Leaf::appendChild(Leaf *item)
 {
+    std::cout << "APPENDING CHILD\n";
     m_childItems.append(item);
 }
 
@@ -285,8 +286,13 @@ void TreeModel::updateTree()
         static_cast<Leaf*>(parent.internalPointer())->clear();
     */
  
+    //QList<QVariant> rootData;
+    //rootData << "name" << "visible" << "icon" << "uid" << "nid";
+
     emit layoutAboutToBeChanged();
     rootItem->clear();
+    //delete rootItem;
+    //rootItem = new Leaf(rootData);
     loadChildren(0,rootItem);
     emit layoutChanged();
 
@@ -307,8 +313,16 @@ void TreeModel::test()
 
 QModelIndex TreeModel::setCurrentNode(int uid)
 {
-    QModelIndex parent = index(0,0);
-    int childCount = columnCount(parent);    
+    std::cout << "SETTING CURRENT NODE TO:" << uid << std::endl;
+
+    QModelIndex parent = index(uid,0);
+    int childCount=0;
+    if(parent.isValid())
+        childCount = static_cast<Leaf*>(parent.internalPointer())->childCount();
+    //Leaf* leaf = static_cast<Leaf*>(parent.internalPointer());
+ 
+    //int childCount = columnCount(parent);    
+    //int childCount = leaf->childCount();    
     std::cout << "uid " << uid << " child count " << childCount  << std::endl;
  
     for(int i=0; i<childCount-1; i++){
@@ -323,7 +337,7 @@ QModelIndex TreeModel::setCurrentNode(int uid)
         if(uid==data(index(i,0,parent),260).toInt())
             return index(i,0,parent);
     }
-    return index(0,0);
+    return index(uid,0);
 }
 
 bool TreeModel::removeColumns(int position, int columns, const QModelIndex &parent)
@@ -406,6 +420,7 @@ void TreeModel::loadChildren(const int uid, Leaf* parent)
 
     //std::cout << "load child for " << uid << std::endl;
 
+    std::cout << "CHILD APPENDED to " << uid << std::endl;
     parent->appendChild(new Leaf(data,parent)); 
 
     // recursive loop through each child node
