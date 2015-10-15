@@ -314,18 +314,26 @@ void TreeModel::test()
 QModelIndex TreeModel::setCurrentNode(int uid)
 {
     std::cout << "SETTING CURRENT NODE TO:" << uid << std::endl;
-
-    QModelIndex parent = index(uid,0);
+    QModelIndex rindex = getNodeIndex(uid,index(0,0));
+    if(!rindex.isValid())
+        return index(0,0);
+       
+    return rindex;
+ 
+    /*
+    QModelIndex parent = index(0,0);
     int childCount=0;
-    if(parent.isValid())
+    if(parent.isValid()) {
         childCount = static_cast<Leaf*>(parent.internalPointer())->childCount();
+        std::cout << "parent for uid: " << uid << " is valid.\n";
+    }
     //Leaf* leaf = static_cast<Leaf*>(parent.internalPointer());
  
     //int childCount = columnCount(parent);    
     //int childCount = leaf->childCount();    
     std::cout << "uid " << uid << " child count " << childCount  << std::endl;
  
-    for(int i=0; i<childCount-1; i++){
+    for(int i=0; i<childCount; i++){
         //Leaf* leaf = static_cast<Leaf*>(index(1,i).internalPointer());
         std::cout << "Leaf " << i << " values are " 
             << data(index(i,0,parent),257).toInt() << " "
@@ -334,10 +342,35 @@ QModelIndex TreeModel::setCurrentNode(int uid)
             << data(index(i,0,parent),260).toInt() << " "
             << data(index(i,0,parent),261).toInt() << " "
             << std::endl;  
-        if(uid==data(index(i,0,parent),260).toInt())
+        if(uid==data(index(i,0,parent),260).toInt()) {
+            std::cout << "returning row " << i << std::endl;
             return index(i,0,parent);
+        }
     }
     return index(uid,0);
+    */
+}
+
+QModelIndex TreeModel::getNodeIndex(int uid, QModelIndex parent)
+{
+    if(!parent.isValid())
+        return QModelIndex();
+
+    int childCount=0;
+    childCount = static_cast<Leaf*>(parent.internalPointer())->childCount();
+    std::cout << "searching " << static_cast<Leaf*>(parent.internalPointer())->row()<< " uid=" << data(parent,260).toInt() << std::endl;
+    if(data(parent,260).toInt() == uid)
+        return parent;
+
+    QModelIndex rindex=QModelIndex();
+
+    for(int i=0; i<childCount; i++){
+        rindex=getNodeIndex(uid,index(static_cast<Leaf*>(parent.internalPointer())->lastChild()->row(),0,parent));
+        if(rindex.isValid())
+            return rindex; 
+    }
+
+    return QModelIndex();    
 }
 
 bool TreeModel::removeColumns(int position, int columns, const QModelIndex &parent)
