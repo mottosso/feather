@@ -137,10 +137,17 @@ Rectangle {
         sg_editor.connectionMouseClicked(button,uid,nid,fid);
     }
 
+    function selectNode(uid) {
+        console.log("SELECT SG NODE " + uid);
+        sg_editor.update_sg()
+    }
+    
+    /*
     function setSelection(type,uid,nid,fid) {
         console.log("sg triggered");
         console.log("sg editor triggered for uid " + uid + " nid " + nid + " fid " + fid);
     }
+    */
 
     function add_node(name,type,nid) {
         console.log("Add node: " + name + " type: " + type + " nid: " + nid)
@@ -159,7 +166,7 @@ Rectangle {
         connMenu.connectionButtonPressed.connect(connectionButtonPressed)
         connMenu.connectionButtonReleased.connect(connectionButtonReleased)
         connMenu.connectionButtonClicked.connect(connectionButtonClicked)
-        scenegraph.nodeSelected.connect(setSelection)
+        scenegraph.nodeSelected.connect(selectNode)
         scenegraph.updateGraph.connect(sg_editor.update_sg)
         scenegraph.cleared.connect(sg_editor.update_sg)
         addNodeDialog.addNode.connect(add_node)

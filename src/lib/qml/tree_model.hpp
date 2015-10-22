@@ -82,12 +82,12 @@ class TreeModel : public QAbstractItemModel
         QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
         int rowCount(const QModelIndex &parent=QModelIndex()) const Q_DECL_OVERRIDE;
         int columnCount(const QModelIndex &parent=QModelIndex()) const Q_DECL_OVERRIDE;
-        Q_INVOKABLE void updateTree();
+        Q_INVOKABLE void updateTree(QModelIndex parent=QModelIndex());
         Q_INVOKABLE void test();
         Q_INVOKABLE QModelIndex setCurrentNode(int uid);
         QModelIndex getNodeIndex(int uid, QModelIndex parent);
         bool removeColumns(int position, int columns, const QModelIndex &parent);
-        bool removeRows(int position, int rows, const QModelIndex &parent=QModelIndex()) Q_DECL_OVERRIDE;
+        bool removeRows(int position, int rows, const QModelIndex &parent=QModelIndex());
         Leaf* getLeaf(const QModelIndex& index) const;
         Q_INVOKABLE void removeNode(int uid, const QModelIndex &parent=QModelIndex());
         Q_INVOKABLE void clearTree(); // this is used to remove every node from the outliner

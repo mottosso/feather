@@ -105,6 +105,7 @@ Item {
  
         //onActivated: { console.log("item activated " + model.data(index,260)); scenegraph.clear_selection(); scenegraph.select_node(model.data(index,260)) }
         onClicked: {
+            console.log("index=" + index)
             if(!model)
                 console.log("no model found")
             else {
@@ -121,13 +122,14 @@ Item {
     } 
 
     function selectNode(uid){
+        console.log("select uid:" + uid)
         var index = tree.model.setCurrentNode(uid)
-        //console.log("selected index:" + index)
+        console.log("selected index:" + index)
         //tree.selection.clear()
         // this does work
         tree.selection.setCurrentIndex(index,Qt.ClearAndSelect)
         // this does not work for some reason
-        //tree.selection.select(index,Qt.ClearAndSelect)
+        tree.selection.select(index,Qt.ClearAndSelect)
     }
 
     function clear(){
@@ -135,9 +137,12 @@ Item {
     }
 
     function remove_node(uid){
-        tree.selection.setCurrentIndex(tree.model.setCurrentNode(0),Qt.ClearAndSelect)
-        console.log("remove node called")
-        tree.model.removeNode(uid,tree.model.index(0,0))
+        //tree.selection.setCurrentIndex(tree.model.setCurrentNode(0),Qt.ClearAndSelect)
+        //console.log("remove node called")
+        //var nindex= tree.model.getNodeIndex(uid,index(0,0))
+        //console.log("node index = " + nindex) 
+        //tree.model.removeNode(uid,tree.model.index(0,0))
+        tree.model.removeRows(0,1,tree.selection.currentIndex().parent())
     }
 
     Component.onCompleted: {

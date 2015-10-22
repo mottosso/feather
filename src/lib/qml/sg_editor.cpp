@@ -26,6 +26,21 @@
 #include "selection.hpp"
 #include "field.hpp"
 
+#define BACKGROUND_COLOR "#696969"
+#define NODE_TEXT_COLOR "#FFFAFA"
+#define SELECTED_NODE_COLOR "#FF007F"
+#define DESELECTED_NODE_COLOR "#6A5ACD"
+#define HOVER_NODE_COLOR "#FF8C00"
+#define SELECTED_IN_CONNECTOR_COLOR "" // TODO
+#define DESELECTED_IN_CONNECTOR_COLOR "#50C878"
+#define HOVER_CONNECTOR_COLOR "#FFBF00"
+#define SELECTED_OUT_CONNECTOR_COLOR "" // TODO
+#define DESELECTED_OUT_CONNECTOR_COLOR "#9400D3"
+#define SELECTED_CONNECTION_COLOR "#FFEF00"
+#define DESELECTED_CONNECTION_COLOR "#99BADD"
+#define HOVER_CONNECTION_COLOR ""  // TODO
+
+
 int MouseInfo::clickX=0;
 int MouseInfo::clickY=0;
 
@@ -57,9 +72,9 @@ SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type
     //feather::FFieldConnection connection = boost::edge(n);
     //std::cout << "EDGE for node 0 is " << feather::sg[connection.first].n1 << "=>" << feather::sg[connection.first].n2 << std::endl;
     if(m_type == In)
-        m_connFillBrush = QBrush(QColor("#50C878"));
+        m_connFillBrush = QBrush(QColor(DESELECTED_IN_CONNECTOR_COLOR));
     else
-        m_connFillBrush = QBrush(QColor("#9400D3"));
+        m_connFillBrush = QBrush(QColor(DESELECTED_OUT_CONNECTOR_COLOR));
 }
 
 SceneGraphConnection::~SceneGraphConnection()
@@ -89,16 +104,16 @@ void SceneGraphConnection::mouseReleaseEvent(QMouseEvent* event)
 
 void SceneGraphConnection::hoverEnterEvent(QHoverEvent* event)
 {
-    m_connFillBrush.setColor(QColor("#FFBF00"));
+    m_connFillBrush.setColor(QColor(HOVER_CONNECTOR_COLOR));
     update();
 }
 
 void SceneGraphConnection::hoverLeaveEvent(QHoverEvent* event)
 {
     if(m_type == In)
-        m_connFillBrush = QBrush(QColor("#50C878"));
+        m_connFillBrush = QBrush(QColor(DESELECTED_IN_CONNECTOR_COLOR));
     else
-        m_connFillBrush = QBrush(QColor("#9400D3"));
+        m_connFillBrush = QBrush(QColor(DESELECTED_OUT_CONNECTOR_COLOR));
     update();
 }
 
@@ -118,12 +133,12 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
     m_x(0),
     m_y(0),
     m_imgDir("ui/icons/"),
-    m_nodeFillBrush(QBrush(QColor("#6A5ACD"))),
+    m_nodeFillBrush(QBrush(QColor(DESELECTED_NODE_COLOR))),
     m_pInConn(new SceneGraphConnection(SceneGraphConnection::In,this)),
     m_pOutConn(new SceneGraphConnection(SceneGraphConnection::Out,this))
 {
     if(feather::smg::Instance()->selected(m_uid)){
-        m_nodeFillBrush.setColor(QColor("#FF007F"));
+        m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
         update();
     }
     setWidth(NODE_WIDTH+4);
@@ -155,9 +170,9 @@ void SceneGraphNode::ConnPressed(Qt::MouseButton button, SceneGraphConnection::C
 void SceneGraphNode::setNodeSelection(int type, int uid, int nid)
 {
     if(feather::smg::Instance()->selected(m_uid))
-        m_nodeFillBrush.setColor(QColor("#FF007F"));
+        m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
     else 
-        m_nodeFillBrush.setColor(QColor("#6A5ACD"));
+        m_nodeFillBrush.setColor(QColor(DESELECTED_NODE_COLOR));
 
     update();
 }
@@ -167,7 +182,7 @@ void SceneGraphNode::paint(QPainter* painter)
     painter->setRenderHints(QPainter::Antialiasing, true);
 
     QPen trimPen = QPen(QColor(0,0,0),2);
-    QPen textPen = QPen(QColor("#FFFAFA"),2);
+    QPen textPen = QPen(QColor(NODE_TEXT_COLOR),2);
     QFont textFont("DejaVuSans",8);
 
     //QBrush connInFillBrush = QBrush(QColor("#FF4500"));
@@ -218,20 +233,24 @@ void SceneGraphNode::mouseReleaseEvent(QMouseEvent* event)
 
 void SceneGraphNode::hoverEnterEvent(QHoverEvent* event)
 {
-    m_nodeFillBrush.setColor(QColor("#318CE7"));
+    /*
+    m_nodeFillBrush.setColor(QColor(HOVER_NODE_COLOR));
     update();
+    */
 }
 
 void SceneGraphNode::hoverLeaveEvent(QHoverEvent* event)
 {
+    /*
     if(feather::smg::Instance()->selected(m_uid)){
-        m_nodeFillBrush.setColor(QColor("#FF007F"));
+        m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
         update();
     } else {
-        m_nodeFillBrush.setColor(QColor("#6A5ACD"));
+        m_nodeFillBrush.setColor(QColor(DESELECTED_NODE_COLOR));
         update();
     }
    //update();
+    */
 }
 
 void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
@@ -295,9 +314,9 @@ void SceneGraphLink::paint(QPainter* painter)
 
     QPen pathPen;
     if(SGState::mode==SGState::Normal)
-        pathPen = QPen(QColor("#99BADD"),1);
+        pathPen = QPen(QColor(DESELECTED_CONNECTION_COLOR),1);
     else
-        pathPen = QPen(QColor("#FFEF00"),2);
+        pathPen = QPen(QColor(SELECTED_CONNECTION_COLOR),2);
 
     path.moveTo(sp.x()+2,sp.y()+2);
 
@@ -393,7 +412,7 @@ void SceneGraphEditor::connectionMouseClicked(int button, int uid, int nid, int 
 
 void SceneGraphEditor::paint(QPainter* painter)
 {
-    setFillColor(QColor("#696969"));
+    setFillColor(QColor(BACKGROUND_COLOR));
     painter->setRenderHints(QPainter::Antialiasing, true);
 
     std::for_each(m_links.begin(),m_links.end(),[painter](SceneGraphLink* l){ l->paint(painter); });
@@ -401,7 +420,7 @@ void SceneGraphEditor::paint(QPainter* painter)
 
 void SceneGraphEditor::updateGraph()
 {
-    int xpos = 100;
+    int xpos = 50;
     int ypos = 50;
 
     std::for_each(m_nodes.begin(), m_nodes.end(), [](SceneGraphNode* node){ delete node; });
@@ -411,7 +430,9 @@ void SceneGraphEditor::updateGraph()
     m_links.clear();
 
     std::vector<int> uids;
-    feather::qml::command::get_selected_nodes(uids);
+    // disabled selection as root for testing
+    //feather::qml::command::get_selected_nodes(uids);
+    uids.push_back(0);
 
     std::cout << uids.size() << " nodes are selected\n";
 
@@ -419,7 +440,7 @@ void SceneGraphEditor::updateGraph()
 
     // for each selected uid we will draw all the nodes connected to it.
     for(uint i=0; i < uids.size(); i++) {
-        updateLeaf(NULL,uids[i],xpos,ypos+=100);
+        updateLeaf(NULL,uids[i],xpos,ypos);
     }
 }
 
@@ -452,7 +473,7 @@ void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int 
     int ystep = 0;
     std::for_each(cuids.begin(),cuids.end(),[&xpos,&ypos,this,node,&ystep](int key){
         std::cout << "drawing leaf " << key << std::endl;
-        updateLeaf(node,key,xpos+100,ypos+ystep+100);
+        updateLeaf(node,key,xpos+200,ypos+ystep);
         ystep+=40;
     });
 }
