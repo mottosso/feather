@@ -123,13 +123,14 @@ Item {
 
     function selectNode(uid){
         console.log("select uid:" + uid)
-        var index = tree.model.setCurrentNode(uid)
+        //var index = tree.model.setCurrentNode(uid)
+        var nindex = tree.model.getNodeIndex(uid,index(0,0))
         console.log("selected index:" + index)
         //tree.selection.clear()
         // this does work
-        tree.selection.setCurrentIndex(index,Qt.ClearAndSelect)
+        //tree.selection.setCurrentIndex(nindex,Qt.ClearAndSelect)
         // this does not work for some reason
-        tree.selection.select(index,Qt.ClearAndSelect)
+        tree.selection.select(nindex,Qt.ClearAndSelect)
     }
 
     function clear(){
@@ -141,8 +142,8 @@ Item {
         //console.log("remove node called")
         //var nindex= tree.model.getNodeIndex(uid,index(0,0))
         //console.log("node index = " + nindex) 
-        //tree.model.removeNode(uid,tree.model.index(0,0))
-        tree.model.removeRows(0,1,tree.selection.currentIndex().parent())
+        tree.model.removeNode(uid,tree.model.index(0,0))
+        //tree.model.removeRows(1,1,tree.selection.currentIndex().parent())
     }
 
     Component.onCompleted: {
