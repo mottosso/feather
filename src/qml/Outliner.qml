@@ -142,7 +142,6 @@ Item {
         var nindex = tree.model.getNodeIndex(uid,tree.model.index(0,0))
         console.log("selected index:" + nindex)
         tree.selection.setCurrentIndex(nindex,Qt.ClearAndSelect)
-        //tree.selection.select(nindex,Qt.ClearAndSelect)
     }
 
     function clear(){
