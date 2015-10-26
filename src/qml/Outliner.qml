@@ -121,8 +121,10 @@ Item {
         tree.model.updateTree()
     } 
 
+    // this is the old select node function
+    /*
     function selectNode(uid){
-        console.log("select uid:" + uid)
+        console.log("SELECTED OUTLINER NODE " + uid)
         //var index = tree.model.setCurrentNode(uid)
         var nindex = tree.model.getNodeIndex(uid,index(0,0))
         console.log("selected index:" + index)
@@ -131,6 +133,16 @@ Item {
         //tree.selection.setCurrentIndex(nindex,Qt.ClearAndSelect)
         // this does not work for some reason
         tree.selection.select(nindex,Qt.ClearAndSelect)
+    }
+    */
+
+    function selectNode() {
+        var uid = scenegraph.selected_node()
+        console.log("SELECTED OUTLINER NODE " + uid)
+        var nindex = tree.model.getNodeIndex(uid,tree.model.index(0,0))
+        console.log("selected index:" + nindex)
+        tree.selection.setCurrentIndex(nindex,Qt.ClearAndSelect)
+        //tree.selection.select(nindex,Qt.ClearAndSelect)
     }
 
     function clear(){

@@ -121,6 +121,7 @@ Rectangle {
     }
 
     function nodeSelection(type,uid,nid) {
+        // This is needed to emit to the nodeSelected signal to the other widgets so they can update 
         scenegraph.select_node(type,uid,nid);
     }
 
@@ -137,8 +138,9 @@ Rectangle {
         sg_editor.connectionMouseClicked(button,uid,nid,fid);
     }
 
-    function selectNode(uid) {
-        console.log("SELECT SG NODE " + uid);
+    function selectNode() {
+        var uid = scenegraph.selected_node()
+        console.log("SELECTED SG NODE " + uid)
         sg_editor.update_sg()
     }
     

@@ -85,7 +85,7 @@ class TreeModel : public QAbstractItemModel
         Q_INVOKABLE void updateTree(QModelIndex parent=QModelIndex());
         Q_INVOKABLE void test();
         Q_INVOKABLE QModelIndex setCurrentNode(int uid);
-        QModelIndex getNodeIndex(int uid, QModelIndex parent);
+        Q_INVOKABLE QModelIndex getNodeIndex(int uid, QModelIndex parent);
         bool removeColumns(int position, int columns, const QModelIndex &parent);
         bool removeRows(int position, int rows, const QModelIndex &parent=QModelIndex());
         Leaf* getLeaf(const QModelIndex& index) const;

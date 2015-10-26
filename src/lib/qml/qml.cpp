@@ -75,14 +75,14 @@ int SceneGraph::selected_node()
 int SceneGraph::select_node(int uid)
 {
     status p = qml::command::select_node(uid);
-    emit nodeSelected(uid);
+    emit nodeSelected();
     return p.state;
 }
  
 int SceneGraph::select_node(int type, int uid)
 {
     status p = qml::command::select_node(type,uid);
-    emit nodeSelected(uid);
+    emit nodeSelected();
     return p.state;
 }
 
