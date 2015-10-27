@@ -118,6 +118,7 @@ Item {
 
     function updateSg(){
         console.log("updateSg() model" + tree.model)
+        clear()
         tree.model.updateTree()
     } 
 
@@ -141,7 +142,17 @@ Item {
         console.log("SELECTED OUTLINER NODE " + uid)
         var nindex = tree.model.getNodeIndex(uid,tree.model.index(0,0))
         console.log("selected index:" + nindex)
+        //console.log("index row: " + nindex.row())
+        //console.log("index uid: " + nindex.data(260))
+ 
+        /*
+        if(nindex.isValid())
+            console.log("VALID")
+        else
+            console.log("INVALID")
+        */
         tree.selection.setCurrentIndex(nindex,Qt.ClearAndSelect)
+        //tree.selection.setCurrentIndex(tree.model.index(0,0),Qt.ClearAndSelect)
     }
 
     function clear(){

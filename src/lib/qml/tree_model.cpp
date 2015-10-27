@@ -359,28 +359,42 @@ QModelIndex TreeModel::setCurrentNode(int uid)
     */
 }
 
-QModelIndex TreeModel::getNodeIndex(int uid, QModelIndex parent)
+QModelIndex TreeModel::getNodeIndex(int uid, QModelIndex ind)
 {
-    if(!parent.isValid())
+    if(!ind.isValid())
         return QModelIndex();
 
     int childCount=0;
-    childCount = static_cast<Leaf*>(parent.internalPointer())->childCount();
-    int row = static_cast<Leaf*>(parent.internalPointer())->row();
-    std::cout << "searching " << row << " uid=" << data(parent,260).toInt() << std::endl;
-    if(data(parent,260).toInt() == uid)
-        return parent;
+    childCount = static_cast<Leaf*>(ind.internalPointer())->childCount();
+    int row = static_cast<Leaf*>(ind.internalPointer())->row();
+    //QModelIndex cindex = index(row,0,parent);
+    std::cout << "searching " << row << " uid=" << data(ind,260).toInt() << " - childCount = " << childCount << std::endl;
+    if(data(ind,260).toInt() == uid)
+        return index(row,0,parent(ind));
 
-    QModelIndex rindex;
+    //QModelIndex rindex;
+
+    //QModelIndex nparent = index(row,0,parent);
 
     for(int i=0; i<childCount; i++){
-        rindex=getNodeIndex(uid,index(i,0,parent));
+        
+        QModelIndex rindex = getNodeIndex(uid,index(i,0,ind));
+        if(rindex.isValid())
+            return rindex; 
+        /*
+        //rindex=index(i,0,parent);
         //std::cout << "i=" << i << " uid=" << data(index(i,0,parent),260).toInt();
-        if(rindex.isValid()) {
+        if(data(rindex,260).isValid()) {
             std::cout << "uid:" << data(rindex,260).toInt() << " VALID\n";
-            if(data(rindex,260).toInt()==uid)
+            if(data(rindex,260).toInt()==uid) {
+                std::cout << "\t UID MATCHES: " << rindex.row() << "," << rindex.column() << std::endl;
+                //return rindex;
                 return rindex;
+            } else {
+                return getNodeIndex(uid,rindex);
+            }
         }
+        */
     }
 
     return QModelIndex();    
