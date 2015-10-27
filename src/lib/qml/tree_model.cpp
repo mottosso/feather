@@ -422,7 +422,7 @@ bool TreeModel::removeRows(int position, int rows, const QModelIndex &parent)
     bool success = true;
 
     beginRemoveRows(parent, position, position + rows - 1);
-    //success = parentItem->removeChildren(position, rows);
+    success = parentItem->removeChildren(position, rows);
     endRemoveRows();
 
     return success;
