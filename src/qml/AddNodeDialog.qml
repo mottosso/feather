@@ -195,11 +195,12 @@ Window {
             case Node.Polygon:
                 nidOption.model = null
                 nidOption.model = polygonModel
-                break;
+                 break;
             default:
                 nidOption.model = null
                 nidOption.model = polygonModel
-        }
+         }
+        dialog.nid = nidOption.model.get(0).nid
     }
 
     function set_nid(index){
