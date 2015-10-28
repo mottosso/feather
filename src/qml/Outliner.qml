@@ -109,7 +109,6 @@ Item {
             if(!model)
                 console.log("no model found")
             else {
-                console.log("item clicked for index " + index + " model " + model.data(index,260))
                 scenegraph.clear_selection()
                 scenegraph.select_node(model.data(index,260))
             }
@@ -117,42 +116,14 @@ Item {
    }
 
     function updateSg(){
-        console.log("updateSg() model" + tree.model)
         clear()
         tree.model.updateTree()
     } 
 
-    // this is the old select node function
-    /*
-    function selectNode(uid){
-        console.log("SELECTED OUTLINER NODE " + uid)
-        //var index = tree.model.setCurrentNode(uid)
-        var nindex = tree.model.getNodeIndex(uid,index(0,0))
-        console.log("selected index:" + index)
-        //tree.selection.clear()
-        // this does work
-        //tree.selection.setCurrentIndex(nindex,Qt.ClearAndSelect)
-        // this does not work for some reason
-        tree.selection.select(nindex,Qt.ClearAndSelect)
-    }
-    */
-
     function selectNode() {
         var uid = scenegraph.selected_node()
-        console.log("SELECTED OUTLINER NODE " + uid)
         var nindex = tree.model.getNodeIndex(uid,tree.model.index(0,0))
-        console.log("selected index:" + nindex)
-        //console.log("index row: " + nindex.row())
-        //console.log("index uid: " + nindex.data(260))
- 
-        /*
-        if(nindex.isValid())
-            console.log("VALID")
-        else
-            console.log("INVALID")
-        */
         tree.selection.setCurrentIndex(nindex,Qt.ClearAndSelect)
-        //tree.selection.setCurrentIndex(tree.model.index(0,0),Qt.ClearAndSelect)
     }
 
     function clear(){
@@ -160,12 +131,7 @@ Item {
     }
 
     function remove_node(uid){
-        //tree.selection.setCurrentIndex(tree.model.setCurrentNode(0),Qt.ClearAndSelect)
-        //console.log("remove node called")
-        //var nindex= tree.model.getNodeIndex(uid,index(0,0))
-        //console.log("node index = " + nindex) 
         tree.model.removeNode(uid,tree.model.index(0,0))
-        //tree.model.removeRows(1,1,tree.selection.currentIndex().parent())
     }
 
     Component.onCompleted: {
