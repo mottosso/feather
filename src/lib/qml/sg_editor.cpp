@@ -163,19 +163,25 @@ SceneGraphNode::~SceneGraphNode()
 
 }
 
+// update the node's visual selection
+void SceneGraphNode::drawSelected(bool selected)
+{
+    if(true)
+        m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
+    else 
+        m_nodeFillBrush.setColor(QColor(DESELECTED_NODE_COLOR));
+    update();
+}
+
 void SceneGraphNode::ConnPressed(Qt::MouseButton button, SceneGraphConnection::Connection conn)
 {
     ConnClicked(button,conn,m_uid,m_node); 
 }
 
+// check SG to see if the node is selected
 void SceneGraphNode::setNodeSelection(int type, int uid, int nid)
 {
-    if(feather::smg::Instance()->selected(m_uid))
-        m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
-    else 
-        m_nodeFillBrush.setColor(QColor(DESELECTED_NODE_COLOR));
-
-    update();
+    (feather::smg::Instance()->selected(m_uid)) ? drawSelected(true) : drawSelected(false);
 }
 
 void SceneGraphNode::paint(QPainter* painter)
@@ -230,7 +236,7 @@ void SceneGraphNode::mousePressEvent(QMouseEvent* event)
 
 void SceneGraphNode::mouseDoubleClickEvent(QMouseEvent* event)
 {
-    nodePressed(event->button(),m_uid,m_node);
+    emit nodePressed(event->button(),m_uid,m_node);
 }
 
 void SceneGraphNode::mouseReleaseEvent(QMouseEvent* event)
@@ -388,7 +394,7 @@ void SceneGraphEditor::nodePressed(Qt::MouseButton button, int uid, int nid)
     // for now we'll have it so only one node can be selected at a time
     feather::qml::command::clear_selection();
     //feather::qml::command::select_node(uid);
-    nodeSelection(0,uid,nid);
+    emit nodeSelection(0,uid,nid);
 }
 
 void SceneGraphEditor::connectionMousePressed(int button, int uid, int nid, int fid)

@@ -98,7 +98,8 @@ class SceneGraphNode : public QQuickPaintedItem
         void paint(QPainter* painter);
         void inConnectionPoint(QPointF& point);
         void outConnectionPoint(QPointF& point);
-    
+        void drawSelected(bool selected);
+ 
     protected slots:
         void ConnPressed(Qt::MouseButton button,SceneGraphConnection::Connection conn);
         void setNodeSelection(int type, int uid, int nid);
