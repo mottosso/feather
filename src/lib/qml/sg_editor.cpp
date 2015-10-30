@@ -27,7 +27,7 @@
 #include "field.hpp"
 
 #define BACKGROUND_COLOR "#696969"
-#define NODE_TEXT_COLOR "#FFFAFA"
+#define NODE_TEXT_COLOR "#000000"
 #define SELECTED_NODE_COLOR "#FF007F"
 #define DESELECTED_NODE_COLOR "#6A5ACD"
 #define HOVER_NODE_COLOR "#FF8C00"
@@ -119,6 +119,7 @@ void SceneGraphConnection::hoverLeaveEvent(QHoverEvent* event)
 
 void SceneGraphConnection::mouseMoveEvent(QMouseEvent* event)
 {
+    std::cout << "connection mouse move event\n";
     MouseInfo::clickX = event->windowPos().x(); 
     MouseInfo::clickY = event->windowPos().y(); 
     SGState::pSge->update();
@@ -183,7 +184,7 @@ void SceneGraphNode::paint(QPainter* painter)
 
     QPen trimPen = QPen(QColor(0,0,0),2);
     QPen textPen = QPen(QColor(NODE_TEXT_COLOR),2);
-    QFont textFont("DejaVuSans",8);
+    QFont textFont("DejaVuSans",12);
 
     //QBrush connInFillBrush = QBrush(QColor("#FF4500"));
     //QBrush connOutFillBrush = QBrush(QColor("#DA70D6"));
@@ -208,7 +209,7 @@ void SceneGraphNode::paint(QPainter* painter)
     // Node Label 
     painter->setPen(textPen);
     painter->setFont(textFont);
-    painter->drawText(QRect(8,2,NODE_WIDTH-26,NODE_HEIGHT),Qt::AlignLeft|Qt::AlignVCenter,feather::qml::command::get_node_name(m_uid).c_str());
+    painter->drawText(QRect(8,2,NODE_WIDTH-26,NODE_HEIGHT),Qt::AlignHCenter|Qt::AlignVCenter,feather::qml::command::get_node_name(m_uid).c_str());
     //setX(m_x);
     //setY(m_y);
 
@@ -223,6 +224,12 @@ void SceneGraphNode::mousePressEvent(QMouseEvent* event)
 {
     m_x = event->screenPos().x();
     m_y = event->screenPos().y();
+    // had nodePressed() here but found out that it would
+    // block mouseMoveEvent from ever being called
+}
+
+void SceneGraphNode::mouseDoubleClickEvent(QMouseEvent* event)
+{
     nodePressed(event->button(),m_uid,m_node);
 }
 
@@ -233,24 +240,18 @@ void SceneGraphNode::mouseReleaseEvent(QMouseEvent* event)
 
 void SceneGraphNode::hoverEnterEvent(QHoverEvent* event)
 {
-    /*
     m_nodeFillBrush.setColor(QColor(HOVER_NODE_COLOR));
     update();
-    */
 }
 
 void SceneGraphNode::hoverLeaveEvent(QHoverEvent* event)
 {
-    /*
     if(feather::smg::Instance()->selected(m_uid)){
         m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
-        update();
     } else {
         m_nodeFillBrush.setColor(QColor(DESELECTED_NODE_COLOR));
-        update();
     }
-   //update();
-    */
+   update();
 }
 
 void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
@@ -387,7 +388,7 @@ void SceneGraphEditor::nodePressed(Qt::MouseButton button, int uid, int nid)
     // for now we'll have it so only one node can be selected at a time
     feather::qml::command::clear_selection();
     //feather::qml::command::select_node(uid);
-    emit nodeSelection(0,uid,nid);
+    nodeSelection(0,uid,nid);
 }
 
 void SceneGraphEditor::connectionMousePressed(int button, int uid, int nid, int fid)
@@ -479,10 +480,10 @@ void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int 
 }
 
 
-void SceneGraphEditor::mousePressEvent(QMouseEvent* event){};
-void SceneGraphEditor::mouseReleaseEvent(QMouseEvent* event){};
-void SceneGraphEditor::hoverEnterEvent(QHoverEvent* event){};
-void SceneGraphEditor::hoverLeaveEvent(QHoverEvent* event){};
+void SceneGraphEditor::mousePressEvent(QMouseEvent* event){ std::cout << "mouse press\n"; };
+void SceneGraphEditor::mouseReleaseEvent(QMouseEvent* event){ std::cout << "mouse release\n"; };
+void SceneGraphEditor::hoverEnterEvent(QHoverEvent* event){ std::cout << "hover enter\n"; };
+void SceneGraphEditor::hoverLeaveEvent(QHoverEvent* event){ std::cout << "hover leave\n"; };
 void SceneGraphEditor::hoverMoveEvent(QHoverEvent* event){ std::cout << "hover move\n"; };
 void SceneGraphEditor::mouseMoveEvent(QMouseEvent* event){ std::cout << "mouse move\n"; };
 

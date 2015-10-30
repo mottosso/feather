@@ -109,6 +109,7 @@ class SceneGraphNode : public QQuickPaintedItem
 
     protected:
         void mousePressEvent(QMouseEvent* event);
+        void mouseDoubleClickEvent(QMouseEvent* event);
         void mouseReleaseEvent(QMouseEvent* event);
         void hoverEnterEvent(QHoverEvent* event);
         void hoverLeaveEvent(QHoverEvent* event);
