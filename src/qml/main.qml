@@ -21,9 +21,10 @@
  *
  ***********************************************************************/
 
-import QtQuick 2.3
+import QtQuick 2.5
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
+import QtQuick.Window 2.2
 import feather.scenegraph 1.0
 
 ApplicationWindow {
@@ -32,6 +33,7 @@ ApplicationWindow {
     height: 800
     visible: true
     title: "Feather 0.1"
+    //flags: Qt.FramelessWindowHint
 
     SceneGraph { id: sg }
 
@@ -103,6 +105,28 @@ ApplicationWindow {
 
     statusBar: StatusBar {
         RowLayout { BusyIndicator { implicitWidth: 10; implicitHeight: 10; running: false } Label { text: "Feather 0.1" } }
+    }
+
+    // this is for catching key presses on the main window
+    Item {
+        anchors.fill: parent
+        focus: true
+
+        Keys.onPressed: {
+            console.log("key pressed")
+            if((event.modifiers == Qt.ControlModifier)&&(event.key == Qt.Key_F)){
+                console.log("F key hit")
+                if(window.visibility == Window.FullScreen)
+                    window.visibility = Window.Windowed
+                else
+                    window.visibility = Window.FullScreen
+                event.accepted=true
+            }
+        }
+    }
+
+    Component.onCompleted: {
+        //window.showFullScreen()        
     }
 
     //Material {}
