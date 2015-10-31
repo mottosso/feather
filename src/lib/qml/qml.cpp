@@ -61,6 +61,13 @@ QString SceneGraph::node_name(int uid)
     return qml::command::get_node_name(uid).c_str();
 }
 
+int SceneGraph::node_id(int uid)
+{
+    int nid;
+    qml::command::get_node_id(uid,nid);
+    return nid;
+}
+
 int SceneGraph::connect_nodes(int n1, int f1, int n2, int f2)
 {
     status p = qml::command::connect_nodes(n1,f1,n2,f2);

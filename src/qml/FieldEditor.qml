@@ -127,8 +127,10 @@ Item {
         fieldModel.layoutChanged()
     }
 
-    function nodeSelect(uid) {
-        nodeLabel.text = scenegraph.node_name(uid);
+    function nodeSelect() {
+        var uid = scenegraph.selected_node()
+        var nid = scenegraph.node_id(uid)
+        nodeLabel.text = scenegraph.node_name(uid)
         fieldModel.addFields(uid,nid)
     }
 

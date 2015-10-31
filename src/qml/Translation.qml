@@ -27,20 +27,26 @@ Item {
     ListModel {
         id: plugins
 
-        // Polygon Cube
-        // In
-        ListElement { name: "Mesh"; node: 320; field: 1 }
-        ListElement { name: "Test"; node: 320; field: 2 }
-        // Out 
-        //ListElement { name: ""; node: 320; field: 1 }
+        // Empty
+        ListElement { name: "Parent"; node: 1; field: 1 }
+ 
+        // Polygon Shape 
+        ListElement { name: "Parent"; node: 320; field: 1 }
+        ListElement { name: "Mesh"; node: 320; field: 3 }
+        ListElement { name: "Test"; node: 320; field: 4 }
+        // Out
+        ListElement { name: "Child"; node: 320; field: 2 }
+
 
         // Polygon Cube
         // In
-        ListElement { name: "SubX"; node: 322; field: 1 }
-        ListElement { name: "SubY"; node: 322; field: 2 }
-        ListElement { name: "SubZ"; node: 322; field: 3 }
+        ListElement { name: "Parent"; node: 322; field: 1 }
+        ListElement { name: "SubX"; node: 322; field: 3 }
+        ListElement { name: "SubY"; node: 322; field: 4 }
+        ListElement { name: "SubZ"; node: 322; field: 5 }
         // Out 
-        ListElement { name: "Mesh"; node: 322; field: 4 }
+        ListElement { name: "Child"; node: 322; field: 2 }
+        ListElement { name: "Mesh"; node: 322; field: 6 }
 
     }
 

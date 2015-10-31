@@ -87,6 +87,7 @@ class FieldModel : public QAbstractListModel
         void fieldsChanged();
 
     private:
+        bool show_fid(int type);
         Q_DISABLE_COPY(FieldModel);
         QList<FieldInfo*> m_fields;
 };

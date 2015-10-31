@@ -88,8 +88,48 @@ void FieldModel::addFields(int uid, int nid)
     feather::qml::command::get_fid_list(uid,nid,feather::field::connection::In,fids);
     m_fields.clear();
     for(uint i=0; i < fids.size(); i++) {
-        m_fields.append(new FieldInfo(uid,nid,fids.at(i)->id,fids.at(i)->type,0));
+        std::cout << "adding field - uid:" << uid << " nid:" << nid << " fid:" << fids.at(i)->id << " type:" << fids.at(i)->type << std::endl;
+        // we only want to add fields that can be edited from the field editor
+        if(show_fid(fids.at(i)->type))
+            m_fields.append(new FieldInfo(uid,nid,fids.at(i)->id,fids.at(i)->type,0));
     }
     layoutChanged();
 }
 
+bool FieldModel::show_fid(int type)
+{
+    switch(type){
+        case feather::field::Bool:
+            return true; 
+        case feather::field::Int:
+            return true; 
+        case feather::field::Float:
+            return true; 
+        case feather::field::Double:
+            return true; 
+        case feather::field::Vertex:
+            return true; 
+        case feather::field::Vector:
+            return true; 
+        case feather::field::RGB:
+            return true; 
+        case feather::field::RGBA:
+            return true; 
+        case feather::field::BoolArray:
+            return true; 
+        case feather::field::IntArray:
+            return true; 
+        case feather::field::FloatArray:
+            return true; 
+        case feather::field::VertexArray:
+            return true; 
+        case feather::field::VectorArray:
+            return true; 
+        case feather::field::RGBArray:
+            return true; 
+        case feather::field::RGBAArray:
+            return true; 
+        default:
+            return false; 
+    }
+}
