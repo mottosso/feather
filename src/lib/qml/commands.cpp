@@ -281,6 +281,16 @@ status qml::command::get_fid_list(int uid, int nid, field::connection::Type conn
     return scenegraph::get_fid_list(uid,nid,conn,list);
 }
 
+int qml::command::get_in_field_count(int uid)
+{
+    return scenegraph::get_in_field_count(uid);
+}
+
+int qml::command::get_out_field_count(int uid)
+{
+    return scenegraph::get_out_field_count(uid);
+}
+
 
 // SCENEGRAPH EDITOR
 

@@ -36,6 +36,8 @@ Rectangle {
     property SceneGraph scenegraph: Null
     property Properties properties: Null
 
+    Translation { id: translate }
+
     // Dialogs
     AddNodeDialog{ id: addNodeDialog; properties: sgWindow.properties }
 
@@ -161,10 +163,15 @@ Rectangle {
         scenegraph.triggerUpdate()
     }
 
+    function nodeFieldName(nid,fid,name) {
+        name = translator.get_field_name(nid,fid)         
+    }
+
     Component.onCompleted: {
         sg_editor.update_sg()
         sg_editor.openConnMenu.connect(openConnectionMenu)
         sg_editor.nodeSelection.connect(nodeSelection)
+        sg_editor.getFieldName.connect(nodeFieldName)
         connMenu.connectionButtonPressed.connect(connectionButtonPressed)
         connMenu.connectionButtonReleased.connect(connectionButtonReleased)
         connMenu.connectionButtonClicked.connect(connectionButtonClicked)

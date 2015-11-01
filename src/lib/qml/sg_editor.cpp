@@ -191,6 +191,8 @@ void SceneGraphNode::paint(QPainter* painter)
     QPen trimPen = QPen(QColor(0,0,0),2);
     QPen textPen = QPen(QColor(NODE_TEXT_COLOR),2);
     QFont textFont("DejaVuSans",12);
+    textFont.setBold(true);
+    QFont connFont("DejaVuSans",8);
 
     //QBrush connInFillBrush = QBrush(QColor("#FF4500"));
     //QBrush connOutFillBrush = QBrush(QColor("#DA70D6"));
@@ -198,7 +200,13 @@ void SceneGraphNode::paint(QPainter* painter)
     // draw the node box
     painter->setPen(trimPen);
     painter->setBrush(m_nodeFillBrush);
-    painter->drawRoundedRect(QRect(2,2,NODE_WIDTH,NODE_HEIGHT),2,2);
+    int incount = feather::qml::command::get_in_field_count(m_uid);
+    int outcount = feather::qml::command::get_out_field_count(m_uid);
+    int height = 20 + (20 * std::max(incount,outcount));
+    
+    setHeight(height+4);
+ 
+    painter->drawRoundedRect(QRect(2,2,NODE_WIDTH,height),2,2);
 
     // draw the input and output connectors
     //QPoint sConnPoint;
@@ -215,7 +223,24 @@ void SceneGraphNode::paint(QPainter* painter)
     // Node Label 
     painter->setPen(textPen);
     painter->setFont(textFont);
-    painter->drawText(QRect(8,2,NODE_WIDTH-26,NODE_HEIGHT),Qt::AlignHCenter|Qt::AlignVCenter,feather::qml::command::get_node_name(m_uid).c_str());
+    painter->drawText(QRect(0,0,NODE_WIDTH-26,NODE_HEIGHT),Qt::AlignHCenter|Qt::AlignVCenter,feather::qml::command::get_node_name(m_uid).c_str());
+
+    // in connections
+    painter->setFont(connFont);
+    feather::field::FieldBase* field;
+    int sx=0;
+    for(int i=1; i < incount; i++){
+        feather::qml::command::get_field_base(m_uid,i,field);
+        QString name;
+        std::cout << "in connection id=" << field->id << " name=" << name.toStdString().c_str() << std::endl; 
+        painter->drawText(QRect(4,sx+20,NODE_WIDTH-4,NODE_HEIGHT),Qt::AlignLeft|Qt::AlignVCenter,"input");
+        sx+=20;
+    }
+
+    // out connections 
+    painter->drawText(QRect(4,20,NODE_WIDTH-4,NODE_HEIGHT),Qt::AlignRight|Qt::AlignVCenter,"output");
+
+
     //setX(m_x);
     //setY(m_y);
 
@@ -464,6 +489,7 @@ void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int 
 
     connect(node,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
     connect(node,SIGNAL(nodePressed(Qt::MouseButton,int,int)),this,SLOT(nodePressed(Qt::MouseButton,int,int)));
+    connect(node,SIGNAL(getFieldName(int,int,QString&)),this,SLOT(getFieldName(int,int,QString&)));
     connect(this,SIGNAL(nodeSelection(int,int,int)),node,SLOT(setNodeSelection(int,int,int)));
 
     m_nodes.push_back(node);

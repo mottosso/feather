@@ -245,6 +245,17 @@ namespace feather
             }
         };
 
+        int get_in_field_count(int uid) {
+            int i=0;
+            std::for_each(sg[uid].fields.begin(), sg[uid].fields.end(),[&i](field::FieldBase* f){ if(f->conn_type==field::connection::In){i++;} });
+            return i; 
+        }
+
+        int get_out_field_count(int uid) {
+            int i=0;
+            std::for_each(sg[uid].fields.begin(), sg[uid].fields.end(),[&i](field::FieldBase* f){ if(f->conn_type==field::connection::Out){i++;} });
+            return i; 
+        }
 
         // LAYER
         
