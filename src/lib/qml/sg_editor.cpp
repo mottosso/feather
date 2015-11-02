@@ -191,7 +191,9 @@ void SceneGraphNode::paint(QPainter* painter)
     QPen trimPen = QPen(QColor(0,0,0),2);
     QPen textPen = QPen(QColor(NODE_TEXT_COLOR),2);
     QFont textFont("DejaVuSans",12);
-    textFont.setBold(true);
+    textFont.setBold((feather::smg::Instance()->selected(m_uid)) ? true : false);
+    //textFont.setBold(true);
+
     //QFont connFont("DejaVuSans",8);
 
     //QBrush connInFillBrush = QBrush(QColor("#FF4500"));
