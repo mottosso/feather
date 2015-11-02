@@ -107,7 +107,6 @@ class SceneGraphNode : public QQuickPaintedItem
     signals:
         void ConnClicked(Qt::MouseButton button, SceneGraphConnection::Connection conn, int uid, int nid);
         void nodePressed(Qt::MouseButton button, int uid, int nid);
-        void getFieldName(int nid, int fid, QString& name);
 
     protected:
         void mousePressEvent(QMouseEvent* event);
@@ -179,6 +178,7 @@ class SceneGraphEditor : public QQuickPaintedItem
         }
 
         FieldModel* connection() { return m_connection; }
+
         int clickX() { return MouseInfo::clickX; }
         int clickY() { return MouseInfo::clickY; }
 
@@ -200,7 +200,6 @@ class SceneGraphEditor : public QQuickPaintedItem
         void connectionChanged();
         void nodeSelection(int type, int uid, int nid);
         void updateSelection();
-        void getFieldName(int nid, int fid, QString& name);
 
     private:
         void updateGraph();
