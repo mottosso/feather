@@ -225,7 +225,7 @@ void SceneGraphNode::paint(QPainter* painter)
     // Node Label 
     painter->setPen(textPen);
     painter->setFont(textFont);
-    painter->drawText(QRect(0,0,NODE_WIDTH-26,NODE_HEIGHT),Qt::AlignHCenter|Qt::AlignVCenter,feather::qml::command::get_node_name(m_uid).c_str());
+    painter->drawText(QRect(0,0,NODE_WIDTH,NODE_HEIGHT),Qt::AlignHCenter|Qt::AlignVCenter,feather::qml::command::get_node_name(m_uid).c_str());
 
     // FOR NOW WE ARE ONLY GOING TO SO THE NODE
     // BUT IN THE FUTURE WE'LL SHOW ALL IT'S 
@@ -251,10 +251,10 @@ void SceneGraphNode::paint(QPainter* painter)
     //setY(m_y);
 
     // Node Icon
-    QRectF tgt(NODE_WIDTH-26,4,24,24);
-    QRectF src(0,0,48,48);
-    QImage img(m_imgPath.str().c_str());
-    painter->drawImage(tgt,img,src);
+    //QRectF tgt(NODE_WIDTH-26,4,24,24);
+    //QRectF src(0,0,48,48);
+    //QImage img(m_imgPath.str().c_str());
+    //painter->drawImage(tgt,img,src);
 }
 
 void SceneGraphNode::mousePressEvent(QMouseEvent* event)
