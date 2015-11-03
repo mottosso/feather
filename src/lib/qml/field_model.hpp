@@ -29,18 +29,36 @@
 #include "field.hpp"
 #include "commands.hpp"
 
+// this is used to hold all the attribute names
+class FieldName {
+    public:
+        FieldName(const QString &_name="",
+                const int &_uid=0,
+                const int &_nid=0):
+            name(_name),
+            uid(_uid),
+            nid(_nid) {}
+        QString name;
+        int uid;
+        int nid;
+};
+
+// this is used to display the current field
 class FieldInfo { 
     public:
-        FieldInfo(const int &_uid=0,
+        FieldInfo(const QString &_name="",
+                const int &_uid=0,
                 const int &_nid=0,
                 const int &_fid=0,
                 const int &_type=0,
                 const bool &_locked=false):
+            name(_name),
             uid(_uid),
             nid(_nid),
             fid(_fid),
             type(_type),
             locked(_locked) {}
+        QString name;
         int uid;
         int nid;
         int fid;
@@ -52,6 +70,7 @@ class FieldModel : public QAbstractListModel
 {
     Q_OBJECT
         Q_PROPERTY(QList<FieldInfo*> fields READ fields WRITE setFields NOTIFY fieldsChanged)
+        Q_PROPERTY(QList<FieldName*> fieldnames READ fieldnames WRITE setFieldnames NOTIFY fieldnamesChanged)
  
     public:
         FieldModel(QObject* parent=0);
@@ -59,11 +78,12 @@ class FieldModel : public QAbstractListModel
 
         enum ERoles
         {
-            UidRole = Qt::UserRole + 1,
-            NidRole = Qt::UserRole + 2,
-            FidRole = Qt::UserRole + 3,
-            TypeRole = Qt::UserRole + 4,
-            LockedRole = Qt::UserRole + 5
+            NameRole = Qt::UserRole + 1,
+            UidRole = Qt::UserRole + 2,
+            NidRole = Qt::UserRole + 3,
+            FidRole = Qt::UserRole + 4,
+            TypeRole = Qt::UserRole + 5,
+            LockedRole = Qt::UserRole + 6
         };
 
         QHash<int, QByteArray> roleNames() const;
@@ -79,17 +99,29 @@ class FieldModel : public QAbstractListModel
         }
 
         QList<FieldInfo*> fields() { return m_fields; }
+ 
+        // field names 
+        void setFieldnames(QList<FieldName*>& fn) {
+            if(m_fieldnames != fn) {
+                m_fieldnames=fn;
+            }
+        }
+
+        QList<FieldName*> fieldnames() { return m_fieldnames; }
 
         Q_INVOKABLE void addField(int uid, int nid, int fid, int type, bool locked);
         Q_INVOKABLE void addFields(int uid, int nid);
- 
+        QString getFieldName(int uid, int nid);
+
     signals:
         void fieldsChanged();
+        void fieldnamesChanged();
 
     private:
         bool show_fid(int type);
         Q_DISABLE_COPY(FieldModel);
         QList<FieldInfo*> m_fields;
+        QList<FieldName*> m_fieldnames;
 };
 
 #endif

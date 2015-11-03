@@ -112,6 +112,7 @@ Rectangle {
     }    
 
     PopupMenu { id: connMenu; model: connModel }
+
     function openConnectionMenu() {
         connMenu.x = sg_editor.clickX
         connMenu.y = sg_editor.clickY

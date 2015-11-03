@@ -34,6 +34,7 @@ FieldModel::~FieldModel()
 QHash<int, QByteArray> FieldModel::roleNames() const
 {
     QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
+    roles.insert(NameRole, QByteArray("name"));
     roles.insert(UidRole, QByteArray("uid"));
     roles.insert(NidRole, QByteArray("nid"));
     roles.insert(FidRole, QByteArray("fid"));
@@ -56,6 +57,8 @@ QVariant FieldModel::data(const QModelIndex& index, int role) const
     FieldInfo *dobj = m_fields.at(index.row());
     switch (role) {
         case Qt::DisplayRole: // The default display role now displays the first name as well
+        case NameRole:
+            return QVariant::fromValue(dobj->name);
         case UidRole:
             return QVariant::fromValue(dobj->uid);
         case NidRole:
@@ -78,7 +81,7 @@ void FieldModel::clear()
 
 void FieldModel::addField(int uid, int nid, int fid, int type, bool locked)
 {
-    m_fields.append(new FieldInfo(uid,nid,fid,type,locked));
+    m_fields.append(new FieldInfo(getFieldName(uid,nid),uid,nid,fid,type,locked));
 }
 
 void FieldModel::addFields(int uid, int nid)
@@ -91,9 +94,17 @@ void FieldModel::addFields(int uid, int nid)
         std::cout << "adding field - uid:" << uid << " nid:" << nid << " fid:" << fids.at(i)->id << " type:" << fids.at(i)->type << std::endl;
         // we only want to add fields that can be edited from the field editor
         if(show_fid(fids.at(i)->type))
-            m_fields.append(new FieldInfo(uid,nid,fids.at(i)->id,fids.at(i)->type,0));
+            m_fields.append(new FieldInfo(getFieldName(uid,nid),uid,nid,fids.at(i)->id,fids.at(i)->type,0));
     }
-    layoutChanged();
+    emit layoutChanged();
+}
+
+QString FieldModel::getFieldName(int uid, int nid){
+    for(auto fn : m_fieldnames){
+        if((fn->uid==uid) && (fn->nid==nid))
+            return fn->name;
+    }
+    return "";
 }
 
 bool FieldModel::show_fid(int type)

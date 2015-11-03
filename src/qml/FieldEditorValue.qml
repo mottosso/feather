@@ -35,12 +35,13 @@ Rectangle {
     property int fieldType: 0 
     property int value: field.intVal
     property Properties properties: Null
+    property alias label: label.text
 
     Field { id: field }
 
     FieldPopup { id: popup }
 
-    Translation { id: name }
+    //Translation { id: name }
 
 
     // LABEL
@@ -55,7 +56,7 @@ Rectangle {
         horizontalAlignment: Text.AlignRight
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: 10
-        text: name.get_field_name(nodeKey,fieldKey);
+        //text: name.get_field_name(nodeKey,fieldKey);
     }    
    
     // VALUE
