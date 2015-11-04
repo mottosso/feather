@@ -35,7 +35,8 @@ Rectangle {
     
     property SceneGraph scenegraph: Null
     property Properties properties: Null
-
+    property alias fieldModel: sg_editor.connection
+ 
     // Dialogs
     AddNodeDialog{ id: addNodeDialog; properties: sgWindow.properties }
 
@@ -108,7 +109,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: 2
-        connection: connModel
+        //connection: connModel
     }    
 
     PopupMenu { id: connMenu; model: connModel }

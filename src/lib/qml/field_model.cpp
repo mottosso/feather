@@ -91,20 +91,25 @@ void FieldModel::addFields(int uid, int nid)
     feather::qml::command::get_fid_list(uid,nid,feather::field::connection::In,fids);
     m_fields.clear();
     for(uint i=0; i < fids.size(); i++) {
-        std::cout << "adding field - uid:" << uid << " nid:" << nid << " fid:" << fids.at(i)->id << " type:" << fids.at(i)->type << std::endl;
+        //std::cout << "adding field - uid:" << uid << " nid:" << nid << " fid:" << fids.at(i)->id << " type:" << fids.at(i)->type << std::endl;
         // we only want to add fields that can be edited from the field editor
         if(show_fid(fids.at(i)->type))
-            m_fields.append(new FieldInfo(getFieldName(uid,nid),uid,nid,fids.at(i)->id,fids.at(i)->type,0));
+            m_fields.append(new FieldInfo(getFieldName(nid,fids.at(i)->id),uid,nid,fids.at(i)->id,fids.at(i)->type,0));
     }
     emit layoutChanged();
 }
 
-QString FieldModel::getFieldName(int uid, int nid){
+void FieldModel::addFieldName(QString name, int nid, int fid)
+{
+    m_fieldnames.push_back(new FieldName{name,nid,fid});
+}
+
+QString FieldModel::getFieldName(int nid, int fid){
     for(auto fn : m_fieldnames){
-        if((fn->uid==uid) && (fn->nid==nid))
+        if((fn->nid==nid) && (fn->fid==fid))
             return fn->name;
     }
-    return "";
+    return "ERROR";
 }
 
 bool FieldModel::show_fid(int type)

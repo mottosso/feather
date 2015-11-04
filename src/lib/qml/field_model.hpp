@@ -30,17 +30,10 @@
 #include "commands.hpp"
 
 // this is used to hold all the attribute names
-class FieldName {
-    public:
-        FieldName(const QString &_name="",
-                const int &_uid=0,
-                const int &_nid=0):
-            name(_name),
-            uid(_uid),
-            nid(_nid) {}
-        QString name;
-        int uid;
-        int nid;
+struct FieldName {
+    QString name;
+    int nid;
+    int fid;
 };
 
 // this is used to display the current field
@@ -70,7 +63,6 @@ class FieldModel : public QAbstractListModel
 {
     Q_OBJECT
         Q_PROPERTY(QList<FieldInfo*> fields READ fields WRITE setFields NOTIFY fieldsChanged)
-        Q_PROPERTY(QList<FieldName*> fieldnames READ fieldnames WRITE setFieldnames NOTIFY fieldnamesChanged)
  
     public:
         FieldModel(QObject* parent=0);
@@ -100,18 +92,10 @@ class FieldModel : public QAbstractListModel
 
         QList<FieldInfo*> fields() { return m_fields; }
  
-        // field names 
-        void setFieldnames(QList<FieldName*>& fn) {
-            if(m_fieldnames != fn) {
-                m_fieldnames=fn;
-            }
-        }
-
-        QList<FieldName*> fieldnames() { return m_fieldnames; }
-
         Q_INVOKABLE void addField(int uid, int nid, int fid, int type, bool locked);
         Q_INVOKABLE void addFields(int uid, int nid);
-        QString getFieldName(int uid, int nid);
+        Q_INVOKABLE void addFieldName(QString name, int nid, int fid);
+        QString getFieldName(int nid, int fid);
 
     signals:
         void fieldsChanged();
@@ -121,7 +105,7 @@ class FieldModel : public QAbstractListModel
         bool show_fid(int type);
         Q_DISABLE_COPY(FieldModel);
         QList<FieldInfo*> m_fields;
-        QList<FieldName*> m_fieldnames;
+        std::vector<FieldName*> m_fieldnames;
 };
 
 #endif

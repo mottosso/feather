@@ -36,8 +36,7 @@ Item {
     //height: 500
     property SceneGraph scenegraph: Null
     property Properties properties: Null
-
-    FieldModel { id: fieldModel }
+    property alias fieldModel: view.model
 
     Rectangle {
         id: nodeFrame
@@ -73,13 +72,13 @@ Item {
         }
 
         ListView {
+            id: view
             spacing: 2
             anchors.top: nodeTitle.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.margins: 1
-            model: fieldModel
             delegate: FieldEditorValue { properties: fieldEditor.properties; width: parent.width; uId: uid; nodeKey: nid; fieldKey: fid; fieldType: type; label: name }
         }
 

@@ -40,6 +40,8 @@ ApplicationWindow {
     Properties { id: properties }
 
     menuBar: MainMenu { scenegraph: sg; properties: properties }
+    
+    NodeFields { id: fields }
 
     //toolBar: MainToolBar {}
 
@@ -55,6 +57,7 @@ ApplicationWindow {
             width: 200
             scenegraph: sg
             properties: properties
+            fieldModel: fields
         }
 
         ViewportEditor {
@@ -81,6 +84,7 @@ ApplicationWindow {
                 height: 200
                 scenegraph: sg
                 properties: properties
+                fieldModel: fields
             }
 
             LayerEditor {
