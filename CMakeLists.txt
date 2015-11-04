@@ -14,6 +14,24 @@ ADD_DEFINITIONS("-D GL_GLEXT_PROTOTYPES")
 SET(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Doxygen
+FIND_PACKAGE(Doxygen)
+
+IF(DOXYGEN_FOUND)
+
+    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+
+    # this will build the docs when 'make' is ran
+    # to make it so that doxygen is only built when 'make doc' is
+    # called remove ALL from the line below
+    ADD_CUSTOM_TARGET(doc ALL
+        ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Generating API documentation with Doxygen" VERBATIM
+    )
+
+ENDIF(DOXYGEN_FOUND)
+
 # RELEASE VERSION
 #set(CMAKE_BUILD_TYPE=Release)
 #set(CMAKE_CXX_FLAGS "-g -Wall")
