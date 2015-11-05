@@ -245,6 +245,10 @@ namespace feather
             }
         };
 
+        int get_field_count(int uid) {
+            return sg[uid].fields.size(); 
+        }
+
         int get_in_field_count(int uid) {
             int i=0;
             std::for_each(sg[uid].fields.begin(), sg[uid].fields.end(),[&i](field::FieldBase* f){ if(f->conn_type==field::connection::In){i++;} });
@@ -256,6 +260,17 @@ namespace feather
             std::for_each(sg[uid].fields.begin(), sg[uid].fields.end(),[&i](field::FieldBase* f){ if(f->conn_type==field::connection::Out){i++;} });
             return i; 
         }
+
+        field::connection::Type get_field_connection_type(int uid, int fid) {
+            for(int i=0; i < sg[uid].fields.size(); i++){
+                if(sg[uid].fields.at(i)->id==fid)
+                    return static_cast<field::connection::Type>(sg[uid].fields.at(i)->conn_type);
+            }
+            //std::for_each(sg[uid].fields.begin(), sg[uid].fields.end(),[&fid](field::FieldBase* f){ if(f->id==fid){ return f->conn_type; } });
+            return static_cast<field::connection::Type>(0); // this should never be returned
+            
+        }
+
 
         // LAYER
         

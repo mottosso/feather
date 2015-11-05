@@ -204,6 +204,8 @@ void qml::command::add_node_to_layer(int uid, int lid)
 // FIELDS
 
 // GET FIELD BASE
+// This returns the nodes field base class if it's not connected.
+// If the node is connected, the parent field base is returned.
 status qml::command::get_field_base(int uid, int field, feather::field::FieldBase* &f)
 {
     //typedef field::Field<int,field::connection::In>* fielddata;
@@ -281,6 +283,11 @@ status qml::command::get_fid_list(int uid, int nid, field::connection::Type conn
     return scenegraph::get_fid_list(uid,nid,conn,list);
 }
 
+int qml::command::get_field_count(int uid)
+{
+    return scenegraph::get_field_count(uid);
+}
+
 int qml::command::get_in_field_count(int uid)
 {
     return scenegraph::get_in_field_count(uid);
@@ -289,6 +296,13 @@ int qml::command::get_in_field_count(int uid)
 int qml::command::get_out_field_count(int uid)
 {
     return scenegraph::get_out_field_count(uid);
+}
+
+// Field Connections
+
+feather::field::connection::Type qml::command::get_field_connection_type(int uid, int fid)
+{
+    return scenegraph::get_field_connection_type(uid,fid);
 }
 
 

@@ -95,8 +95,11 @@ class FieldModel : public QAbstractListModel
         Q_INVOKABLE void addField(int uid, int nid, int fid, int type, bool locked);
         Q_INVOKABLE void addFields(int uid, int nid);
         Q_INVOKABLE void addFieldName(QString name, int nid, int fid);
-        QString getFieldName(int nid, int fid);
+        static QString getFieldName(int nid, int fid);
 
+    protected:
+        static std::vector<FieldName*> m_fieldnames;
+ 
     signals:
         void fieldsChanged();
         void fieldnamesChanged();
@@ -105,7 +108,8 @@ class FieldModel : public QAbstractListModel
         bool show_fid(int type);
         Q_DISABLE_COPY(FieldModel);
         QList<FieldInfo*> m_fields;
-        std::vector<FieldName*> m_fieldnames;
+        //static std::vector<FieldName*> m_fieldnames;
+        //std::vector<FieldName*> m_fieldnames;
 };
 
 #endif

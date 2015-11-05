@@ -29,6 +29,7 @@ FieldModel {
     Component.onCompleted: {
         // Empty
         addFieldName("Parent",1,1)
+        addFieldName("Child",1,2)
  
         // Polygon Shape 
         addFieldName("Parent",320,1)

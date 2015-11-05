@@ -23,6 +23,8 @@
 
 #include "field_model.hpp"
 
+std::vector<FieldName*> FieldModel::m_fieldnames;
+
 FieldModel::FieldModel(QObject* parent) : QAbstractListModel(parent)
 {
 }
