@@ -57,12 +57,14 @@ SceneGraphEditor* SGState::pSge=NULL;
 
 // SCENEGRAPH
 
-SceneGraphConnection::SceneGraphConnection(SceneGraphConnection::Connection type, QQuickItem* parent) :
+SceneGraphConnection::SceneGraphConnection(int fid, QString name, SceneGraphConnection::Connection type, QQuickItem* parent) :
     QQuickPaintedItem(parent),
-    m_type(type)
+    m_type(type),
+    m_fid(fid),
+    m_name(name)
 {
-    setWidth(CONNECTION_WIDTH);
-    setHeight(CONNECTION_HEIGHT);
+    setWidth(NODE_WIDTH/2);
+    setHeight(20);
     setAcceptedMouseButtons(Qt::AllButtons);
     setAcceptHoverEvents(true);
 
@@ -86,7 +88,18 @@ void SceneGraphConnection::paint(QPainter* painter)
 {
     painter->setRenderHints(QPainter::Antialiasing, true);
     painter->setBrush(m_connFillBrush);
-    painter->drawEllipse(QPoint(5,5),CONNECTION_WIDTH/2,CONNECTION_HEIGHT/2);
+    //painter->drawEllipse(QPoint(5,5),CONNECTION_WIDTH/2,CONNECTION_HEIGHT/2);
+    painter->drawRoundedRect(QRect(0,3,NODE_WIDTH/2,14),4,4);
+
+    QFont font("DejaVuSans",8);
+    painter->setFont(font);
+    /*
+    if(m_type == In)
+        painter->drawText(QRect(2,0,NODE_WIDTH/2,20),Qt::AlignLeft|Qt::AlignVCenter,m_name.toStdString().c_str());
+    else
+        painter->drawText(QRect(0,0,NODE_WIDTH/2-2,20),Qt::AlignRight|Qt::AlignVCenter,m_name.toStdString().c_str());
+    */
+    painter->drawText(QRect(0,0,NODE_WIDTH/2,20),Qt::AlignHCenter|Qt::AlignVCenter,m_name.toStdString().c_str());
 }
 
 void SceneGraphConnection::mousePressEvent(QMouseEvent* event)
@@ -136,9 +149,9 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
     m_y(0),
     m_imgDir("ui/icons/"),
     m_nodeFillBrush(QBrush(QColor(DESELECTED_NODE_COLOR))),
-    m_nodeTitleBrush(QBrush(QColor(NODE_TITLE_BLOCK_COLOR))),
-    m_pInConn(new SceneGraphConnection(SceneGraphConnection::In,this)),
-    m_pOutConn(new SceneGraphConnection(SceneGraphConnection::Out,this))
+    m_nodeTitleBrush(QBrush(QColor(NODE_TITLE_BLOCK_COLOR)))
+    //m_pInConn(new SceneGraphConnection(SceneGraphConnection::In,this)),
+    //m_pOutConn(new SceneGraphConnection(SceneGraphConnection::Out,this))
 {
     if(feather::smg::Instance()->selected(m_uid)){
         m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
@@ -146,10 +159,12 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
     }
     setWidth(NODE_WIDTH+4);
     setHeight(NODE_HEIGHT+4);
+    /*
     m_pOutConn->setX(NODE_WIDTH-2);
     m_pOutConn->setY((NODE_HEIGHT/2)-2);
     m_pInConn->setX(-2);
     m_pInConn->setY((NODE_HEIGHT/2)-2);
+    */
     setAcceptedMouseButtons(Qt::AllButtons);
     setAcceptHoverEvents(true);
 
@@ -158,8 +173,25 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
     m_connCount = feather::qml::command::get_field_count(m_uid);
     m_nodeHeight = 20 + (20 * std::max(m_inConnCount,m_outConnCount));
  
-    connect(m_pInConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
-    connect(m_pOutConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
+    int yin=15;
+    int yout=15;
+    for(int i=1; i <= m_connCount; i++){
+        if(feather::qml::command::get_field_connection_type(m_uid,i)==feather::field::connection::In){
+            std::cout << "IN - Node " << m_node << " FID " << i << " name " << FieldModel::getFieldName(m_node,i).toStdString().c_str() << std::endl;
+            m_pInConns.push_back(new SceneGraphConnection(i,FieldModel::getFieldName(m_node,i),SceneGraphConnection::In,this));
+            m_pInConns.at(m_pInConns.size()-1)->setX(-2);
+            m_pInConns.at(m_pInConns.size()-1)->setY((NODE_HEIGHT/2+yin)-2);
+            yin+=20;
+            connect(m_pInConns.at(m_pInConns.size()-1),SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
+        } else {
+            std::cout << "OUT - Node " << m_node << " FID " << i << " name " << FieldModel::getFieldName(m_node,i).toStdString().c_str() << std::endl;
+            m_pOutConns.push_back(new SceneGraphConnection(i,FieldModel::getFieldName(m_node,i),SceneGraphConnection::Out,this));  
+            m_pOutConns.at(m_pOutConns.size()-1)->setX(NODE_WIDTH/2+6);
+            m_pOutConns.at(m_pOutConns.size()-1)->setY((NODE_HEIGHT/2)-2+yout);
+            yout+=20;
+            connect(m_pOutConns.at(m_pOutConns.size()-1),SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
+        }
+    }
 
     feather::qml::command::get_node_icon(m_node,m_imgFile);
     m_imgPath << m_imgDir << m_imgFile;
@@ -224,7 +256,7 @@ void SceneGraphNode::paint(QPainter* painter)
 
     // this is the title block
     painter->setBrush(m_nodeTitleBrush);
-    painter->drawRoundedRect(QRect(12,2,NODE_WIDTH-20,20),2,2);
+    painter->drawRoundedRect(QRect(12,2,NODE_WIDTH-20,20),6,6);
 
     // draw the input and output connectors
     //QPoint sConnPoint;
@@ -254,6 +286,7 @@ void SceneGraphNode::paint(QPainter* painter)
     // BUT IN THE FUTURE WE'LL SHOW ALL IT'S 
     // FIELDS
     // in connections
+    /*
     painter->setFont(connFont);
     int inx=0;
     int outx=0;
@@ -268,6 +301,7 @@ void SceneGraphNode::paint(QPainter* painter)
             outx+=20;
         }
     }
+    */
 
     // out connections 
     //painter->drawText(QRect(4,20,NODE_WIDTH-4,NODE_HEIGHT),Qt::AlignRight|Qt::AlignVCenter,"output");
@@ -322,12 +356,12 @@ void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
 
 void SceneGraphNode::inConnectionPoint(QPointF& point)
 {
-    point = mapToItem(parentItem(),QPoint(m_pInConn->x(),m_pInConn->y()));
+    //point = mapToItem(parentItem(),QPoint(m_pInConn->x(),m_pInConn->y()));
 }
 
 void SceneGraphNode::outConnectionPoint(QPointF& point)
 {
-    point = mapToItem(parentItem(),QPoint(m_pOutConn->x(),m_pOutConn->y()));
+    //point = mapToItem(parentItem(),QPoint(m_pOutConn->x(),m_pOutConn->y()));
 }
 
 
@@ -349,7 +383,12 @@ void SceneGraphNode::getConnectionPoint(feather::field::connection::Type conn, Q
 
 // Link
 
-SceneGraphLink::SceneGraphLink(SceneGraphNode* snode, SceneGraphNode* tnode, QQuickItem* parent) : QQuickPaintedItem(parent), m_snode(snode), m_tnode(tnode)
+SceneGraphLink::SceneGraphLink(SceneGraphNode* snode, int sfid, SceneGraphNode* tnode, int tfid, QQuickItem* parent) :
+QQuickPaintedItem(parent),
+m_snode(snode),
+m_sfid(sfid),
+m_tnode(tnode),
+m_tfid(tfid)
 {
 
 }
@@ -367,8 +406,8 @@ void SceneGraphLink::paint(QPainter* painter)
 
     QPointF sp;
     QPointF tp;
-    m_snode->outConnectionPoint(sp);
-    m_tnode->inConnectionPoint(tp);
+    m_snode->outConnectionPoint(m_sfid,sp);
+    m_tnode->inConnectionPoint(m_tfid,tp);
 
     QPen pathPen;
     if(SGState::mode==SGState::Normal)
