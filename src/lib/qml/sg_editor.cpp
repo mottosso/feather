@@ -354,12 +354,12 @@ void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
     parentItem()->update();
 }
 
-void SceneGraphNode::inConnectionPoint(QPointF& point)
+void SceneGraphNode::inConnectionPoint(int fid, QPointF& point)
 {
     //point = mapToItem(parentItem(),QPoint(m_pInConn->x(),m_pInConn->y()));
 }
 
-void SceneGraphNode::outConnectionPoint(QPointF& point)
+void SceneGraphNode::outConnectionPoint(int fid, QPointF& point)
 {
     //point = mapToItem(parentItem(),QPoint(m_pOutConn->x(),m_pOutConn->y()));
 }
@@ -561,7 +561,9 @@ void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int 
     // make a link if we have a pointer to a parent node
     if(pnode!=NULL) {
         std::cout << "adding link\n";
-        m_links.push_back(new SceneGraphLink(pnode,node,this));
+        int pfid=0; //TODO
+        int tfid=0; // TODO
+        m_links.push_back(new SceneGraphLink(pnode,pfid,node,tfid,this));
     }
 
     std::vector<int> cuids;
