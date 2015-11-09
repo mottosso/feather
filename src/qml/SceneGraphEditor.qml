@@ -125,7 +125,7 @@ Rectangle {
     function nodeSelection(type,uid,nid) {
         // This is needed to emit to the nodeSelected signal to the other widgets so they can update 
         scenegraph.select_node(type,uid,nid);
-    }
+      }
 
     function connectionButtonPressed(button,uid,nid,fid) {
         sg_editor.connectionMousePressed(button,uid,nid,fid);
@@ -143,7 +143,6 @@ Rectangle {
     function selectNode() {
         var uid = scenegraph.selected_node()
         console.log("SELECTED SG NODE " + uid)
-        sg_editor.update_sg()
     }
     
     /*
@@ -164,7 +163,6 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        sg_editor.update_sg()
         sg_editor.openConnMenu.connect(openConnectionMenu)
         sg_editor.nodeSelection.connect(nodeSelection)
         connMenu.connectionButtonPressed.connect(connectionButtonPressed)
@@ -174,6 +172,7 @@ Rectangle {
         scenegraph.updateGraph.connect(sg_editor.update_sg)
         scenegraph.cleared.connect(sg_editor.update_sg)
         addNodeDialog.addNode.connect(add_node)
+        sg_editor.update_sg()
     }
 
 }

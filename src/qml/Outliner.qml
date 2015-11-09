@@ -37,7 +37,7 @@ Item {
     //height: 600
     property SceneGraph scenegraph: Null
     property Properties properties: Null
-   
+  
     TreeModel { id: treeModel }
 
     Action {

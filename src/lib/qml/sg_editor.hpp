@@ -131,8 +131,8 @@ class SceneGraphNode : public QQuickPaintedItem
         std::stringstream m_imgPath;
         QBrush m_nodeFillBrush;
         QBrush m_nodeTitleBrush;
-        SceneGraphConnection* m_pInConn;
-        SceneGraphConnection* m_pOutConn;
+        //SceneGraphConnection* m_pInConn;
+        //SceneGraphConnection* m_pOutConn;
         int m_inConnCount;
         int m_outConnCount;
         int m_connCount;
@@ -175,7 +175,7 @@ class SceneGraphEditor : public QQuickPaintedItem
         ~SceneGraphEditor();
 
         void paint(QPainter* painter);
-        Q_INVOKABLE void update_sg() { updateGraph(); update(); }; 
+        Q_INVOKABLE void update_sg() { updateGraph(); update(); };
         Q_INVOKABLE void startConnection() { SGState::mode=SGState::FieldConnection; };
         Q_INVOKABLE void connectionMousePressed(int button, int uid, int nid, int fid);
         Q_INVOKABLE void connectionMouseReleased(int button, int uid, int nid, int fid);

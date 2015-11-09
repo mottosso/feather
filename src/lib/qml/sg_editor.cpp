@@ -150,12 +150,10 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
     m_imgDir("ui/icons/"),
     m_nodeFillBrush(QBrush(QColor(DESELECTED_NODE_COLOR))),
     m_nodeTitleBrush(QBrush(QColor(NODE_TITLE_BLOCK_COLOR)))
-    //m_pInConn(new SceneGraphConnection(SceneGraphConnection::In,this)),
-    //m_pOutConn(new SceneGraphConnection(SceneGraphConnection::Out,this))
 {
     if(feather::smg::Instance()->selected(m_uid)){
         m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
-        //update();
+        update();
     }
     setWidth(NODE_WIDTH+4);
     setHeight(NODE_HEIGHT+4);
@@ -199,7 +197,13 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
 
 SceneGraphNode::~SceneGraphNode()
 {
+    for(auto c : m_pInConns)
+        delete c;
+    m_pInConns.clear();
 
+    for(auto c : m_pOutConns)
+        delete c;
+    m_pOutConns.clear();
 }
 
 // update the node's visual selection
@@ -322,6 +326,7 @@ void SceneGraphNode::mousePressEvent(QMouseEvent* event)
 void SceneGraphNode::mouseDoubleClickEvent(QMouseEvent* event)
 {
     emit nodePressed(event->button(),m_uid,m_node);
+    update();
 }
 
 void SceneGraphNode::mouseReleaseEvent(QMouseEvent* event)
@@ -436,6 +441,7 @@ void SceneGraphLink::paint(QPainter* painter)
 
     painter->setPen(pathPen);
     painter->drawPath(path);
+
 }
 
 
@@ -518,6 +524,7 @@ void SceneGraphEditor::paint(QPainter* painter)
     setFillColor(QColor(BACKGROUND_COLOR));
     painter->setRenderHints(QPainter::Antialiasing, true);
 
+    //std::for_each(m_nodes.begin(),m_nodes.end(),[painter](SceneGraphNode* n){ n->paint(painter); });
     std::for_each(m_links.begin(),m_links.end(),[painter](SceneGraphLink* l){ l->paint(painter); });
 }
 
@@ -529,9 +536,12 @@ void SceneGraphEditor::updateGraph()
     std::cout << "CLEARING SG EDITOR\n";
     std::for_each(m_nodes.begin(), m_nodes.end(), [](SceneGraphNode* node){ delete node; });
     std::for_each(m_links.begin(), m_links.end(), [](SceneGraphLink* link){ delete link; });
-
+    std::cout << "AFTER CLEARING NODE COUNT:" << m_nodes.size() << std::endl;
+    std::cout << "AFTER CLEARING LINKS COUNT:" << m_links.size() << std::endl;
+ 
     m_nodes.clear();
     m_links.clear();
+
 
     std::vector<int> uids;
     // disabled selection as root for testing
@@ -575,9 +585,9 @@ void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int 
             uint fc = feather::qml::command::get_field_count(node->uid());
 
             // if the pnode is the root, only connect the parent and child fields
-            if(!pnode->uid())
+            if(!pnode->uid()){
                 m_links.push_back(new SceneGraphLink(pnode,2,node,1,this));
-            else {   
+            } else {   
                 for(uint i=1; i <= fc; i++){
                     // get the fid's fieldBase
                     feather::field::FieldBase* f;
