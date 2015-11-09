@@ -68,6 +68,7 @@ class SceneGraphConnection : public QQuickPaintedItem
         SceneGraphConnection(int fid, QString name, Connection type, QQuickItem* parent=0);
         ~SceneGraphConnection();
         void paint(QPainter* painter);
+        inline uint fid() { return m_fid; };
 
     protected:
         void mousePressEvent(QMouseEvent* event);
@@ -86,7 +87,7 @@ class SceneGraphConnection : public QQuickPaintedItem
         int m_tgtField;
         Connection m_type;
         QBrush m_connFillBrush;
-        int m_fid;
+        uint m_fid;
         QString m_name;
 };
 
@@ -101,6 +102,7 @@ class SceneGraphNode : public QQuickPaintedItem
         void inConnectionPoint(int fid, QPointF& point);
         void outConnectionPoint(int fid, QPointF& point);
         void drawSelected(bool selected);
+        inline int uid() { return m_uid; }; /*! Node's unique id assigned by the scenegraph. */
  
     protected slots:
         void ConnPressed(Qt::MouseButton button,SceneGraphConnection::Connection conn);
@@ -188,10 +190,9 @@ class SceneGraphEditor : public QQuickPaintedItem
             }
         }
 
-        FieldModel* connection() { return m_connection; }
-
-        int clickX() { return MouseInfo::clickX; }
-        int clickY() { return MouseInfo::clickY; }
+        FieldModel* connection() { return m_connection; };
+        inline int clickX() { return MouseInfo::clickX; };
+        inline int clickY() { return MouseInfo::clickY; };
 
     protected slots:
         void ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int uid, int nid);
@@ -215,7 +216,7 @@ class SceneGraphEditor : public QQuickPaintedItem
     private:
         void updateGraph();
         void updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int ypos);
-
+        inline SceneGraphNode* getNode(int uid) { for(auto n : m_nodes){ if(n->uid()==uid){ return n; } } return nullptr; }; /*! Used to get the pointer of a node already in the node draw list. If the node's uid is not in the list a null pointer is returned. */
         int m_scale;
         int m_nodeWidth;
         int m_nodeHeight;

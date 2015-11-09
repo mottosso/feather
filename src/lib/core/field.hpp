@@ -59,6 +59,8 @@ namespace feather
             START=18
         };
 
+        // TODO
+        // The puid will change when nodes are removed, so it's need's to be updated
         struct FieldBase
         {
             FieldBase():update(true),connected(false),puid(0),pf(0),type(0){};

@@ -231,10 +231,15 @@ namespace feather
         };
 
 
-        field::FieldBase* get_fieldBase(int uid, int node, int field) {
-            field::FieldBase* f = plugins.get_fieldBase(uid,node,field,sg[uid].fields); 
+        /*!
+         * Returns a node's field that holds the value for the fid.
+         * NOTE! if the field is connected it will return the field of the parent that's connected to it.
+         * If you want to get the base of the node's fid, even if it's connected, use get_node_fieldBase().
+         */
+        field::FieldBase* get_fieldBase(int uid, int nid, int fid) {
+            field::FieldBase* f = plugins.get_fieldBase(uid,nid,fid,sg[uid].fields); 
             if(!f)
-                return f;
+                return nullptr; // TODO fix this once the rest works!
 
             if(f->connected){
                 //std::cout << "field is connected to uid:" << f->puid << ", node:" << f->pn << ", field " << f->pf << std::endl;
@@ -243,6 +248,16 @@ namespace feather
                 //std::cout << "field is not connected, returning the default field\n";
                 return f;
             }
+        };
+
+        /*!
+         * Same as get_fieldBase() except it will return the base of the node field even if it's connected 
+         */
+        field::FieldBase* get_node_fieldBase(int uid, int nid, int fid) {
+            field::FieldBase* f = plugins.get_fieldBase(uid,nid,fid,sg[uid].fields); 
+            if(!f)
+                return nullptr; // TODO fix this once the rest works!
+            return f;
         };
 
         int get_field_count(int uid) {
@@ -262,7 +277,7 @@ namespace feather
         }
 
         field::connection::Type get_field_connection_type(int uid, int fid) {
-            for(int i=0; i < sg[uid].fields.size(); i++){
+            for(uint i=0; i < sg[uid].fields.size(); i++){
                 if(sg[uid].fields.at(i)->id==fid)
                     return static_cast<field::connection::Type>(sg[uid].fields.at(i)->conn_type);
             }

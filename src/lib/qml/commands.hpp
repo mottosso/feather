@@ -75,7 +75,17 @@ namespace feather
             // Fields
  
             // get field base 
-            status get_field_base(int uid, int field, feather::field::FieldBase* &f);
+            /*!
+             * Returns a node's field that holds the value for the fid.
+             * NOTE! if the field is connected it will return the field of the parent that's connected to it.
+             * If you want to get the base of the node's fid, even if it's connected, use get_node_fieldBase().
+             */
+            status get_field_base(int uid, int fid, feather::field::FieldBase* &f);
+            /*!
+             * Same as get_fieldBase() except it will return the base of the node field even if it's connected 
+             */
+            status get_node_field_base(int uid, int fid, feather::field::FieldBase* &f);
+
             // get the field value
             status get_field_val(int uid, int node, int field, bool& val);
             status get_field_val(int uid, int node, int field, int& val);

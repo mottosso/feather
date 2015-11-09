@@ -155,7 +155,7 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
 {
     if(feather::smg::Instance()->selected(m_uid)){
         m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
-        update();
+        //update();
     }
     setWidth(NODE_WIDTH+4);
     setHeight(NODE_HEIGHT+4);
@@ -356,12 +356,18 @@ void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
 
 void SceneGraphNode::inConnectionPoint(int fid, QPointF& point)
 {
-    //point = mapToItem(parentItem(),QPoint(m_pInConn->x(),m_pInConn->y()));
+    for(auto c : m_pInConns){
+        if(c->fid()==fid)
+            point = mapToItem(parentItem(),QPoint(c->x(),c->y()));
+    }
 }
 
 void SceneGraphNode::outConnectionPoint(int fid, QPointF& point)
 {
-    //point = mapToItem(parentItem(),QPoint(m_pOutConn->x(),m_pOutConn->y()));
+    for(auto c : m_pOutConns){
+        if(c->fid()==fid)
+            point = mapToItem(parentItem(),QPoint(c->x(),c->y()));
+    }
 }
 
 
@@ -520,6 +526,7 @@ void SceneGraphEditor::updateGraph()
     int xpos = 50;
     int ypos = 50;
 
+    std::cout << "CLEARING SG EDITOR\n";
     std::for_each(m_nodes.begin(), m_nodes.end(), [](SceneGraphNode* node){ delete node; });
     std::for_each(m_links.begin(), m_links.end(), [](SceneGraphLink* link){ delete link; });
 
@@ -537,7 +544,7 @@ void SceneGraphEditor::updateGraph()
 
     // for each selected uid we will draw all the nodes connected to it.
     for(uint i=0; i < uids.size(); i++) {
-        updateLeaf(NULL,uids[i],xpos,ypos);
+        updateLeaf(nullptr,uids[i],xpos,ypos);
     }
 }
 
@@ -547,34 +554,58 @@ void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int 
     int nid=0;
     feather::status s = feather::qml::command::get_node_id(uid,nid);
 
-    SceneGraphNode *node = new SceneGraphNode(uid,nid,this);
+    // if the node is already in the draw list, don't add a new one
+    SceneGraphNode *node = getNode(uid);
+    if(!node){
+        std::cout << "ADDING NODE TO SG EDITOR\n";
+        node = new SceneGraphNode(uid,nid,this);
+        // setup the node qt connections
+        connect(node,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
+        connect(node,SIGNAL(nodePressed(Qt::MouseButton,int,int)),this,SLOT(nodePressed(Qt::MouseButton,int,int)));
+        connect(this,SIGNAL(nodeSelection(int,int,int)),node,SLOT(setNodeSelection(int,int,int)));
 
-    node->setX(xpos);
-    node->setY(ypos);
+        // place the node in the scenegraph
+        node->setX(xpos);
+        node->setY(ypos);
 
-    connect(node,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
-    connect(node,SIGNAL(nodePressed(Qt::MouseButton,int,int)),this,SLOT(nodePressed(Qt::MouseButton,int,int)));
-    connect(this,SIGNAL(nodeSelection(int,int,int)),node,SLOT(setNodeSelection(int,int,int)));
+        // if the parent is null, there is no need to get any connections between the two nodes
+        if(pnode!=nullptr){
+            // draw the links between between the pnode and the node
+            // go through each child nodes input field and create a link if it's hooked to the parent node
+            uint fc = feather::qml::command::get_field_count(node->uid());
 
-    m_nodes.push_back(node);
-    
-    // make a link if we have a pointer to a parent node
-    if(pnode!=NULL) {
-        std::cout << "adding link\n";
-        int pfid=0; //TODO
-        int tfid=0; // TODO
-        m_links.push_back(new SceneGraphLink(pnode,pfid,node,tfid,this));
+            // if the pnode is the root, only connect the parent and child fields
+            if(!pnode->uid())
+                m_links.push_back(new SceneGraphLink(pnode,2,node,1,this));
+            else {   
+                for(uint i=1; i <= fc; i++){
+                    // get the fid's fieldBase
+                    feather::field::FieldBase* f;
+                    feather::qml::command::get_node_field_base(uid,i,f);
+                    if(f!=nullptr){
+                        if(f->puid==pnode->uid() && f->conn_type==feather::field::connection::In)
+                            m_links.push_back(new SceneGraphLink(pnode,f->pf,node,i,this));
+                    }
+                }
+            }            
+        }
+
+        // since this is a new node we need to also draw it's children and links
+
+        // get the connected nodes
+        std::vector<int> cuids;
+        feather::qml::command::get_node_connected_uids(uid,cuids);
+
+        // add a link for each connection between the two nodes
+        int ystep=0;
+        for(auto c : cuids) {
+            // add the child node to draw list and get it's links
+            updateLeaf(node, c, xpos+200, ypos+ystep);
+            ystep+=40;
+        } 
+
     }
 
-    std::vector<int> cuids;
-    // update each connected node as a separate leaf 
-    feather::qml::command::get_node_connected_uids(uid,cuids);
-    int ystep = 0;
-    std::for_each(cuids.begin(),cuids.end(),[&xpos,&ypos,this,node,&ystep](int key){
-        std::cout << "drawing leaf " << key << std::endl;
-        updateLeaf(node,key,xpos+200,ypos+ystep);
-        ystep+=40;
-    });
 }
 
 

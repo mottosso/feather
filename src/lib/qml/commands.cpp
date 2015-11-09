@@ -206,21 +206,27 @@ void qml::command::add_node_to_layer(int uid, int lid)
 // GET FIELD BASE
 // This returns the nodes field base class if it's not connected.
 // If the node is connected, the parent field base is returned.
-status qml::command::get_field_base(int uid, int field, feather::field::FieldBase* &f)
+status qml::command::get_field_base(int uid, int fid, feather::field::FieldBase* &f)
+{
+    f = scenegraph::get_fieldBase(uid,sg[uid].node,fid);
+    if(!f) {
+        return status(FAILED,"null field base\n");
+    }
+    return status();
+} 
+
+// This is the same as get_field_base except it always returns the node's field, even if it's connected
+status qml::command::get_node_field_base(int uid, int fid, feather::field::FieldBase* &f)
 {
     //typedef field::Field<int,field::connection::In>* fielddata;
     //fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
-    f = scenegraph::get_fieldBase(uid,sg[uid].node,field);
+    f = scenegraph::get_node_fieldBase(uid,sg[uid].node,fid);
     if(!f) {
-        //std::cout << "NULL FIELD\n";
         return status(FAILED,"null field base\n");
     }
-    /*
-    else  
-        val=f->value;
-    */
     return status();
 } 
+
 
 // GET FIELD VALUE
 
