@@ -29,7 +29,6 @@ Rectangle {
     color: "orange"
     border.color: "black"
     border.width: 1
-    property SceneGraph scenegraph: Null
     property alias showAxis: renderer.axis
     property alias showGrid: renderer.grid
     property alias shadingMode: renderer.shadingMode
@@ -149,16 +148,16 @@ Rectangle {
     function updateGL() { renderer.updateGL() }
 
     function updateSelectionInfo(uid) {
-        selectedNameLabel.text = "Name: " + scenegraph.node_name(uid)
+        selectedNameLabel.text = "Name: " + SceneGraph.node_name(uid)
         selectedUidLabel.text = "UID: " + uid
     }
 
     Component.onCompleted: {
-        scenegraph.nodeAdded.connect(nodeAdded)
-        scenegraph.nodesAdded.connect(nodesAdded)
-        scenegraph.nodesRemoved.connect(nodesRemoved)
-        scenegraph.updateGraph.connect(updateGL)
-        scenegraph.nodeSelected.connect(updateSelectionInfo)
+        SceneGraph.nodeAdded.connect(nodeAdded)
+        SceneGraph.nodesAdded.connect(nodesAdded)
+        SceneGraph.nodesRemoved.connect(nodesRemoved)
+        SceneGraph.updateGraph.connect(updateGL)
+        SceneGraph.nodeSelected.connect(updateSelectionInfo)
         renderer.updateGL()
     }
 }

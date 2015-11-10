@@ -32,7 +32,6 @@ Rectangle {
     border.width: 1
     width: 500
     height: 20
-    property SceneGraph scenegraph: Null
     property Properties properties: Null
 
     Item {
@@ -89,7 +88,7 @@ Rectangle {
     }
 
     function run_command() {
-        scenegraph.run_command_string(cmdId.text)
+        SceneGraph.run_command_string(cmdId.text)
     }
 
     function command_message_changed(pass,msg) {
@@ -116,6 +115,6 @@ Rectangle {
 
     Component.onCompleted: {
         cmdId.accepted.connect(run_command)
-        scenegraph.commandMessageChanged.connect(command_message_changed)
+        SceneGraph.commandMessageChanged.connect(command_message_changed)
     }
 }

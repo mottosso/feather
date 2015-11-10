@@ -34,7 +34,6 @@ Item {
     //flags: Qt.Tool
     //width: 200
     //height: 500
-    property SceneGraph scenegraph: Null
     property Properties properties: Null
     property alias fieldModel: view.model
 
@@ -127,9 +126,9 @@ Item {
     }
 
     function nodeSelect() {
-        var uid = scenegraph.selected_node()
-        var nid = scenegraph.node_id(uid)
-        nodeLabel.text = scenegraph.node_name(uid)
+        var uid = SceneGraph.selected_node()
+        var nid = SceneGraph.node_id(uid)
+        nodeLabel.text = SceneGraph.node_name(uid)
         fieldModel.addFields(uid,nid)
     }
 
@@ -146,8 +145,8 @@ Item {
     Component.onCompleted: {
         // This was removed to fix seq fault during outliner selection
         // It needs to be enabled again once the outliner is working
-        //scenegraph.nodeSelected.connect(setSelection)        
-        scenegraph.nodeSelected.connect(nodeSelect)
+        //SceneGraph.nodeSelected.connect(setSelection)        
+        SceneGraph.nodeSelected.connect(nodeSelect)
         fieldEditor.properties.colorsChanged.connect(updateColor)
         updateColor()
     }    

@@ -26,6 +26,7 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 1.4
 import QtQml.Models 2.2
 import feather.scenegraph 1.0
+import feather.outliner 1.0
 
 Item {
 //Window {
@@ -35,10 +36,9 @@ Item {
     //flags: Qt.Tool
     //width: 300
     //height: 600
-    property SceneGraph scenegraph: Null
     property Properties properties: Null
   
-    TreeModel { id: treeModel }
+    OutlinerModel { id: treeModel }
 
     Action {
         id: testAction 
@@ -103,14 +103,14 @@ Item {
         horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
         style: OutlinerLeafNode {}
  
-        //onActivated: { console.log("item activated " + model.data(index,260)); scenegraph.clear_selection(); scenegraph.select_node(model.data(index,260)) }
+        //onActivated: { console.log("item activated " + model.data(index,260)); SceneGraph.clear_selection(); SceneGraph.select_node(model.data(index,260)) }
         onClicked: {
             console.log("index=" + index)
             if(!model)
                 console.log("no model found")
             else {
-                scenegraph.clear_selection()
-                scenegraph.select_node(model.data(index,260))
+                SceneGraph.clear_selection()
+                SceneGraph.select_node(model.data(index,260))
             }
         }
    }
@@ -121,7 +121,7 @@ Item {
     } 
 
     function selectNode() {
-        var uid = scenegraph.selected_node()
+        var uid = SceneGraph.selected_node()
         var nindex = tree.model.getNodeIndex(uid,tree.model.index(0,0))
         tree.selection.setCurrentIndex(nindex,Qt.ClearAndSelect)
     }
@@ -135,10 +135,10 @@ Item {
     }
 
     Component.onCompleted: {
-        scenegraph.updateGraph.connect(updateSg)
+        SceneGraph.updateGraph.connect(updateSg)
         // when we only want to update the tree's selected node, not the scenegraph's
-        scenegraph.nodeSelected.connect(selectNode)
-        scenegraph.cleared.connect(clear)
-        scenegraph.nodeRemoved.connect(remove_node)
+        SceneGraph.nodeSelected.connect(selectNode)
+        SceneGraph.cleared.connect(clear)
+        SceneGraph.nodeRemoved.connect(remove_node)
     }
 }

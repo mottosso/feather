@@ -35,7 +35,6 @@ Item {
     //flags: Qt.Tool
     //width: 200
     //height: 200
-    property SceneGraph scenegraph: Null
     property Properties properties: Null
 
     AddLayerDialog {
@@ -76,11 +75,11 @@ Item {
         text: "Add Node To Layer"
         tooltip: "add selected node to selected layer"
         onTriggered: {
-            console.log("addNodeToLayerAction selected node=" + scenegraph.selected_node())
-            var uid = scenegraph.selected_node()
+            console.log("addNodeToLayerAction selected node=" + SceneGraph.selected_node())
+            var uid = SceneGraph.selected_node()
             var lid = view.currentIndex 
             if(uid){
-                scenegraph.add_node_to_layer(uid,lid)
+                SceneGraph.add_node_to_layer(uid,lid)
              }
         }
     }
@@ -189,7 +188,7 @@ Item {
         // the scenegraph will trigger a update telling the Outliner to clear
         // it's root node and setup again which destroys the items displayed
         // making them invalid
-        //scenegraph.update()
+        //SceneGraph.update()
         view.update()
     }
 

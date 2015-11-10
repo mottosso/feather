@@ -30,7 +30,6 @@ Menu {
     title: "Help"
     visible: true
 
-    property SceneGraph scenegraph: Null
     property Properties properties: Null
 
     style: MenuStyle { properties: helpMenu.properties }

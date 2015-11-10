@@ -34,7 +34,6 @@ Menu {
     title: "File"
     visible: true
 
-    property SceneGraph scenegraph: Null
     property Properties properties: Null
 
     style: MenuStyle { properties: fileMenu.properties }
@@ -47,8 +46,8 @@ Menu {
         onAccepted: {
             importObjFilename.stringValue = tools.urlToString(importDialog.fileUrl)
             importObj.exec()       
-            scenegraph.triggerUpdate()
-            scenegraph.nodesAdded()
+            SceneGraph.triggerUpdate()
+            SceneGraph.nodesAdded()
         }
         onRejected: {} 
     }
@@ -85,7 +84,7 @@ Menu {
         id: newAction
         text: "New"
         tooltip: "Clear the scene"
-        onTriggered: { scenegraph.clear() }
+        onTriggered: { SceneGraph.clear() }
     }
 
     // Open

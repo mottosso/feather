@@ -28,8 +28,6 @@ import feather.scenegraph 1.0
 import feather.node 1.0
 
 Menu {
-    SceneGraph { id: sg }
-
     // ACTIONS
 
     // Make Plane 
@@ -37,7 +35,7 @@ Menu {
         id: makePlaneAction
         text: "Plane"
         tooltip: "Create Polygon Plane"
-        onTriggered: { sg.add_node(Node.Object,325) }
+        onTriggered: { SceneGraph.add_node(Node.Object,325) }
     }
 
     // Make Cube 

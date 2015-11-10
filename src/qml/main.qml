@@ -35,11 +35,9 @@ ApplicationWindow {
     title: "Feather 0.1"
     //flags: Qt.FramelessWindowHint
 
-    SceneGraph { id: sg }
-
     Properties { id: properties }
 
-    menuBar: MainMenu { scenegraph: sg; properties: properties }
+    menuBar: MainMenu { properties: properties }
     
     NodeFields { id: fields }
 
@@ -55,7 +53,6 @@ ApplicationWindow {
         SceneGraphEditor{
             id: sgEditor
             width: 200
-            scenegraph: sg
             properties: properties
             fieldModel: fields
         }
@@ -63,7 +60,6 @@ ApplicationWindow {
         ViewportEditor {
             id: viewportEditor
             Layout.fillWidth: true 
-            scenegraph: sg
             properties: properties
         }
 
@@ -75,21 +71,18 @@ ApplicationWindow {
             Outliner {
                 id: outliner
                 height: 200
-                scenegraph: sg
                 properties: properties
             }
 
             FieldEditor {
                 id: fieldEditor
                 height: 200
-                scenegraph: sg
                 properties: properties
                 fieldModel: fields
             }
 
             LayerEditor {
                 id: layerEditor
-                scenegraph: sg
                 properties: properties
             }
 
@@ -103,7 +96,6 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         height: 25
-        scenegraph: sg
         properties: properties
     }
 

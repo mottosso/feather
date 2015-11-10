@@ -30,7 +30,6 @@ Menu {
     title: "Window"
     visible: true
 
-    property SceneGraph scenegraph: Null
     property Properties properties: Null
 
     style: MenuStyle { properties: windowMenu.properties }

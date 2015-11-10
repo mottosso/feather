@@ -24,12 +24,10 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.4
-import feather.scenegraph 1.0
 
 MenuBar {
     id: menu
     property Properties properties: Null
-    property SceneGraph scenegraph: Null
 
     style: MenuBarStyle {
         background: Rectangle {
@@ -39,19 +37,19 @@ MenuBar {
         }
     }
  
-    FileMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
+    FileMenu{ properties: menu.properties }
 
-    EditMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
+    EditMenu{ properties: menu.properties }
 
-    AddMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
+    AddMenu{ properties: menu.properties }
 
-    ViewMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
+    ViewMenu{ properties: menu.properties }
 
-    SelectMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
+    SelectMenu{ properties: menu.properties }
 
-    ToolsMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
+    ToolsMenu{ properties: menu.properties }
 
-    WindowMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
+    WindowMenu{ properties: menu.properties }
 
-    HelpMenu{ scenegraph: menu.scenegraph; properties: menu.properties }
+    HelpMenu{ properties: menu.properties }
 }

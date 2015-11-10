@@ -32,14 +32,23 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 
+// callback function for scenegraph singleton
+static QObject *get_scenegraph(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+    SceneGraph *sg = new SceneGraph();
+    return sg;
+}
+
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
     qmlRegisterType<ViewportThread>("feather.viewport", 1, 0, "Viewport");
     qmlRegisterType<SceneGraphEditor>("feather.editors", 1, 0, "SceneGraphEditor");
-    qmlRegisterType<SceneGraph>("feather.scenegraph", 1, 0, "SceneGraph");
-    qmlRegisterType<TreeModel>("feather.scenegraph", 1, 0, "TreeModel");
+    qmlRegisterSingletonType<SceneGraph>("feather.scenegraph", 1, 0, "SceneGraph", get_scenegraph);
+    qmlRegisterType<TreeModel>("feather.outliner", 1, 0, "OutlinerModel");
     qmlRegisterType<Node>("feather.node", 1, 0, "Node");
     qmlRegisterType<Field>("feather.field", 1, 0, "Field");
     qmlRegisterType<FieldModel>("feather.field", 1, 0, "FieldModel");

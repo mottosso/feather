@@ -31,7 +31,6 @@ Menu {
     title: "Edit"
     visible: true
 
-    property SceneGraph scenegraph: Null
     property Properties properties: Null
 
     style: MenuStyle { properties: editMenu.properties }

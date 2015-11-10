@@ -33,7 +33,6 @@ Rectangle {
     id: sgWindow
     color: "black" 
     
-    property SceneGraph scenegraph: Null
     property Properties properties: Null
     property alias fieldModel: sg_editor.connection
  
@@ -54,10 +53,10 @@ Rectangle {
         id: deleteNode
         tooltip: "Remove selected node from scenegraph"
         onTriggered: {
-            var uid = scenegraph.selected_node()
-            scenegraph.remove_node(uid)
-            scenegraph.nodesRemoved()
-            scenegraph.triggerUpdate()
+            var uid = SceneGraph.selected_node()
+            SceneGraph.remove_node(uid)
+            SceneGraph.nodesRemoved()
+            SceneGraph.triggerUpdate()
         }
     }
 
@@ -124,12 +123,12 @@ Rectangle {
 
     function nodeSelection(type,uid,nid) {
         // This is needed to emit to the nodeSelected signal to the other widgets so they can update 
-        scenegraph.select_node(type,uid,nid);
+        SceneGraph.select_node(type,uid,nid);
       }
 
     function connectionButtonPressed(button,uid,nid,fid) {
         sg_editor.connectionMousePressed(button,uid,nid,fid);
-        scenegraph.select_node(0,uid,nid,fid);
+        SceneGraph.select_node(0,uid,nid,fid);
     }
 
     function connectionButtonReleased(button,uid,nid,fid) {
@@ -141,7 +140,7 @@ Rectangle {
     }
 
     function selectNode() {
-        var uid = scenegraph.selected_node()
+        var uid = SceneGraph.selected_node()
         console.log("SELECTED SG NODE " + uid)
     }
     
@@ -154,12 +153,12 @@ Rectangle {
 
     function add_node(name,type,nid) {
         console.log("Add node: " + name + " type: " + type + " nid: " + nid)
-        var uid = scenegraph.add_node(type,nid,name)
+        var uid = SceneGraph.add_node(type,nid,name)
         //console.log("added node as uid: " + uid)
-        var suid = scenegraph.selected_node()
-        var p = scenegraph.connect_nodes(suid,2,uid,1)
+        var suid = SceneGraph.selected_node()
+        var p = SceneGraph.connect_nodes(suid,2,uid,1)
         //console.log("connection status was: " + p)
-        scenegraph.triggerUpdate()
+        SceneGraph.triggerUpdate()
     }
 
     Component.onCompleted: {
@@ -168,9 +167,9 @@ Rectangle {
         connMenu.connectionButtonPressed.connect(connectionButtonPressed)
         connMenu.connectionButtonReleased.connect(connectionButtonReleased)
         connMenu.connectionButtonClicked.connect(connectionButtonClicked)
-        scenegraph.nodeSelected.connect(selectNode)
-        scenegraph.updateGraph.connect(sg_editor.update_sg)
-        scenegraph.cleared.connect(sg_editor.update_sg)
+        SceneGraph.nodeSelected.connect(selectNode)
+        SceneGraph.updateGraph.connect(sg_editor.update_sg)
+        SceneGraph.cleared.connect(sg_editor.update_sg)
         addNodeDialog.addNode.connect(add_node)
         sg_editor.update_sg()
     }

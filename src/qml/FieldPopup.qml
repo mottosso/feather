@@ -28,8 +28,6 @@ import feather.scenegraph 1.0
 import feather.node 1.0
 
 Menu {
-    SceneGraph { id: sg }
-
     // ACTIONS
 
     // Make Plane 

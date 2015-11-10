@@ -36,7 +36,6 @@ Item {
     //flags: Qt.Tool
     //width: 600
     //height: 600
-    property SceneGraph scenegraph: Null
     property Properties properties: Null
 
     // Show Viewport Components
@@ -232,7 +231,6 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        scenegraph: editor.scenegraph 
 
         /*
         MouseArea {
