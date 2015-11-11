@@ -363,7 +363,7 @@ void SceneGraphNode::inConnectionPoint(int fid, QPointF& point)
 {
     for(auto c : m_pInConns){
         if(c->fid()==fid)
-            point = mapToItem(parentItem(),QPoint(c->x(),c->y()));
+            point = mapToItem(parentItem(),QPoint(c->x(),c->y()+10));
     }
 }
 
@@ -371,7 +371,7 @@ void SceneGraphNode::outConnectionPoint(int fid, QPointF& point)
 {
     for(auto c : m_pOutConns){
         if(c->fid()==fid)
-            point = mapToItem(parentItem(),QPoint(c->x(),c->y()));
+            point = mapToItem(parentItem(),QPoint(c->x()+(NODE_WIDTH/2),c->y()+10));
     }
 }
 
@@ -426,17 +426,18 @@ void SceneGraphLink::paint(QPainter* painter)
     else
         pathPen = QPen(QColor(SELECTED_CONNECTION_COLOR),2);
 
-    path.moveTo(sp.x()+2,sp.y()+2);
+    path.moveTo(sp.x(),sp.y());
 
-    int midX = sp.x() + ((tp.x()-sp.x())/2);
+    int midSX = sp.x() + (abs(tp.x()-sp.x())/2);
+    int midTX = tp.x() - (abs(tp.x()-sp.x())/2);
 
     if(SGState::mode==SGState::Normal)
-        path.cubicTo(midX,sp.y(),
-                midX,tp.y(),
-                tp.x()-2,tp.y()+2);
+        path.cubicTo(midSX,sp.y(),
+                midTX,tp.y(),
+                tp.x(),tp.y());
     else 
         path.cubicTo(MouseInfo::clickX,sp.y(),
-                midX,MouseInfo::clickY-35,
+                midTX,MouseInfo::clickY-35,
                 MouseInfo::clickX-2,MouseInfo::clickY-35);
 
     painter->setPen(pathPen);
