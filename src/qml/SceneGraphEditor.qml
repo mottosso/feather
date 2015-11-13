@@ -142,6 +142,7 @@ Rectangle {
     function selectNode() {
         var uid = SceneGraph.selected_node()
         console.log("SELECTED SG NODE " + uid)
+        //sg_editor.drawNodeSelected(uid)
     }
     
     /*

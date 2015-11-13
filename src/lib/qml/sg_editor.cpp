@@ -113,13 +113,13 @@ void SceneGraphConnection::mousePressEvent(QMouseEvent* event)
 void SceneGraphConnection::mouseReleaseEvent(QMouseEvent* event)
 {
     SGState::mode = SGState::Normal;
-    update();
+    //update();
 }
 
 void SceneGraphConnection::hoverEnterEvent(QHoverEvent* event)
 {
     m_connFillBrush.setColor(QColor(HOVER_CONNECTOR_COLOR));
-    update();
+    //update();
 }
 
 void SceneGraphConnection::hoverLeaveEvent(QHoverEvent* event)
@@ -128,7 +128,7 @@ void SceneGraphConnection::hoverLeaveEvent(QHoverEvent* event)
         m_connFillBrush = QBrush(QColor(DESELECTED_IN_CONNECTOR_COLOR));
     else
         m_connFillBrush = QBrush(QColor(DESELECTED_OUT_CONNECTOR_COLOR));
-    update();
+    //update();
 }
 
 void SceneGraphConnection::mouseMoveEvent(QMouseEvent* event)
@@ -136,7 +136,7 @@ void SceneGraphConnection::mouseMoveEvent(QMouseEvent* event)
     std::cout << "connection mouse move event\n";
     MouseInfo::clickX = event->windowPos().x(); 
     MouseInfo::clickY = event->windowPos().y(); 
-    SGState::pSge->update();
+    //SGState::pSge->update();
 }
 
 
@@ -153,7 +153,7 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
 {
     if(feather::smg::Instance()->selected(m_uid)){
         m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
-        update();
+        //update();
     }
     setWidth(NODE_WIDTH+4);
     setHeight(NODE_HEIGHT+4);
@@ -213,7 +213,6 @@ void SceneGraphNode::drawSelected(bool selected)
         m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
     else 
         m_nodeFillBrush.setColor(QColor(DESELECTED_NODE_COLOR));
-    update();
 }
 
 void SceneGraphNode::ConnPressed(Qt::MouseButton button, SceneGraphConnection::Connection conn)
@@ -326,7 +325,6 @@ void SceneGraphNode::mousePressEvent(QMouseEvent* event)
 void SceneGraphNode::mouseDoubleClickEvent(QMouseEvent* event)
 {
     emit nodePressed(event->button(),m_uid,m_node);
-    update();
 }
 
 void SceneGraphNode::mouseReleaseEvent(QMouseEvent* event)
@@ -337,7 +335,7 @@ void SceneGraphNode::mouseReleaseEvent(QMouseEvent* event)
 void SceneGraphNode::hoverEnterEvent(QHoverEvent* event)
 {
     m_nodeFillBrush.setColor(QColor(HOVER_NODE_COLOR));
-    update();
+    //update();
 }
 
 void SceneGraphNode::hoverLeaveEvent(QHoverEvent* event)
@@ -347,7 +345,7 @@ void SceneGraphNode::hoverLeaveEvent(QHoverEvent* event)
     } else {
         m_nodeFillBrush.setColor(QColor(DESELECTED_NODE_COLOR));
     }
-   update();
+   //update();
 }
 
 void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
@@ -356,7 +354,7 @@ void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
     setY(y() + (event->screenPos().y() - m_y));
     m_x = event->screenPos().x();
     m_y = event->screenPos().y();
-    parentItem()->update();
+    //parentItem()->update();
 }
 
 void SceneGraphNode::inConnectionPoint(int fid, QPointF& point)
@@ -442,7 +440,6 @@ void SceneGraphLink::paint(QPainter* painter)
 
     painter->setPen(pathPen);
     painter->drawPath(path);
-
 }
 
 
@@ -456,12 +453,12 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
     // for testing purposes I'm selecting the node from here.
     // later this will be done from the viewport or outliner
     feather::qml::command::select_node(0,0);
-    updateGraph();
+    //update();
 }
 
 SceneGraphEditor::~SceneGraphEditor()
 {
-
+    clearGraph();
 }
 
 void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int uid, int nid)
@@ -496,8 +493,9 @@ void SceneGraphEditor::nodePressed(Qt::MouseButton button, int uid, int nid)
 {
     // for now we'll have it so only one node can be selected at a time
     feather::qml::command::clear_selection();
-    //feather::qml::command::select_node(uid);
+    feather::qml::command::select_node(uid);
     emit nodeSelection(0,uid,nid);
+    //updateGraph();
 }
 
 void SceneGraphEditor::connectionMousePressed(int button, int uid, int nid, int fid)
@@ -520,6 +518,26 @@ void SceneGraphEditor::connectionMouseClicked(int button, int uid, int nid, int 
         SGState::mode=SGState::Normal;
 }
 
+void SceneGraphEditor::drawNodeSelected(int uid)
+{
+    for(auto n : m_nodes){
+        if(n->uid()==uid)
+            n->drawSelected(true);
+    }
+    
+}
+
+void SceneGraphEditor::clearGraph()
+{
+    std::cout << "CLEARING SG EDITOR\n";
+    std::for_each(m_links.begin(), m_links.end(), [](SceneGraphLink* link){ delete link; });
+    m_links.clear();
+    std::for_each(m_nodes.begin(), m_nodes.end(), [](SceneGraphNode* node){ delete node; });
+    m_nodes.clear();
+    std::cout << "AFTER CLEARING NODE COUNT:" << m_nodes.size() << std::endl;
+    std::cout << "AFTER CLEARING LINKS COUNT:" << m_links.size() << std::endl;
+}
+
 void SceneGraphEditor::paint(QPainter* painter)
 {
     setFillColor(QColor(BACKGROUND_COLOR));
@@ -534,15 +552,7 @@ void SceneGraphEditor::updateGraph()
     int xpos = 50;
     int ypos = 50;
 
-    std::cout << "CLEARING SG EDITOR\n";
-    std::for_each(m_nodes.begin(), m_nodes.end(), [](SceneGraphNode* node){ delete node; });
-    std::for_each(m_links.begin(), m_links.end(), [](SceneGraphLink* link){ delete link; });
-    std::cout << "AFTER CLEARING NODE COUNT:" << m_nodes.size() << std::endl;
-    std::cout << "AFTER CLEARING LINKS COUNT:" << m_links.size() << std::endl;
- 
-    m_nodes.clear();
-    m_links.clear();
-
+    clearGraph();
 
     std::vector<int> uids;
     // disabled selection as root for testing
@@ -554,9 +564,10 @@ void SceneGraphEditor::updateGraph()
     std::for_each(uids.begin(),uids.end(),[](int& n){ std::cout << n << ","; });
 
     // for each selected uid we will draw all the nodes connected to it.
-    for(uint i=0; i < uids.size(); i++) {
-        updateLeaf(nullptr,uids[i],xpos,ypos);
-    }
+    //for(uint i=0; i < uids.size(); i++) {
+    //    updateLeaf(nullptr,uids[i],xpos,ypos);
+    //}
+    updateLeaf(nullptr,0,xpos,ypos);
 }
 
 
