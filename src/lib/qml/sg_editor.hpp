@@ -63,10 +63,10 @@ class SceneGraphConnection : public QQuickPaintedItem
     public:
         enum Connection { In, Out };
 
-        SceneGraphConnection(int fid, QString name, Connection type, QQuickItem* parent=0);
+        SceneGraphConnection(unsigned int fid, QString name, Connection type, QQuickItem* parent=0);
         ~SceneGraphConnection();
         void paint(QPainter* painter);
-        inline uint fid() { return m_fid; };
+        inline unsigned int fid() { return m_fid; };
 
     protected:
         void mousePressEvent(QMouseEvent* event);
@@ -85,7 +85,7 @@ class SceneGraphConnection : public QQuickPaintedItem
         int m_tgtField;
         Connection m_type;
         QBrush m_connFillBrush;
-        uint m_fid;
+        unsigned int m_fid;
         QString m_name;
 };
 
@@ -97,8 +97,8 @@ class SceneGraphNode : public QQuickPaintedItem
         SceneGraphNode(int _uid, int _node, QQuickItem* parent=0);
         ~SceneGraphNode();
         void paint(QPainter* painter);
-        void inConnectionPoint(int fid, QPointF& point);
-        void outConnectionPoint(int fid, QPointF& point);
+        void inConnectionPoint(unsigned int fid, QPointF& point);
+        void outConnectionPoint(unsigned int fid, QPointF& point);
         inline int uid() { return m_uid; }; /*! Node's unique id assigned by the scenegraph. */
  
     protected slots:
@@ -143,15 +143,15 @@ class SceneGraphLink : public QQuickPaintedItem
     Q_OBJECT
     
     public:
-        SceneGraphLink(SceneGraphNode* snode, int sfid, SceneGraphNode* tnode, int tfid, QQuickItem* parent=0);
+        SceneGraphLink(SceneGraphNode* snode, unsigned int sfid, SceneGraphNode* tnode, unsigned int tfid, QQuickItem* parent=0);
         ~SceneGraphLink();
         void paint(QPainter* painter);
 
     private:
         SceneGraphNode* m_snode; // source node
-        int m_sfid;
+        unsigned int m_sfid;
         SceneGraphNode* m_tnode; // target node
-        int m_tfid;
+        unsigned int m_tfid;
 };
 
 
@@ -171,9 +171,9 @@ class SceneGraphEditor : public QQuickPaintedItem
         void paint(QPainter* painter);
         Q_INVOKABLE void update_sg() { updateGraph(); update(); };
         Q_INVOKABLE void startConnection() { SGState::mode=SGState::FieldConnection; };
-        Q_INVOKABLE void connectionMousePressed(int button, int uid, int nid, int fid);
-        Q_INVOKABLE void connectionMouseReleased(int button, int uid, int nid, int fid);
-        Q_INVOKABLE void connectionMouseClicked(int button, int uid, int nid, int fid);
+        Q_INVOKABLE void connectionMousePressed(int button, unsigned int uid, unsigned int nid, unsigned int fid);
+        Q_INVOKABLE void connectionMouseReleased(int button, unsigned int uid, unsigned int nid, unsigned int fid);
+        Q_INVOKABLE void connectionMouseClicked(int button, unsigned int uid, unsigned int nid, unsigned int fid);
         Q_INVOKABLE void clearGraph();
         Q_INVOKABLE void updateNodes();
 

@@ -57,7 +57,7 @@ SceneGraphEditor* SGState::pSge=NULL;
 
 // SCENEGRAPH
 
-SceneGraphConnection::SceneGraphConnection(int fid, QString name, SceneGraphConnection::Connection type, QQuickItem* parent) :
+SceneGraphConnection::SceneGraphConnection(unsigned int fid, QString name, SceneGraphConnection::Connection type, QQuickItem* parent) :
     QQuickPaintedItem(parent),
     m_type(type),
     m_fid(fid),
@@ -313,7 +313,7 @@ void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
     parentItem()->update();
 }
 
-void SceneGraphNode::inConnectionPoint(int fid, QPointF& point)
+void SceneGraphNode::inConnectionPoint(unsigned int fid, QPointF& point)
 {
     for(auto c : m_pInConns){
         if(c->fid()==fid)
@@ -321,7 +321,7 @@ void SceneGraphNode::inConnectionPoint(int fid, QPointF& point)
     }
 }
 
-void SceneGraphNode::outConnectionPoint(int fid, QPointF& point)
+void SceneGraphNode::outConnectionPoint(unsigned int fid, QPointF& point)
 {
     for(auto c : m_pOutConns){
         if(c->fid()==fid)
@@ -348,7 +348,7 @@ void SceneGraphNode::getConnectionPoint(feather::field::connection::Type conn, Q
 
 // Link
 
-SceneGraphLink::SceneGraphLink(SceneGraphNode* snode, int sfid, SceneGraphNode* tnode, int tfid, QQuickItem* parent) :
+SceneGraphLink::SceneGraphLink(SceneGraphNode* snode, unsigned int sfid, SceneGraphNode* tnode, unsigned int tfid, QQuickItem* parent) :
 QQuickPaintedItem(parent),
 m_snode(snode),
 m_sfid(sfid),
@@ -455,17 +455,17 @@ void SceneGraphEditor::nodePressed(Qt::MouseButton button, int uid, int nid)
     updateNodes();
 }
 
-void SceneGraphEditor::connectionMousePressed(int button, int uid, int nid, int fid)
+void SceneGraphEditor::connectionMousePressed(int button, unsigned int uid, unsigned int nid, unsigned int fid)
 {
     std::cout << "connection mouse pressed, button " << button << " uid " << uid << " nid " << nid << " fid " << fid << std::endl;
 }
 
-void SceneGraphEditor::connectionMouseReleased(int button, int uid, int nid, int fid)
+void SceneGraphEditor::connectionMouseReleased(int button, unsigned int uid, unsigned int nid, unsigned int fid)
 {
     std::cout << "connection mouse released, button " << button << " uid " << uid << " nid " << nid << " fid " << fid << std::endl;
 }
 
-void SceneGraphEditor::connectionMouseClicked(int button, int uid, int nid, int fid)
+void SceneGraphEditor::connectionMouseClicked(int button, unsigned int uid, unsigned int nid, unsigned int fid)
 {
     std::cout << "connection mouse clicked, button " << button << " uid " << uid << " nid " << nid << " fid " << fid << std::endl;
     
