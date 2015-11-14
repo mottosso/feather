@@ -136,6 +136,7 @@ void SceneGraphConnection::mouseMoveEvent(QMouseEvent* event)
     std::cout << "connection mouse move event\n";
     MouseInfo::clickX = event->windowPos().x(); 
     MouseInfo::clickY = event->windowPos().y(); 
+    //parentItem()->update();
     //SGState::pSge->update();
 }
 
@@ -151,10 +152,11 @@ SceneGraphNode::SceneGraphNode(int _uid, int _node, QQuickItem* parent) :
     m_nodeFillBrush(QBrush(QColor(DESELECTED_NODE_COLOR))),
     m_nodeTitleBrush(QBrush(QColor(NODE_TITLE_BLOCK_COLOR)))
 {
-    if(feather::smg::Instance()->selected(m_uid)){
+    if(feather::smg::Instance()->selected(m_uid))
         m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
-        //update();
-    }
+    else
+        m_nodeFillBrush.setColor(QColor(DESELECTED_NODE_COLOR));
+
     setWidth(NODE_WIDTH+4);
     setHeight(NODE_HEIGHT+4);
     /*
@@ -206,24 +208,9 @@ SceneGraphNode::~SceneGraphNode()
     m_pOutConns.clear();
 }
 
-// update the node's visual selection
-void SceneGraphNode::drawSelected(bool selected)
-{
-    if(true)
-        m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
-    else 
-        m_nodeFillBrush.setColor(QColor(DESELECTED_NODE_COLOR));
-}
-
 void SceneGraphNode::ConnPressed(Qt::MouseButton button, SceneGraphConnection::Connection conn)
 {
     ConnClicked(button,conn,m_uid,m_node); 
-}
-
-// check SG to see if the node is selected
-void SceneGraphNode::setNodeSelection(int type, int uid, int nid)
-{
-    (feather::smg::Instance()->selected(m_uid)) ? drawSelected(true) : drawSelected(false);
 }
 
 void SceneGraphNode::paint(QPainter* painter)
@@ -233,20 +220,18 @@ void SceneGraphNode::paint(QPainter* painter)
     QPen trimPen = QPen(QColor(0,0,0),1);
     QPen textPen = QPen(QColor(NODE_TEXT_COLOR),2);
     QFont textFont("DejaVuSans",12);
+
+    if(feather::smg::Instance()->selected(m_uid))
+        m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
+    else
+        m_nodeFillBrush.setColor(QColor(DESELECTED_NODE_COLOR));
+
     textFont.setBold((feather::smg::Instance()->selected(m_uid)) ? true : false);
-    //textFont.setBold(true);
 
     QFont connFont("DejaVuSans",8);
 
     QBrush connInFillBrush = QBrush(QColor("#FF4500"));
     QBrush connOutFillBrush = QBrush(QColor("#DA70D6"));
-
-    /*
-    int incount = feather::qml::command::get_in_field_count(m_uid);
-    int outcount = feather::qml::command::get_out_field_count(m_uid);
-    int fcount = feather::qml::command::get_field_count(m_uid);
-    int height = 20 + (20 * std::max(incount,outcount));
-    */
 
     setHeight(m_nodeHeight+44);
 
@@ -283,35 +268,6 @@ void SceneGraphNode::paint(QPainter* painter)
     QRectF src(0,0,48,48);
     QImage img(m_imgPath.str().c_str());
     painter->drawImage(tgt,img,src);
-
-
-    // FOR NOW WE ARE ONLY GOING TO SO THE NODE
-    // BUT IN THE FUTURE WE'LL SHOW ALL IT'S 
-    // FIELDS
-    // in connections
-    /*
-    painter->setFont(connFont);
-    int inx=0;
-    int outx=0;
-    for(int i=1; i <= m_connCount; i++){
-        QString name;
-        name = FieldModel::getFieldName(m_node,i);
-        if(feather::qml::command::get_field_connection_type(m_uid,i)==feather::field::connection::In){
-            painter->drawText(QRect(4,inx+20,NODE_WIDTH-4,20),Qt::AlignLeft|Qt::AlignVCenter,name.toStdString().c_str());
-            inx+=20;
-        } else {
-            painter->drawText(QRect(4,outx+20,NODE_WIDTH-4,20),Qt::AlignRight|Qt::AlignVCenter,name.toStdString().c_str());
-            outx+=20;
-        }
-    }
-    */
-
-    // out connections 
-    //painter->drawText(QRect(4,20,NODE_WIDTH-4,NODE_HEIGHT),Qt::AlignRight|Qt::AlignVCenter,"output");
-
-    //setX(m_x);
-    //setY(m_y);
-
 }
 
 void SceneGraphNode::mousePressEvent(QMouseEvent* event)
@@ -335,7 +291,7 @@ void SceneGraphNode::mouseReleaseEvent(QMouseEvent* event)
 void SceneGraphNode::hoverEnterEvent(QHoverEvent* event)
 {
     m_nodeFillBrush.setColor(QColor(HOVER_NODE_COLOR));
-    //update();
+    update();
 }
 
 void SceneGraphNode::hoverLeaveEvent(QHoverEvent* event)
@@ -345,7 +301,7 @@ void SceneGraphNode::hoverLeaveEvent(QHoverEvent* event)
     } else {
         m_nodeFillBrush.setColor(QColor(DESELECTED_NODE_COLOR));
     }
-   //update();
+    update();
 }
 
 void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
@@ -354,7 +310,7 @@ void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
     setY(y() + (event->screenPos().y() - m_y));
     m_x = event->screenPos().x();
     m_y = event->screenPos().y();
-    //parentItem()->update();
+    parentItem()->update();
 }
 
 void SceneGraphNode::inConnectionPoint(int fid, QPointF& point)
@@ -453,6 +409,7 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
     // for testing purposes I'm selecting the node from here.
     // later this will be done from the viewport or outliner
     feather::qml::command::select_node(0,0);
+    updateGraph();
     //update();
 }
 
@@ -495,7 +452,7 @@ void SceneGraphEditor::nodePressed(Qt::MouseButton button, int uid, int nid)
     feather::qml::command::clear_selection();
     feather::qml::command::select_node(uid);
     emit nodeSelection(0,uid,nid);
-    //updateGraph();
+    updateNodes();
 }
 
 void SceneGraphEditor::connectionMousePressed(int button, int uid, int nid, int fid)
@@ -518,24 +475,18 @@ void SceneGraphEditor::connectionMouseClicked(int button, int uid, int nid, int 
         SGState::mode=SGState::Normal;
 }
 
-void SceneGraphEditor::drawNodeSelected(int uid)
-{
-    for(auto n : m_nodes){
-        if(n->uid()==uid)
-            n->drawSelected(true);
-    }
-    
-}
-
 void SceneGraphEditor::clearGraph()
 {
-    std::cout << "CLEARING SG EDITOR\n";
     std::for_each(m_links.begin(), m_links.end(), [](SceneGraphLink* link){ delete link; });
     m_links.clear();
     std::for_each(m_nodes.begin(), m_nodes.end(), [](SceneGraphNode* node){ delete node; });
     m_nodes.clear();
-    std::cout << "AFTER CLEARING NODE COUNT:" << m_nodes.size() << std::endl;
-    std::cout << "AFTER CLEARING LINKS COUNT:" << m_links.size() << std::endl;
+}
+
+void SceneGraphEditor::updateNodes()
+{
+    for(auto n : m_nodes)
+        n->update();
 }
 
 void SceneGraphEditor::paint(QPainter* painter)
@@ -555,6 +506,7 @@ void SceneGraphEditor::updateGraph()
     clearGraph();
 
     std::vector<int> uids;
+
     // disabled selection as root for testing
     //feather::qml::command::get_selected_nodes(uids);
     uids.push_back(0);
@@ -581,10 +533,10 @@ void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int 
     if(!node){
         std::cout << "ADDING NODE TO SG EDITOR\n";
         node = new SceneGraphNode(uid,nid,this);
+        m_nodes.push_back(node);
         // setup the node qt connections
         connect(node,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
         connect(node,SIGNAL(nodePressed(Qt::MouseButton,int,int)),this,SLOT(nodePressed(Qt::MouseButton,int,int)));
-        connect(this,SIGNAL(nodeSelection(int,int,int)),node,SLOT(setNodeSelection(int,int,int)));
 
         // place the node in the scenegraph
         node->setX(xpos);

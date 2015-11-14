@@ -31,8 +31,6 @@
 
 #define NODE_WIDTH 100
 #define NODE_HEIGHT 30
-//#define CONNECTION_WIDTH 10
-//#define CONNECTION_HEIGHT 10 
 
 class SceneGraphEditor;
 
@@ -101,12 +99,10 @@ class SceneGraphNode : public QQuickPaintedItem
         void paint(QPainter* painter);
         void inConnectionPoint(int fid, QPointF& point);
         void outConnectionPoint(int fid, QPointF& point);
-        void drawSelected(bool selected);
         inline int uid() { return m_uid; }; /*! Node's unique id assigned by the scenegraph. */
  
     protected slots:
         void ConnPressed(Qt::MouseButton button,SceneGraphConnection::Connection conn);
-        void setNodeSelection(int type, int uid, int nid);
  
     signals:
         void ConnClicked(Qt::MouseButton button, SceneGraphConnection::Connection conn, int uid, int nid);
@@ -131,8 +127,6 @@ class SceneGraphNode : public QQuickPaintedItem
         std::stringstream m_imgPath;
         QBrush m_nodeFillBrush;
         QBrush m_nodeTitleBrush;
-        //SceneGraphConnection* m_pInConn;
-        //SceneGraphConnection* m_pOutConn;
         int m_inConnCount;
         int m_outConnCount;
         int m_connCount;
@@ -180,8 +174,8 @@ class SceneGraphEditor : public QQuickPaintedItem
         Q_INVOKABLE void connectionMousePressed(int button, int uid, int nid, int fid);
         Q_INVOKABLE void connectionMouseReleased(int button, int uid, int nid, int fid);
         Q_INVOKABLE void connectionMouseClicked(int button, int uid, int nid, int fid);
-        Q_INVOKABLE void drawNodeSelected(int uid);
         Q_INVOKABLE void clearGraph();
+        Q_INVOKABLE void updateNodes();
 
         // connection 
         void setConnection(FieldModel* c) {

@@ -140,18 +140,9 @@ Rectangle {
     }
 
     function selectNode() {
-        var uid = SceneGraph.selected_node()
-        console.log("SELECTED SG NODE " + uid)
-        //sg_editor.drawNodeSelected(uid)
+        sg_editor.updateNodes()
     }
     
-    /*
-    function setSelection(type,uid,nid,fid) {
-        console.log("sg triggered");
-        console.log("sg editor triggered for uid " + uid + " nid " + nid + " fid " + fid);
-    }
-    */
-
     function add_node(name,type,nid) {
         console.log("Add node: " + name + " type: " + type + " nid: " + nid)
         var uid = SceneGraph.add_node(type,nid,name)
@@ -172,7 +163,6 @@ Rectangle {
         SceneGraph.updateGraph.connect(sg_editor.update_sg)
         SceneGraph.cleared.connect(sg_editor.update_sg)
         addNodeDialog.addNode.connect(add_node)
-        sg_editor.update_sg()
     }
 
 }
