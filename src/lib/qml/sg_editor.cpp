@@ -545,6 +545,8 @@ bool SceneGraphEditor::connectNodes()
         c->setSelected(false);
     SGState::selectedConnections.erase(SGState::selectedConnections.begin(),SGState::selectedConnections.end());
 
+    //feather::qml::command::scenegraph_update();
+
     update();
     return true;
 }

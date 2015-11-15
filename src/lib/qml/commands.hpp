@@ -108,6 +108,7 @@ namespace feather
             std::string get_node_name(int uid);
             void gl_init(int uid, FGlInfo& info);
             void gl_draw(int uid, FGlInfo& info);
+            void scenegraph_update();
             int get_min_uid();
             int get_max_uid();
             void get_plugins(std::vector<PluginInfo>& list);

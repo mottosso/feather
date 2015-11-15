@@ -49,6 +49,7 @@ namespace feather
             Object,
             Curve,
             Polygon,
+            Shape,
             N
         };
 

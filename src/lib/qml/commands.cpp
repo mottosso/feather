@@ -345,6 +345,11 @@ void qml::command::gl_draw(int uid, FGlInfo& info)
     scenegraph::gl_draw(sg[uid],info);
 }
 
+void qml::command::scenegraph_update()
+{
+    scenegraph::update();
+}
+
 int qml::command::get_min_uid()
 {
     return cstate.sgState.minUid; 

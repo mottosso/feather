@@ -66,6 +66,7 @@ Rectangle {
         tooltip: "connect the two selected node connections"
         onTriggered: {
             sg_editor.connectNodes()
+            SceneGraph.triggerUpdate()
         }
     }
 
