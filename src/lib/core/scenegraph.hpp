@@ -238,16 +238,22 @@ namespace feather
          */
         field::FieldBase* get_fieldBase(int uid, int nid, int fid) {
             field::FieldBase* f = plugins.get_fieldBase(uid,nid,fid,sg[uid].fields); 
-            if(!f)
-                return nullptr; // TODO fix this once the rest works!
-
-            if(f->connected){
-                //std::cout << "field is connected to uid:" << f->puid << ", node:" << f->pn << ", field " << f->pf << std::endl;
-                return get_fieldBase(f->puid,f->pn,f->pf);
-            } else {
-                //std::cout << "field is not connected, returning the default field\n";
-                return f;
+            if(!f) {
+                //f = sg[uid].fields.at(fid); // TODO fix this once the rest works!
+                //if(!f)
+                //    return nullptr;
+                //else
+                //    return f;
+                //}
+                if(f->connected){
+                    //std::cout << "field is connected to uid:" << f->puid << ", node:" << f->pn << ", field " << f->pf << std::endl;
+                    f = get_fieldBase(f->puid,f->pn,f->pf);
+                //} else {
+                    //std::cout << "field is not connected, returning the default field\n";
+                //    return f;
+                } 
             }
+            return f;
         };
 
         /*!
@@ -255,8 +261,14 @@ namespace feather
          */
         field::FieldBase* get_node_fieldBase(int uid, int nid, int fid) {
             field::FieldBase* f = plugins.get_fieldBase(uid,nid,fid,sg[uid].fields); 
-            if(!f)
-                return nullptr; // TODO fix this once the rest works!
+            if(!f) {
+                for(auto field : sg[uid].fields){
+                    if(field->id == fid)
+                        f = field;
+                }
+                if(!f)
+                    return nullptr;
+            }
             return f;
         };
 
@@ -666,8 +678,8 @@ namespace feather
             // see if the two types can be connected
             int src_node = sg[n1].node;
             int tgt_node = sg[n2].node;
-            field::FieldBase* sfield = get_fieldBase(n1,src_node,f1);
-            field::FieldBase* tfield = get_fieldBase(n2,tgt_node,f2);
+            field::FieldBase* sfield = get_node_fieldBase(n1,src_node,f1);
+            field::FieldBase* tfield = get_node_fieldBase(n2,tgt_node,f2);
             std::cout 
                 << "sn=" << src_node 
                 << ", sfield=" << sfield->id 

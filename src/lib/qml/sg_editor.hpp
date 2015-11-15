@@ -33,6 +33,8 @@
 #define NODE_HEIGHT 30
 
 class SceneGraphEditor;
+class SceneGraphNode;
+class SceneGraphConnection;
 
 struct SGState {
     // Source Node Info
@@ -47,6 +49,7 @@ struct SGState {
     static int tgtNid;
     static int tgtFid;
     static SceneGraphEditor* pSge;
+    static std::vector<SceneGraphConnection*> selectedConnections;
 };
 
 
@@ -63,10 +66,13 @@ class SceneGraphConnection : public QQuickPaintedItem
     public:
         enum Connection { In, Out };
 
-        SceneGraphConnection(unsigned int fid, QString name, Connection type, QQuickItem* parent=0);
+        SceneGraphConnection(SceneGraphNode* node, unsigned int fid, QString name, Connection type, QQuickItem* parent=0);
         ~SceneGraphConnection();
         void paint(QPainter* painter);
+        SceneGraphNode* node() { return m_node; };
         inline unsigned int fid() { return m_fid; };
+        inline Connection type() { return m_type; };
+        inline void setSelected(bool s) { m_selected=s; };
 
     protected:
         void mousePressEvent(QMouseEvent* event);
@@ -79,14 +85,12 @@ class SceneGraphConnection : public QQuickPaintedItem
         void connClicked(Qt::MouseButton button, SceneGraphConnection::Connection conn);
 
     private:
-        int m_srcUid;
-        int m_srcField;
-        int m_tgtUid;
-        int m_tgtField;
+        bool m_selected;
         Connection m_type;
         QBrush m_connFillBrush;
         unsigned int m_fid;
         QString m_name;
+        SceneGraphNode* m_node;
 };
 
 class SceneGraphNode : public QQuickPaintedItem
@@ -94,11 +98,12 @@ class SceneGraphNode : public QQuickPaintedItem
     Q_OBJECT
 
     public:
-        SceneGraphNode(int _uid, int _node, QQuickItem* parent=0);
+        SceneGraphNode(int uid, int nid, QQuickItem* parent=0);
         ~SceneGraphNode();
         void paint(QPainter* painter);
         void inConnectionPoint(unsigned int fid, QPointF& point);
         void outConnectionPoint(unsigned int fid, QPointF& point);
+        inline int nid() { return m_nid; };
         inline int uid() { return m_uid; }; /*! Node's unique id assigned by the scenegraph. */
  
     protected slots:
@@ -119,7 +124,7 @@ class SceneGraphNode : public QQuickPaintedItem
     private:
         void getConnectionPoint(feather::field::connection::Type conn, QPoint& npoint, QPoint& cpoint);
         int m_uid;
-        int m_node;
+        int m_nid;
         int m_x;
         int m_y;
         std::string m_imgDir;
@@ -176,6 +181,8 @@ class SceneGraphEditor : public QQuickPaintedItem
         Q_INVOKABLE void connectionMouseClicked(int button, unsigned int uid, unsigned int nid, unsigned int fid);
         Q_INVOKABLE void clearGraph();
         Q_INVOKABLE void updateNodes();
+        Q_INVOKABLE bool connectNodes(); // this only works on selected connections in the SGState
+        Q_INVOKABLE bool disconnectNodes(); // this only works on selected connections in the SGState
 
         // connection 
         void setConnection(FieldModel* c) {

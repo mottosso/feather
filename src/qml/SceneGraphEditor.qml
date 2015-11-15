@@ -60,6 +60,24 @@ Rectangle {
         }
     }
 
+    // Add Connection 
+    Action {
+        id: addConnection 
+        tooltip: "connect the two selected node connections"
+        onTriggered: {
+            sg_editor.connectNodes()
+        }
+    }
+
+    // Delete Connection 
+    Action {
+        id: deleteConnection 
+        tooltip: "disconnect the two selected node connections"
+        onTriggered: {
+            sg_editor.disconnectNodes()
+        }
+    }
+
 
     ToolBar {
         id: toolBar
@@ -90,9 +108,23 @@ Rectangle {
 
             ToolButton {
                 id: deleteNodeButton
-                width: 32; height: 23
+                width: 32; height: 32
                 iconSource: "/usr/local/feather/ui/icons/delete_node.png"
                 action: deleteNode 
+            }
+
+            ToolButton {
+                id: addConnectionButton
+                width: 32; height: 32
+                iconSource: "/usr/local/feather/ui/icons/add_connection.png"
+                action: addConnection 
+            }
+
+            ToolButton {
+                id: deleteConnectionButton
+                width: 32; height: 32
+                iconSource: "/usr/local/feather/ui/icons/delete_connection.png"
+                action: deleteConnection 
             }
 
         }
