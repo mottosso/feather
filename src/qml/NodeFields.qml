@@ -38,6 +38,13 @@ FieldModel {
         // Out
         addFieldName("Child",320,2)
 
+        // Polygon Shape 
+        addFieldName("Parent",321,1)
+        addFieldName("SubX",321,3)
+        addFieldName("SubY",321,4)
+        // Out
+        addFieldName("Child",321,2)
+        addFieldName("Mesh",321,5)
 
         // Polygon Cube
         // In

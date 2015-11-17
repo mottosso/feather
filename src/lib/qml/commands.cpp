@@ -218,7 +218,7 @@ status qml::command::get_field_base(int uid, int fid, feather::field::FieldBase*
 // This is the same as get_field_base except it always returns the node's field, even if it's connected
 status qml::command::get_node_field_base(int uid, int fid, feather::field::FieldBase* &f)
 {
-    //typedef field::Field<int,field::connection::In>* fielddata;
+    //typedef field::Field<int>* fielddata;
     //fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
     f = scenegraph::get_node_fieldBase(uid,sg[uid].node,fid);
     if(!f) {
@@ -239,7 +239,7 @@ status qml::command::get_field_val(int uid, int node, int field, bool& val)
 
 status qml::command::get_field_val(int uid, int node, int field, int& val)
 {
-    typedef field::Field<int,field::connection::In>* fielddata;
+    typedef field::Field<int>* fielddata;
     fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
     if(!f)
         std::cout << uid << "," << node << "," << field << " NULL FIELD\n";
@@ -263,7 +263,7 @@ status qml::command::set_field_val(int uid, int node, int field, bool& val)
 
 status qml::command::set_field_val(int uid, int node, int field, int& val)
 {
-    typedef field::Field<int,field::connection::In>* fielddata;
+    typedef field::Field<int>* fielddata;
     fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
     if(!f)
         std::cout << "NULL FIELD\n";

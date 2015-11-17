@@ -76,10 +76,11 @@ namespace feather
             int type;
         };
 
-        template <typename _Type, int _Conn>
+        //template <typename _Type, int _Conn>
+        template <typename _Type>
         struct Field : public FieldBase
         {
-            Field(int _type=0){ conn_type=_Conn; };
+            Field(int _type=0){};//{ conn_type=_Conn; };
             //Field(int _type=0):conn(_Conn){ };
             //typedef _Type type;
             //int conn;
@@ -135,10 +136,11 @@ namespace feather
     namespace feather {\
         template <> struct add_fields<__node,__field_key> {\
             static status exec(field::Fields& fields) {\
-                 field::Field<__type,__connection>* f = new field::Field<__type,__connection>();\
+                 field::Field<__type>* f = new field::Field<__type>();\
                 f->id=__field_key;\
                 f->value=__default_value;\
                 f->type=__type_enum;\
+                f->conn_type=__connection;\
                 fields.push_back(f);\
                 return add_fields<__node,__field_key-1>::exec(fields);\
             };\

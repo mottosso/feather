@@ -238,7 +238,7 @@ namespace feather
          */
         field::FieldBase* get_fieldBase(int uid, int nid, int fid) {
             field::FieldBase* f = plugins.get_fieldBase(uid,nid,fid,sg[uid].fields); 
-            if(!f) {
+            if(!f || f->connected) {
                 //f = sg[uid].fields.at(fid); // TODO fix this once the rest works!
                 //if(!f)
                 //    return nullptr;

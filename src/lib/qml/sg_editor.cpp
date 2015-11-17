@@ -523,6 +523,7 @@ bool SceneGraphEditor::connectNodes()
     if(SGState::selectedConnections.size() > 1){
         // for now we'll just connect the inputs to the first in connection we see
         SceneGraphConnection* in = nullptr;
+
         // find the first in connection
         for(auto c : SGState::selectedConnections) {
             if(c->type() == SceneGraphConnection::In) {
@@ -530,6 +531,7 @@ bool SceneGraphEditor::connectNodes()
                 break;
             }
         }
+
         if(in != nullptr) {
             for(auto c : SGState::selectedConnections) {
                 if(c->type() == SceneGraphConnection::Out) {
@@ -540,12 +542,14 @@ bool SceneGraphEditor::connectNodes()
             }
         }
     }
+
     // unselect all the currently selected connections
     for(auto c : SGState::selectedConnections)
         c->setSelected(false);
+
     SGState::selectedConnections.erase(SGState::selectedConnections.begin(),SGState::selectedConnections.end());
 
-    //feather::qml::command::scenegraph_update();
+   feather::qml::command::scenegraph_update();
 
     update();
     return true;
