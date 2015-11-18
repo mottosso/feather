@@ -150,6 +150,7 @@ namespace feather
 
     struct FMesh
     {
+        enum Type { TRI, QUAD, VARY } type;
         FVertex3DArray v;
         FTextureCoordArray st;
         FVertex3DArray vn;
