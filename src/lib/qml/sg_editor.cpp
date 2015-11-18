@@ -294,9 +294,8 @@ void SceneGraphNode::paint(QPainter* painter)
 
     // node icon
     QRectF tgt(NODE_WIDTH/2-12,m_nodeHeight+12,24,24);
-    QRectF src(0,0,48,48);
     QImage img(m_imgPath.str().c_str());
-    painter->drawImage(tgt,img,src);
+    painter->drawImage(tgt,img);
 }
 
 void SceneGraphNode::mousePressEvent(QMouseEvent* event)
