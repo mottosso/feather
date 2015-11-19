@@ -54,6 +54,7 @@ namespace feather
             status get_node_icon(int nid, std::string& file);
             status get_node_id(int uid, int& nid);
             status get_node_connected_uids(int uid, std::vector<int>& uids);
+            status get_node_connected_uids(int uid, int fid, std::vector<int>& uids);
             status load_plugins();
             status run_command(std::string cmd, feather::parameter::ParameterList params);
             status run_command_string(std::string str);

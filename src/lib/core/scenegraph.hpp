@@ -231,6 +231,20 @@ namespace feather
         };
 
 
+        /* This will return all the node uids connected to node's fid */
+        status get_node_connected_uids(int uid, int fid, std::vector<int>& uids) {
+            typedef typename boost::graph_traits<FSceneGraph>::out_edge_iterator ei;
+            std::pair<ei,ei> p = boost::out_edges(uid,sg);
+ 
+            for(;p.first!=p.second;++p.first){
+                if(sg[*p.first].f1 == fid)
+                    uids.push_back(target(*p.first,sg));
+            }
+
+            return status();
+        };
+
+
         /*!
          * Returns a node's field that holds the value for the fid.
          * NOTE! if the field is connected it will return the field of the parent that's connected to it.
