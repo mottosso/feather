@@ -25,6 +25,6 @@ import QtQuick 2.3
 
 ListModel {
     ListElement { text: "Empty"; nid: 1 }
-    ListElement { text: "Shape"; nid: 2 }
-    ListElement { text: "Transform"; nid: 3 }
+    //ListElement { text: "Shape"; nid: 2 }
+    //ListElement { text: "Transform"; nid: 3 }
 }
