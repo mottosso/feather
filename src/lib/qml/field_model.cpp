@@ -31,6 +31,9 @@ FieldModel::FieldModel(QObject* parent) : QAbstractListModel(parent)
 
 FieldModel::~FieldModel()
 {
+    for(auto f : m_fields)
+        delete f;
+    m_fields.clear();
 }                                                                        
 
 QHash<int, QByteArray> FieldModel::roleNames() const

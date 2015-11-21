@@ -79,7 +79,6 @@ SceneGraphConnection::SceneGraphConnection(SceneGraphNode* node, unsigned int fi
         m_connFillBrush = QBrush(QColor(DESELECTED_IN_CONNECTOR_COLOR));
     else
         m_connFillBrush = QBrush(QColor(DESELECTED_OUT_CONNECTOR_COLOR));
-
 }
 
 SceneGraphConnection::~SceneGraphConnection()
@@ -438,7 +437,6 @@ SceneGraphEditor::SceneGraphEditor(QQuickItem* parent) : QQuickPaintedItem(paren
     // later this will be done from the viewport or outliner
     feather::qml::command::select_node(0,0);
     updateGraph();
-    //update();
 }
 
 SceneGraphEditor::~SceneGraphEditor()

@@ -132,7 +132,7 @@ Rectangle {
 
     } 
 
-    FieldModel { id: connModel }
+    //FieldModel { id: connModel }
 
     SceneGraphEditor {
         id: sg_editor
@@ -141,17 +141,18 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: 2
-        //connection: connModel
     }    
 
-    PopupMenu { id: connMenu; model: connModel }
+    //PopupMenu { id: connMenu; model: connModel }
 
     function openConnectionMenu() {
+        /*
         connMenu.x = sg_editor.clickX
         connMenu.y = sg_editor.clickY
         console.log(sg_editor.clickX + " " + sg_editor.clickY)
         connMenu.resize()
         connMenu.visible = true
+        */
     }
 
     function nodeSelection(type,uid,nid) {
@@ -189,9 +190,9 @@ Rectangle {
     Component.onCompleted: {
         sg_editor.openConnMenu.connect(openConnectionMenu)
         sg_editor.nodeSelection.connect(nodeSelection)
-        connMenu.connectionButtonPressed.connect(connectionButtonPressed)
-        connMenu.connectionButtonReleased.connect(connectionButtonReleased)
-        connMenu.connectionButtonClicked.connect(connectionButtonClicked)
+        //connMenu.connectionButtonPressed.connect(connectionButtonPressed)
+        //connMenu.connectionButtonReleased.connect(connectionButtonReleased)
+        //connMenu.connectionButtonClicked.connect(connectionButtonClicked)
         SceneGraph.nodeSelected.connect(selectNode)
         SceneGraph.updateGraph.connect(sg_editor.update_sg)
         SceneGraph.cleared.connect(sg_editor.update_sg)
