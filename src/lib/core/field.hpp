@@ -103,6 +103,7 @@ namespace feather
         // Currently this is just a brief list for testing.
         template <> bool can_connect<Bool,Bool>() { return true; };
         template <> bool can_connect<Int,Int>() { return true; };
+        template <> bool can_connect<Double,Double>() { return true; };
         template <> bool can_connect<Float,Float>() { return true; };
         template <> bool can_connect<Mesh,Mesh>() { return true; };
         template <> bool can_connect<Node,Node>() { return true; };

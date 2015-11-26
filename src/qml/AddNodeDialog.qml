@@ -144,7 +144,7 @@ Window {
                 id: nidOption
                 width: 200
                 height: 30
-                model: polygonModel
+                model: commonModel
                 properties: dialog.properties 
              }
         }        
@@ -198,9 +198,10 @@ Window {
                  break;
             default:
                 nidOption.model = null
-                nidOption.model = polygonModel
+                nidOption.model = commonModel
          }
         dialog.nid = nidOption.model.get(0).nid
+        nidOption.update()
     }
 
     function set_nid(index){

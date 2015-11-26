@@ -144,15 +144,14 @@ Rectangle {
     }    
 
     //PopupMenu { id: connMenu; model: connModel }
+    PopupMenu { id: connMenu; model: sgWindow.fieldModel }
 
     function openConnectionMenu() {
-        /*
         connMenu.x = sg_editor.clickX
         connMenu.y = sg_editor.clickY
         console.log(sg_editor.clickX + " " + sg_editor.clickY)
         connMenu.resize()
         connMenu.visible = true
-        */
     }
 
     function nodeSelection(type,uid,nid) {

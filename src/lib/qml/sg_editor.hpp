@@ -131,6 +131,7 @@ class SceneGraphNode : public QQuickPaintedItem
         std::string m_imgFile;
         std::stringstream m_imgPath;
         QBrush m_nodeFillBrush;
+        QBrush m_layerFillBrush;
         QBrush m_nodeTitleBrush;
         int m_inConnCount;
         int m_outConnCount;
