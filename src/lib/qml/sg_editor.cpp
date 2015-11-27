@@ -26,11 +26,11 @@
 #include "selection.hpp"
 #include "field.hpp"
 
-#define BACKGROUND_COLOR "#696969"
+#define BACKGROUND_COLOR "#444444"
 #define NODE_TEXT_COLOR "#000000"
 #define SELECTED_NODE_COLOR "#FF007F"
-#define DESELECTED_NODE_COLOR "#6A5ACD"
-#define NODE_TITLE_BLOCK_COLOR "#66CCFF"
+#define DESELECTED_NODE_COLOR "#666666"
+#define NODE_TITLE_BLOCK_COLOR "#888888"
 #define HOVER_NODE_COLOR "#FF8C00"
 #define SELECTED_CONNECTOR_COLOR "#FFFF00" // TODO
 #define DESELECTED_IN_CONNECTOR_COLOR "#50C878"
@@ -56,25 +56,17 @@ std::vector<SceneGraphConnection*> SGState::selectedConnections = std::vector<Sc
 
 // SCENEGRAPH
 
-SceneGraphConnection::SceneGraphConnection(SceneGraphNode* node, unsigned int fid, QString name, SceneGraphConnection::Connection type, QQuickItem* parent) :
+SceneGraphConnection::SceneGraphConnection(SceneGraphNode* node, SceneGraphConnection::Connection type, QQuickItem* parent) :
     QQuickPaintedItem(parent),
     m_selected(false),
     m_type(type),
-    m_fid(fid),
-    m_name(name),
     m_node(node)
 {
-    setWidth(NODE_WIDTH/2);
-    setHeight(20);
+    setWidth(CONNECTION_WIDTH);
+    setHeight(CONNECTION_HEIGHT);
     setAcceptedMouseButtons(Qt::AllButtons);
     setAcceptHoverEvents(true);
 
-    //int nedges = feather::qml::command::get_node_connection_count(0);
-    std::vector<int> edges;
-    feather::qml::command::get_node_out_connections(0,edges);
-    //feather::FNodeDescriptor n = 0;
-    //feather::FFieldConnection connection = boost::edge(n);
-    //std::cout << "EDGE for node 0 is " << feather::sg[connection.first].n1 << "=>" << feather::sg[connection.first].n2 << std::endl;
     if(m_type == In)
         m_connFillBrush = QBrush(QColor(DESELECTED_IN_CONNECTOR_COLOR));
     else
@@ -88,7 +80,6 @@ SceneGraphConnection::~SceneGraphConnection()
 void SceneGraphConnection::paint(QPainter* painter)
 {
     painter->setRenderHints(QPainter::Antialiasing, true);
-    //painter->drawEllipse(QPoint(5,5),CONNECTION_WIDTH/2,CONNECTION_HEIGHT/2);
 
     if(!m_selected){
         if(m_type == In)
@@ -99,48 +90,15 @@ void SceneGraphConnection::paint(QPainter* painter)
         m_connFillBrush = QBrush(QColor(SELECTED_CONNECTOR_COLOR));
     }
 
-    QPen trimPen = QPen(QColor(0,0,0),1);
-    trimPen.setStyle(Qt::NoPen);
-    painter->setPen(trimPen); 
     painter->setBrush(m_connFillBrush);
-    painter->drawRect(QRect(0,3,NODE_WIDTH/2,14));
-
-    QPen textPen = QPen(QColor(NODE_TEXT_COLOR),2);
-    painter->setPen(textPen);
-    QFont font("DejaVuSans",8);
-    painter->setFont(font);
-    /*
-    if(m_type == In)
-        painter->drawText(QRect(2,0,NODE_WIDTH/2,20),Qt::AlignLeft|Qt::AlignVCenter,m_name.toStdString().c_str());
-    else
-        painter->drawText(QRect(0,0,NODE_WIDTH/2-2,20),Qt::AlignRight|Qt::AlignVCenter,m_name.toStdString().c_str());
-    */
-    painter->drawText(QRect(0,0,NODE_WIDTH/2,20),Qt::AlignHCenter|Qt::AlignVCenter,m_name.toStdString().c_str());
+    painter->drawEllipse(QPoint(5,5),CONNECTION_WIDTH/2,CONNECTION_HEIGHT/2);
 }
 
 void SceneGraphConnection::mousePressEvent(QMouseEvent* event)
 {
     MouseInfo::clickX = event->windowPos().x();
     MouseInfo::clickY = event->windowPos().y();
-    //SGState::mode = SGState::FieldConnection;
-    //connClicked(event->button(),m_type);
-
-    // Add the connection to the selected list if not selected
-    // else remove it from the list
-    if(m_selected) {
-        int i=0;
-        for(auto c : SGState::selectedConnections){
-            if(c->fid()==m_fid)
-                SGState::selectedConnections.erase(SGState::selectedConnections.begin()+i);
-            i++;
-        }
-        m_selected=false;
-    } else {
-        SGState::selectedConnections.push_back(this);
-        m_selected=true;
-    }
-    std::cout << "connections size=" << SGState::selectedConnections.size() << std::endl;
-    update();
+    //update();
 }
 
 void SceneGraphConnection::mouseReleaseEvent(QMouseEvent* event)
@@ -193,41 +151,23 @@ SceneGraphNode::SceneGraphNode(int uid, int nid, QQuickItem* parent) :
 
     setWidth(NODE_WIDTH+4);
     setHeight(NODE_HEIGHT+4);
-    /*
-    m_pOutConn->setX(NODE_WIDTH-2);
-    m_pOutConn->setY((NODE_HEIGHT/2)-2);
-    m_pInConn->setX(-2);
-    m_pInConn->setY((NODE_HEIGHT/2)-2);
-    */
+
     setAcceptedMouseButtons(Qt::AllButtons);
     setAcceptHoverEvents(true);
 
     m_inConnCount = feather::qml::command::get_in_field_count(m_uid);
     m_outConnCount = feather::qml::command::get_out_field_count(m_uid);
     m_connCount = feather::qml::command::get_field_count(m_uid);
-    m_nodeHeight = 24 + (NODE_HEIGHT/2 * std::max(m_inConnCount,m_outConnCount));
- 
-    int yin=15;
-    int yout=15;
     
-    // draw the connections
-    for(int i=1; i <= m_connCount; i++){
-        if(feather::qml::command::get_field_connection_type(m_uid,i)==feather::field::connection::In){
-            std::cout << "IN - Node " << m_nid << " FID " << i << " name " << FieldModel::getFieldName(m_nid,i).toStdString().c_str() << std::endl;
-            m_pInConns.push_back(new SceneGraphConnection(this,i,FieldModel::getFieldName(m_nid,i),SceneGraphConnection::In,this));
-            m_pInConns.at(m_pInConns.size()-1)->setX(-2);
-            m_pInConns.at(m_pInConns.size()-1)->setY((NODE_HEIGHT/2+yin));
-            yin+=NODE_HEIGHT/2;
-            connect(m_pInConns.at(m_pInConns.size()-1),SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
-        } else {
-            std::cout << "OUT - Node " << m_nid << " FID " << i << " name " << FieldModel::getFieldName(m_nid,i).toStdString().c_str() << std::endl;
-            m_pOutConns.push_back(new SceneGraphConnection(this,i,FieldModel::getFieldName(m_nid,i),SceneGraphConnection::Out,this));  
-            m_pOutConns.at(m_pOutConns.size()-1)->setX(NODE_WIDTH/2+6);
-            m_pOutConns.at(m_pOutConns.size()-1)->setY((NODE_HEIGHT/2)+yout);
-            yout+=NODE_HEIGHT/2;
-            connect(m_pOutConns.at(m_pOutConns.size()-1),SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
-        }
-    }
+    m_pInConn = new SceneGraphConnection(this,SceneGraphConnection::In,this);
+    m_pInConn->setX(-2);
+    m_pInConn->setY(NODE_HEIGHT/2+14);
+    connect(m_pInConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
+
+    m_pOutConn = new SceneGraphConnection(this,SceneGraphConnection::Out,this);
+    m_pOutConn->setX(NODE_WIDTH-4);
+    m_pOutConn->setY(NODE_HEIGHT/2+14);
+    connect(m_pOutConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
 
     feather::qml::command::get_node_icon(m_nid,m_imgFile);
     m_imgPath << m_imgDir << m_imgFile;
@@ -235,13 +175,8 @@ SceneGraphNode::SceneGraphNode(int uid, int nid, QQuickItem* parent) :
 
 SceneGraphNode::~SceneGraphNode()
 {
-    for(auto c : m_pInConns)
-        delete c;
-    m_pInConns.clear();
-
-    for(auto c : m_pOutConns)
-        delete c;
-    m_pOutConns.clear();
+    delete m_pInConn;
+    delete m_pOutConn;
 }
 
 void SceneGraphNode::ConnPressed(Qt::MouseButton button, SceneGraphConnection::Connection conn)
@@ -254,7 +189,7 @@ void SceneGraphNode::paint(QPainter* painter)
     painter->setRenderHints(QPainter::Antialiasing, true);
  
     QPen trimPen = QPen(QColor(0,0,0),1);
-    trimPen.setStyle(Qt::NoPen);
+    //trimPen.setStyle(Qt::NoPen);
     QPen textPen = QPen(QColor(NODE_TEXT_COLOR),2);
     QFont textFont("DejaVuSans",12);
 
@@ -265,54 +200,34 @@ void SceneGraphNode::paint(QPainter* painter)
 
     textFont.setBold((feather::smg::Instance()->selected(m_uid)) ? true : false);
 
-    QFont connFont("DejaVuSans",8);
-
     QBrush connInFillBrush = QBrush(QColor("#FF4500"));
     QBrush connOutFillBrush = QBrush(QColor("#DA70D6"));
 
-    setHeight(m_nodeHeight+44);
+    setHeight(NODE_HEIGHT+44);
 
     // node trim 
     painter->setPen(trimPen);
 
     // draw layer bar
     painter->setBrush(m_layerFillBrush);
-    //painter->pen().setWidth(0);
-    //trimPen.setWidth(0);
-    painter->drawRect(QRect(NODE_WIDTH/2-12,m_nodeHeight+10,24,26));
-
-
-    //painter->setPen(trimPen);
-    // node icon
-    QRectF tgt(NODE_WIDTH/2-12,m_nodeHeight+12,24,24);
-    QImage img(m_imgPath.str().c_str());
-    painter->drawImage(tgt,img);
-
-
-    // draw the node block
-    painter->setBrush(m_nodeFillBrush);
-    painter->drawRect(QRect(2,12,NODE_WIDTH,m_nodeHeight));
 
     // draw title block
     painter->setBrush(m_nodeTitleBrush);
-    painter->drawRect(QRect(12,2,NODE_WIDTH-20,20));
+    painter->drawRoundedRect(QRect(12,2,NODE_WIDTH-20,20),4,4);
 
-    // draw the input and output connectors
-    //QPoint sConnPoint;
-    //QPoint tConnPoint;
-    //QPoint point; 
-    //getConnectionPoint(feather::field::connection::In,point,sConnPoint);
-    //getConnectionPoint(feather::field::connection::Out,point,tConnPoint);
-    //painter->setBrush(connInFillBrush);
-    //painter->drawEllipse(sConnPoint,6,6);
-    //painter->setBrush(connOutFillBrush);
-    //painter->drawEllipse(tConnPoint,6,6);
+    // draw the node block
+    painter->setBrush(m_nodeFillBrush);
+    painter->drawRoundedRect(QRect(2,20,NODE_WIDTH,NODE_HEIGHT),4,4);
 
+    // node icon
+    QRectF tgt(NODE_WIDTH/2-12,21,24,24);
+    QImage img(m_imgPath.str().c_str());
+    painter->drawImage(tgt,img);
 
     // node label 
     painter->setPen(textPen);
     painter->setFont(textFont);
-    painter->drawText(QRect(0,2,NODE_WIDTH,m_nodeHeight),Qt::AlignHCenter|Qt::AlignTop,feather::qml::command::get_node_name(m_uid).c_str());
+    painter->drawText(QRect(0,2,NODE_WIDTH,NODE_HEIGHT),Qt::AlignHCenter|Qt::AlignTop,feather::qml::command::get_node_name(m_uid).c_str());
 
 }
 
@@ -320,8 +235,6 @@ void SceneGraphNode::mousePressEvent(QMouseEvent* event)
 {
     m_x = event->screenPos().x();
     m_y = event->screenPos().y();
-    // had nodePressed() here but found out that it would
-    // block mouseMoveEvent from ever being called
 }
 
 void SceneGraphNode::mouseDoubleClickEvent(QMouseEvent* event)
@@ -361,18 +274,12 @@ void SceneGraphNode::mouseMoveEvent(QMouseEvent* event)
 
 void SceneGraphNode::inConnectionPoint(unsigned int fid, QPointF& point)
 {
-    for(auto c : m_pInConns){
-        if(c->fid()==fid)
-            point = mapToItem(parentItem(),QPoint(c->x(),c->y()+10));
-    }
+    point = mapToItem(parentItem(),QPoint(m_pInConn->x(),m_pInConn->y()+10));
 }
 
 void SceneGraphNode::outConnectionPoint(unsigned int fid, QPointF& point)
 {
-    for(auto c : m_pOutConns){
-        if(c->fid()==fid)
-            point = mapToItem(parentItem(),QPoint(c->x()+(NODE_WIDTH/2),c->y()+10));
-    }
+    point = mapToItem(parentItem(),QPoint(m_pOutConn->x()+(NODE_WIDTH/2),m_pOutConn->y()+10));
 }
 
 
@@ -394,12 +301,10 @@ void SceneGraphNode::getConnectionPoint(feather::field::connection::Type conn, Q
 
 // Link
 
-SceneGraphLink::SceneGraphLink(SceneGraphNode* snode, unsigned int sfid, SceneGraphNode* tnode, unsigned int tfid, QQuickItem* parent) :
+SceneGraphLink::SceneGraphLink(SceneGraphNode* snode, SceneGraphNode* tnode, QQuickItem* parent) :
 QQuickPaintedItem(parent),
 m_snode(snode),
-m_sfid(sfid),
-m_tnode(tnode),
-m_tfid(tfid)
+m_tnode(tnode)
 {
 
 }
@@ -417,8 +322,8 @@ void SceneGraphLink::paint(QPainter* painter)
 
     QPointF sp;
     QPointF tp;
-    m_snode->outConnectionPoint(m_sfid,sp);
-    m_tnode->inConnectionPoint(m_tfid,tp);
+    //m_snode->outConnectionPoint(m_sfid,sp);
+    //m_tnode->inConnectionPoint(m_tfid,tp);
 
     QPen pathPen;
     if(SGState::mode==SGState::Normal)
@@ -552,8 +457,8 @@ bool SceneGraphEditor::connectNodes()
             for(auto c : SGState::selectedConnections) {
                 if(c->type() == SceneGraphConnection::Out) {
                     // are they are two connections already connected?
-                    feather::qml::command::connect_nodes(c->node()->uid(),c->fid(),in->node()->uid(),in->fid()); 
-                    m_links.push_back(new SceneGraphLink(c->node(),c->fid(),in->node(),in->fid(),this));
+                    //feather::qml::command::connect_nodes(c->node()->uid(),c->fid(),in->node()->uid(),in->fid()); 
+                    //m_links.push_back(new SceneGraphLink(c->node(),c->fid(),in->node(),in->fid(),this));
                  }
             }
         }
@@ -638,7 +543,8 @@ void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int 
 
             // if the pnode is the root, only connect the parent and child fields
             if(!pnode->uid()){
-                m_links.push_back(new SceneGraphLink(pnode,2,node,1,this));
+                //m_links.push_back(new SceneGraphLink(pnode,2,node,1,this));
+                m_links.push_back(new SceneGraphLink(pnode,node,this));
             } else {   
                 for(uint i=1; i <= fc; i++){
                     // get the fid's fieldBase
@@ -646,7 +552,7 @@ void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int 
                     feather::qml::command::get_node_field_base(uid,i,f);
                     if(f!=nullptr){
                         if(f->puid==pnode->uid() && f->conn_type==feather::field::connection::In)
-                            m_links.push_back(new SceneGraphLink(pnode,f->pf,node,i,this));
+                            m_links.push_back(new SceneGraphLink(pnode,node,this));
                     }
                 }
             }            
@@ -670,11 +576,9 @@ void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int 
 
 }
 
-
 void SceneGraphEditor::mousePressEvent(QMouseEvent* event){ std::cout << "mouse press\n"; };
 void SceneGraphEditor::mouseReleaseEvent(QMouseEvent* event){ std::cout << "mouse release\n"; };
 void SceneGraphEditor::hoverEnterEvent(QHoverEvent* event){ std::cout << "hover enter\n"; };
 void SceneGraphEditor::hoverLeaveEvent(QHoverEvent* event){ std::cout << "hover leave\n"; };
 void SceneGraphEditor::hoverMoveEvent(QHoverEvent* event){ std::cout << "hover move\n"; };
 void SceneGraphEditor::mouseMoveEvent(QMouseEvent* event){ std::cout << "mouse move\n"; };
-

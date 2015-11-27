@@ -31,6 +31,9 @@
 
 #define NODE_WIDTH 100
 #define NODE_HEIGHT 30
+#define CONNECTION_WIDTH 10 
+#define CONNECTION_HEIGHT 10 
+
 
 class SceneGraphEditor;
 class SceneGraphNode;
@@ -66,11 +69,10 @@ class SceneGraphConnection : public QQuickPaintedItem
     public:
         enum Connection { In, Out };
 
-        SceneGraphConnection(SceneGraphNode* node, unsigned int fid, QString name, Connection type, QQuickItem* parent=0);
+        SceneGraphConnection(SceneGraphNode* node, Connection type, QQuickItem* parent=0);
         ~SceneGraphConnection();
         void paint(QPainter* painter);
         SceneGraphNode* node() { return m_node; };
-        inline unsigned int fid() { return m_fid; };
         inline Connection type() { return m_type; };
         inline void setSelected(bool s) { m_selected=s; };
 
@@ -88,8 +90,6 @@ class SceneGraphConnection : public QQuickPaintedItem
         bool m_selected;
         Connection m_type;
         QBrush m_connFillBrush;
-        unsigned int m_fid;
-        QString m_name;
         SceneGraphNode* m_node;
 };
 
@@ -137,8 +137,8 @@ class SceneGraphNode : public QQuickPaintedItem
         int m_outConnCount;
         int m_connCount;
         int m_nodeHeight;
-        std::vector<SceneGraphConnection*> m_pInConns;
-        std::vector<SceneGraphConnection*> m_pOutConns;
+        SceneGraphConnection* m_pInConn;
+        SceneGraphConnection* m_pOutConn;
 };
 
 
@@ -149,15 +149,13 @@ class SceneGraphLink : public QQuickPaintedItem
     Q_OBJECT
     
     public:
-        SceneGraphLink(SceneGraphNode* snode, unsigned int sfid, SceneGraphNode* tnode, unsigned int tfid, QQuickItem* parent=0);
+        SceneGraphLink(SceneGraphNode* snode, SceneGraphNode* tnode, QQuickItem* parent=0);
         ~SceneGraphLink();
         void paint(QPainter* painter);
 
     private:
         SceneGraphNode* m_snode; // source node
-        unsigned int m_sfid;
         SceneGraphNode* m_tnode; // target node
-        unsigned int m_tfid;
 };
 
 
@@ -189,7 +187,6 @@ class SceneGraphEditor : public QQuickPaintedItem
         void setConnection(FieldModel* c) {
             if(m_connection!= c) {
                 m_connection=c;
-                //m_connection->addField();
                 connectionChanged();
             }
         }
@@ -229,6 +226,5 @@ class SceneGraphEditor : public QQuickPaintedItem
         std::vector<SceneGraphLink*> m_links;
         FieldModel* m_connection;
 };
-
 
 #endif
