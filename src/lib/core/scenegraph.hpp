@@ -270,6 +270,19 @@ namespace feather
         return f;
     };
 
+
+    /*!
+     * Returns a node's field that holds the value for the fid.
+     * NOTE! if the field is connected it will return the field of the parent that's connected to it.
+     * If you want to get the base of the node's fid, even if it's connected, use get_node_fieldBase().
+     */
+    field::FieldBase* get_fieldBase(int uid, int fid) {
+        int nid=0;
+        get_node_id(uid,nid);
+        return get_fieldBase(uid,nid,fid);
+    };
+
+
     /*!
      * Same as get_fieldBase() except it will return the base of the node field even if it's connected 
      */

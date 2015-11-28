@@ -78,6 +78,8 @@ class SceneGraph : public QObject
         Q_INVOKABLE int run_command_string(QString str);
         Q_INVOKABLE void triggerUpdate() { emit updateGraph(); };
         Q_INVOKABLE void add_node_to_layer(int uid, int lid);
+        Q_INVOKABLE bool connected(unsigned int uid, unsigned int fid);
+        Q_INVOKABLE QList<unsigned int> connected_fields(unsigned int uid, unsigned int fid);
 
     signals:
         void nodeSelected(); // this will inform the widget to update it's selection from the selection manager
@@ -219,15 +221,43 @@ class Node: public QObject
 {
     Q_OBJECT
         Q_ENUMS(Type)
-        Q_PROPERTY(QQmlListProperty<Field> inFields READ inFields)
-        Q_PROPERTY(QQmlListProperty<Field> outFields READ outFields)
+        //Q_PROPERTY(QQmlListProperty<Field> inFields READ inFields)
+        //Q_PROPERTY(QQmlListProperty<Field> outFields READ outFields)
+        Q_PROPERTY(unsigned int uid READ uid WRITE setUid NOTIFY uidChanged)
+        Q_PROPERTY(unsigned int nid READ nid WRITE setNid NOTIFY nidChanged)
  
     public:
         Node(QObject* parent=0);
         ~Node();
-        QQmlListProperty<Field> inFields();
-        QQmlListProperty<Field> outFields();
+        //QQmlListProperty<Field> inFields();
+        //QQmlListProperty<Field> outFields();
 
+        // uid 
+        void setUid(unsigned int& i) {
+            if(m_uid != i) {
+                m_uid = i;
+                emit uidChanged();
+            }
+        };
+
+        unsigned int uid() { return m_uid; };
+
+        // nid 
+        void setNid(unsigned int& i) {
+            if(m_nid != i) {
+                m_nid = i;
+                emit nidChanged();
+            }
+        };
+
+        unsigned int nid() { return m_nid; };
+
+        Q_INVOKABLE unsigned int field_count();
+        Q_INVOKABLE unsigned int in_field_count();
+        Q_INVOKABLE unsigned int out_field_count();
+        Q_INVOKABLE QList<unsigned int> in_fields();
+        Q_INVOKABLE QList<unsigned int> out_fields();
+ 
         enum Type {
             Empty = node::Empty,
             Camera = node::Camera,
@@ -242,13 +272,19 @@ class Node: public QObject
             Polygon = node::Polygon 
         };
 
+    signals:
+       void uidChanged();
+       void nidChanged();
+
     private:
-        int m_id; // node id
-        int m_uid; // scenegraph vertex
-        static void append_inField(QQmlListProperty<Field> *list, Field *field);
-        static void append_outField(QQmlListProperty<Field> *list, Field *field);
-        QList<Field *> m_inFields;
-        QList<Field *> m_outFields;
+        unsigned int m_uid; // node id
+        unsigned int m_nid; // node id
+        //int m_id; // node id
+        //int m_uid; // scenegraph vertex
+        //static void append_inField(QQmlListProperty<Field> *list, Field *field);
+        //static void append_outField(QQmlListProperty<Field> *list, Field *field);
+        //QList<Field *> m_inFields;
+        //QList<Field *> m_outFields;
 };
 
 

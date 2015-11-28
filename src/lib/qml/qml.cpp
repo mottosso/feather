@@ -118,6 +118,23 @@ void SceneGraph::add_node_to_layer(int uid, int lid)
     qml::command::add_node_to_layer(uid,lid);
 }
 
+bool SceneGraph::connected(unsigned int uid, unsigned int fid)
+{
+    bool conn;
+    int nid;
+    qml::command::get_node_id(uid,nid);
+    qml::command::get_field_connection_status(uid,nid,fid,conn);
+    return conn; 
+}
+
+QList<unsigned int> SceneGraph::connected_fields(unsigned int uid, unsigned int fid)
+{
+    QList<unsigned int> fids;
+    //qml::command::get_field_connection_status(uid,fid,conn);
+    return fids; 
+}
+
+
 // Field
 Field::Field(QObject* parent): m_uid(0),m_node(0),m_field(0),m_boolVal(false),m_intVal(0),m_floatVal(0.0),m_connected(false)
 {
@@ -170,7 +187,9 @@ void Field::get_connected()
 
 
 // Node
-Node::Node(QObject* parent)
+Node::Node(QObject* parent):
+    m_uid(0),
+    m_nid(0)
 {
 }
 
@@ -178,6 +197,7 @@ Node::~Node()
 {
 }
 
+/*
 QQmlListProperty<Field> Node::inFields()
 {
     return QQmlListProperty<Field>(this,0,&Node::append_inField,0,0,0);
@@ -203,7 +223,46 @@ void Node::append_outField(QQmlListProperty<Field> *list, Field *field)
         node->m_outFields.append(field);
     }
 }
+*/
 
+unsigned int Node::field_count()
+{
+    return qml::command::get_field_count(m_uid); 
+}
+
+unsigned int Node::in_field_count()
+{
+    return qml::command::get_in_field_count(m_uid); 
+}
+
+unsigned int Node::out_field_count()
+{
+    return qml::command::get_out_field_count(m_uid); 
+}
+
+QList<unsigned int> Node::in_fields()
+{
+    std::vector<field::FieldBase*> fids;
+    QList<unsigned int> qfids;
+
+    qml::command::get_fid_list(m_uid,m_nid,field::connection::In,fids);
+    for(auto f : fids)
+        qfids.push_back(f->id);
+ 
+    return qfids;
+}
+
+QList<unsigned int> Node::out_fields()
+{
+    std::vector<field::FieldBase*> fids;
+    QList<unsigned int> qfids;
+
+    qml::command::get_fid_list(m_uid,m_nid,field::connection::Out,fids);
+    for(auto f : fids)
+        qfids.push_back(f->id);
+    
+    return qfids;
+}
 
 // Parameter
 Parameter::Parameter(QObject* parent) : QObject(parent)
