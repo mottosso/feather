@@ -56,6 +56,10 @@ SET_TARGET_PROPERTIES(feather
 
 TARGET_LINK_LIBRARIES(feather ${feather_LIBS})
 
+# Config file
+FILE(GLOB CONFIG_FILES "feather.rc")
+INSTALL(FILES ${CONFIG_FILES} DESTINATION /usr/local/feather)
+
 # INSTALL
 INSTALL( TARGETS feather
     RUNTIME DESTINATION /usr/local/feather)

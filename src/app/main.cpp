@@ -26,11 +26,164 @@
 #include "sg_editor.hpp"
 #include "field_model.hpp"
 #include "layer_model.hpp"
-#include "tree_model.hpp" // is this being used ????
+#include "tree_model.hpp"
 #include "qml.hpp"
 #include "commands.hpp"
 #include <QApplication>
 #include <QQmlApplicationEngine>
+
+
+// CONFIG DATA
+
+typedef struct {
+    std::string mainpath;
+} config;
+
+BOOST_FUSION_ADAPT_STRUCT(
+    config,
+    (std::string, mainpath)
+    )
+
+namespace config_parsing 
+{
+
+    namespace fusion = boost::fusion;
+    namespace phoenix = boost::phoenix;
+    namespace qi = boost::spirit::qi;
+    namespace ascii = boost::spirit::ascii;
+    namespace lambda = boost::lambda;
+
+    template <typename InputIterator>
+        struct skipper_grammar : qi::grammar<InputIterator>
+    {
+        typedef skipper_grammar<InputIterator> type;
+        skipper_grammar()
+            : skipper_grammar::base_type( skip_on ),
+            comment_char( '#' )
+        {
+            using ascii::char_;
+            using ascii::space;
+            using ascii::no_case;
+            using qi::lit;
+            using qi::eol;
+            using phoenix::ref;
+            using namespace qi::labels;
+
+            comment =
+                //char_( ref( comment_char ) )
+                char_ ( '#' )
+                >> *( char_ - eol ) >> eol
+                ;
+
+            comment_charset =
+                char_( "!\"#$%&'()*,:;<>?@\\^`{|}~" )
+                ;
+
+            skip_on =
+                space  // tab/space/cr/lf
+                | comment
+                ;
+        }
+
+        char comment_char;
+        qi::rule<InputIterator> comment;
+        qi::rule<InputIterator, char()> comment_charset;
+        qi::rule<InputIterator> comment_directive;
+        qi::rule<InputIterator> skip_on;
+    };
+
+
+    template<typename Iterator, typename Skipper>
+        struct config_parser : qi::grammar<Iterator, config(), Skipper>
+    {
+        config_parser() : config_parser::base_type(data ,"data")
+        {
+            using qi::lit;
+            using qi::lexeme;
+            using qi::on_error;
+            using qi::fail;
+            using qi::int_;
+            using qi::uint_;
+            using qi::double_;
+            //using qi::eol;
+            using ascii::char_;
+            using ascii::string;
+            using namespace qi::labels;
+            using phoenix::construct;
+            using phoenix::val;
+            using phoenix::if_;
+            using phoenix::arg_names::arg1;
+
+            //data %= lit("mainpath[\"") >>  lexeme[+(char_ - qi::eol)] >> lit("\"]");
+            data %= lit("mainpath[\"") >> lexeme[+(char_ - '"')] >> lit("\"]");
+
+
+            // names for rule errors
+            data.name("data");
+
+            // error handling
+            on_error<fail>
+                (
+                 data,
+                 std::cout
+                 << val("Error! Expecting ")
+                 << boost::spirit::_4   // what failed
+                 << val(" here: \"")
+                 << construct<std::string>(boost::spirit::_3, boost::spirit::_2) // interators to error pos, end
+                 << val("\"")
+                 << std::endl
+                );
+        }
+
+        qi::rule<Iterator, config(), Skipper> data;
+    }; 
+
+}
+
+
+// load config file
+bool load_config(config& _config)
+{
+    using boost::spirit::ascii::space;
+    typedef std::string::const_iterator iterator_type;
+    typedef config_parsing::skipper_grammar<iterator_type> skipper_type;
+    typedef config_parsing::config_parser<iterator_type, skipper_type> config_parser;
+
+    // add std::ios::binary flag to read binary data
+    std::ifstream fs("feather.rc", std::ios::in|std::ios::ate);
+    long size;
+    char* buffer;
+    std::string input;
+
+    if(fs.is_open())
+    {
+        size = fs.tellg();
+        buffer = new char[size+1];
+        fs.seekg(0, std::ios::beg);
+        fs.read(buffer, size);
+        buffer[size] = '\0';
+        input = buffer;
+        fs.close();
+
+        config_parser g; // our grammar
+
+        std::string::const_iterator iter = input.begin();
+        std::string::const_iterator end = input.end();
+
+        bool r = phrase_parse(iter, end, g, skipper_type(), _config);
+
+        delete[] buffer;
+        
+        std::cout << "Config file loaded - \"" << _config.mainpath << "\" is the entry point\n";
+
+    } else {
+        std::cout << "Config file failed to load\n";
+        return false;
+    }
+
+    return true;
+};
+
 
 // callback function for scenegraph singleton
 static QObject *get_scenegraph(QQmlEngine *engine, QJSEngine *scriptEngine)
@@ -63,6 +216,10 @@ int main(int argc, char **argv)
     feather::qml::command::init();
 
     int execReturn = 0;
+
+    config cnfg;
+    bool p = load_config(cnfg);
+
 
     {
         QQmlApplicationEngine view("ui/main.qml");
