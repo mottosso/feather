@@ -114,9 +114,7 @@ namespace config_parsing
             using phoenix::if_;
             using phoenix::arg_names::arg1;
 
-            //data %= lit("mainpath[\"") >>  lexeme[+(char_ - qi::eol)] >> lit("\"]");
             data %= lit("mainpath[\"") >> lexeme[+(char_ - '"')] >> lit("\"]");
-
 
             // names for rule errors
             data.name("data");
@@ -222,7 +220,8 @@ int main(int argc, char **argv)
 
 
     {
-        QQmlApplicationEngine view("ui/main.qml");
+        //QQmlApplicationEngine view("ui/main.qml");
+        QQmlApplicationEngine view(cnfg.mainpath.c_str());
         execReturn = app.exec();
     }
 
