@@ -35,7 +35,7 @@ Menu {
         id: makePlaneAction
         text: "Plane"
         tooltip: "Create Polygon Plane"
-        onTriggered: { SceneGraph.add_node(Node.Object,325) }
+        onTriggered: { SceneGraph.add_node(325,"test") }
     }
 
     // Make Cube 

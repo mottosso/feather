@@ -24,11 +24,11 @@ IF(DOXYGEN_FOUND)
     # this will build the docs when 'make' is ran
     # to make it so that doxygen is only built when 'make doc' is
     # called remove ALL from the line below
-    ADD_CUSTOM_TARGET(doc ALL
-        ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        COMMENT "Generating API documentation with Doxygen" VERBATIM
-    )
+    #ADD_CUSTOM_TARGET(doc ALL
+    #    ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+    #    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    #    COMMENT "Generating API documentation with Doxygen" VERBATIM
+    #)
 
 ENDIF(DOXYGEN_FOUND)
 

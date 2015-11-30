@@ -45,7 +45,7 @@ namespace feather
 
             // Node
 
-            int add_node(int type, int node, std::string name); 
+            int add_node(int node, std::string name); 
             bool nodes_added(std::vector<int>& uids);
             status remove_node(int uid);
             void nodes_updated();

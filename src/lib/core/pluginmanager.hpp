@@ -51,7 +51,7 @@ namespace feather
         void (*gl_init)(FNode&,FGlInfo&);
         void (*gl_draw)(FNode&,FGlInfo&);
         bool (*node_exist)(int); // is there a node with the given type and id in this plugin
-        int (*node_type)(int);
+        status (*node_type)(int,node::Type&);
         bool (*node_icon)(int,std::string&); // name of icon image in ui/icons path
         status(*create_fields)(int,field::Fields&); // creates a new instance of the nodes fields which will get deleted by the scenegraph when the node is removed.
         field::FieldBase* (*get_field)(int,int,field::Fields&);
@@ -169,10 +169,10 @@ namespace feather
 
     template <int _Id>
     struct find_node_type {
-        static bool exec(int id) { return find_node_type<_Id-1>::exec(id); };
+        static status exec(int id) { return find_node_type<_Id-1>::exec(id); };
     };
 
-    template <> struct find_node_type<0> { static bool exec(int id) { return false; }; };
+    template <> struct find_node_type<0> { static status exec(int id) { return status(FAILED,"failed to find any matching nodes"); }; };
 
 
     // NODE ICON 
@@ -300,6 +300,7 @@ namespace feather
 
     template <> struct find_create_fields<0> { static status exec(int id, field::Fields& fields) { return status(FAILED,"No matching node found to create fields in"); }; };
 
+
     // NODE ICON IMAGE 
 
     template <int _Id>
@@ -321,6 +322,27 @@ namespace feather
     };
 
 
+    // NODE TYPE 
+
+    template <int _Id>
+    struct call_node_types {
+        static void exec(int nid, feather::node::Type& type) { call_node_types<_Id-1>::exec(nid,type); };
+    };
+
+    template <> struct call_node_types<0> { static void exec(int nid, feather::node::Type& type) {}; };
+ 
+    template <int _Id> void node_type(int nid, feather::node::Type& type) {};
+
+    struct call_node_type {
+        call_node_type(int nid, feather::node::Type& type) : m_nid(nid),m_type(type){};
+        void operator()(PluginData n) { if(n.node_exist(m_nid)) { /*std::cout << "found gl info for node " << m_node.uid << std::endl;*/ n.node_type(m_nid,m_type); } };
+
+        private:
+            int m_nid;
+            feather::node::Type& m_type;
+    };
+
+
     // PLUGIN MANAGER
 
     class PluginManager
@@ -339,6 +361,7 @@ namespace feather
             int min_uid();
             int max_uid();
             status node_icon_file(int nid, std::string& file);
+            status node_type(int nid, feather::node::Type& type);
             void loaded_plugins(std::vector<PluginInfo>& list);
             status get_fid_list(int nid, field::connection::Type conn, field::Fields& fields, std::vector<field::FieldBase*>& list);
 
@@ -360,7 +383,7 @@ namespace feather
     void gl_init(feather::FNode& node, feather::FGlInfo& info);\
     void gl_draw(feather::FNode& node, feather::FGlInfo& info);\
     bool node_exist(int);\
-    int node_type(int);\
+    feather::status node_type(int,feather::node::Type&);\
     bool node_icon(int,std::string&);\
     feather::status create_fields(int, feather::field::Fields&);\
     feather::field::FieldBase* get_field(int,int,feather::field::Fields&);\
@@ -400,8 +423,8 @@ namespace feather
     };\
     \
     /* get the node type */\
-    int node_type(int id) {\
-        return find_node_type<MAX_NODE_ID>::exec(id);\
+    feather::status node_type(int id, feather::node::Type& type) {\
+        return find_node_type<MAX_NODE_ID>::exec(id,type);\
     };\
     /* get the node icon */\
     bool node_icon(int id, std::string& file) {\

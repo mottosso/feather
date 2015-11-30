@@ -42,9 +42,9 @@ void SceneGraph::clear()
     emit cleared();
 }
 
-int SceneGraph::add_node(int type, int node, QString name)
+int SceneGraph::add_node(int node, QString name)
 {
-    int uid = qml::command::add_node(type,node,name.toStdString());
+    int uid = qml::command::add_node(node,name.toStdString());
     emit nodeAdded(uid);
     return uid;
 }

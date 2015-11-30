@@ -135,14 +135,19 @@ namespace feather
         static status add_node(int id) { return status(FAILED,"no matching node for add_node"); };
         */
 
-        int add_node(int t, int n, std::string name) {
-            std::cout << "add node: " << n << ", type: " << t << std::endl;
+        //int add_node(int t, int n, std::string name) {
+        int add_node(int n, std::string name) {
+            //std::cout << "add node: " << n << ", type: " << t << std::endl;
+            feather::node::Type ntype;
+            plugins.node_type(n,ntype);
+            std::cout << "add node: " << n << " type: " << ntype << std::endl;
 
             // TODO
             // Here I need to ask the plugin manager if the node exists
  
             FNodeDescriptor uid = boost::add_vertex(sg);
-            sg[uid].type = static_cast<feather::node::Type>(t);
+            //sg[uid].type = static_cast<feather::node::Type>(t);
+            sg[uid].type = ntype;
             sg[uid].uid = uid;
             sg[uid].node = n;
             sg[uid].name = name;

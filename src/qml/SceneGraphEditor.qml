@@ -176,9 +176,9 @@ Rectangle {
         sg_editor.updateNodes()
     }
     
-    function add_node(name,type,nid) {
-        console.log("Add node: " + name + " type: " + type + " nid: " + nid)
-        var uid = SceneGraph.add_node(type,nid,name)
+    function add_node(name,nid) {
+        console.log("Add node: " + name + " nid: " + nid)
+        var uid = SceneGraph.add_node(nid,name)
         //console.log("added node as uid: " + uid)
         var suid = SceneGraph.selected_node()
         var p = SceneGraph.connect_nodes(suid,2,uid,1)
