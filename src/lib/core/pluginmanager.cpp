@@ -150,13 +150,16 @@ status PluginManager::create_fields(int node, field::Fields& fields)
 field::FieldBase* PluginManager::get_fieldBase(int uid, int node, int field, field::Fields& fields)
 {
     for(uint i=0; i < m_plugins.size(); i++) {
+        //std::cout << "looking in plugin "  << i << " for node " << node << std::endl;
         if(m_plugins[i].node_exist(node)) {
+            //std::cout << "Found node " << node << std::endl;
             // TODO - I need to verify that the field data actually exists
             //std::cout << "PluginManager::get_fieldBase(" << uid << "," << node << "," << field << "," << &fields << ")\n";
             return m_plugins[i].get_field(node,field,fields);
         }
     }
-    return NULL;
+    //std::cout << "Never found node " << node << std::endl;
+    return nullptr;
 }
 
 status PluginManager::load_command(PluginData &command)

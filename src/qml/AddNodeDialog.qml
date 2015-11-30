@@ -47,7 +47,7 @@ Window {
 
     color: properties.getColor("windowBg")
 
-    signal addNode(string name, int type, int nid)
+    signal addNode(string name, int nid)
 
     NodeTypeModel{ id: typeModel }
 
@@ -177,7 +177,7 @@ Window {
 
     function add_node(){
         dialog.name = nameEdit.text
-        addNode(name, type, nid)
+        addNode(name, nid)
         dialog.visible = false
     }
 

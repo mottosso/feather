@@ -169,10 +169,10 @@ namespace feather
 
     template <int _Id>
     struct find_node_type {
-        static status exec(int id) { return find_node_type<_Id-1>::exec(id); };
+        static status exec(int id, node::Type& type) { return find_node_type<_Id-1>::exec(id,type); };
     };
 
-    template <> struct find_node_type<0> { static status exec(int id) { return status(FAILED,"failed to find any matching nodes"); }; };
+    template <> struct find_node_type<0> { static status exec(int id, node::Type& type) { return status(FAILED,"failed to find any matching nodes"); }; };
 
 
     // NODE ICON 
@@ -438,7 +438,7 @@ namespace feather
     \
     /* find the node's field */\
     feather::field::FieldBase* get_field(int nid, int fid, field::Fields& fields) {\
-        return find_node_field<startnode,endnode,5>::exec(nid,fid,fields);\
+        return find_node_field<startnode,endnode,50>::exec(nid,fid,fields);\
     };\
     /* find the node's fid's*/\
     feather::status get_fid_list(int nid, feather::field::connection::Type conn, feather::field::Fields& fields, std::vector<feather::field::FieldBase*>& list) {\

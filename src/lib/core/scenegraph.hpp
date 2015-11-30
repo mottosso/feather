@@ -295,6 +295,7 @@ namespace feather
         field::FieldBase* f = plugins.get_fieldBase(uid,nid,fid,sg[uid].fields); 
         if(!f) {
             for(auto field : sg[uid].fields){
+                //std::cout << "looking for " << fid << " field id=" << field->id << std::endl;
                 if(field->id == fid)
                     f = field;
             }
@@ -712,6 +713,8 @@ namespace scenegraph
      */
     status connect(FNodeDescriptor n1, int f1, FNodeDescriptor n2, int f2)
     {
+        std::cout << "Trying to connect node: " << n1 << " field: " << f1 << " to node: " << n2 << " field: " << f2 << std::endl;
+
         // can't connect two fields from the same node
         if(n1==n2)
             return status(FAILED,"Can't connect two fields from the same node");
@@ -721,6 +724,12 @@ namespace scenegraph
         int tgt_node = sg[n2].node;
         field::FieldBase* sfield = get_node_fieldBase(n1,src_node,f1);
         field::FieldBase* tfield = get_node_fieldBase(n2,tgt_node,f2);
+
+        if(!sfield)
+            return status(FAILED,"Can't connect nodes, no source field found");
+        if(!tfield)
+            return status(FAILED,"Can't connect nodes, no target field found");
+
         std::cout 
             << "*** CONNECT NODES *** sconn_type=" << sfield->conn_type
             << ", tconn_type=" << tfield->conn_type

@@ -118,11 +118,12 @@ namespace feather
         };\
         \
         template <> struct find_node_type<__node_enum> {\
-            static bool exec(int id) {\
+            static status exec(int id,node::Type& type) {\
                 if(id==__node_enum){\
-                    return __node_type;\
+                    type = __node_type;\
+                    return status();\
                 } else {\
-                    return find_node_type<__node_enum-1>::exec(id);\
+                    return find_node_type<__node_enum-1>::exec(id,type);\
                 }\
             };\
         };\
