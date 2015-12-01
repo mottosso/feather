@@ -15,6 +15,7 @@ SET(QT_USE_QTOPENGL TRUE)
 
 SET(feather_qml_SRCS
     commands.cpp
+    curves.cpp
     field_model.cpp
     layer_model.cpp
     tree_model.cpp

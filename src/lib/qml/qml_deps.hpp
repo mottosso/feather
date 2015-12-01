@@ -30,6 +30,7 @@
 #include <QtQuick/QQuickItem>
 #include <QtQuick/qquickwindow.h>
 #include <QtQuick/QQuickWindow>
+#include <QtQuick/QSGFlatColorMaterial>
 #include <QQuickItem>
 #include <QtCore/QMutex>
 #include <QtCore/QThread>

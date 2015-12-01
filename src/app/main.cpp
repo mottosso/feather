@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 #include "deps.hpp"
+#include "curves.hpp"
 #include "viewportthread.hpp"
 #include "sg_editor.hpp"
 #include "field_model.hpp"
@@ -196,6 +197,7 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
+    qmlRegisterType<BezierCurve>("feather.ui.curves", 1, 0, "BezierCurve");
     qmlRegisterType<ViewportThread>("feather.viewport", 1, 0, "Viewport");
     qmlRegisterType<SceneGraphEditor>("feather.editors", 1, 0, "SceneGraphEditor");
     qmlRegisterSingletonType<SceneGraph>("feather.scenegraph", 1, 0, "SceneGraph", get_scenegraph);
