@@ -561,7 +561,7 @@ class node_visitor : public boost::default_bfs_visitor
         template < typename Vertex, typename Graph >
             void initialize_vertex(Vertex u, const Graph & g) const
             {
-                std::cout << "init node " << sg[u].node << std::endl;
+                std::cout << "init nid " << sg[u].node << std::endl;
                 /*
                 if(cstate.sgMode==state::DrawGL)
                         plugins.draw_gl(sg[u].node);
@@ -575,7 +575,7 @@ class node_visitor : public boost::default_bfs_visitor
         template < typename Vertex, typename Graph >
             void start_vertex(Vertex u, const Graph & g) const
             {
-                std::cout << "start node " << sg[u].node << std::endl;
+                std::cout << "start nid " << sg[u].node << std::endl;
             }
 
         // Discover Vertex
@@ -585,7 +585,7 @@ class node_visitor : public boost::default_bfs_visitor
         template < typename Vertex, typename Graph >
             void discover_vertex(Vertex u, const Graph & g) const
             {
-                std::cout << "discover vertex:" << u << " node:" << sg[u].node << std::endl;
+                std::cout << "discover vertex(uid):" << u << " nid:" << sg[u].node << std::endl;
                 //scenegraph::do_it<node::N>::exec(u);
 
                 if(cstate.sgMode==state::DoIt)
@@ -630,7 +630,7 @@ class node_visitor : public boost::default_bfs_visitor
         template < typename Vertex, typename Graph >
             void finish_vertex(Vertex u, const Graph & g) const
             {
-                std::cout << "finish vertex " << sg[u].node << std::endl;
+                std::cout << "finish vertex(uid) " << sg[u].node << std::endl;
             }
 
         // EDGES
@@ -642,10 +642,10 @@ class node_visitor : public boost::default_bfs_visitor
         template < typename Edge, typename Graph >
             void examine_edge(Edge u, const Graph & g) const
             {
-                std::cout << "examine edge - n1:" << sg[u].n1 
-                    << " f1:" << sg[u].f1
-                    << " n2:" << sg[u].n2
-                    << " f2:" << sg[u].f2
+                std::cout << "examine edge - uid1:" << sg[u].n1 
+                    << " fid1:" << sg[u].f1
+                    << " uid2:" << sg[u].n2
+                    << " fid2:" << sg[u].f2
                     << std::endl;
             }
 
@@ -659,10 +659,10 @@ class node_visitor : public boost::default_bfs_visitor
         template < typename Edge, typename Graph >
             void tree_edge(Edge u, const Graph & g) const
             {
-                std::cout << "tree edge - n1:" << sg[u].n1 
-                    << " f1:" << sg[u].f1
-                    << " n2:" << sg[u].n2
-                    << " f2:" << sg[u].f2
+                std::cout << "tree edge - uid1:" << sg[u].n1 
+                    << " fid1:" << sg[u].f1
+                    << " uid2:" << sg[u].n2
+                    << " fid2:" << sg[u].f2
                     << std::endl;
             }
 
@@ -673,7 +673,7 @@ class node_visitor : public boost::default_bfs_visitor
         template < typename Edge, typename Graph >
             void forward_or_cross_edge(Edge u, const Graph & g) const
             {
-                std::cout << "forward or cross edge " << sg[u].node << std::endl;
+                std::cout << "forward or cross edge nid:" << sg[u].node << std::endl;
             }
 
 
@@ -713,7 +713,7 @@ namespace scenegraph
      */
     status connect(FNodeDescriptor n1, int f1, FNodeDescriptor n2, int f2)
     {
-        std::cout << "Trying to connect node: " << n1 << " field: " << f1 << " to node: " << n2 << " field: " << f2 << std::endl;
+        std::cout << "Trying to connect nid: " << n1 << " fid: " << f1 << " to nid: " << n2 << " fid: " << f2 << std::endl;
 
         // can't connect two fields from the same node
         if(n1==n2)
@@ -761,7 +761,7 @@ namespace scenegraph
             //std::cout << "TEST edge iter " << *p.first << std::endl;
 
             for(;p.first!=p.second;++p.first){
-                std::cout << "edge iter " << *p.first << " f1:" << sg[*p.first].f1  << " f2:" << sg[*p.first].f2 << std::endl;
+                std::cout << "edge iter " << *p.first << " fid1:" << sg[*p.first].f1  << " fid2:" << sg[*p.first].f2 << std::endl;
                 //uids.push_back(target(*p.first,sg));
             }
 
@@ -782,7 +782,7 @@ namespace scenegraph
             tfield->pn = src_node;
             tfield->pf = f1;
         } else {
-            std::cout << "could not connect node " << n1 << " and node " << n2 << std::endl;
+            std::cout << "could not connect nid " << n1 << " and nid " << n2 << std::endl;
             return status(FAILED,"field types can not be connected");
         }
 
