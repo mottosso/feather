@@ -25,22 +25,80 @@
 #include "scenegraph.hpp"
 
 
-int main(int argc, char **argv)
+// options
+#define PRINT_OPTIONS 0
+#define ADD_NODE 1
+#define REMOVE_NODE 2
+#define CONNECT_NODE_FIELDS 3
+#define DISCONNECT_NODE_FIELDS 4
+#define AUTO_TEST 5
+#define UPDATE_SCENEGRAPH 6
+#define EXIT 7 
+
+
+void print_menu()
+{
+    std::cout << "Welcome to Feather3D core tester application\n\tHit \"h\" for the options menu.\n\tSelect an option\n";
+};
+
+
+unsigned int get_option()
+{
+    unsigned int o;
+    std::cout << "Select Option: ";
+    std::cin >> o;
+    return o;    
+};
+
+
+void print_options()
+{
+    std::cout << "OPTIONS:\n"
+        << "\t==========================\n"
+        << "\t0: Print Options\n"
+        << "\t1: Add Node\n"
+        << "\t2: Remove Node\n"
+        << "\t3: Connect Node Fields\n"
+        << "\t4: Disconnect Node Fields\n"
+        << "\t5: Auto Test\n"
+        << "\t6: Update Scenegraph\n"
+        << "\t7: Exit\n"
+        << "\t==========================\n";
+};
+
+
+void add_node()
+{
+
+};
+
+
+void remove_node()
+{
+
+};
+
+
+void connect_node_fields()
+{
+
+};
+
+
+void disconnect_node_fields()
+{
+
+};
+
+
+int auto_test()
 {
     feather::status p;
-    feather::scenegraph::load_plugins();
-
-
-    // ADD NODES
-
 
     // add node tests
-    std::cout << "FEATHER CORE TESTING STARTING:\n\tAdding root, plane, and shape nodes to the SG: ";
-    unsigned int root=0;
+    std::cout << "FEATHER AUTO TEST STARTING:\n\tAdding plane and shape nodes to the SG: ";
     unsigned int plane=0;
     unsigned int shape=0;
-    root = feather::scenegraph::add_node(1,"root"); // empty 
-    std::cout << " root uid:" << root;
     plane = feather::scenegraph::add_node(321,"plane"); // polygon plane
     std::cout << " plane uid:" << plane;
     shape = feather::scenegraph::add_node(320,"shape"); // polygon shape
@@ -57,7 +115,7 @@ int main(int argc, char **argv)
     // node connection tests
     std::cout << "CONNECTING NODES:\n\tConnecting root.child->plane.parent: ";
     // root.child->plane.parent
-    p = feather::scenegraph::connect(root,2,plane,1);
+    p = feather::scenegraph::connect(0,2,plane,1);
     if(!p.state){
         std::cout << "failed" << std::endl;
         return 1; 
@@ -106,8 +164,62 @@ int main(int argc, char **argv)
 
     feather::scenegraph::update();
     std::cout << "\n\n";
+};
 
 
-    std::cout << "FEATHER CORE TESTING COMPLETE - ALL GOOD\n";
+void update_scenegraph()
+{
+    feather::scenegraph::update();
+};
+
+
+void run_option(unsigned int o)
+{
+    switch(o){
+        case PRINT_OPTIONS:
+            print_options();
+        break;
+        case ADD_NODE:
+            add_node();
+        break;
+        case REMOVE_NODE:
+            remove_node();
+        break;
+        case CONNECT_NODE_FIELDS:
+            connect_node_fields();
+        break;
+        case DISCONNECT_NODE_FIELDS:
+            disconnect_node_fields();
+        break;
+        case AUTO_TEST:
+            auto_test();
+        break;
+        case UPDATE_SCENEGRAPH:
+            update_scenegraph();
+        break;
+        case EXIT:
+        break;
+        default:
+            std::cout << "*** NOT A VALID OPTION ***\n";
+        break;
+    }
+};
+
+
+int main(int argc, char **argv)
+{
+    feather::scenegraph::load_plugins();
+    feather::scenegraph::add_node(1,"root"); 
+ 
+    print_menu();
+    print_options();
+    unsigned int option=0;
+   
+    while(option!=EXIT){
+        option = get_option();
+        run_option(option);
+    } 
+
+    std::cout << "FEATHER CORE TESTING COMPLETE\n";
     return 0;
 };
