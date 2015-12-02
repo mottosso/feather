@@ -92,7 +92,7 @@ void add_node()
             n == 321 ||
             n == 322
       ){
-        std::cout << "\n\tNode Name: ";
+        std::cout << "\tNode Name: ";
         std::string name;
         std::cin >> name;
         feather::scenegraph::add_node(n,name);
@@ -103,7 +103,27 @@ void add_node()
 
 void remove_node()
 {
+    std::vector<unsigned int> uids;
+    feather::scenegraph::get_nodes(uids);
 
+    std::cout << "Select UID to remove:\n"
+        << "\t==========================\n";
+    for(auto uid : uids)
+        std::cout << "\t" << uid << "\n";
+    std::cout << "\t==========================\n"
+        << "\t:";
+    unsigned int suid;
+    std::cin >> suid;
+    if(!suid)
+        return;
+    for(auto uid : uids) {
+        if(uid == suid) {
+            std::cout << "Removing Node " << uid << std::endl;
+            feather::scenegraph::remove_node(uid);
+            return;
+        }
+    }
+    std::cout << "Node " << suid << " not found\n";
 };
 
 

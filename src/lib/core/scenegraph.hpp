@@ -209,6 +209,15 @@ namespace feather
         }
     };
 
+    /*
+     * Return a vector containing all the uids in the scenegraph
+     */
+    void get_nodes(std::vector<unsigned int> &uids) {
+        int count = num_vertices(sg);
+        for(int i=0; i < count; i++)
+            uids.push_back(i);
+    }
+
     status get_node_icon(int nid, std::string& file) {
         return plugins.node_icon_file(nid,file);
     };
