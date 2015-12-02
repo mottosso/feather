@@ -108,8 +108,11 @@ void remove_node()
 
     std::cout << "Select UID to remove:\n"
         << "\t==========================\n";
-    for(auto uid : uids)
-        std::cout << "\t" << uid << "\n";
+    for(auto uid : uids) {
+        std::string n;
+        feather::scenegraph::get_node_name(uid,n);
+        std::cout << "\t" << uid << " \"" << n << "\"\n";
+    }
     std::cout << "\t==========================\n"
         << "\t:";
     unsigned int suid;

@@ -218,6 +218,13 @@ namespace feather
             uids.push_back(i);
     }
 
+
+    status get_node_name(int uid, std::string& name) {
+        name = sg[uid].name;
+        return status();
+    };
+
+
     status get_node_icon(int nid, std::string& file) {
         return plugins.node_icon_file(nid,file);
     };
