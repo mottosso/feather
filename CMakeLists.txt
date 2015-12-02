@@ -15,11 +15,11 @@ SET(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Doxygen
-FIND_PACKAGE(Doxygen)
+#FIND_PACKAGE(Doxygen)
 
-IF(DOXYGEN_FOUND)
+#IF(DOXYGEN_FOUND)
 
-    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+    #CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
 
     # this will build the docs when 'make' is ran
     # to make it so that doxygen is only built when 'make doc' is
@@ -30,7 +30,7 @@ IF(DOXYGEN_FOUND)
     #    COMMENT "Generating API documentation with Doxygen" VERBATIM
     #)
 
-ENDIF(DOXYGEN_FOUND)
+#ENDIF(DOXYGEN_FOUND)
 
 # RELEASE VERSION
 #set(CMAKE_BUILD_TYPE=Release)
