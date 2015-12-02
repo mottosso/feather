@@ -71,6 +71,32 @@ void print_options()
 
 void add_node()
 {
+    std::cout << "Select Node Type:\n"
+        << "\t==========================\n"
+        << "\t1: Empty\n"
+        << "\t320: Polygon Shape\n"
+        << "\t321: Polygon Plane\n"
+        << "\t322: Polygon Cube\n"
+        << "\t0: Exit\n"
+        << "\t==========================\n"
+        << "\t:";
+
+    unsigned int n;
+    std::cin >> n;
+
+    if(!n)
+        return;
+
+    if( n == 1 ||
+            n == 320 ||
+            n == 321 ||
+            n == 322
+      ){
+        std::cout << "\n\tNode Name: ";
+        std::string name;
+        std::cin >> name;
+        feather::scenegraph::add_node(n,name);
+    }
 
 };
 
