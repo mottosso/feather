@@ -124,6 +124,19 @@ namespace feather
         status load_plugins() {
             return plugins.load_plugins();
         };
+
+
+        
+        // NODES
+
+        bool node_exist(unsigned int uid) {
+            int count = num_vertices(sg);
+            for(int i=0; i < count; i++) {
+                if(i==uid)
+                    return true;
+            }
+            return false;
+        }
         
         /* Add Node
          * This function is called during specialization of nodes when
@@ -266,6 +279,10 @@ namespace feather
     };
 
 
+
+    // FIELDS
+
+
     /*!
      * Returns a node's field that holds the value for the fid.
      * NOTE! if the field is connected it will return the field of the parent that's connected to it.
@@ -335,6 +352,16 @@ namespace feather
         int i=0;
         std::for_each(sg[uid].fields.begin(), sg[uid].fields.end(),[&i](field::FieldBase* f){ if(f->conn_type==field::connection::Out){i++;} });
         return i; 
+    }
+
+    status get_in_fields(int uid, std::vector<unsigned int> &fids) {
+         std::for_each(sg[uid].fields.begin(), sg[uid].fields.end(),[&fids](field::FieldBase* f){ if(f->conn_type==field::connection::In){fids.push_back(f->id);} });
+         return status(); // need to test if the uid exist
+    }
+
+    status get_out_fields(int uid, std::vector<unsigned int> &fids) {
+         std::for_each(sg[uid].fields.begin(), sg[uid].fields.end(),[&fids](field::FieldBase* f){ if(f->conn_type==field::connection::Out){fids.push_back(f->id);} });
+         return status(); // need to test if the uid exist
     }
 
     field::connection::Type get_field_connection_type(int uid, int fid) {
