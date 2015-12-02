@@ -33,7 +33,8 @@
 #define DISCONNECT_NODE_FIELDS 4
 #define AUTO_TEST 5
 #define UPDATE_SCENEGRAPH 6
-#define EXIT 7 
+#define CLEAR_SCENEGRAPH 7
+#define EXIT 8 
 
 
 void print_menu()
@@ -62,7 +63,8 @@ void print_options()
         << "\t4: Disconnect Node Fields\n"
         << "\t5: Auto Test\n"
         << "\t6: Update Scenegraph\n"
-        << "\t7: Exit\n"
+        << "\t7: Clear Scenegraph\n"
+        << "\t8: Exit\n"
         << "\t==========================\n";
 };
 
@@ -173,6 +175,12 @@ void update_scenegraph()
 };
 
 
+void clear_scenegraph()
+{
+    feather::scenegraph::clear();
+};
+
+
 void run_option(unsigned int o)
 {
     switch(o){
@@ -196,6 +204,9 @@ void run_option(unsigned int o)
         break;
         case UPDATE_SCENEGRAPH:
             update_scenegraph();
+        break;
+        case CLEAR_SCENEGRAPH:
+            clear_scenegraph();
         break;
         case EXIT:
         break;
