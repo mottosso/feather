@@ -54,7 +54,7 @@ SET_TARGET_PROPERTIES(feather
     CMAKE_CXX_STANDARD_REQUIRED ON
 )
 
-TARGET_LINK_LIBRARIES(feather ${feather_LIBS})
+TARGET_LINK_LIBRARIES(feather ${feather_LIBS} ${CMAKE_DL_LIBS})
 
 # Config file
 FILE(GLOB CONFIG_FILES "feather.rc")
