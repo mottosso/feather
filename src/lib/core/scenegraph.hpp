@@ -130,8 +130,8 @@ namespace feather
         // NODES
 
         bool node_exist(unsigned int uid) {
-            int count = num_vertices(sg);
-            for(int i=0; i < count; i++) {
+            unsigned int count = num_vertices(sg);
+            for(unsigned int i=0; i < count; i++) {
                 if(i==uid)
                     return true;
             }
@@ -832,7 +832,34 @@ namespace scenegraph
         return status();
     };
 
-    
+
+    /*!
+     * Disconnect node n1 for n2
+     */
+    status disconnect(int suid, int sfid, int tuid, int tfid)
+    {
+        // verify that the disconnect rules are meet
+        if(suid == tuid)
+            return status(FAILED,"Node 1 can't be the same as Node 2");
+
+        // still need to test that sfid is an input and tfid is an output
+       
+        // get the out edges of the source node
+        typedef typename boost::graph_traits<FSceneGraph>::out_edge_iterator eo;
+        std::pair<eo,eo> p = boost::out_edges(suid,sg);
+
+        for(;p.first!=p.second;++p.first){
+            if(sg[*p.first].f1 == sfid && sg[*p.first].f2 == tfid) {
+                // TODO - there might be some cleanup to do here
+                boost::remove_edge(p.first,sg);
+                //std::cout << "found connection to disconnect!\n";
+            }
+        }
+
+
+        return status();   
+    }
+ 
     //template <int _Type, int _Node>
     //status add_node(int id) { return status(FAILED,"no matching node for add_node"); };
 

@@ -233,6 +233,96 @@ void connect_node_fields()
 
 void disconnect_node_fields()
 {
+    std::vector<unsigned int> uids;
+    std::vector<unsigned int> fids;
+
+    feather::scenegraph::get_nodes(uids);
+
+    std::cout << "Select Source Node:\n"
+        << "\t==========================\n";
+ 
+    for(auto uid : uids) {
+        std::string n;
+        feather::scenegraph::get_node_name(uid,n);
+        std::cout << "\t" << uid << " \"" << n << "\"\n";
+    }
+
+    std::cout << "\t==========================\n"
+        << "\t:";
+
+    unsigned int suid;
+    std::cin >> suid;
+
+    // verify the uid is in the sg
+    if(!feather::scenegraph::node_exist(suid)) {
+        std::cout << "Node " << suid << " does not exist\n";
+        return;
+    }
+    
+    feather::scenegraph::get_out_fields(suid,fids);
+ 
+    std::cout << "Select Node's Out Field:\n"
+        << "\t==========================\n";
+ 
+    for(auto fid : fids) {
+        std::string n;
+        //feather::scenegraph::get_node_name(uid,n);
+        std::cout << "\t" << fid << " \"" << n << "\"\n";
+    }
+
+    std::cout << "\t==========================\n"
+        << "\t:";
+    
+    unsigned int sfid;
+    std::cin >> sfid;
+
+
+    std::cout << "Select Target Node:\n"
+        << "\t==========================\n";
+ 
+    for(auto uid : uids) {
+        std::string n;
+        feather::scenegraph::get_node_name(uid,n);
+        if(suid != uid)
+            std::cout << "\t" << uid << " \"" << n << "\"\n";
+    }
+
+    std::cout << "\t==========================\n"
+        << "\t:";
+
+    unsigned int tuid;
+    std::cin >> tuid;
+
+    // verify the uid is in the sg
+    if(!feather::scenegraph::node_exist(tuid)) {
+        std::cout << "Node " << tuid << " does not exist\n";
+        return;
+    }
+   
+    fids.clear(); 
+    feather::scenegraph::get_in_fields(tuid,fids);
+ 
+    std::cout << "Select Node's In Field:\n"
+        << "\t==========================\n";
+ 
+    for(auto fid : fids) {
+        std::string n;
+        //feather::scenegraph::get_node_name(uid,n);
+        std::cout << "\t" << fid << " \"" << n << "\"\n";
+    }
+
+    std::cout << "\t==========================\n"
+        << "\t:";
+    
+    unsigned int tfid;
+    std::cin >> tfid;
+
+    feather::status p = feather::scenegraph::disconnect(suid,sfid,tuid,tfid);
+
+    if(!p.state) {
+        std::cout << "Disconnect Failed: " << p.msg << std::endl;
+        return;
+    }
 
 };
 
