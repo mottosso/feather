@@ -51,9 +51,10 @@ int SceneGraph::add_node(int node, QString name)
 
 bool SceneGraph::remove_node(int uid)
 {
-    status p = qml::command::remove_node(uid);
+    status e;
+    qml::command::remove_node(uid,e);
     emit nodeRemoved(uid);
-    return p.state;
+    return e.state;
 }
 
 QString SceneGraph::node_name(int uid)

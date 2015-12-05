@@ -105,6 +105,7 @@ void add_node()
 
 void remove_node()
 {
+    feather::status e;
     std::vector<unsigned int> uids;
     feather::scenegraph::get_nodes(uids);
 
@@ -129,7 +130,7 @@ void remove_node()
     for(auto uid : uids) {
         if(uid == suid) {
             std::cout << "Removing Node " << uid << std::endl;
-            feather::scenegraph::remove_node(uid);
+            feather::scenegraph::remove_node(uid,e);
             return;
         }
     }
@@ -391,7 +392,7 @@ int auto_test()
     // REMOVING NODES
     std::cout << "REMOVING NODES:\n\tremoving shape node: ";
     // root.child->plane.parent
-    e = feather::scenegraph::remove_node(shape);
+    feather::scenegraph::remove_node(shape,e);
     if(!e.state){
         std::cout << "failed" << std::endl;
         return 1; 

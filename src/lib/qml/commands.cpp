@@ -91,9 +91,9 @@ bool qml::command::nodes_added(std::vector<int>& uids)
     return true;
 }
 
-status qml::command::remove_node(int uid)
+void qml::command::remove_node(const unsigned int uid, status& error)
 {
-    return scenegraph::remove_node(uid);
+    scenegraph::remove_node(uid,error);
 }
 
 void qml::command::nodes_updated()
