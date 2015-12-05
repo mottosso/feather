@@ -71,6 +71,8 @@ void print_options()
 
 void add_node()
 {
+    feather::status e;
+
     std::cout << "Select Node Type:\n"
         << "\t==========================\n"
         << "\t1: Empty\n"
@@ -95,7 +97,7 @@ void add_node()
         std::cout << "\tNode Name: ";
         std::string name;
         std::cin >> name;
-        feather::scenegraph::add_node(n,name);
+        feather::scenegraph::add_node(n,name,e);
     }
 
 };
@@ -329,15 +331,15 @@ void disconnect_node_fields()
 
 int auto_test()
 {
-    feather::status p;
+    feather::status e;
 
     // add node tests
     std::cout << "FEATHER AUTO TEST STARTING:\n\tAdding plane and shape nodes to the SG: ";
     unsigned int plane=0;
     unsigned int shape=0;
-    plane = feather::scenegraph::add_node(321,"plane"); // polygon plane
+    plane = feather::scenegraph::add_node(321,"plane",e); // polygon plane
     std::cout << " plane uid:" << plane;
-    shape = feather::scenegraph::add_node(320,"shape"); // polygon shape
+    shape = feather::scenegraph::add_node(320,"shape",e); // polygon shape
     std::cout << " shape uid:" << shape;
     std::cout << "\nNODES ADDED\n\n";
  
@@ -351,26 +353,26 @@ int auto_test()
     // node connection tests
     std::cout << "CONNECTING NODES:\n\tConnecting root.child->plane.parent: ";
     // root.child->plane.parent
-    p = feather::scenegraph::connect(0,2,plane,1);
-    if(!p.state){
+    e = feather::scenegraph::connect(0,2,plane,1);
+    if(!e.state){
         std::cout << "failed" << std::endl;
         return 1; 
     } else {
         std::cout << "passed" << std::endl;
     }
     // plane.child->shape.parent
-    p = feather::scenegraph::connect(plane,2,shape,1);
-    std::cout << "\tConnecting plane.child->shape.parent: " << ((!p.state) ? "failed" : "passed") << std::endl;
-    if(!p.state){
+    e = feather::scenegraph::connect(plane,2,shape,1);
+    std::cout << "\tConnecting plane.child->shape.parent: " << ((!e.state) ? "failed" : "passed") << std::endl;
+    if(!e.state){
         std::cout << "failed" << std::endl;
         return 1; 
     } else {
         std::cout << "passed" << std::endl;
     }
     // plane.mesh->plane.mesh
-    p = feather::scenegraph::connect(plane,5,shape,3);
+    e = feather::scenegraph::connect(plane,5,shape,3);
     std::cout << "\tConnecting plane.mesh->shape.mesh: ";
-    if(!p.state){
+    if(!e.state){
         std::cout << "failed" << std::endl;
         return 1; 
     } else {
@@ -389,8 +391,8 @@ int auto_test()
     // REMOVING NODES
     std::cout << "REMOVING NODES:\n\tremoving shape node: ";
     // root.child->plane.parent
-    p = feather::scenegraph::remove_node(shape);
-    if(!p.state){
+    e = feather::scenegraph::remove_node(shape);
+    if(!e.state){
         std::cout << "failed" << std::endl;
         return 1; 
     } else {
@@ -453,8 +455,9 @@ void run_option(unsigned int o)
 
 int main(int argc, char **argv)
 {
+    feather::status e;
     feather::scenegraph::load_plugins();
-    feather::scenegraph::add_node(1,"root"); 
+    feather::scenegraph::add_node(1,"root",e); 
  
     print_menu();
     print_options();

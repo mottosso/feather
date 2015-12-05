@@ -34,6 +34,8 @@ status qml::command::init() {
     load_plugins();
     cstate.sgState.minUid=0;
     cstate.sgState.maxUid=0;
+
+    status e;
     add_node(1,"root"); // PolyCube
     //int uid1 = add_node(320,"CubeShape"); // PolyShape
     //scenegraph::connect(0,4,uid1,1); // connect PolyCube.out to PolyShape.in
@@ -46,9 +48,10 @@ status qml::command::init() {
     return status();
 }
 
-int qml::command::add_node(int node, std::string name)
+unsigned int qml::command::add_node(const unsigned int nid, const std::string name)
 {
-    int uid =  scenegraph::add_node(node,name);
+    status e;
+    unsigned int uid =  scenegraph::add_node(nid,name,e);
     cstate.sgState.maxUid = uid;
     return uid;
     /*

@@ -149,12 +149,13 @@ namespace feather
         */
 
         //int add_node(int t, int n, std::string name) {
-        int add_node(int n, std::string name) {
+        unsigned int add_node(const unsigned int n, const std::string name, feather::status& error) {
             //std::cout << "add node: " << n << ", type: " << t << std::endl;
             feather::node::Type ntype;
             plugins.node_type(n,ntype);
             std::cout << "add node: " << n << " type: " << ntype << std::endl;
 
+            error.state=feather::FAILED;
             // TODO
             // Here I need to ask the plugin manager if the node exists
  
