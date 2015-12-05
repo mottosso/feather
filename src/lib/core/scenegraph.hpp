@@ -155,7 +155,6 @@ namespace feather
             plugins.node_type(n,ntype);
             std::cout << "add node: " << n << " type: " << ntype << std::endl;
 
-            error.state=feather::FAILED;
             // TODO
             // Here I need to ask the plugin manager if the node exists
  
