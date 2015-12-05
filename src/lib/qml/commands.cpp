@@ -334,9 +334,9 @@ void qml::command::clear()
     scenegraph::clear();
 }
 
-void qml::command::get_node_out_connections(int uid, std::vector<int>& nodes)
+void qml::command::get_node_out_connections(const unsigned int uid, std::vector<unsigned int>& uids)
 {
-    scenegraph::get_node_out_connections(uid,nodes);
+    scenegraph::get_node_out_connections(uid,uids);
 }
 
 int qml::command::get_node_connection_count(int uid)

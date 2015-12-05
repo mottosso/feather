@@ -206,7 +206,7 @@ namespace feather
      *  will add all the nodes connected to the
      *  uid to the nodes reference
      */
-    void get_node_out_connections(int uid, std::vector<int>& nodes) {
+    void get_node_out_connections(const unsigned int uid, std::vector<unsigned int>& uids) {
         typedef boost::graph_traits<FSceneGraph>::out_edge_iterator OutConn;
         std::pair<OutConn,OutConn> out = boost::out_edges(uid,sg);
 
@@ -217,7 +217,7 @@ namespace feather
         } else {
             std::cout << "edges don't match for " << uid << std::endl;
             boost::graph_traits<FSceneGraph>::edge_descriptor c = *out.first;
-            nodes.push_back(sg[boost::target(c,sg)].uid);
+            uids.push_back(sg[boost::target(c,sg)].uid);
         }
     };
 
