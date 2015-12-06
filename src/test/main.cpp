@@ -76,6 +76,7 @@ void add_node()
     std::cout << "Select Node Type:\n"
         << "\t==========================\n"
         << "\t1: Empty\n"
+        << "\t3: Transform\n"
         << "\t320: Polygon Shape\n"
         << "\t321: Polygon Plane\n"
         << "\t322: Polygon Cube\n"
@@ -90,6 +91,7 @@ void add_node()
         return;
 
     if( n == 1 ||
+            n == 3 ||
             n == 320 ||
             n == 321 ||
             n == 322
