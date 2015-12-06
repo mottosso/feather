@@ -242,9 +242,8 @@ namespace feather
     };
 
 
-    status get_node_id(int uid, int& nid) {
-        nid=sg[uid].node;
-        return status();
+    unsigned int get_node_id(const unsigned int uid, status& error) {
+        return sg[uid].node;
     };
 
 
@@ -314,8 +313,8 @@ namespace feather
      * If you want to get the base of the node's fid, even if it's connected, use get_node_fieldBase().
      */
     field::FieldBase* get_fieldBase(int uid, int fid) {
-        int nid=0;
-        get_node_id(uid,nid);
+        status e;
+        unsigned int nid = get_node_id(uid,e);
         return get_fieldBase(uid,nid,fid);
     };
 

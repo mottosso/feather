@@ -371,7 +371,7 @@ void TreeModel::loadChildren(const int uid, Leaf* parent)
     data.append(true); // visible
     int nid;
     std::string icon;
-    feather::qml::command::get_node_id(uid,nid); 
+    nid = feather::qml::command::get_node_id(uid,e); 
     feather::qml::command::get_node_icon(nid,icon,e); 
     data.append(icon.c_str()); // icon 
     data.append(uid); // uid

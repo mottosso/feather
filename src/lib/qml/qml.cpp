@@ -67,9 +67,8 @@ QString SceneGraph::node_name(int uid)
 
 int SceneGraph::node_id(int uid)
 {
-    int nid;
-    qml::command::get_node_id(uid,nid);
-    return nid;
+    status e;
+    return qml::command::get_node_id(uid,e);
 }
 
 int SceneGraph::connect_nodes(int n1, int f1, int n2, int f2)
@@ -126,9 +125,9 @@ void SceneGraph::add_node_to_layer(int uid, int lid)
 
 bool SceneGraph::connected(unsigned int uid, unsigned int fid)
 {
+    status e;
     bool conn;
-    int nid;
-    qml::command::get_node_id(uid,nid);
+    unsigned int nid = qml::command::get_node_id(uid,e);
     qml::command::get_field_connection_status(uid,nid,fid,conn);
     return conn; 
 }

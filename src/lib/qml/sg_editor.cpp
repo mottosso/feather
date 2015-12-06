@@ -523,8 +523,8 @@ void SceneGraphEditor::updateGraph()
 
 void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int ypos)
 {
-    int nid=0;
-    feather::status s = feather::qml::command::get_node_id(uid,nid);
+    feather::status e;
+    unsigned int nid = feather::qml::command::get_node_id(uid,e);
 
     // if the node is already in the draw list, don't add a new one
     SceneGraphNode *node = getNode(uid);

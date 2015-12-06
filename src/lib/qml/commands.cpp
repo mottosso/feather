@@ -121,9 +121,9 @@ void qml::command::get_node_icon(const unsigned int nid, std::string& file, stat
     scenegraph::get_node_icon(nid,file,e);
 }
 
-status qml::command::get_node_id(int uid, int& nid)
+unsigned int qml::command::get_node_id(const unsigned int uid, status& e)
 {
-    return scenegraph::get_node_id(uid,nid);
+    return scenegraph::get_node_id(uid,e);
 }
 
 status qml::command::get_node_connected_uids(int uid, std::vector<int>& uids)
