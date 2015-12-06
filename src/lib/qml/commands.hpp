@@ -107,7 +107,7 @@ namespace feather
             void clear();
             void get_node_out_connections(const unsigned int uid, std::vector<unsigned int>& uids);
             int get_node_connection_count(int uid);
-            std::string get_node_name(int uid);
+            void get_node_name(const unsigned int uid, std::string& name, status& error);
             void gl_init(int uid, FGlInfo& info);
             void gl_draw(int uid, FGlInfo& info);
             void scenegraph_update();

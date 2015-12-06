@@ -345,9 +345,9 @@ int qml::command::get_node_connection_count(int uid)
     return 0; 
 }
 
-std::string qml::command::get_node_name(int uid)
+void qml::command::get_node_name(const unsigned int uid, std::string& name, status& error)
 {
-    return sg[uid].name;
+    scenegraph::get_node_name(uid,name,error);
 }
 
 void qml::command::gl_init(int uid, FGlInfo& info)

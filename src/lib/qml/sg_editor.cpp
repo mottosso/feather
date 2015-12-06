@@ -186,6 +186,7 @@ void SceneGraphNode::ConnPressed(Qt::MouseButton button, SceneGraphConnection::C
 
 void SceneGraphNode::paint(QPainter* painter)
 {
+    feather::status e;
     painter->setRenderHints(QPainter::Antialiasing, true);
  
     QPen trimPen = QPen(QColor(0,0,0),1);
@@ -227,7 +228,9 @@ void SceneGraphNode::paint(QPainter* painter)
     // node label 
     painter->setPen(textPen);
     painter->setFont(textFont);
-    painter->drawText(QRect(0,2,NODE_WIDTH,NODE_HEIGHT),Qt::AlignHCenter|Qt::AlignTop,feather::qml::command::get_node_name(m_uid).c_str());
+    std::string name;
+    feather::qml::command::get_node_name(m_uid,name,e);
+    painter->drawText(QRect(0,2,NODE_WIDTH,NODE_HEIGHT),Qt::AlignHCenter|Qt::AlignTop,name.c_str());
 
 }
 

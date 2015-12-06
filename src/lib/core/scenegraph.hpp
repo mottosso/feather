@@ -231,9 +231,9 @@ namespace feather
     }
 
 
-    status get_node_name(int uid, std::string& name) {
+    void get_node_name(const unsigned int uid, std::string& name, status& error) {
+        // TODO verify that uid exist and set the error if it doesn't
         name = sg[uid].name;
-        return status();
     };
 
 

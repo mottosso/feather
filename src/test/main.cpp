@@ -114,7 +114,7 @@ void remove_node()
 
     for(auto uid : uids) {
         std::string n;
-        feather::scenegraph::get_node_name(uid,n);
+        feather::scenegraph::get_node_name(uid,n,e);
         std::cout << "\t" << uid << " \"" << n << "\"\n";
     }
 
@@ -141,6 +141,7 @@ void remove_node()
 
 void connect_node_fields()
 {
+    feather::status e;
     std::vector<unsigned int> uids;
     std::vector<unsigned int> fids;
 
@@ -151,7 +152,7 @@ void connect_node_fields()
  
     for(auto uid : uids) {
         std::string n;
-        feather::scenegraph::get_node_name(uid,n);
+        feather::scenegraph::get_node_name(uid,n,e);
         std::cout << "\t" << uid << " \"" << n << "\"\n";
     }
 
@@ -190,7 +191,7 @@ void connect_node_fields()
  
     for(auto uid : uids) {
         std::string n;
-        feather::scenegraph::get_node_name(uid,n);
+        feather::scenegraph::get_node_name(uid,n,e);
         if(suid != uid)
             std::cout << "\t" << uid << " \"" << n << "\"\n";
     }
@@ -236,6 +237,7 @@ void connect_node_fields()
 
 void disconnect_node_fields()
 {
+    feather::status e;
     std::vector<unsigned int> uids;
     std::vector<unsigned int> fids;
 
@@ -246,7 +248,7 @@ void disconnect_node_fields()
  
     for(auto uid : uids) {
         std::string n;
-        feather::scenegraph::get_node_name(uid,n);
+        feather::scenegraph::get_node_name(uid,n,e);
         std::cout << "\t" << uid << " \"" << n << "\"\n";
     }
 
@@ -285,7 +287,7 @@ void disconnect_node_fields()
  
     for(auto uid : uids) {
         std::string n;
-        feather::scenegraph::get_node_name(uid,n);
+        feather::scenegraph::get_node_name(uid,n,e);
         if(suid != uid)
             std::cout << "\t" << uid << " \"" << n << "\"\n";
     }

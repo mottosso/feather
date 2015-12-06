@@ -59,7 +59,10 @@ bool SceneGraph::remove_node(int uid)
 
 QString SceneGraph::node_name(int uid)
 {
-    return qml::command::get_node_name(uid).c_str();
+    std::string name;
+    status e;
+    qml::command::get_node_name(uid,name,e);
+    return QString(name.c_str());
 }
 
 int SceneGraph::node_id(int uid)
