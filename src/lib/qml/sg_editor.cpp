@@ -144,6 +144,8 @@ SceneGraphNode::SceneGraphNode(int uid, int nid, QQuickItem* parent) :
     m_layerFillBrush(QBrush(QColor("#DDDDDD"))),
     m_nodeTitleBrush(QBrush(QColor(NODE_TITLE_BLOCK_COLOR)))
 {
+    feather::status e;
+
     if(feather::smg::Instance()->selected(m_uid))
         m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
     else
@@ -169,7 +171,7 @@ SceneGraphNode::SceneGraphNode(int uid, int nid, QQuickItem* parent) :
     m_pOutConn->setY(NODE_HEIGHT/2+14);
     connect(m_pOutConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
 
-    feather::qml::command::get_node_icon(m_nid,m_imgFile);
+    feather::qml::command::get_node_icon(m_nid,m_imgFile,e);
     m_imgPath << m_imgDir << m_imgFile;
 }
 

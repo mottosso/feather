@@ -116,9 +116,9 @@ status qml::command::connect_nodes(int n1, int f1, int n2, int f2)
     return p;
 }
 
-status qml::command::get_node_icon(int nid, std::string& file)
+void qml::command::get_node_icon(int nid, std::string& file, status& e)
 {
-    return scenegraph::get_node_icon(nid,file);
+    scenegraph::get_node_icon(nid,file,e);
 }
 
 status qml::command::get_node_id(int uid, int& nid)

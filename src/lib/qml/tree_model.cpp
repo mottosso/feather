@@ -372,7 +372,7 @@ void TreeModel::loadChildren(const int uid, Leaf* parent)
     int nid;
     std::string icon;
     feather::qml::command::get_node_id(uid,nid); 
-    feather::qml::command::get_node_icon(nid,icon); 
+    feather::qml::command::get_node_icon(nid,icon,e); 
     data.append(icon.c_str()); // icon 
     data.append(uid); // uid
     data.append(0); // nid
