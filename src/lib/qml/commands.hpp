@@ -51,7 +51,7 @@ namespace feather
             void nodes_updated();
             bool node_exists(int uid);
             status connect_nodes(int n1, int f1, int n2, int f2); 
-            void get_node_icon(int nid, std::string& file, status& error);
+            void get_node_icon(const unsigned int nid, std::string& file, status& error);
             status get_node_id(int uid, int& nid);
             status get_node_connected_uids(int uid, std::vector<int>& uids);
             status get_node_connected_uids(int uid, int fid, std::vector<int>& uids);

@@ -237,7 +237,7 @@ namespace feather
     };
 
 
-    void get_node_icon(int nid, std::string& file, status& error) {
+    void get_node_icon(const unsigned int nid, std::string& file, status& error) {
         error = plugins.node_icon_file(nid,file);
     };
 
