@@ -293,15 +293,15 @@ namespace feather
  
     struct FNode
     {
-        FNode(node::Type t=node::Empty) : type(t),parent(NULL) {};
+        FNode(node::Type t=node::Empty) : type(t)/*, parent(NULL),*/ {};
         int uid; // unique id number
         int node; // node type enum
         field::Fields fields; // this holds the field data
         std::string name;
         node::Type type; // this is the node group type
         int layer; // what layer is the node stored in
-        DataObject* parent; // ??still used??
-        FAttributeArray* attrs; // ??still used??
+        //DataObject* parent; // ??still used??
+        //FAttributeArray* attrs; // ??still used??
         // GL
         int glVertex;
         int glColor;
