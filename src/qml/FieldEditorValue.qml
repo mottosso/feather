@@ -188,6 +188,7 @@ Rectangle {
     Component.onCompleted: { intField.state="normal" }
 
     function typeNormalStateColor(t) {
+        console.log("field type=" + intField.fieldType)
         switch(intField.fieldType) {
             case Field.Bool || Field.BoolArray: return properties.getColor("boolType"); break;
             case Field.Int || Field.IntArray: return properties.getColor("intType"); break;
