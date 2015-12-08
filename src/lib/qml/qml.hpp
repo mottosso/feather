@@ -174,6 +174,7 @@ class Field: public QObject
             Bool=field::Bool,
             Int=field::Int,
             Float=field::Float,
+            Double=field::Double,
             Vertex=field::Vertex,
             Vector=field::Vector,
             Mesh=field::Mesh,
