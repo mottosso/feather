@@ -49,12 +49,14 @@ Window {
 
     signal addNode(string name, int nid)
 
-    NodeTypeModel{ id: typeModel }
+    NodeTypeModel { id: typeModel }
+    NodeModel { id: nidModel }
+    ListModel { id: nodeModel; ListElement{ text: ""; nid: 0; type: 0 } }
 
     // Nodes
-    NodeCommonModel { id: commonModel }
-    NodePolygonModel { id: polygonModel }
-
+    //NodeCommonModel { id: commonModel }
+    //NodePolygonModel { id: polygonModel }
+    
     Column {
         spacing: 4
         anchors.fill: parent
@@ -141,10 +143,10 @@ Window {
             }
         
             OptionBox {
-                id: nidOption
+                id: nodeOption
                 width: 200
                 height: 30
-                model: commonModel
+                model: nodeModel
                 properties: dialog.properties 
              }
         }        
@@ -186,33 +188,28 @@ Window {
     }
 
     function set_type(index) {
+        nodeOption.model.clear()
+ 
         dialog.type = typeOption.model.get(index).type
-        switch(dialog.type){
-            case Node.Object:
-                nidOption.model = null
-                nidOption.model = commonModel
-                break; 
-            case Node.Polygon:
-                nidOption.model = null
-                nidOption.model = polygonModel
-                 break;
-            default:
-                nidOption.model = null
-                nidOption.model = commonModel
-         }
-        dialog.nid = nidOption.model.get(0).nid
-        nidOption.update()
+
+        for(var i=0; i < nidModel.count; i++){
+            if(nidModel.get(i).type == dialog.type)
+                nodeOption.model.append({"text":nidModel.get(i).text, "nid":nidModel.get(i).nid, "type":nidModel.get(i).type})
+        }
+
+        dialog.nid = nodeOption.model.get(0).nid
     }
 
     function set_nid(index){
-        dialog.nid = nidOption.model.get(index).nid
+        dialog.nid = nodeOption.model.get(index).nid
     }
 
     Component.onCompleted: {
         cancelButton.clicked.connect(hide)
         acceptButton.clicked.connect(add_node)
-        //typeOption.activated.connect(nidOption.model.set_type)
+        //typeOption.activated.connect(nodeOption.model.set_type)
         typeOption.activated.connect(set_type)
-        nidOption.activated.connect(set_nid)
+        nodeOption.activated.connect(set_nid)
+        set_type(typeOption.model.currentIndex)
     }
 }

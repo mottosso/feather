@@ -26,15 +26,22 @@ import feather.node 1.0
 
 ListModel {
     //ListElement { text: "Null"; type: Node.Null }// will get an error if you use Null as an ListElement
-    ListElement { text: "Empty"; type: Node.Empty }
+    // Empty
+    ListElement { text: "Empty"; nid: 1; type: Node.Empty }
     //ListElement { text: "Camera"; type: Node.Camera }
     //ListElement { text: "Light"; type: Node.Light }
     //ListElement { text: "Texture"; type: Node.Texture }
     //ListElement { text: "Modifier"; type: Node.Modifier }
     //ListElement { text: "Deformer"; type: Node.Deformer }
-    ListElement { text: "Manipulator"; type: Node.Manipulator }
+    // Manipulator
+    ListElement { text: "Transform"; nid: 3; type: Node.Manipulator }
     //ListElement { text: "Shader"; type: Node.Shader }
-    //ListElement { text: "Object"; type: Node.Object }
+    // Object
+    //ListElement { text: "Empty"; nid: 0; type: Node.Object }
+    // Curve
     //ListElement { text: "Curve"; type: Node.Curve }
-    ListElement { text: "Polygon"; type: Node.Polygon }
+    // Polygon
+    ListElement { text: "PolygonShape"; nid: 320; type: Node.Polygon }
+    ListElement { text: "PolygonPlane"; nid: 321; type: Node.Polygon }
+    ListElement { text: "PolygonCube"; nid: 322; type: Node.Polygon }
 }
