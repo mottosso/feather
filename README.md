@@ -7,7 +7,7 @@ Feather is still a WIP that has not yet reached v0.1. I hope to release v0.1 som
 
 ![Feather Logo](https://raw.githubusercontent.com/richardlayman/feather/master/assets/images/logo.png)
 
-3d modelling and animation application.
+3d modeling and animation application.
 
 ![Feather UI](https://raw.githubusercontent.com/richardlayman/feather/master/assets/images/ui_v0_1.png)
 
