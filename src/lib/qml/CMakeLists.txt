@@ -22,6 +22,7 @@ SET(feather_qml_SRCS
     sg_editor.cpp
     gl_scene.cpp
     viewport.cpp
+    viewport2.cpp
     viewportthread.cpp
     qml.cpp
 )
@@ -36,6 +37,8 @@ INCLUDE_DIRECTORIES(${feather_core_SOURCE_DIR}
     ${Qt5Qml_INCLUDE_DIRS}
     ${Qt5Quick_INCLUDE_DIRS}
     ${QtOpenGL_INCLUDE_DIRS}
+    ${Qt3DCore_INCLUDE_DIRS}
+    ${Qt3DRenderer_INCLUDE_DIRS}
     "/usr/include/qt/QtGui/5.3.0"
     "/usr/include/qt/QtGui/5.3.0/QtGui"
     "/usr/include/qt/QtCore/5.3.0"
@@ -51,16 +54,20 @@ ADD_DEFINITIONS(${Qt5Widgets_DEFINITIONS}
     ${Qt5Qml_DEFINITIONS}
     ${Qt5Quick_DEFINITIONS}
     ${Qt5OpenGL_DEFINITIONS}
+    ${Qt3DCore_DEFINITIONS}
+    ${Qt3DRenderer_DEFINITIONS}
 )
 
 SET(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 SET(CMAKE_CXX_FLAGS "${Qt5Qml_EXECUTABLE_COMPILE_FLAGS}")
 SET(CMAKE_CXX_FLAGS "${Qt5Quick_EXECUTABLE_COMPILE_FLAGS}")
 SET(CMAKE_CXX_FLAGS "${Qt5OpenGL_EXECUTABLE_COMPILE_FLAGS}")
+SET(CMAKE_CXX_FLAGS "${Qt3DCore_EXECUTABLE_COMPILE_FLAGS}")
+SET(CMAKE_CXX_FLAGS "${Qt3DRenderer_EXECUTABLE_COMPILE_FLAGS}")
 
 ADD_LIBRARY(feather_qml SHARED ${feather_qml_SRCS})
 
-QT5_USE_MODULES(feather_qml Widgets Quick OpenGL)
+QT5_USE_MODULES(feather_qml Widgets Quick OpenGL 3DCore 3DRenderer)
 
 SET(feather_qml_LIBS
  ${BOOST_LIBRARIES}
@@ -69,6 +76,8 @@ SET(feather_qml_LIBS
  ${QT5Qml_LIBRARIES}
  ${QT5Quick_LIBRARIES}
  ${QT5OpenGL_LIBRARIES}
+ ${QT3DCore_LIBRARIES}
+ ${QT3DRenderer_LIBRARIES}
 )
 
 TARGET_LINK_LIBRARIES(feather_qml ${feather_qml_LIBS})

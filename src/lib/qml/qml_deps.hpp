@@ -53,4 +53,10 @@
 #include <QtOpenGL/QtOpenGL>
 #include <QtOpenGL/QGLFunctions>
 
+// Qt3D
+#include <Qt3DCore/QEntity>
+#include <Qt3DCore/QNode>
+#include <QTimer>
+#include <qmath.h>
+
 #endif
