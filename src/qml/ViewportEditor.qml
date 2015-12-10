@@ -225,7 +225,7 @@ Item {
 
     } 
 
-    Viewport3D { 
+    Viewport3D2 { 
         id: viewport
         anchors.top: toolBar.bottom
         anchors.left: parent.left
