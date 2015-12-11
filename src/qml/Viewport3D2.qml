@@ -25,166 +25,90 @@ import QtQuick 2.3
 import QtQuick.Scene3D 2.0
 import Qt3D 2.0
 import Qt3D.Renderer 2.0
-//import feather.viewport 1.0
+import feather.viewport 1.0
 import feather.scenegraph 1.0
 
 
 Rectangle {
     id: frame
+    color: "yellow"
 
-Scene3D {
-    id: scene3d
-    anchors.fill: parent
-    anchors.margins: 10
-    focus: true
-    aspects: "input"
-
-Entity {
-    id : rootNode
-
-    CameraLens {
-        id : cameraLens
-        projectionType: CameraLens.PerspectiveProjection
-        fieldOfView: 45
-        aspectRatio: 16/9
-        nearPlane : 0.01
-        farPlane : 1000.0
-    } // cameraLens
-
-    Entity {
-        id : sceneRoot
-        components: [frameGraph]
-        property real rotationAngle : 0
-
-        SequentialAnimation {
-            running : true
-            loops: Animation.Infinite
-            NumberAnimation {target : sceneRoot; property : "rotationAngle"; to : 360; duration : 2000;}
-        }
-
-        property var cameras : [cameraViewport1, cameraViewport2, cameraViewport3, cameraViewport4]
-
-        Timer {
-            running : true
-            interval : 10000
-            repeat : true
-            property int count : 0
-            onTriggered:
-            {
-                cameraSelectorTopLeftViewport.camera = sceneRoot.cameras[count++ % 4];
-                cameraSelectorTopRightViewport.camera = sceneRoot.cameras[count % 4];
-                cameraSelectorBottomLeftViewport.camera = sceneRoot.cameras[(count + 1) % 4];
-                cameraSelectorBottomRightViewport.camera = sceneRoot.cameras[(count + 2) % 4];
-            }
-        }
-
-        FrameGraph {
-            id : frameGraph
-
-            Viewport {
-                id : mainViewport
-                rect: Qt.rect(0, 0, 1, 1)
-
-                ClearBuffer {
-                    buffers : ClearBuffer.ColorDepthBuffer
-                }
-
-                Viewport {
-                    id : topLeftViewport
-                    rect : Qt.rect(0, 0, 0.5, 0.5)
-                    CameraSelector {id : cameraSelectorTopLeftViewport; camera : sceneRoot.cameras[0]}
-                }
-
-                Viewport {
-                    id : topRightViewport
-                    rect : Qt.rect(0.5, 0, 0.5, 0.5)
-                    CameraSelector {id : cameraSelectorTopRightViewport; camera : sceneRoot.cameras[1]}
-                }
-
-                Viewport {
-                    id : bottomLeftViewport
-                    rect : Qt.rect(0, 0.5, 0.5, 0.5)
-                    CameraSelector {id : cameraSelectorBottomLeftViewport; camera : sceneRoot.cameras[2]}
-                }
-
-                Viewport {
-                    id : bottomRightViewport
-                    rect : Qt.rect(0.5, 0.5, 0.5, 0.5)
-                    CameraSelector {id : cameraSelectorBottomRightViewport; camera : sceneRoot.cameras[3]}
-                }
-
-            } // mainViewport
-        } // frameGraph
+    Scene3D {
+        id: scene3d
+        anchors.fill: parent
+        anchors.margins: 2
+        focus: true
+        aspects: "input"
 
         Entity {
-            id : cameraViewport1
-            property Transform transform : Transform {
-                LookAt {
-                    position: Qt.vector3d( 0.0, 0.0, -20.0 )
-                    upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
-                    viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
-                }
-            }
-            components : [cameraLens, transform]
-        }
+            id : sceneRoot
+            components: [frameGraph]
+            property real rotationAngle : 0
 
-        Entity {
-            id : cameraViewport2
-            property Transform transform : Transform {
+            Camera {
+                id: camera
+                projectionType: CameraLens.PerspectiveProjection
+                fieldOfView: 45
+                aspectRatio: 16/9
+                nearPlane : 0.1
+                farPlane : 1000.0
+                position: Qt.vector3d( 0.0, 0.0, -40.0 )
+                upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
+                viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
+            }
+
+            Configuration  {
+                controlledCamera: camera
+            }
+
+            SequentialAnimation {
+                running : true
+                loops: Animation.Infinite
+                NumberAnimation {target : sceneRoot; property : "rotationAngle"; to : 360; duration : 2000;}
+            }
+
+            FrameGraph {
+                id : frameGraph
+
+                activeFrameGraph: ForwardRenderer {
+                    id : mainViewport
+                    clearColor: "grey"
+                    camera: camera 
+                } // mainViewport
+            } // frameGraph
+
+            /*
+            PhongMaterial {
+                id: material
+            }
+
+            SphereMesh {
+                id: sphereMesh
+                radius: 3
+            }
+
+            Transform {
+                id: sphereTransform
+                Translate {
+                    translation: Qt.vector3d(20, 0, 0)
+                }
+
                 Rotate {
-                    angle : sceneRoot.rotationAngle
-                    axis : Qt.vector3d(0, 1, 0)
-                }
-                LookAt {
-                    position: Qt.vector3d( 0.0, 0.0, 20.0 )
-                    upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
-                    viewCenter: Qt.vector3d( -3.0, 0.0, 10.0 )
+                    id: sphereRotation
+                    axis: Qt.vector3d(0, 1, 0)
                 }
             }
-            components : [cameraLens, transform]
-        }
-
-        Entity {
-            id : cameraViewport3
-            property Transform transform : Transform {
-                LookAt {
-                    position: Qt.vector3d( 0.0, 30.0, 30.0 )
-                    upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
-                    viewCenter: Qt.vector3d( -5.0, -20.0, -10.0 )
-                }
+            
+            Entity {
+                id: sphereEntity
+                components: [ sphereMesh, material, sphereTransform ]
             }
-            components : [cameraLens, transform]
-        }
+            */
 
-        Entity {
-            components : [
-                Transform {
-                    Rotate {
-                        angle : -sceneRoot.rotationAngle
-                        axis : Qt.vector3d(0, 0, 1)
-                    }
-                },
-                SceneLoader {
-                    source: "qrc:/assets/test_scene.dae"
-                }]
-        }
+            Viewport2 { id: vp }
 
-        Entity {
-            id : cameraViewport4
-            property Transform transform : Transform {
-                LookAt {
-                    position: Qt.vector3d( 0.0, 15.0, 20.0 )
-                    upVector: Qt.vector3d( 0.0, 0.0, 1.0 )
-                    viewCenter: Qt.vector3d( 0.0, -15.0, -20.0 )
-                }
-            }
-            components : [cameraLens, transform]
         }
 
     } // sceneRoot
-
-} // rootNode
-
-}
 
 }

@@ -25,21 +25,45 @@
 
 // MAIN VIEWPORT
 
-//#include "examplescene.h"
-//#include "boxentity.h"
+TessellatedGeometry::TessellatedGeometry(QNode *parent)
+    : Qt3D::QGeometry(parent),
+    m_positionAttribute(new Qt3D::QAttribute(this)),
+    m_vertexBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this))
+{
+    const float positionData[] = {
+        -0.8f, -0.8f, 0.0f,
+        0.8f, -0.8f, 0.0f,
+        0.8f,  0.8f, 0.0f,
+        -0.8f,  0.8f, 0.0f
+    };
 
-//#include <QTimer>
-//#include <qmath.h>
+    const int nVerts = 4;
+    const int size = nVerts * 3 * sizeof(float);
+    QByteArray positionBytes;
+    positionBytes.resize(size);
+    memcpy(positionBytes.data(), positionData, size);
+
+    m_vertexBuffer->setData(positionBytes);
+
+    m_positionAttribute->setName(Qt3D::QAttribute::defaultPositionAttributeName());
+    m_positionAttribute->setDataType(Qt3D::QAttribute::Float);
+    m_positionAttribute->setDataSize(3);
+    m_positionAttribute->setCount(nVerts);
+    m_positionAttribute->setByteStride(3 * sizeof(float));
+    m_positionAttribute->setBuffer(m_vertexBuffer);
+
+    setVerticesPerPatch(4);
+    addAttribute(m_positionAttribute);
+}
 
 
-BoxEntity::BoxEntity(QNode *parent)
-    : Qt3D::QEntity(parent)
-    , m_transform(new Qt3D::QTransform())
-    , m_translate(new Qt3D::QTranslateTransform())
-    , m_mesh(new Qt3D::QCuboidMesh())
-    , m_material(new Qt3D::QPhongMaterial())
-    , m_angle(0.0f)
-      , m_radius(1.0f)
+
+Object::Object(QNode *parent)
+    : Qt3D::QEntity(parent),
+    m_transform(new Qt3D::QTransform()),
+    m_translate(new Qt3D::QTranslateTransform()),
+    m_mesh(new Qt3D::QGeometryRenderer()),
+    m_material(new Qt3D::QPhongMaterial())
 {
     m_transform->addTransform(m_translate);
 
@@ -47,65 +71,29 @@ BoxEntity::BoxEntity(QNode *parent)
     m_material->setAmbient(Qt::gray);
     m_material->setSpecular(Qt::white);
     m_material->setShininess(150.0f);
+    
+    m_mesh->setGeometry(new TessellatedGeometry(this));
 
     addComponent(m_transform);
     addComponent(m_mesh);
     addComponent(m_material);
 }
 
-void BoxEntity::setDiffuseColor(const QColor &diffuseColor)
+void Object::setDiffuseColor(const QColor &diffuseColor)
 {
     m_material->setDiffuse(diffuseColor);
 }
 
-void BoxEntity::setAngle(float arg)
-{
-    if (m_angle == arg)
-        return;
-
-    m_angle = arg;
-    emit angleChanged();
-    updateTransformation();
-}
-
-void BoxEntity::setRadius(float arg)
-{
-    if (m_radius == arg)
-        return;
-
-    m_radius = arg;
-    emit radiusChanged();
-    updateTransformation();
-}
-
-QColor BoxEntity::diffuseColor()
+QColor Object::diffuseColor()
 {
     return m_material->diffuse();
 }
 
-float BoxEntity::angle() const
-{
-    return m_angle;
-}
 
-float BoxEntity::radius() const
-{
-    return m_radius;
-}
-
-void BoxEntity::updateTransformation()
-{
-    m_translate->setTranslation(QVector3D(qCos(m_angle) * m_radius,
-                1.0f,
-                qSin(m_angle) * m_radius));
-}
-
-
-
-Viewport2::Viewport2(Qt3D::QNode *parent)
-    : Qt3D::QEntity(parent)
-    , m_timer(new QTimer(this))
-    , m_even(true)
+// VIEWPORT
+Viewport2::Viewport2(QNode *parent)
+    : Qt3D::QEntity(parent),
+    m_timer(new QTimer(this))
 {
     QObject::connect(m_timer, SIGNAL(timeout()), SLOT(updateScene()));
     m_timer->setInterval(1200);
@@ -122,30 +110,14 @@ void Viewport2::updateScene()
     if (m_entities.isEmpty()) {
         buildScene();
     } else {
-        int i = 0;
-        Q_FOREACH (BoxEntity *entity, m_entities) {
-            if (i % 2 == 0)
-                entity->setParent(m_even ? Q_NULLPTR : this);
-            else
-                entity->setParent(m_even ? this : Q_NULLPTR);
-            ++i;
+        Q_FOREACH (Object *entity, m_entities) {
+            entity->setParent(this);
         }
-        m_even = !m_even;
     }
 }
 
 void Viewport2::buildScene()
 {
-    int count = 20;
-    const float radius = 5.0f;
-
-    for (int i = 0; i < count; ++i) {
-        BoxEntity *entity = new BoxEntity;
-        const float angle = M_PI * 2.0f * float(i) / count;
-        entity->setAngle(angle);
-        entity->setRadius(radius);
-        entity->setDiffuseColor(QColor(qFabs(qCos(angle)) * 255, 204, 75));
-        m_entities.append(entity);
-    }
+    m_entities.append(new Object()); 
 }
 

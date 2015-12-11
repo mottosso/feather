@@ -20,64 +20,48 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  ***********************************************************************/
-
 #ifndef VIEWPORT2_HPP 
 #define VIEWPORT2_HPP
 
 #include "deps.hpp"
 #include "qml_deps.hpp"
 #include "types.hpp"
-//#include "gl_scene.hpp"
-#include <Qt3DCore/QEntity>
 
-// Headers for BoxEntity
-#include <Qt3DCore/QEntity>
-#include <Qt3DCore/QTransform>
-#include <Qt3DCore/QTranslateTransform>
-#include <Qt3DCore/QScaleTransform>
-#include <Qt3DRenderer/QCuboidMesh>
-#include <Qt3DRenderer/QPhongMaterial>
-
-
-class BoxEntity : public Qt3D::QEntity
+class TessellatedGeometry : public Qt3D::QGeometry
 {
     Q_OBJECT
+    public:
+        TessellatedGeometry(Qt3D::QNode *parent=0);
 
-    Q_PROPERTY(QColor diffuseColor READ diffuseColor WRITE setDiffuseColor NOTIFY diffuseColorChanged)
-    Q_PROPERTY(float angle READ angle WRITE setAngle NOTIFY angleChanged)
-    Q_PROPERTY(float radius READ radius WRITE setRadius NOTIFY radiusChanged)
-
-public:
-    BoxEntity(QNode *parent = 0);
-
-    QColor diffuseColor();
-    float angle() const;
-    float radius() const;
-
-public Q_SLOTS:
-    void setDiffuseColor(const QColor &diffuseColor);
-    void setAngle(float arg);
-    void setRadius(float arg);
-
-Q_SIGNALS:
-    void diffuseColorChanged();
-    void angleChanged();
-    void radiusChanged();
-
-private:
-    void updateTransformation();
-
-    Qt3D::QTransform *m_transform;
-    Qt3D::QTranslateTransform *m_translate;
-    Qt3D::QScaleTransform *m_scale;
-    Qt3D::QCuboidMesh *m_mesh;
-    Qt3D::QPhongMaterial *m_material;
-    float m_angle;
-    float m_radius;
+    private:
+        Qt3D::QAttribute *m_positionAttribute;
+        Qt3D::QBuffer *m_vertexBuffer;
 };
 
 
-class QTimer;
+
+class Object: public Qt3D::QEntity
+{
+    Q_OBJECT
+    Q_PROPERTY(QColor diffuseColor READ diffuseColor WRITE setDiffuseColor NOTIFY diffuseColorChanged)
+ 
+    public:
+        Object(QNode *parent = 0);
+        QColor diffuseColor();
+
+    public Q_SLOTS:
+        void setDiffuseColor(const QColor &diffuseColor);
+ 
+    Q_SIGNALS:
+        void diffuseColorChanged();
+ 
+    private:
+        Qt3D::QTransform *m_transform;
+        Qt3D::QTranslateTransform *m_translate;
+        Qt3D::QScaleTransform *m_scale;
+        Qt3D::QGeometryRenderer *m_mesh;
+        Qt3D::QPhongMaterial *m_material;
+};
 
 
 class Viewport2 : public Qt3D::QEntity
@@ -93,9 +77,8 @@ class Viewport2 : public Qt3D::QEntity
         void buildScene();
 
     private:
-        QVector<BoxEntity *> m_entities;
+        QVector<Object*> m_entities;
         QTimer *m_timer;
-        bool m_even;
 };
 
 #endif

@@ -37,6 +37,9 @@
 #include <QtGui/QGuiApplication>
 #include <QtGui/QOffscreenSurface>
 #include <QTime>
+#include <QTimer>
+
+#include <qmath.h>
 
 // QtOpenGL
 #include <QtGui/QOpenGLContext>
@@ -49,14 +52,21 @@
 #include <QVector>
 #include <QPainter>
 #include <QPaintEngine>
-
 #include <QtOpenGL/QtOpenGL>
 #include <QtOpenGL/QGLFunctions>
 
 // Qt3D
 #include <Qt3DCore/QEntity>
 #include <Qt3DCore/QNode>
-#include <QTimer>
-#include <qmath.h>
+#include <Qt3DCore/QEntity>
+#include <Qt3DCore/QTransform>
+#include <Qt3DCore/QTranslateTransform>
+#include <Qt3DCore/QScaleTransform>
+#include <Qt3DRenderer/QCuboidMesh>
+#include <Qt3DRenderer/QPhongMaterial>
+#include <Qt3DRenderer/qattribute.h>
+#include <Qt3DRenderer/qbuffer.h>
+#include <Qt3DRenderer/qgeometry.h>
+
 
 #endif
