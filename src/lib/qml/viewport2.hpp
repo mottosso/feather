@@ -27,6 +27,9 @@
 #include "qml_deps.hpp"
 #include "types.hpp"
 
+
+// MESHES
+
 class TessellatedGeometry : public Qt3D::QGeometry
 {
     Q_OBJECT
@@ -43,16 +46,24 @@ class TessellatedGeometry : public Qt3D::QGeometry
 class Object: public Qt3D::QEntity
 {
     Q_OBJECT
+    Q_PROPERTY(QColor ambientColor READ ambientColor WRITE setAmbientColor NOTIFY ambientColorChanged)
+    Q_PROPERTY(QColor specularColor READ specularColor WRITE setSpecularColor NOTIFY specularColorChanged)
     Q_PROPERTY(QColor diffuseColor READ diffuseColor WRITE setDiffuseColor NOTIFY diffuseColorChanged)
  
     public:
         Object(QNode *parent = 0);
+        QColor ambientColor();
+        QColor specularColor();
         QColor diffuseColor();
 
     public Q_SLOTS:
+        void setAmbientColor(const QColor &ambientColor);
+        void setSpecularColor(const QColor &specularColor);
         void setDiffuseColor(const QColor &diffuseColor);
  
     Q_SIGNALS:
+        void ambientColorChanged();
+        void specularColorChanged();
         void diffuseColorChanged();
  
     private:

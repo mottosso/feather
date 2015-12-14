@@ -26,6 +26,8 @@
 // MAIN VIEWPORT
 
 
+// MESHES
+
 TessellatedGeometry::TessellatedGeometry(QNode *parent)
     : Qt3D::QGeometry(parent),
     m_positionAttribute(new Qt3D::QAttribute(this)),
@@ -97,9 +99,30 @@ Object::Object(QNode *parent)
     addComponent(m_material);
 }
 
+void Object::setAmbientColor(const QColor &ambientColor)
+{
+    m_material->setAmbient(ambientColor);
+}
+
+
+void Object::setSpecularColor(const QColor &specularColor)
+{
+    m_material->setSpecular(specularColor);
+}
+
 void Object::setDiffuseColor(const QColor &diffuseColor)
 {
     m_material->setDiffuse(diffuseColor);
+}
+
+QColor Object::ambientColor()
+{
+    return m_material->ambient();
+}
+
+QColor Object::specularColor()
+{
+    return m_material->specular();
 }
 
 QColor Object::diffuseColor()
