@@ -78,7 +78,6 @@ class Viewport2 : public Qt3D::QEntity
 
     private:
         QVector<Object*> m_entities;
-        QTimer *m_timer;
 };
 
 #endif

@@ -25,19 +25,22 @@
 
 // MAIN VIEWPORT
 
+
 TessellatedGeometry::TessellatedGeometry(QNode *parent)
     : Qt3D::QGeometry(parent),
     m_positionAttribute(new Qt3D::QAttribute(this)),
     m_vertexBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this))
 {
     const float positionData[] = {
-        -0.8f, -0.8f, 0.0f,
-        0.8f, -0.8f, 0.0f,
-        0.8f,  0.8f, 0.0f,
-        -0.8f,  0.8f, 0.0f
+        -1.0f, -1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,
+        1.0f,  1.0f, 0.0f,
+        1.0f,  1.0f, 0.0f,
+        -1.0f,  1.0f, 0.0f,
+        -1.0f, -1.0f, 0.0f
     };
 
-    const int nVerts = 4;
+    const int nVerts = 6;
     const int size = nVerts * 3 * sizeof(float);
     QByteArray positionBytes;
     positionBytes.resize(size);
@@ -68,10 +71,25 @@ Object::Object(QNode *parent)
     m_transform->addTransform(m_translate);
 
     connect(m_material, SIGNAL(diffuseChanged()), this, SIGNAL(diffuseColorChanged()));
-    m_material->setAmbient(Qt::gray);
+    m_material->setAmbient(Qt::red);
     m_material->setSpecular(Qt::white);
-    m_material->setShininess(150.0f);
-    
+    m_material->setShininess(0.0f);
+
+    /*
+    Points
+    Lines
+    LineLoop
+    LineStrip
+    Triangles
+    TriangleStrip
+    TriangleFan
+    LinesAdjacency
+    TrianglesAdjacency
+    LineStripAdjacency
+    TriangleStripAdjacency
+    Patches
+    */
+    m_mesh->setPrimitiveType(Qt3D::QGeometryRenderer::Triangles);
     m_mesh->setGeometry(new TessellatedGeometry(this));
 
     addComponent(m_transform);
@@ -92,12 +110,10 @@ QColor Object::diffuseColor()
 
 // VIEWPORT
 Viewport2::Viewport2(QNode *parent)
-    : Qt3D::QEntity(parent),
-    m_timer(new QTimer(this))
+    : Qt3D::QEntity(parent)
 {
-    QObject::connect(m_timer, SIGNAL(timeout()), SLOT(updateScene()));
-    m_timer->setInterval(1200);
-    m_timer->start();
+    buildScene();
+    updateScene();
 }
 
 Viewport2::~Viewport2()
