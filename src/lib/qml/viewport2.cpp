@@ -91,7 +91,12 @@ Object::Object(QNode *parent)
     TriangleStripAdjacency
     Patches
     */
+    // Faces
     m_mesh->setPrimitiveType(Qt3D::QGeometryRenderer::Triangles);
+    // Edges
+    //m_mesh->setPrimitiveType(Qt3D::QGeometryRenderer::LineLoop);
+    // Points
+    //m_mesh->setPrimitiveType(Qt3D::QGeometryRenderer::Points);
     m_mesh->setGeometry(new TessellatedGeometry(this));
 
     addComponent(m_transform);

@@ -78,8 +78,19 @@ class Object: public Qt3D::QEntity
 class Viewport2 : public Qt3D::QEntity
 {
     Q_OBJECT
-
+    
     public:
+        enum Display {
+            Hide,
+            BoundingBox,
+            Point,
+            Edge,
+            Wireframe,
+            SmoothShaded,
+            FlatShaded,
+            Rendered
+        };
+
         explicit Viewport2(Qt3D::QNode *parent = 0);
         ~Viewport2();
 
