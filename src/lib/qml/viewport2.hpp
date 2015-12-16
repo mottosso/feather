@@ -28,6 +28,53 @@
 #include "types.hpp"
 
 
+// GRID
+
+class GridGeometry : public Qt3D::QGeometry
+{
+    Q_OBJECT
+
+    public:
+        GridGeometry(Qt3D::QNode *parent=0);
+        int majorSubDividLevel();
+        int minorSubDividLevel();
+        void setMajorSubDividLevel(const int &level);
+        void setMinorSubDividLevel(const int &level);
+       
+    private:
+        void build();
+        int m_majorLevel;
+        int m_minorLevel;
+        std::vector<feather::FVertex3D> m_grid;
+        Qt3D::QAttribute *m_meshAttribute;
+        Qt3D::QBuffer *m_vertexBuffer;
+};
+
+
+class Grid : public Qt3D::QEntity
+{
+    Q_OBJECT
+    Q_PROPERTY(QColor diffuseColor READ diffuseColor WRITE setDiffuseColor NOTIFY diffuseColorChanged)
+    
+    public:
+        Grid(Qt3D::QNode *parent=0);
+        ~Grid();
+        GridGeometry* grid() { return static_cast<GridGeometry*>(m_pMesh->geometry()); };
+        QColor diffuseColor();
+
+    public Q_SLOTS:
+        void setDiffuseColor(const QColor &diffuseColor);
+ 
+    Q_SIGNALS:
+        void diffuseColorChanged();
+ 
+    private:
+        void build();
+        Qt3D::QTransform *m_pTransform;
+        Qt3D::QPhongMaterial *m_pMaterial;
+        Qt3D::QGeometryRenderer *m_pMesh;
+};
+
 // MESHES
 
 class TessellatedGeometry : public Qt3D::QGeometry
@@ -78,7 +125,11 @@ class Object: public Qt3D::QEntity
 class Viewport2 : public Qt3D::QEntity
 {
     Q_OBJECT
-    
+    Q_PROPERTY(int majorSubDividLevel READ majorSubDividLevel WRITE setMajorSubDividLevel NOTIFY majorSubDividLevelChanged)
+    Q_PROPERTY(int minorSubDividLevel READ minorSubDividLevel WRITE setMinorSubDividLevel NOTIFY minorSubDividLevelChanged)
+    Q_PROPERTY(bool showGrid READ showGrid WRITE setShowGrid NOTIFY showGridChanged)
+    Q_PROPERTY(bool showAxis READ showAxis WRITE setShowAxis NOTIFY showAxisChanged)
+ 
     public:
         enum Display {
             Hide,
@@ -93,13 +144,30 @@ class Viewport2 : public Qt3D::QEntity
 
         explicit Viewport2(Qt3D::QNode *parent = 0);
         ~Viewport2();
+        int majorSubDividLevel();
+        int minorSubDividLevel();
+        bool showGrid();
+        bool showAxis();
 
     private Q_SLOTS:
         void updateScene();
         void buildScene();
+        void setMajorSubDividLevel(const int &level);
+        void setMinorSubDividLevel(const int &level);
+        void setShowGrid(const bool &show);
+        void setShowAxis(const bool &show);
 
+   Q_SIGNALS:
+        void majorSubDividLevelChanged();
+        void minorSubDividLevelChanged();
+        void showGridChanged();
+        void showAxisChanged();
+ 
     private:
+        bool m_showGrid;
+        bool m_showAxis;
         QVector<Object*> m_entities;
+        Grid* m_pGrid;
 };
 
 #endif
