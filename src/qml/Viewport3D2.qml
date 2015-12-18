@@ -49,7 +49,7 @@ Rectangle {
                 id: camera
                 projectionType: CameraLens.PerspectiveProjection
                 fieldOfView: 45
-                aspectRatio: 16/9
+                aspectRatio: frame.width/frame.height
                 nearPlane : 0.1
                 farPlane : 1000.0
                 position: Qt.vector3d( 0.0, 0.0, -40.0 )

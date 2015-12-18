@@ -27,6 +27,8 @@
 
 GridGeometry::GridGeometry(QNode *parent)
     : Qt3D::QGeometry(parent),
+    m_majorLevel(10),
+    m_minorLevel(10),
     m_meshAttribute(new Qt3D::QAttribute(this)),
     m_vertexBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this))
 {
@@ -88,7 +90,7 @@ void GridGeometry::build()
     m_grid.push_back(feather::FVertex3D(10,0,10));
     m_grid.push_back(feather::FVertex3D(-10,0,10));
 
-    double cpos = 10; 
+    double cpos = 10.0; 
     for(unsigned int i=0; i < 10; i++){
         cpos -= major_spacing;
         // Z corners
