@@ -30,6 +30,40 @@
 
 // GRID
 
+class AxisGeometry : public Qt3D::QGeometry
+{
+    Q_OBJECT
+
+    public:
+        AxisGeometry(Qt3D::QNode *parent=0);
+       
+    private:
+        void build();
+        std::vector<feather::FVertex3D> m_axis;
+        Qt3D::QAttribute *m_meshAttribute;
+        Qt3D::QBuffer *m_vertexBuffer;
+};
+
+
+class Axis : public Qt3D::QEntity
+{
+    Q_OBJECT
+    
+    public:
+        Axis(Qt3D::QNode *parent=0);
+        ~Axis();
+        AxisGeometry* grid() { return static_cast<AxisGeometry*>(m_pMesh->geometry()); };
+
+    private:
+        void build();
+        Qt3D::QTransform *m_pTransform;
+        Qt3D::QPhongMaterial *m_pMaterial;
+        Qt3D::QGeometryRenderer *m_pMesh;
+};
+
+
+// GRID
+
 class GridGeometry : public Qt3D::QGeometry
 {
     Q_OBJECT
@@ -168,6 +202,7 @@ class Viewport2 : public Qt3D::QEntity
         bool m_showAxis;
         QVector<Object*> m_entities;
         Grid* m_pGrid;
+        Axis* m_pAxis;
 };
 
 #endif

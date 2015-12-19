@@ -25,6 +25,79 @@
 
 // MAIN VIEWPORT
 
+
+// AXIS GEOMETRY
+
+AxisGeometry::AxisGeometry(QNode *parent)
+    : Qt3D::QGeometry(parent),
+    m_meshAttribute(new Qt3D::QAttribute(this)),
+    m_vertexBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this))
+{
+    build();
+
+    //const int nVerts = 6;
+    const int size = m_axis.size() * sizeof(feather::FVertex3D);
+    QByteArray meshBytes;
+    meshBytes.resize(size);
+    memcpy(meshBytes.data(), m_axis.data(), size);
+
+    m_vertexBuffer->setData(meshBytes);
+
+    m_meshAttribute->setName(Qt3D::QAttribute::defaultPositionAttributeName());
+    m_meshAttribute->setDataType(Qt3D::QAttribute::Double);
+    m_meshAttribute->setDataSize(3);
+    m_meshAttribute->setCount(m_axis.size());
+    m_meshAttribute->setByteStride(sizeof(feather::FVertex3D));
+    m_meshAttribute->setBuffer(m_vertexBuffer);
+
+    //setVerticesPerPatch(4);
+    addAttribute(m_meshAttribute);
+}
+
+void AxisGeometry::build()
+{
+    // X axis 
+    m_axis.push_back(feather::FVertex3D(0,0,0));
+    m_axis.push_back(feather::FVertex3D(10,0,0));
+ 
+    // Y axis 
+    m_axis.push_back(feather::FVertex3D(0,0,0));
+    m_axis.push_back(feather::FVertex3D(0,10,0));
+ 
+    // Z axis 
+    m_axis.push_back(feather::FVertex3D(0,0,0));
+    m_axis.push_back(feather::FVertex3D(0,0,10));
+}
+
+// AXIS 
+
+Axis::Axis(QNode *parent)
+    : Qt3D::QEntity(parent),
+    m_pTransform(new Qt3D::QTransform()),
+    m_pMaterial(new Qt3D::QPhongMaterial()),
+    m_pMesh(new Qt3D::QGeometryRenderer())
+{
+    m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::Lines);
+    m_pMesh->setGeometry(new AxisGeometry(this));
+    
+    //m_pMaterial->setDiffuse(QColor(Qt::red));
+    m_pMaterial->setAmbient(Qt::red);
+    m_pMaterial->setSpecular(Qt::black);
+    m_pMaterial->setShininess(0.0f);
+
+    addComponent(m_pTransform);
+    addComponent(m_pMesh);
+    addComponent(m_pMaterial);
+}
+
+Axis::~Axis()
+{
+
+}
+
+
+// GRID GEOMETRY
+
 GridGeometry::GridGeometry(QNode *parent)
     : Qt3D::QGeometry(parent),
     m_majorLevel(10),
@@ -261,6 +334,8 @@ Viewport2::Viewport2(QNode *parent)
     m_showAxis(true)
 {
     m_pGrid = new Grid(this);
+    m_pAxis = new Axis(this);
+
     buildScene();
     updateScene();
 }
@@ -270,6 +345,8 @@ Viewport2::~Viewport2()
     qDeleteAll(m_entities);
     delete m_pGrid;
     m_pGrid=0;
+    delete m_pAxis;
+    m_pAxis=0;
 }
 
 void Viewport2::updateScene()
