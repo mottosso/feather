@@ -81,9 +81,20 @@ Axis::Axis(QNode *parent)
     m_pMesh->setGeometry(new AxisGeometry(this));
     
     //m_pMaterial->setDiffuse(QColor(Qt::red));
-    m_pMaterial->setAmbient(Qt::red);
-    m_pMaterial->setSpecular(Qt::black);
-    m_pMaterial->setShininess(0.0f);
+    //m_pMaterial->setAmbient(Qt::red);
+    //m_pMaterial->setSpecular(Qt::black);
+    //m_pMaterial->setShininess(0.0f);
+
+    Qt3D::QEffect* effect = new Qt3D::QEffect();
+    Qt3D::QShaderProgram* shader = new Qt3D::QShaderProgram();
+    Qt3D::QTechnique* technique = new Qt3D::QTechnique(); 
+    Qt3D::QRenderPass* pass = new Qt3D::QRenderPass();
+
+    shader->setFragmentShaderCode(Qt3D::QShaderProgram::loadSource(QUrl("shaders/frag/test.glsl")));
+    pass->setShaderProgram(shader);
+    technique->addPass(pass); 
+    effect->addTechnique(technique);
+    m_pMaterial->setEffect(effect);
 
     addComponent(m_pTransform);
     addComponent(m_pMesh);

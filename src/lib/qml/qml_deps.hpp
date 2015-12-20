@@ -64,6 +64,10 @@
 #include <Qt3DCore/QScaleTransform>
 #include <Qt3DRenderer/QCuboidMesh>
 #include <Qt3DRenderer/QPhongMaterial>
+#include <Qt3DRenderer/QShaderProgram>
+#include <Qt3DRenderer/QEffect>
+#include <Qt3DRenderer/QTechnique>
+#include <Qt3DRenderer/QRenderPass>
 #include <Qt3DRenderer/qattribute.h>
 #include <Qt3DRenderer/qbuffer.h>
 #include <Qt3DRenderer/qgeometry.h>
