@@ -20,10 +20,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  ***********************************************************************/
-#version 120
+#version 330
 
 varying vec4 c;
  
 void main(void) {
-  gl_FragColor = c;
+  gl_FragColor = vec4(1.0,0.0,0.0,1.0);
 }

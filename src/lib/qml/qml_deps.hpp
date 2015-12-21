@@ -68,9 +68,11 @@
 #include <Qt3DRenderer/QEffect>
 #include <Qt3DRenderer/QTechnique>
 #include <Qt3DRenderer/QRenderPass>
+#include <Qt3DRenderer/QOpenGLFilter>
 #include <Qt3DRenderer/qattribute.h>
 #include <Qt3DRenderer/qbuffer.h>
 #include <Qt3DRenderer/qgeometry.h>
+
 
 
 #endif

@@ -57,7 +57,7 @@ class Axis : public Qt3D::QEntity
     private:
         void build();
         Qt3D::QTransform *m_pTransform;
-        Qt3D::QPhongMaterial *m_pMaterial;
+        Qt3D::QMaterial *m_pMaterial;
         Qt3D::QGeometryRenderer *m_pMesh;
 };
 

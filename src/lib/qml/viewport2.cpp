@@ -74,7 +74,7 @@ void AxisGeometry::build()
 Axis::Axis(QNode *parent)
     : Qt3D::QEntity(parent),
     m_pTransform(new Qt3D::QTransform()),
-    m_pMaterial(new Qt3D::QPhongMaterial()),
+    m_pMaterial(new Qt3D::QMaterial()),
     m_pMesh(new Qt3D::QGeometryRenderer())
 {
     m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::Lines);
@@ -85,16 +85,44 @@ Axis::Axis(QNode *parent)
     //m_pMaterial->setSpecular(Qt::black);
     //m_pMaterial->setShininess(0.0f);
 
+    
     Qt3D::QEffect* effect = new Qt3D::QEffect();
     Qt3D::QShaderProgram* shader = new Qt3D::QShaderProgram();
     Qt3D::QTechnique* technique = new Qt3D::QTechnique(); 
     Qt3D::QRenderPass* pass = new Qt3D::QRenderPass();
 
-    shader->setFragmentShaderCode(Qt3D::QShaderProgram::loadSource(QUrl("shaders/frag/test.glsl")));
-    pass->setShaderProgram(shader);
-    technique->addPass(pass); 
-    effect->addTechnique(technique);
-    m_pMaterial->setEffect(effect);
+    technique->openGLFilter()->setApi(Qt3D::QOpenGLFilter::Desktop);
+    technique->openGLFilter()->setProfile(Qt3D::QOpenGLFilter::Core);
+    technique->openGLFilter()->setMajorVersion(3);
+    technique->openGLFilter()->setMinorVersion(1);
+
+
+    QFile vert("shaders/vert/mesh2.glsl");
+    QFile frag("shaders/frag/test.glsl");
+    QFile geom("shaders/geom/geom.glsl");
+
+    if (!vert.open(QIODevice::ReadOnly | QIODevice::Text) ||
+            !frag.open(QIODevice::ReadOnly | QIODevice::Text) ||
+            !geom.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+    else {
+        while (!vert.atEnd()) {
+            shader->setVertexShaderCode(vert.readLine());
+        }
+
+        while (!frag.atEnd()) {
+            shader->setFragmentShaderCode(frag.readLine());
+        }
+
+        while (!geom.atEnd()) {
+            shader->setGeometryShaderCode(geom.readLine());
+        }
+
+        pass->setShaderProgram(shader);
+        technique->addPass(pass); 
+        effect->addTechnique(technique);
+        m_pMaterial->setEffect(effect);
+    }
 
     addComponent(m_pTransform);
     addComponent(m_pMesh);
