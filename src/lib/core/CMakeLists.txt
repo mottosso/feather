@@ -64,6 +64,7 @@ SET(feather_core_HDRS
     light.hpp
     texture.hpp
     shader.hpp
+    draw.hpp
     gl.hpp
 )
 

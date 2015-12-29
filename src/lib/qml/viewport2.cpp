@@ -75,9 +75,11 @@ Axis::Axis(QNode *parent)
     : Qt3D::QEntity(parent),
     m_pTransform(new Qt3D::QTransform()),
     m_pMaterial(new Qt3D::QMaterial()),
-    m_pMesh(new Qt3D::QGeometryRenderer())
+    m_pMesh(new Qt3D::QGeometryRenderer()),
+    m_pMouseInput(new Qt3D::QMouseInput(this))
 {
-    m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::Lines);
+    //m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::Lines);
+    m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::Triangles);
     m_pMesh->setGeometry(new AxisGeometry(this));
     
     //m_pMaterial->setDiffuse(QColor(Qt::red));
@@ -91,11 +93,55 @@ Axis::Axis(QNode *parent)
     Qt3D::QTechnique* technique = new Qt3D::QTechnique(); 
     Qt3D::QRenderPass* pass = new Qt3D::QRenderPass();
 
-    technique->openGLFilter()->setApi(Qt3D::QOpenGLFilter::Desktop);
-    technique->openGLFilter()->setProfile(Qt3D::QOpenGLFilter::Core);
+    //technique->openGLFilter()->setApi(Qt3D::QOpenGLFilter::Desktop);
+    //technique->openGLFilter()->setApi(Qt3D::QOpenGLFilter::ES);
+    //technique->openGLFilter()->setProfile(Qt3D::QOpenGLFilter::Core);
     technique->openGLFilter()->setMajorVersion(3);
-    technique->openGLFilter()->setMinorVersion(1);
+    technique->openGLFilter()->setMinorVersion(3);
 
+    technique->addParameter(new Qt3D::QParameter("line.width",QVariant(2.0)));
+
+    pass->addBinding(new Qt3D::QParameterMapping("ambient","ka",Qt3D::QParameterMapping::Uniform));
+    pass->addBinding(new Qt3D::QParameterMapping("diffuse","kd",Qt3D::QParameterMapping::Uniform));
+    pass->addBinding(new Qt3D::QParameterMapping("specular","ks",Qt3D::QParameterMapping::Uniform));
+
+    /*
+    shader->setVertexShaderCode("#version 130\\
+            in vec3 vertexPosition;\\
+            in vec3 vertexNormal;\\
+            out vec3 position;\\
+            out vec3 normal;\\
+            uniform mat4 modelView;\\
+            uniform mat3 modelViewNormal;\\
+            uniform mat4 mvp;\\
+            void main()\\
+            {\\
+            normal = normalize(modelViewNormal * vertexNormal);\\
+            position = vec3(modelView * vec4(vertexPosition, 1.0));\\
+            gl_Position = mvp * vec4(vertexPosition, 1.0);\\
+            }");
+
+            shader->setFragmentShaderCode("#version 130\\
+                    in vec3 normal;\\
+                    in vec3 position;\\
+                    uniform vec3 finalColor;\\
+                    out vec4 fragColor;\\
+                    void main()\\
+                    {\\
+                    vec3 n = normalize(normal);\\
+                    vec3 s = normalize(vec3(1.0, 0.0, 1.0) - position);\\
+                    vec3 v = normalize(-position);\\
+                    float diffuse = max(dot(s, n), 0.0);\\
+                    //fragColor = vec4(diffuse * finalColor, 1.0);\\
+                    gl_FragColor = 1.0;\\
+                    }");
+
+                    pass->setShaderProgram(shader);
+                    technique->addPass(pass); 
+                    effect->addTechnique(technique);
+                    m_pMaterial->setEffect(effect);
+
+    */
 
     QFile vert("shaders/vert/mesh2.glsl");
     QFile frag("shaders/frag/test.glsl");
@@ -103,9 +149,10 @@ Axis::Axis(QNode *parent)
 
     if (!vert.open(QIODevice::ReadOnly | QIODevice::Text) ||
             !frag.open(QIODevice::ReadOnly | QIODevice::Text) ||
-            !geom.open(QIODevice::ReadOnly | QIODevice::Text))
+            !geom.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        std::cout << "Shaders failed to open!\n";
         return;
-    else {
+    } else {
         while (!vert.atEnd()) {
             shader->setVertexShaderCode(vert.readLine());
         }
@@ -127,6 +174,13 @@ Axis::Axis(QNode *parent)
     addComponent(m_pTransform);
     addComponent(m_pMesh);
     addComponent(m_pMaterial);
+
+    connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(mouseClicked()));
+    /*
+    connect(m_pTransform,SIGNAL(entered()),this,SLOT(mouseClicked()));
+    connect(m_pMesh,SIGNAL(entered()),this,SLOT(mouseClicked()));
+    connect(m_pMaterial,SIGNAL(entered()),this,SLOT(mouseClicked()));
+    */
 }
 
 Axis::~Axis()
@@ -134,6 +188,10 @@ Axis::~Axis()
 
 }
 
+void Axis::mouseClicked()
+{
+    std::cout << "Axis Pressed\n";
+}
 
 // GRID GEOMETRY
 
@@ -370,13 +428,16 @@ QColor Object::diffuseColor()
 Viewport2::Viewport2(QNode *parent)
     : Qt3D::QEntity(parent),
     m_showGrid(true),
-    m_showAxis(true)
+    m_showAxis(true),
+    m_pMouseInput(new Qt3D::QMouseInput(this))
 {
     m_pGrid = new Grid(this);
     m_pAxis = new Axis(this);
 
     buildScene();
     updateScene();
+    addComponent(m_pMouseInput);
+    connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(onEntered()));
 }
 
 Viewport2::~Viewport2()
@@ -448,3 +509,7 @@ void Viewport2::buildScene()
     m_entities.append(new Object()); 
 }
 
+void Viewport2::onEntered()
+{
+    std::cout << "VP Entered\n";
+}

@@ -69,10 +69,11 @@
 #include <Qt3DRenderer/QTechnique>
 #include <Qt3DRenderer/QRenderPass>
 #include <Qt3DRenderer/QOpenGLFilter>
+#include <Qt3DRenderer/QParameter>
+#include <Qt3DRenderer/QParameterMapping>
 #include <Qt3DRenderer/qattribute.h>
 #include <Qt3DRenderer/qbuffer.h>
 #include <Qt3DRenderer/qgeometry.h>
-
-
+#include <Qt3DInput/QMouseInput>
 
 #endif

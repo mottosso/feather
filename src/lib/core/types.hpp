@@ -290,13 +290,21 @@ namespace feather
     typedef std::pair<FSceneGraph::edge_descriptor, bool> FFieldConnection;
 
     struct PluginNodeFields;
- 
+
+};
+
+#include "draw.hpp"
+
+namespace feather
+{        
+
     struct FNode
     {
         FNode(node::Type t=node::Empty) : type(t)/*, parent(NULL),*/ {};
         int uid; // unique id number
         int node; // node type enum
         field::Fields fields; // this holds the field data
+        draw::DrawItems items; // holds descriptions of how to draw the node
         std::string name;
         node::Type type; // this is the node group type
         int layer; // what layer is the node stored in

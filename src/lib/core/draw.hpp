@@ -1,8 +1,8 @@
 /***********************************************************************
  *
- * Filename: state.hpp
+ * Filename: draw.hpp
  *
- * Description: Used for selection of items in the scenegraph.
+ * Description: Used to draw items in the viewport.
  *
  * Copyright (C) 2015 Richard Layman, rlayman2000@yahoo.com 
  *
@@ -21,36 +21,38 @@
  *
  ***********************************************************************/
 
-#ifndef STATE_HPP
-#define STATE_HPP
+#ifndef DRAW_HPP
+#define DRAW_HPP
 
 #include "deps.hpp"
 #include "types.hpp"
 
-namespace feather
-{
+namespace feather {
 
-    namespace state
-    {
+    namespace draw {
 
-        enum SGMode { None, DoIt, DrawIt, DrawGL, DrawSelection };
-        
-        struct FSgState {
-            int minUid;
-            int maxUid;
+        struct Item {};
+
+        struct Line : public Item
+        {
+            enum Type { Solid, Dashed };
+            Line(FVector3D _sp, FVector3D _ep, FColorRGB _color, Type _type=Solid) : sp(_sp), ep(_ep), color(_color), type(_type) {};
+            FVector3D sp;
+            FVector3D ep;
+            FColorRGB color;
+            Type type;
         };
 
-        struct FState {
-            FState() : sgMode(None) { };
-            SGMode sgMode;
-            FSgState sgState;
-            std::vector<int> uid_update;
-            void clear_uid_update() { uid_update.clear(); };
-            void add_uid_to_update(int uid) { uid_update.push_back(uid); };
-        };
+        typedef std::vector<Item*> DrawItems;
 
-    } // namespace state
+    } // namespace draw
 
 } // namespace feather
 
+#define DRAW_IT(__node_enum)\
+    template <> status node_draw_it<__node_enum>(draw::DrawItems& items)
+
+#define DRAW_LINE(__startpoint,__endpoint,__color,__type)\
+    items.push_back(new draw::Line(__startpoint,__endpoint,__color,__type);
+    
 #endif

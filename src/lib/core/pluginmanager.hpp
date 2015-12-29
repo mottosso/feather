@@ -29,6 +29,7 @@
 #include "command.hpp"
 #include "parameter.hpp"
 #include "field.hpp"
+#include "draw.hpp"
 
 #define MAX_NODE_ID 900
 
@@ -48,6 +49,7 @@ namespace feather
         std::string (*description)();
         std::string (*author)();
         status (*do_it)(int,field::Fields&);
+        status (*draw_it)(int,draw::DrawItems&);
         void (*gl_init)(FNode&,FGlInfo&);
         void (*gl_draw)(FNode&,FGlInfo&);
         bool (*node_exist)(int); // is there a node with the given type and id in this plugin
@@ -92,6 +94,7 @@ namespace feather
             std::vector<field::FieldBase*>& m_list; 
     };
 
+
     // DO_IT()
 
     template <int _Id>
@@ -109,6 +112,26 @@ namespace feather
         private:
             int m_node;
             field::Fields& m_fields;
+    };
+
+
+    // DRAW_IT()
+
+    template <int _Id>
+    struct call_draw_its {
+        static status exec(int id, draw::DrawItems& items) { return call_draw_its<_Id-1>::exec(id,items); };
+    };
+
+    template <> struct call_draw_its<0> { static status exec(int id, draw::DrawItems& items) { return status(FAILED,"could not find node"); }; };
+
+    template <int _Id> status node_draw_it(draw::DrawItems& items) { return status(FAILED,"no node found"); };
+   
+    struct call_draw_it {
+        call_draw_it(int node,draw::DrawItems& items): m_node(node), m_items(items){};
+        void operator()(PluginData n) { if(n.node_exist(m_node)) { n.draw_it(m_node,m_items); } };
+        private:
+            int m_node;
+            draw::DrawItems& m_items;
     };
 
 
@@ -352,6 +375,7 @@ namespace feather
             ~PluginManager();
             status load_plugins();
             status do_it(int node,field::Fields& fields); // this is called by the scenegraph
+            status draw_it(int node,draw::DrawItems& items); // this is called by the scenegraph
             void gl_init(FNode& node, FGlInfo& info); 
             void gl_draw(FNode& node, FGlInfo& info); 
             status create_fields(int node, field::Fields& fields); // this will return a new instance of the node's fields 
@@ -380,6 +404,7 @@ namespace feather
     std::string description();\
     std::string author();\
     feather::status do_it(int, feather::field::Fields&);\
+    feather::status draw_it(int, feather::draw::DrawItems&);\
     void gl_init(feather::FNode& node, feather::FGlInfo& info);\
     void gl_draw(feather::FNode& node, feather::FGlInfo& info);\
     bool node_exist(int);\
@@ -402,9 +427,14 @@ namespace feather
     /* plugin name */\
     std::string author() { return __author; };\
     \
-    /* call node do_it()'s */\
+    /* call node do_it() */\
     feather::status do_it(int id, feather::field::Fields& fields) {\
         return call_do_its<MAX_NODE_ID>::exec(id,fields);\
+    };\
+    \
+    /* call node draw_it() */\
+    feather::status draw_it(int id, feather::draw::DrawItems& items) {\
+        return call_draw_its<MAX_NODE_ID>::exec(id,items);\
     };\
     \
     void gl_init(feather::FNode& node, feather::FGlInfo& info) {\

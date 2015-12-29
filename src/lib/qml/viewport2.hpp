@@ -36,7 +36,7 @@ class AxisGeometry : public Qt3D::QGeometry
 
     public:
         AxisGeometry(Qt3D::QNode *parent=0);
-       
+ 
     private:
         void build();
         std::vector<feather::FVertex3D> m_axis;
@@ -54,11 +54,15 @@ class Axis : public Qt3D::QEntity
         ~Axis();
         AxisGeometry* grid() { return static_cast<AxisGeometry*>(m_pMesh->geometry()); };
 
+    private Q_SLOTS:
+        void mouseClicked();
+ 
     private:
         void build();
         Qt3D::QTransform *m_pTransform;
         Qt3D::QMaterial *m_pMaterial;
         Qt3D::QGeometryRenderer *m_pMesh;
+        Qt3D::QMouseInput *m_pMouseInput;
 };
 
 
@@ -190,6 +194,7 @@ class Viewport2 : public Qt3D::QEntity
         void setMinorSubDividLevel(const int &level);
         void setShowGrid(const bool &show);
         void setShowAxis(const bool &show);
+        void onEntered();
 
    Q_SIGNALS:
         void majorSubDividLevelChanged();
@@ -203,6 +208,7 @@ class Viewport2 : public Qt3D::QEntity
         QVector<Object*> m_entities;
         Grid* m_pGrid;
         Axis* m_pAxis;
+        Qt3D::QMouseInput *m_pMouseInput;
 };
 
 #endif

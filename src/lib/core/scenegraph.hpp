@@ -636,6 +636,14 @@ class node_visitor : public boost::default_bfs_visitor
                         std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
                 }
 
+                if(cstate.sgMode==state::DrawIt)
+                {
+                    status p = plugins.draw_it(sg[u].node,sg[u].items);
+                    if(!p.state)
+                        std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
+                }
+
+
                 // This might still come in handy later on
                 /*
                 switch(sg[u].type)
