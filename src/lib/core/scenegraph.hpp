@@ -732,15 +732,43 @@ class node_visitor : public boost::default_bfs_visitor
 namespace scenegraph
 {
 
+    /*!
+     * Update all the scenegraph based on the current state mode.
+     * State Modes = { None, DoIt, DrawIt, DrawGL, DrawSelection } 
+     */
     status update()
     {
         // Temporary turn off do_it updating for testing
         // set the state node update 
-        cstate.sgMode = state::DoIt;
+        //cstate.sgMode = state::DoIt;
 
         node_visitor vis;
         //node_d_visitor vis;
         std::cout << "\n*****GRAPH UPDATE*****\n";
+        std::cout << "Currently in the ";
+        switch(cstate.sgMode)
+        {
+            case state::None:
+                std::cout << "None";
+                break;
+            case state::DoIt:
+                std::cout << "DoIt";
+                break;
+            case state::DrawIt:
+                std::cout << "DrawIt";
+                break;
+            case state::DrawGL:
+                std::cout << "DrawGL";
+                break;
+            case state::DrawSelection:
+                std::cout << "DrawSelection";
+                break;
+            default:
+                std::cout << "Unknown";
+                break;
+        }
+        std::cout << " state\n";
+
         breadth_first_search(sg, vertex(0, sg), visitor(vis));
         //FNodeDescriptor s = vertex(0, scenegraph);
            
@@ -753,6 +781,7 @@ namespace scenegraph
         //draw_gl();
         return status();
     };
+
 
     /*!
      * Connect two node fields together.

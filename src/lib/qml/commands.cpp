@@ -43,8 +43,10 @@ status qml::command::init() {
     smg::Instance()->add_state(selection::Node,0,0,0);
  
     // just testing the do_it plugin calls
+    cstate.sgMode = state::DoIt;
     scenegraph::update();
     scenegraph::nodes_updated(); // clear out the uids to update
+    cstate.sgMode = state::None;
     return status();
 }
 
@@ -360,9 +362,29 @@ void qml::command::gl_draw(int uid, FGlInfo& info)
     scenegraph::gl_draw(sg[uid],info);
 }
 
-void qml::command::scenegraph_update()
+void qml::command::scenegraph_update(const unsigned int state)
 {
+    switch(state)
+    {       
+        case state::DoIt:
+            cstate.sgMode = state::DoIt;
+            break;
+        case state::DrawIt:
+            cstate.sgMode = state::DrawIt;
+            break;
+        case state::DrawGL:
+            cstate.sgMode = state::DrawGL;
+            break;
+        case state::DrawSelection:
+            cstate.sgMode = state::DrawSelection;
+            break;
+        default:
+            cstate.sgMode = state::None;
+            break; 
+    }
+    std::cout << "Passed state = " << state << " scene state after set = " << cstate.sgMode << std::endl;
     scenegraph::update();
+    cstate.sgMode = state::None;
 }
 
 int qml::command::get_min_uid()

@@ -25,6 +25,7 @@
 #include "commands.hpp"
 #include "selection.hpp"
 #include "field.hpp"
+#include "state.hpp"
 
 #define BACKGROUND_COLOR "#444444"
 #define NODE_TEXT_COLOR "#000000"
@@ -475,7 +476,7 @@ bool SceneGraphEditor::connectNodes()
 
     SGState::selectedConnections.erase(SGState::selectedConnections.begin(),SGState::selectedConnections.end());
 
-   feather::qml::command::scenegraph_update();
+   feather::qml::command::scenegraph_update(feather::state::DoIt);
 
     update();
     return true;
