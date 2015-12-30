@@ -22,6 +22,8 @@
  ***********************************************************************/
 
 #include "viewport2.hpp"
+#include "commands.hpp"
+#include "state.hpp"
 
 // MAIN VIEWPORT
 
@@ -433,6 +435,9 @@ Viewport2::Viewport2(QNode *parent)
 {
     m_pGrid = new Grid(this);
     m_pAxis = new Axis(this);
+
+    // update the draw items
+    feather::qml::command::scenegraph_update(feather::state::DrawIt);
 
     buildScene();
     updateScene();
