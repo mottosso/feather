@@ -53,6 +53,8 @@ namespace feather
         void (*gl_init)(FNode&,FGlInfo&);
         void (*gl_draw)(FNode&,FGlInfo&);
         bool (*node_exist)(int); // is there a node with the given type and id in this plugin
+        bool (*node_drawable)(int); // can the node be drawn in the viewport
+        status (*node_draw_items)(int,draw::DrawItems&); // can the node be drawn in the viewport
         status (*node_type)(int,node::Type&);
         bool (*node_icon)(int,std::string&); // name of icon image in ui/icons path
         status(*create_fields)(int,field::Fields&); // creates a new instance of the nodes fields which will get deleted by the scenegraph when the node is removed.
@@ -186,6 +188,27 @@ namespace feather
     };
 
     template <> struct find_nodes<0> { static bool exec(int id) { return false; }; };
+
+
+    // NODE DRAWABLE 
+
+    template <int _Id>
+    struct find_node_drawable {
+        static bool exec(int id) { return find_node_drawable<_Id-1>::exec(id); };
+    };
+
+    template <> struct find_node_drawable<0> { static bool exec(int id) { return false; }; };
+
+
+    // GET NODE DRAW ITEMS
+
+    template <int _Id>
+    struct find_node_draw_items {
+        static status exec(int id, draw::DrawItems& items) { return find_node_draw_items<_Id-1>::exec(id,items); };
+    };
+
+    template <> struct find_node_draw_items<0> { static status exec(int id,draw::DrawItems& items) { return status(FAILED,"No drawable items found."); }; };
+
 
 
     // NODE TYPE
@@ -408,6 +431,8 @@ namespace feather
     void gl_init(feather::FNode& node, feather::FGlInfo& info);\
     void gl_draw(feather::FNode& node, feather::FGlInfo& info);\
     bool node_exist(int);\
+    bool node_drawable(int);\
+    feather::status node_draw_items(int,feather::draw::DrawItems&);\
     feather::status node_type(int,feather::node::Type&);\
     bool node_icon(int,std::string&);\
     feather::status create_fields(int, feather::field::Fields&);\
@@ -450,6 +475,17 @@ namespace feather
     /* see if the node is in the plugin */\
     bool node_exist(int id) {\
         return find_nodes<MAX_NODE_ID>::exec(id);\
+    };\
+    \
+    /* see if the node can be drawn */\
+    bool node_drawable(int id) {\
+        return find_node_drawable<MAX_NODE_ID>::exec(id);\
+    };\
+    \
+    \
+    /* get the draw items of a node */\
+    status get_node_draw_items(int id, draw::DrawItems& items) {\
+        return find_node_draw_items<MAX_NODE_ID>::exec(id,items);\
     };\
     \
     /* get the node type */\
