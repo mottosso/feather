@@ -629,20 +629,25 @@ class node_visitor : public boost::default_bfs_visitor
                 std::cout << "discover vertex(uid):" << u << " nid:" << sg[u].node << std::endl;
                 //scenegraph::do_it<node::N>::exec(u);
 
+                status p = plugins.do_it(sg[u].node,sg[u].fields);
+
+                /* 
                 if(cstate.sgMode==state::DoIt)
                 {
                     status p = plugins.do_it(sg[u].node,sg[u].fields);
                     if(!p.state)
                         std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
                 }
+                */
 
+                /*
                 if(cstate.sgMode==state::DrawIt)
                 {
                     status p = plugins.draw_it(sg[u].node,sg[u].items);
                     if(!p.state)
                         std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
                 }
-
+                */
 
                 // This might still come in handy later on
                 /*
@@ -745,6 +750,7 @@ namespace scenegraph
         node_visitor vis;
         //node_d_visitor vis;
         std::cout << "\n*****GRAPH UPDATE*****\n";
+        /*
         std::cout << "Currently in the ";
         switch(cstate.sgMode)
         {
@@ -768,7 +774,7 @@ namespace scenegraph
                 break;
         }
         std::cout << " state\n";
-
+        */
         breadth_first_search(sg, vertex(0, sg), visitor(vis));
         //FNodeDescriptor s = vertex(0, scenegraph);
            

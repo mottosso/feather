@@ -33,7 +33,7 @@ namespace feather
     namespace state
     {
 
-        enum SGMode { None, DoIt, DrawIt, DrawGL, DrawSelection };
+        enum SGMode { None, DoIt, DrawGL, DrawSelection };
         
         struct FSgState {
             int minUid;

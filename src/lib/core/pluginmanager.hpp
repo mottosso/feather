@@ -49,7 +49,7 @@ namespace feather
         std::string (*description)();
         std::string (*author)();
         status (*do_it)(int,field::Fields&);
-        status (*draw_it)(int,draw::DrawItems&);
+        //status (*draw_it)(int,draw::DrawItems&);
         void (*gl_init)(FNode&,FGlInfo&);
         void (*gl_draw)(FNode&,FGlInfo&);
         bool (*node_exist)(int); // is there a node with the given type and id in this plugin
@@ -118,7 +118,7 @@ namespace feather
 
 
     // DRAW_IT()
-
+    /*
     template <int _Id>
     struct call_draw_its {
         static status exec(int id, draw::DrawItems& items) { return call_draw_its<_Id-1>::exec(id,items); };
@@ -135,7 +135,7 @@ namespace feather
             int m_node;
             draw::DrawItems& m_items;
     };
-
+    */
 
     // GL INIT 
 
@@ -209,6 +209,26 @@ namespace feather
 
     template <> struct find_node_draw_items<0> { static status exec(int id,draw::DrawItems& items) { return status(FAILED,"No drawable items found."); }; };
 
+
+    // CALL NODE DRAW ITEM
+
+    template <int _Id>
+    struct call_draw_items {
+        static status exec(int nid, draw::DrawItems& items) { return call_draw_items<_Id-1>::exec(nid,items); };
+    };
+
+    template <> struct call_draw_items<0> { static status exec(int nid, draw::DrawItems& items) { return status(FAILED,"found no draw item for node"); }; };
+ 
+    template <int _Id> void node_draw_items(int nid, draw::DrawItems& items) {};
+
+    struct call_draw_item {
+        call_draw_item(int nid, draw::DrawItems& items): m_nid(nid), m_items(items){};
+        void operator()(PluginData n) { if(n.node_exist(m_nid)) { n.node_draw_items(m_nid,m_items); } };
+
+        private:
+            int m_nid;
+            draw::DrawItems& m_items;
+    };
 
 
     // NODE TYPE
@@ -398,10 +418,11 @@ namespace feather
             ~PluginManager();
             status load_plugins();
             status do_it(int node,field::Fields& fields); // this is called by the scenegraph
-            status draw_it(int node,draw::DrawItems& items); // this is called by the scenegraph
+            //status draw_it(int node,draw::DrawItems& items); // this is called by the scenegraph
             void gl_init(FNode& node, FGlInfo& info); 
             void gl_draw(FNode& node, FGlInfo& info); 
             status create_fields(int node, field::Fields& fields); // this will return a new instance of the node's fields 
+            void get_draw_items(const int nid, draw::DrawItems& items);
             field::FieldBase* get_fieldBase(int uid, int node, int field, field::Fields& fields);
             status run_command(std::string cmd, parameter::ParameterList);
             status run_command_string(std::string str);
@@ -427,7 +448,7 @@ namespace feather
     std::string description();\
     std::string author();\
     feather::status do_it(int, feather::field::Fields&);\
-    feather::status draw_it(int, feather::draw::DrawItems&);\
+    /*feather::status draw_it(int, feather::draw::DrawItems&);*/\
     void gl_init(feather::FNode& node, feather::FGlInfo& info);\
     void gl_draw(feather::FNode& node, feather::FGlInfo& info);\
     bool node_exist(int);\
@@ -458,9 +479,9 @@ namespace feather
     };\
     \
     /* call node draw_it() */\
-    feather::status draw_it(int id, feather::draw::DrawItems& items) {\
-        return call_draw_its<MAX_NODE_ID>::exec(id,items);\
-    };\
+    /*feather::status draw_it(int id, feather::draw::DrawItems& items) {*/\
+    /*    return call_draw_its<MAX_NODE_ID>::exec(id,items);*/\
+    /*};*/\
     \
     void gl_init(feather::FNode& node, feather::FGlInfo& info) {\
         /*std::cout << "gl_init\n";*/\
@@ -484,7 +505,7 @@ namespace feather
     \
     \
     /* get the draw items of a node */\
-    status get_node_draw_items(int id, draw::DrawItems& items) {\
+    status node_draw_items(int id, draw::DrawItems& items) {\
         return find_node_draw_items<MAX_NODE_ID>::exec(id,items);\
     };\
     \

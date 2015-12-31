@@ -437,7 +437,7 @@ Viewport2::Viewport2(QNode *parent)
     m_pAxis = new Axis(this);
 
     // update the draw items
-    feather::qml::command::scenegraph_update(feather::state::DrawIt);
+    feather::qml::command::scenegraph_update();
 
     buildScene();
     updateScene();
