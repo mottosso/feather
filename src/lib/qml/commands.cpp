@@ -138,6 +138,11 @@ status qml::command::get_node_connected_uids(int uid, int fid, std::vector<int>&
     return scenegraph::get_node_connected_uids(uid,fid,uids);
 }
 
+status qml::command::get_node_draw_items(int nid, draw::DrawItems& items)
+{
+    return scenegraph::get_node_draw_items(nid,items);
+}
+
 status qml::command::load_plugins()
 {
     return scenegraph::load_plugins(); 

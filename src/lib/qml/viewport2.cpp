@@ -24,6 +24,7 @@
 #include "viewport2.hpp"
 #include "commands.hpp"
 #include "state.hpp"
+#include "draw.hpp"
 
 // MAIN VIEWPORT
 
@@ -437,7 +438,10 @@ Viewport2::Viewport2(QNode *parent)
     m_pAxis = new Axis(this);
 
     // update the draw items
-    feather::qml::command::scenegraph_update();
+    feather::draw::DrawItems items;
+    feather::qml::command::get_node_draw_items(1,items);
+
+    std::cout << "There are " << items.size() << " draw items\n";
 
     buildScene();
     updateScene();

@@ -202,13 +202,14 @@ namespace feather
 
     // GET NODE DRAW ITEMS
 
+    //template <int _Id> void node_draw_it(draw::DrawItems& items) { return status(FAILED,""); };
+
     template <int _Id>
     struct find_node_draw_items {
         static status exec(int id, draw::DrawItems& items) { return find_node_draw_items<_Id-1>::exec(id,items); };
     };
 
     template <> struct find_node_draw_items<0> { static status exec(int id,draw::DrawItems& items) { return status(FAILED,"No drawable items found."); }; };
-
 
     // CALL NODE DRAW ITEM
 
@@ -219,7 +220,6 @@ namespace feather
 
     template <> struct call_draw_items<0> { static status exec(int nid, draw::DrawItems& items) { return status(FAILED,"found no draw item for node"); }; };
  
-    template <int _Id> void node_draw_items(int nid, draw::DrawItems& items) {};
 
     struct call_draw_item {
         call_draw_item(int nid, draw::DrawItems& items): m_nid(nid), m_items(items){};

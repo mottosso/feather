@@ -276,6 +276,13 @@ namespace feather
         return status();
     };
 
+    
+    /* return a description of how the node is to be draw, if at all */
+    status get_node_draw_items(int nid, draw::DrawItems& items) {
+        plugins.get_draw_items(nid,items);
+        // TODO add a fail status if there is no draw call or failed to get the draw items
+        return status();
+    };
 
 
     // FIELDS

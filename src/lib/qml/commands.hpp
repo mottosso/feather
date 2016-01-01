@@ -31,6 +31,7 @@
 #include "command.hpp"
 #include "pluginmanager.hpp"
 #include "field.hpp"
+#include "draw.hpp"
 
 namespace feather
 {
@@ -55,6 +56,7 @@ namespace feather
             unsigned int get_node_id(const unsigned int uid, status& error);
             status get_node_connected_uids(int uid, std::vector<int>& uids);
             status get_node_connected_uids(int uid, int fid, std::vector<int>& uids);
+            status get_node_draw_items(int nid, draw::DrawItems& items);
             status load_plugins();
             status run_command(std::string cmd, feather::parameter::ParameterList params);
             status run_command_string(std::string str);
