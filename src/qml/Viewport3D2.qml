@@ -57,11 +57,9 @@ Rectangle {
                 viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
             }
 
-            /*
             Configuration  {
                 controlledCamera: camera
             }
-            */
 
             SequentialAnimation {
                 running : true
@@ -113,4 +111,10 @@ Rectangle {
 
     } // sceneRoot
 
+    MouseArea {
+        anchors.fill: parent
+        onClicked: { console.log("CLICKED"); vp.doUpdate() }
+    }
+
+    Component.onCompleted: { vp.doUpdate() }
 }

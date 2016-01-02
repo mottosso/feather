@@ -50,28 +50,7 @@ namespace feather {
 } // namespace feather
 
 #define DRAW_IT(__node_enum)\
-    \
-    template <> struct find_node_drawable<__node_enum> {\
-        static bool exec(int id) {\
-            if(id==__node_enum){\
-                return true;\
-            } else {\
-                return find_node_drawable<__node_enum-1>::exec(id);\
-            }\
-        };\
-    };\
-    \
-    template <> struct find_node_draw_items<__node_enum> {\
-        static status exec(int id, draw::DrawItems& items) {\
-            if(id==__node_enum){\
-                return node_draw_items<__node_enum>(items);\
-            } else {\
-                return find_node_draw_items<__node_enum-1>::exec(id,items);\
-            }\
-        };\
-    };\
-    \
-    template <> status node_draw_items<__node_enum>(draw::DrawItems& items)
+    template <> status node_draw_it<__node_enum>(draw::DrawItems& items)
 
 #define ADD_LINE(__startpoint,__endpoint,__color,__type)\
     items.push_back(new draw::Line(__startpoint,__endpoint,__color,__type));

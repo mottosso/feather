@@ -107,6 +107,26 @@ namespace feather
             };\
         };\
         \
+        template <> struct find_node_drawable<__node_enum> {\
+            static bool exec(int id) {\
+                if(id==__node_enum){\
+                    return true;\
+                } else {\
+                    return find_node_drawable<__node_enum-1>::exec(id);\
+                }\
+            };\
+        };\
+        \
+        template <> struct call_draw_items<__node_enum> {\
+            static status exec(int id, draw::DrawItems& items) {\
+                if(id==__node_enum){\
+                    return node_draw_it<__node_enum>(items);\
+                } else {\
+                    return call_draw_items<__node_enum-1>::exec(id,items);\
+                }\
+            };\
+        };\
+        \
         template <> struct find_nodes<__node_enum> {\
             static bool exec(int id) {\
                 if(id==__node_enum){\

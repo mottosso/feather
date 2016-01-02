@@ -460,6 +460,12 @@ Viewport2::~Viewport2()
 
 void Viewport2::updateScene()
 {
+    feather::draw::DrawItems items;
+    feather::qml::command::get_node_draw_items(1,items);
+
+    std::cout << "There are " << items.size() << " draw items\n";
+
+
     if (m_entities.isEmpty()) {
         buildScene();
     } else {

@@ -31,7 +31,7 @@
 #include "field.hpp"
 #include "draw.hpp"
 
-#define MAX_NODE_ID 900
+#define MAX_NODE_ID 800
 
 namespace feather
 {
@@ -200,17 +200,6 @@ namespace feather
     template <> struct find_node_drawable<0> { static bool exec(int id) { return false; }; };
 
 
-    // GET NODE DRAW ITEMS
-
-    //template <int _Id> void node_draw_it(draw::DrawItems& items) { return status(FAILED,""); };
-
-    template <int _Id>
-    struct find_node_draw_items {
-        static status exec(int id, draw::DrawItems& items) { return find_node_draw_items<_Id-1>::exec(id,items); };
-    };
-
-    template <> struct find_node_draw_items<0> { static status exec(int id,draw::DrawItems& items) { return status(FAILED,"No drawable items found."); }; };
-
     // CALL NODE DRAW ITEM
 
     template <int _Id>
@@ -220,7 +209,8 @@ namespace feather
 
     template <> struct call_draw_items<0> { static status exec(int nid, draw::DrawItems& items) { return status(FAILED,"found no draw item for node"); }; };
  
-
+    template <int _Id> status node_draw_it(draw::DrawItems& items) { return status(FAILED,"no node found"); };
+ 
     struct call_draw_item {
         call_draw_item(int nid, draw::DrawItems& items): m_nid(nid), m_items(items){};
         void operator()(PluginData n) { if(n.node_exist(m_nid)) { n.node_draw_items(m_nid,m_items); } };
@@ -380,7 +370,7 @@ namespace feather
 
     struct call_node_icon {
         call_node_icon(int nid, std::string& file) : m_nid(nid),m_file(file){};
-        void operator()(PluginData n) { if(n.node_exist(m_nid)) { /*std::cout << "found gl info for node " << m_node.uid << std::endl;*/ n.node_icon(m_nid,m_file); } };
+        void operator()(PluginData n) { if(n.node_exist(m_nid)) { n.node_icon(m_nid,m_file); } };
 
         private:
             int m_nid;
@@ -401,7 +391,7 @@ namespace feather
 
     struct call_node_type {
         call_node_type(int nid, feather::node::Type& type) : m_nid(nid),m_type(type){};
-        void operator()(PluginData n) { if(n.node_exist(m_nid)) { /*std::cout << "found gl info for node " << m_node.uid << std::endl;*/ n.node_type(m_nid,m_type); } };
+        void operator()(PluginData n) { if(n.node_exist(m_nid)) { n.node_type(m_nid,m_type); } };
 
         private:
             int m_nid;
@@ -484,12 +474,10 @@ namespace feather
     /*};*/\
     \
     void gl_init(feather::FNode& node, feather::FGlInfo& info) {\
-        /*std::cout << "gl_init\n";*/\
         call_gl_inits<MAX_NODE_ID>::exec(node,info);\
     };\
     \
     void gl_draw(feather::FNode& node, feather::FGlInfo& info) {\
-        /*std::cout << "gl_draw\n";*/\
         call_gl_draws<MAX_NODE_ID>::exec(node,info);\
     };\
     \
@@ -505,8 +493,8 @@ namespace feather
     \
     \
     /* get the draw items of a node */\
-    status node_draw_items(int id, draw::DrawItems& items) {\
-        return find_node_draw_items<MAX_NODE_ID>::exec(id,items);\
+    status node_draw_items(int id, feather::draw::DrawItems& items) {\
+        return call_draw_items<MAX_NODE_ID>::exec(id,items);\
     };\
     \
     /* get the node type */\

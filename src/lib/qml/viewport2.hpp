@@ -186,6 +186,7 @@ class Viewport2 : public Qt3D::QEntity
         int minorSubDividLevel();
         bool showGrid();
         bool showAxis();
+        Q_INVOKABLE void doUpdate(){ updateScene(); };
 
     private Q_SLOTS:
         void updateScene();
