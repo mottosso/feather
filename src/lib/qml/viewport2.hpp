@@ -28,6 +28,33 @@
 #include "types.hpp"
 
 
+// LINE
+
+class Line : public Qt3D::QEntity
+{
+    Q_OBJECT
+    
+    public:
+        Line(Qt3D::QNode *parent=0);
+        ~Line();
+
+    private Q_SLOTS:
+        void mouseClicked();
+ 
+    private:
+        void build();
+        Qt3D::QTransform *m_pTransform;
+        Qt3D::QPhongMaterial *m_pMaterial;
+        Qt3D::QGeometryRenderer *m_pMesh;
+        Qt3D::QMouseInput *m_pMouseInput;
+        std::vector<feather::FVertex3D> m_aVertex;
+        Qt3D::QAttribute *m_meshAttribute;
+        Qt3D::QBuffer *m_vertexBuffer;
+};
+
+
+
+
 // GRID
 
 class AxisGeometry : public Qt3D::QGeometry
@@ -210,6 +237,7 @@ class Viewport2 : public Qt3D::QEntity
         Grid* m_pGrid;
         Axis* m_pAxis;
         Qt3D::QMouseInput *m_pMouseInput;
+        Line* m_pLine;
 };
 
 #endif
