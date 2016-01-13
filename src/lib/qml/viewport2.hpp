@@ -28,6 +28,51 @@
 #include "types.hpp"
 
 
+class DrawItem : public Qt3D::QEntity
+{
+    Q_OBJECT
+
+    public:
+        enum Type{
+            None,
+            Line,
+            Mesh
+        };
+        DrawItem(Type _type=None, Qt3D::QNode *parent=0);
+        ~DrawItem();
+        inline void setType(Type t) { m_type=t; };
+        inline Type type() { return m_type; }; 
+    private:
+        Type m_type;
+};
+
+
+// MESH 
+
+class Mesh : public DrawItem 
+{
+    Q_OBJECT
+    
+    public:
+        Mesh(Qt3D::QNode *parent=0);
+        ~Mesh();
+
+    private Q_SLOTS:
+        void mouseClicked();
+ 
+    private:
+        void build();
+        Qt3D::QTransform *m_pTransform;
+        Qt3D::QPhongMaterial *m_pMaterial;
+        Qt3D::QGeometryRenderer *m_pMesh;
+        Qt3D::QMouseInput *m_pMouseInput;
+        std::vector<feather::FVertex3D> m_aVertex;
+        Qt3D::QAttribute *m_meshAttribute;
+        Qt3D::QBuffer *m_vertexBuffer;
+};
+
+
+
 // LINE
 
 class Line : public Qt3D::QEntity

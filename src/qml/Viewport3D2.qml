@@ -108,19 +108,18 @@ Rectangle {
             }
             */
 
-            //Viewport2 {
-            //    id: vp
-                /*
+            Viewport2 {
+                id: vp
                 MouseInput {
                     id: mouseInput
                     controller: mouseController
                     onClicked: { console.log("VP CLICKED") }
                 }   
                 components: [mouseInput]
-                */
-            //}
+            } 
 
             //property MouseInput mouseInput: MouseInput {
+            /*
             MouseInput {
                 id: mouseInput
                 controller: mouseController
@@ -155,6 +154,7 @@ Rectangle {
             }
  
             components: [frameGraph, sphereEntity, mouseInput]
+            */
             //components: [frameGraph, sphereEntity]
  
         }

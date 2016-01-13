@@ -28,6 +28,77 @@
 
 // MAIN VIEWPORT
 
+DrawItem::DrawItem(Type _type, QNode *parent)
+    : QEntity(parent),
+    m_type(_type)
+{
+}
+
+DrawItem::~DrawItem()
+{
+}
+
+// MESHES
+
+Mesh::Mesh(QNode *parent)
+    : DrawItem(DrawItem::Mesh,parent),
+    m_pTransform(new Qt3D::QTransform()),
+    m_pMaterial(new Qt3D::QPhongMaterial()),
+    m_pMesh(new Qt3D::QGeometryRenderer()),
+    m_pMouseInput(new Qt3D::QMouseInput(this)),
+    m_meshAttribute(new Qt3D::QAttribute(this)),
+    m_vertexBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this))
+{
+    m_aVertex.push_back(feather::FVertex3D(0,0,0));
+    m_aVertex.push_back(feather::FVertex3D(2,2,2));
+    //const int nVerts = 2;
+    const int size = m_aVertex.size() * sizeof(feather::FVertex3D);
+    QByteArray meshBytes;
+    meshBytes.resize(size);
+    memcpy(meshBytes.data(), m_aVertex.data(), size);
+
+    m_vertexBuffer->setData(meshBytes);
+
+    m_meshAttribute->setName(Qt3D::QAttribute::defaultPositionAttributeName());
+    m_meshAttribute->setDataType(Qt3D::QAttribute::Double);
+    m_meshAttribute->setDataSize(3);
+    m_meshAttribute->setCount(m_aVertex.size());
+    m_meshAttribute->setByteStride(sizeof(feather::FVertex3D));
+    m_meshAttribute->setBuffer(m_vertexBuffer);
+
+    //setVerticesPerPatch(4);
+    m_pMesh->setGeometry(new Qt3D::QGeometry(this));
+    m_pMesh->geometry()->addAttribute(m_meshAttribute);
+
+    m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::Triangles);
+    //m_pMesh->setGeometry(new QGeometry(this));
+    
+    m_pMaterial->setDiffuse(QColor(Qt::red));
+    m_pMaterial->setAmbient(Qt::red);
+    //m_pMaterial->setSpecular(Qt::black);
+    //m_pMaterial->setShininess(0.0f);
+
+    
+    addComponent(m_pTransform);
+    addComponent(m_pMesh);
+    addComponent(m_pMaterial);
+
+    connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(mouseClicked()));
+}
+
+Mesh::~Mesh()
+{
+
+}
+
+void Mesh::mouseClicked()
+{
+    std::cout << "Mesh Pressed\n";
+}
+
+
+
+
 
 // LINE
 Line::Line(QNode *parent)
@@ -378,8 +449,6 @@ QColor Grid::diffuseColor()
 }
 
 
-// MESHES
-
 TessellatedGeometry::TessellatedGeometry(QNode *parent)
     : Qt3D::QGeometry(parent),
     m_positionAttribute(new Qt3D::QAttribute(this)),
@@ -605,8 +674,9 @@ void Viewport2::setShowAxis(const bool &show)
 
 void Viewport2::buildScene()
 {
-    m_entities.append(new Object()); 
-    m_pLine = new Line(this); 
+    
+    //m_entities.append(new Object()); 
+    //m_pLine = new Line(this); 
 }
 
 void Viewport2::onEntered()
