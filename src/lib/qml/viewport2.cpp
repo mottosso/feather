@@ -75,8 +75,6 @@ Line::Line(QNode *parent)
     addComponent(m_pMaterial);
 
     connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(mouseClicked()));
-
-
 }
 
 Line::~Line()
@@ -413,6 +411,7 @@ TessellatedGeometry::TessellatedGeometry(QNode *parent)
 
     setVerticesPerPatch(4);
     addAttribute(m_positionAttribute);
+
 }
 
 
@@ -429,6 +428,12 @@ Object::Object(QNode *parent)
     m_material->setAmbient(Qt::red);
     m_material->setSpecular(Qt::white);
     m_material->setShininess(0.0f);
+
+    m_pMouseController = new Qt3D::QMouseController(this);
+    m_pMouseInput = new Qt3D::QMouseInput(this);
+    m_pMouseInput->setController(m_pMouseController);
+    connect(m_pMouseInput,SIGNAL(clicked(Qt3D::Q3DMouseEvent*)),this,SLOT(onClicked(Qt3D::Q3DMouseEvent*)));
+    //connect(m_pMouseInput,SIGNAL(event(Qt3D::Q3DMouseEvent*)),this,SLOT(onEvent(Qt3D::Q3DMouseEvent*)));
 
     /*
     Points
@@ -455,6 +460,7 @@ Object::Object(QNode *parent)
     addComponent(m_transform);
     addComponent(m_mesh);
     addComponent(m_material);
+    addComponent(m_pMouseInput);
 }
 
 void Object::setAmbientColor(const QColor &ambientColor)
@@ -488,14 +494,29 @@ QColor Object::diffuseColor()
     return m_material->diffuse();
 }
 
+void Object::onClicked(Qt3D::Q3DMouseEvent* event)
+{
+    std::cout << "Object Clicked\n";
+}
+
+void Object::onEvent(Qt3D::Q3DMouseEvent* event)
+{
+    std::cout << "Object Event\n";
+}
+
+
 
 // VIEWPORT
 Viewport2::Viewport2(QNode *parent)
     : Qt3D::QEntity(parent),
     m_showGrid(true),
     m_showAxis(true),
-    m_pMouseInput(new Qt3D::QMouseInput(this))
+    m_pMouseController(new Qt3D::QMouseController(this))
 {
+
+    m_pMouseInput = new Qt3D::QMouseInput(this);
+    m_pMouseInput->setController(m_pMouseController);
+ 
     m_pGrid = new Grid(this);
     m_pAxis = new Axis(this);
 
@@ -509,6 +530,7 @@ Viewport2::Viewport2(QNode *parent)
     updateScene();
     addComponent(m_pMouseInput);
     connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(onEntered()));
+    connect(m_pMouseInput,SIGNAL(clicked(Qt3D::Q3DMouseEvent*)),this,SLOT(onClicked(Qt3D::Q3DMouseEvent*)));
 }
 
 Viewport2::~Viewport2()
@@ -591,3 +613,9 @@ void Viewport2::onEntered()
 {
     std::cout << "VP Entered\n";
 }
+
+void Viewport2::onClicked(Qt3D::Q3DMouseEvent* event)
+{
+    std::cout << "VP Clicked\n";
+}
+

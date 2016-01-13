@@ -25,9 +25,8 @@ import QtQuick 2.3
 import QtQuick.Scene3D 2.0
 import Qt3D 2.0
 import Qt3D.Renderer 2.0
+import Qt3D.Input 2.0
 import feather.viewport 1.0
-import feather.scenegraph 1.0
-
 
 Rectangle {
     id: frame
@@ -42,14 +41,13 @@ Rectangle {
 
         Entity {
             id : sceneRoot
-            components: [frameGraph]
             property real rotationAngle : 0
-
+ 
             Camera {
                 id: camera
                 projectionType: CameraLens.PerspectiveProjection
                 fieldOfView: 45
-                aspectRatio: frame.width/frame.height
+                //aspectRatio: frame.width/frame.height
                 nearPlane : 0.1
                 farPlane : 1000.0
                 position: Qt.vector3d( 0.0, 0.0, 20.0 )
@@ -61,11 +59,15 @@ Rectangle {
                 controlledCamera: camera
             }
 
+            /*
             SequentialAnimation {
                 running : true
                 loops: Animation.Infinite
                 NumberAnimation {target : sceneRoot; property : "rotationAngle"; to : 360; duration : 2000;}
             }
+            */
+
+            MouseController { id: mouseController }
 
             FrameGraph {
                 id : frameGraph
@@ -75,6 +77,7 @@ Rectangle {
                     clearColor: "grey"
                     camera: camera 
                 } // mainViewport
+
             } // frameGraph
 
             /*
@@ -105,16 +108,64 @@ Rectangle {
             }
             */
 
-            Viewport2 { id: vp }
+            //Viewport2 {
+            //    id: vp
+                /*
+                MouseInput {
+                    id: mouseInput
+                    controller: mouseController
+                    onClicked: { console.log("VP CLICKED") }
+                }   
+                components: [mouseInput]
+                */
+            //}
 
+            //property MouseInput mouseInput: MouseInput {
+            MouseInput {
+                id: mouseInput
+                controller: mouseController
+                onClicked: { console.log("ENTITY CLICKED") }
+            }
+
+            PhongMaterial {
+                id: material
+                ambient: "red"
+            }
+
+            SphereMesh {
+                id: sphereMesh
+                radius: 1
+            }
+
+            Transform {
+                id: sphereTransform
+                Translate {
+                    translation: Qt.vector3d(0, 0, 0)
+                }
+
+                Rotate {
+                    id: sphereRotation
+                    axis: Qt.vector3d(0, 1, 0)
+                }
+            }
+            
+            Entity {
+                id: sphereEntity
+                components: [ sphereMesh, material, sphereTransform]
+            }
+ 
+            components: [frameGraph, sphereEntity, mouseInput]
+            //components: [frameGraph, sphereEntity]
+ 
         }
 
     } // sceneRoot
 
     MouseArea {
         anchors.fill: parent
-        onClicked: { console.log("CLICKED"); vp.doUpdate() }
+        propagateComposedEvents: true 
+        onClicked: { console.log("RECT CLICKED") }
     }
 
-    Component.onCompleted: { vp.doUpdate() }
+    //Component.onCompleted: { vp.doUpdate() }
 }

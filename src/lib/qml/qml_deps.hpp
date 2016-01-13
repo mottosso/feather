@@ -75,5 +75,7 @@
 #include <Qt3DRenderer/qbuffer.h>
 #include <Qt3DRenderer/qgeometry.h>
 #include <Qt3DInput/QMouseInput>
+#include <Qt3DInput/QMouseController>
+#include <Qt3DInput/Q3DMouseEvent>
 
 #endif

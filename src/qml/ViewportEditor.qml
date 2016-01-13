@@ -236,6 +236,7 @@ Item {
         MouseArea {
             anchors.fill: parent
             hoverEnabled: true
+            propagateComposedEvents: true
         }
         */
     }

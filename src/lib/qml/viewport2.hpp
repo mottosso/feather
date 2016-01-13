@@ -53,8 +53,6 @@ class Line : public Qt3D::QEntity
 };
 
 
-
-
 // GRID
 
 class AxisGeometry : public Qt3D::QGeometry
@@ -178,12 +176,18 @@ class Object: public Qt3D::QEntity
         void specularColorChanged();
         void diffuseColorChanged();
  
+    private Q_SLOTS:
+        void onClicked(Qt3D::Q3DMouseEvent* event);
+        void onEvent(Qt3D::Q3DMouseEvent* event);
+
     private:
         Qt3D::QTransform *m_transform;
         Qt3D::QTranslateTransform *m_translate;
         Qt3D::QScaleTransform *m_scale;
         Qt3D::QGeometryRenderer *m_mesh;
         Qt3D::QPhongMaterial *m_material;
+        Qt3D::QMouseController *m_pMouseController;
+        Qt3D::QMouseInput *m_pMouseInput;
 };
 
 
@@ -223,6 +227,7 @@ class Viewport2 : public Qt3D::QEntity
         void setShowGrid(const bool &show);
         void setShowAxis(const bool &show);
         void onEntered();
+        void onClicked(Qt3D::Q3DMouseEvent* event);
 
    Q_SIGNALS:
         void majorSubDividLevelChanged();
@@ -236,6 +241,7 @@ class Viewport2 : public Qt3D::QEntity
         QVector<Object*> m_entities;
         Grid* m_pGrid;
         Axis* m_pAxis;
+        Qt3D::QMouseController *m_pMouseController;
         Qt3D::QMouseInput *m_pMouseInput;
         Line* m_pLine;
 };
