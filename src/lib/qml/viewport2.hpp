@@ -75,7 +75,7 @@ class Mesh : public DrawItem
 
 // LINE
 
-class Line : public Qt3D::QEntity
+class Line : public DrawItem 
 {
     Q_OBJECT
     

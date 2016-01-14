@@ -102,7 +102,7 @@ void Mesh::mouseClicked()
 
 // LINE
 Line::Line(QNode *parent)
-    : Qt3D::QEntity(parent),
+    : DrawItem(DrawItem::Line,parent),
     m_pTransform(new Qt3D::QTransform()),
     m_pMaterial(new Qt3D::QPhongMaterial()),
     m_pMesh(new Qt3D::QGeometryRenderer()),
