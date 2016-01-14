@@ -283,7 +283,7 @@ class Viewport2 : public Qt3D::QEntity
     private:
         bool m_showGrid;
         bool m_showAxis;
-        QVector<Object*> m_entities;
+        QVector<DrawItem*> m_apDrawItems;
         Grid* m_pGrid;
         Axis* m_pAxis;
         Qt3D::QMouseController *m_pMouseController;

@@ -604,7 +604,7 @@ Viewport2::Viewport2(QNode *parent)
 
 Viewport2::~Viewport2()
 {
-    qDeleteAll(m_entities);
+    qDeleteAll(m_apDrawItems);
     delete m_pGrid;
     m_pGrid=0;
     delete m_pAxis;
@@ -619,11 +619,11 @@ void Viewport2::updateScene()
     std::cout << "There are " << items.size() << " draw items\n";
 
 
-    if (m_entities.isEmpty()) {
+    if (m_apDrawItems.isEmpty()) {
         buildScene();
     } else {
-        Q_FOREACH (Object *entity, m_entities) {
-            entity->setParent(this);
+        Q_FOREACH (DrawItem* item, m_apDrawItems) {
+            item->setParent(this);
         }
     }
 }
