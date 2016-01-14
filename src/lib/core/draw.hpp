@@ -31,12 +31,16 @@ namespace feather {
 
     namespace draw {
 
-        struct Item {};
+        struct Item {
+            enum Type { None, Mesh, Line };
+            Item(Type _type=None):type(_type){}; 
+            Type type;
+        };
 
         struct Line : public Item
         {
             enum Type { Solid, Dashed };
-            Line(FVertex3D _sp, FVertex3D _ep, FColorRGB _color, Type _type=Solid) : sp(_sp), ep(_ep), color(_color), type(_type) {};
+            Line(FVertex3D _sp, FVertex3D _ep, FColorRGB _color, Type _type=Solid) : Item(Item::Line), sp(_sp), ep(_ep), color(_color), type(_type) {};
             FVertex3D sp;
             FVertex3D ep;
             FColorRGB color;

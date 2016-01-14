@@ -595,7 +595,7 @@ Viewport2::Viewport2(QNode *parent)
 
     std::cout << "There are " << items.size() << " draw items\n";
 
-    buildScene();
+    buildScene(items);
     updateScene();
     addComponent(m_pMouseInput);
     connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(onEntered()));
@@ -619,13 +619,20 @@ void Viewport2::updateScene()
     std::cout << "There are " << items.size() << " draw items\n";
 
 
-    if (m_apDrawItems.isEmpty()) {
-        buildScene();
+    if(m_apDrawItems.isEmpty()) {
+        buildScene(items);
+        //buildScene();
     } else {
         Q_FOREACH (DrawItem* item, m_apDrawItems) {
             item->setParent(this);
         }
     }
+
+}
+
+bool Viewport2::buildItems(feather::draw::DrawItems& items)
+{
+    return false;
 }
 
 int Viewport2::majorSubDividLevel()
@@ -672,11 +679,21 @@ void Viewport2::setShowAxis(const bool &show)
     showAxisChanged();
 }
 
-void Viewport2::buildScene()
+void Viewport2::buildScene(feather::draw::DrawItems& items)
 {
-    
-    //m_entities.append(new Object()); 
-    //m_pLine = new Line(this); 
+    for(auto item : items) {
+        switch(item->type){
+            case feather::draw::Item::Mesh:
+                std::cout << "build Mesh\n";
+                break;
+            case feather::draw::Item::Line:
+                std::cout << "build Line\n";
+                m_apDrawItems.push_back(new Line(this));
+                break;
+            default:
+                std::cout << "nothing built\n";
+        }
+    }
 }
 
 void Viewport2::onEntered()

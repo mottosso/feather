@@ -41,7 +41,7 @@ class DrawItem : public Qt3D::QEntity
         DrawItem(Type _type=None, Qt3D::QNode *parent=0);
         ~DrawItem();
         inline void setType(Type t) { m_type=t; };
-        inline Type type() { return m_type; }; 
+        inline Type type() { return m_type; };
     private:
         Type m_type;
 };
@@ -266,7 +266,7 @@ class Viewport2 : public Qt3D::QEntity
 
     private Q_SLOTS:
         void updateScene();
-        void buildScene();
+        void buildScene(feather::draw::DrawItems& items);
         void setMajorSubDividLevel(const int &level);
         void setMinorSubDividLevel(const int &level);
         void setShowGrid(const bool &show);
@@ -281,6 +281,8 @@ class Viewport2 : public Qt3D::QEntity
         void showAxisChanged();
  
     private:
+        // use this method to see if there are any items that need to be built
+        bool buildItems(feather::draw::DrawItems& items);
         bool m_showGrid;
         bool m_showAxis;
         QVector<DrawItem*> m_apDrawItems;
