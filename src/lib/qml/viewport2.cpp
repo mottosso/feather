@@ -50,7 +50,8 @@ Mesh::Mesh(QNode *parent)
     m_vertexBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this))
 {
     m_aVertex.push_back(feather::FVertex3D(0,0,0));
-    m_aVertex.push_back(feather::FVertex3D(2,2,2));
+    m_aVertex.push_back(feather::FVertex3D(0,2,0));
+    m_aVertex.push_back(feather::FVertex3D(0,0,2));
     //const int nVerts = 2;
     const int size = m_aVertex.size() * sizeof(feather::FVertex3D);
     QByteArray meshBytes;
@@ -685,6 +686,7 @@ void Viewport2::buildScene(feather::draw::DrawItems& items)
         switch(item->type){
             case feather::draw::Item::Mesh:
                 std::cout << "build Mesh\n";
+                m_apDrawItems.push_back(new Mesh(this));
                 break;
             case feather::draw::Item::Line:
                 std::cout << "build Line\n";
