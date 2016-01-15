@@ -38,11 +38,12 @@ class DrawItem : public Qt3D::QEntity
             Line,
             Mesh
         };
-        DrawItem(Type _type=None, Qt3D::QNode *parent=0);
+        DrawItem(feather::draw::Item _item, Type _type=None, Qt3D::QNode *parent=0);
         ~DrawItem();
         inline void setType(Type t) { m_type=t; };
         inline Type type() { return m_type; };
     private:
+        feather::draw::Item m_item;
         Type m_type;
 };
 
@@ -54,7 +55,7 @@ class Mesh : public DrawItem
     Q_OBJECT
     
     public:
-        Mesh(Qt3D::QNode *parent=0);
+        Mesh(feather::draw::Item _item, Qt3D::QNode *parent=0);
         ~Mesh();
 
     private Q_SLOTS:
@@ -80,7 +81,7 @@ class Line : public DrawItem
     Q_OBJECT
     
     public:
-        Line(Qt3D::QNode *parent=0);
+        Line(feather::draw::Item _item, Qt3D::QNode *parent=0);
         ~Line();
 
     private Q_SLOTS:
@@ -263,6 +264,7 @@ class Viewport2 : public Qt3D::QEntity
         bool showGrid();
         bool showAxis();
         Q_INVOKABLE void doUpdate(){ updateScene(); };
+        Q_INVOKABLE void addItem(unsigned int uid);
 
     private Q_SLOTS:
         void updateScene();

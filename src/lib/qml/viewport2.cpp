@@ -28,8 +28,9 @@
 
 // MAIN VIEWPORT
 
-DrawItem::DrawItem(Type _type, QNode *parent)
+DrawItem::DrawItem(feather::draw::Item _item, Type _type, QNode *parent)
     : QEntity(parent),
+    m_item(_item),
     m_type(_type)
 {
 }
@@ -40,8 +41,8 @@ DrawItem::~DrawItem()
 
 // MESHES
 
-Mesh::Mesh(QNode *parent)
-    : DrawItem(DrawItem::Mesh,parent),
+Mesh::Mesh(feather::draw::Item _item, QNode *parent)
+    : DrawItem(_item,DrawItem::Mesh,parent),
     m_pTransform(new Qt3D::QTransform()),
     m_pMaterial(new Qt3D::QPhongMaterial()),
     m_pMesh(new Qt3D::QGeometryRenderer()),
@@ -102,8 +103,8 @@ void Mesh::mouseClicked()
 
 
 // LINE
-Line::Line(QNode *parent)
-    : DrawItem(DrawItem::Line,parent),
+Line::Line(feather::draw::Item _item, QNode *parent)
+    : DrawItem(_item,DrawItem::Line,parent),
     m_pTransform(new Qt3D::QTransform()),
     m_pMaterial(new Qt3D::QPhongMaterial()),
     m_pMesh(new Qt3D::QGeometryRenderer()),
@@ -656,6 +657,11 @@ bool Viewport2::showAxis()
     return m_showAxis;
 }
 
+void Viewport2::addItem(unsigned int uid)
+{
+
+}
+
 void Viewport2::setMajorSubDividLevel(const int &level)
 {
     m_pGrid->grid()->setMajorSubDividLevel(level);
@@ -686,11 +692,11 @@ void Viewport2::buildScene(feather::draw::DrawItems& items)
         switch(item->type){
             case feather::draw::Item::Mesh:
                 std::cout << "build Mesh\n";
-                m_apDrawItems.push_back(new Mesh(this));
+                m_apDrawItems.push_back(new Mesh(*(item),this));
                 break;
             case feather::draw::Item::Line:
                 std::cout << "build Line\n";
-                m_apDrawItems.push_back(new Line(this));
+                m_apDrawItems.push_back(new Line(*(item),this));
                 break;
             default:
                 std::cout << "nothing built\n";

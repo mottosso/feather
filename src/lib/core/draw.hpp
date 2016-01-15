@@ -35,6 +35,7 @@ namespace feather {
             enum Type { None, Mesh, Line };
             Item(Type _type=None):type(_type){}; 
             Type type;
+            unsigned int uid;
         };
 
         struct Line : public Item
