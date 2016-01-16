@@ -88,6 +88,7 @@ class SceneGraph : public QObject
         void updateGraph();
         void nodeAdded(int uid);
         void nodesAdded();
+        void nodeAddDrawItems(feather::draw::DrawItems items);
         void nodeRemoved(int uid);
         void nodesRemoved();
         void cleared();
