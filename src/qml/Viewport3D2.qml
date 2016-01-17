@@ -27,6 +27,7 @@ import Qt3D 2.0
 import Qt3D.Renderer 2.0
 import Qt3D.Input 2.0
 import feather.viewport 1.0
+import feather.scenegraph 1.0
 
 Rectangle {
     id: frame
@@ -167,5 +168,7 @@ Rectangle {
         onClicked: { console.log("RECT CLICKED") }
     }
 
-    //Component.onCompleted: { vp.doUpdate() }
+    function addDrawItems(item) { vp.addItems(item) }
+
+    Component.onCompleted: { SceneGraph.nodeAddDrawItems.connect(addDrawItems) }
 }

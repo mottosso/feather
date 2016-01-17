@@ -657,11 +657,6 @@ bool Viewport2::showAxis()
     return m_showAxis;
 }
 
-void Viewport2::addItem(unsigned int uid)
-{
-
-}
-
 void Viewport2::setMajorSubDividLevel(const int &level)
 {
     m_pGrid->grid()->setMajorSubDividLevel(level);
@@ -713,4 +708,26 @@ void Viewport2::onClicked(Qt3D::Q3DMouseEvent* event)
 {
     std::cout << "VP Clicked\n";
 }
+
+void Viewport2::addItems(unsigned int uid)
+{
+    feather::draw::DrawItems items;
+    feather::qml::command::get_node_draw_items(uid,items);
+
+    for(auto item : items) {
+        switch(item->type){
+            case feather::draw::Item::Mesh:
+                std::cout << "add Mesh\n";
+                m_apDrawItems.push_back(new Mesh(*(item),this));
+                break;
+            case feather::draw::Item::Line:
+                std::cout << "add Line\n";
+                m_apDrawItems.push_back(new Line(*(item),this));
+                break;
+            default:
+                std::cout << "nothing built\n";
+        }
+    }
+}
+
 

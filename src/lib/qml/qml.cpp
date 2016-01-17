@@ -46,11 +46,7 @@ int SceneGraph::add_node(int node, QString name)
 {
     int uid = qml::command::add_node(node,name.toStdString());
     emit nodeAdded(uid);
-
-    feather::draw::DrawItems items;
-    feather::qml::command::get_node_draw_items(1,items);
-    emit nodeAddDrawItems(items);
-
+    emit nodeAddDrawItems(uid);
     return uid;
 }
 
