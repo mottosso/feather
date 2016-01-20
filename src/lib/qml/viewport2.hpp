@@ -30,7 +30,7 @@
 
 class DrawItem : public Qt3D::QEntity
 {
-    Q_OBJECT
+    //Q_OBJECT
 
     public:
         enum Type{
@@ -58,15 +58,17 @@ class Mesh : public DrawItem
         Mesh(feather::draw::Item _item, Qt3D::QNode *parent=0);
         ~Mesh();
 
+    /*
     private Q_SLOTS:
         void mouseClicked();
+    */
  
     private:
         void build();
         Qt3D::QTransform *m_pTransform;
         Qt3D::QPhongMaterial *m_pMaterial;
         Qt3D::QGeometryRenderer *m_pMesh;
-        Qt3D::QMouseInput *m_pMouseInput;
+        //Qt3D::QMouseInput *m_pMouseInput;
         std::vector<feather::FVertex3D> m_aVertex;
         Qt3D::QAttribute *m_meshAttribute;
         Qt3D::QBuffer *m_vertexBuffer;
@@ -84,15 +86,17 @@ class Line : public DrawItem
         Line(feather::draw::Item _item, Qt3D::QNode *parent=0);
         ~Line();
 
+    /*
     private Q_SLOTS:
         void mouseClicked();
- 
+    */
+
     private:
         void build();
         Qt3D::QTransform *m_pTransform;
         Qt3D::QPhongMaterial *m_pMaterial;
         Qt3D::QGeometryRenderer *m_pMesh;
-        Qt3D::QMouseInput *m_pMouseInput;
+        //Qt3D::QMouseInput *m_pMouseInput;
         std::vector<feather::FVertex3D> m_aVertex;
         Qt3D::QAttribute *m_meshAttribute;
         Qt3D::QBuffer *m_vertexBuffer;
@@ -125,15 +129,17 @@ class Axis : public Qt3D::QEntity
         ~Axis();
         AxisGeometry* grid() { return static_cast<AxisGeometry*>(m_pMesh->geometry()); };
 
+    /*
     private Q_SLOTS:
         void mouseClicked();
- 
+    */
+
     private:
         void build();
         Qt3D::QTransform *m_pTransform;
         Qt3D::QMaterial *m_pMaterial;
         Qt3D::QGeometryRenderer *m_pMesh;
-        Qt3D::QMouseInput *m_pMouseInput;
+        //Qt3D::QMouseInput *m_pMouseInput;
 };
 
 
@@ -221,10 +227,12 @@ class Object: public Qt3D::QEntity
         void ambientColorChanged();
         void specularColorChanged();
         void diffuseColorChanged();
- 
+
+    /* 
     private Q_SLOTS:
         void onClicked(Qt3D::Q3DMouseEvent* event);
         void onEvent(Qt3D::Q3DMouseEvent* event);
+    */
 
     private:
         Qt3D::QTransform *m_transform;
@@ -232,8 +240,8 @@ class Object: public Qt3D::QEntity
         Qt3D::QScaleTransform *m_scale;
         Qt3D::QGeometryRenderer *m_mesh;
         Qt3D::QPhongMaterial *m_material;
-        Qt3D::QMouseController *m_pMouseController;
-        Qt3D::QMouseInput *m_pMouseInput;
+        //Qt3D::QMouseController *m_pMouseController;
+        //Qt3D::QMouseInput *m_pMouseInput;
 };
 
 
@@ -287,9 +295,10 @@ class Viewport2 : public Qt3D::QEntity
         bool buildItems(feather::draw::DrawItems& items);
         bool m_showGrid;
         bool m_showAxis;
-        QVector<DrawItem*> m_apDrawItems;
+        QList<DrawItem*> m_apDrawItems;
         Grid* m_pGrid;
         Axis* m_pAxis;
+        QEntity* m_pRoot;
         Qt3D::QMouseController *m_pMouseController;
         Qt3D::QMouseInput *m_pMouseInput;
         Line* m_pLine;

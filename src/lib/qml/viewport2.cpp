@@ -46,7 +46,7 @@ Mesh::Mesh(feather::draw::Item _item, QNode *parent)
     m_pTransform(new Qt3D::QTransform()),
     m_pMaterial(new Qt3D::QPhongMaterial()),
     m_pMesh(new Qt3D::QGeometryRenderer()),
-    m_pMouseInput(new Qt3D::QMouseInput(this)),
+    //m_pMouseInput(new Qt3D::QMouseInput(this)),
     m_meshAttribute(new Qt3D::QAttribute(this)),
     m_vertexBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this))
 {
@@ -85,7 +85,7 @@ Mesh::Mesh(feather::draw::Item _item, QNode *parent)
     addComponent(m_pMesh);
     addComponent(m_pMaterial);
 
-    connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(mouseClicked()));
+    //connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(mouseClicked()));
 }
 
 Mesh::~Mesh()
@@ -93,11 +93,12 @@ Mesh::~Mesh()
 
 }
 
+/*
 void Mesh::mouseClicked()
 {
     std::cout << "Mesh Pressed\n";
 }
-
+*/
 
 
 
@@ -108,7 +109,7 @@ Line::Line(feather::draw::Item _item, QNode *parent)
     m_pTransform(new Qt3D::QTransform()),
     m_pMaterial(new Qt3D::QPhongMaterial()),
     m_pMesh(new Qt3D::QGeometryRenderer()),
-    m_pMouseInput(new Qt3D::QMouseInput(this)),
+    //m_pMouseInput(new Qt3D::QMouseInput(this)),
     m_meshAttribute(new Qt3D::QAttribute(this)),
     m_vertexBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this))
 {
@@ -147,7 +148,7 @@ Line::Line(feather::draw::Item _item, QNode *parent)
     addComponent(m_pMesh);
     addComponent(m_pMaterial);
 
-    connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(mouseClicked()));
+    //connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(mouseClicked()));
 }
 
 Line::~Line()
@@ -155,11 +156,12 @@ Line::~Line()
 
 }
 
+/*
 void Line::mouseClicked()
 {
     std::cout << "Line Pressed\n";
 }
-
+*/
 
 
 // AXIS GEOMETRY
@@ -211,8 +213,8 @@ Axis::Axis(QNode *parent)
     : Qt3D::QEntity(parent),
     m_pTransform(new Qt3D::QTransform()),
     m_pMaterial(new Qt3D::QMaterial()),
-    m_pMesh(new Qt3D::QGeometryRenderer()),
-    m_pMouseInput(new Qt3D::QMouseInput(this))
+    m_pMesh(new Qt3D::QGeometryRenderer())
+    //m_pMouseInput(new Qt3D::QMouseInput(this))
 {
     //m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::Lines);
     m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::Triangles);
@@ -311,7 +313,7 @@ Axis::Axis(QNode *parent)
     addComponent(m_pMesh);
     addComponent(m_pMaterial);
 
-    connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(mouseClicked()));
+    //connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(mouseClicked()));
     /*
     connect(m_pTransform,SIGNAL(entered()),this,SLOT(mouseClicked()));
     connect(m_pMesh,SIGNAL(entered()),this,SLOT(mouseClicked()));
@@ -324,10 +326,12 @@ Axis::~Axis()
 
 }
 
+/*
 void Axis::mouseClicked()
 {
     std::cout << "Axis Pressed\n";
 }
+*/
 
 // GRID GEOMETRY
 
@@ -500,10 +504,10 @@ Object::Object(QNode *parent)
     m_material->setSpecular(Qt::white);
     m_material->setShininess(0.0f);
 
-    m_pMouseController = new Qt3D::QMouseController(this);
-    m_pMouseInput = new Qt3D::QMouseInput(this);
-    m_pMouseInput->setController(m_pMouseController);
-    connect(m_pMouseInput,SIGNAL(clicked(Qt3D::Q3DMouseEvent*)),this,SLOT(onClicked(Qt3D::Q3DMouseEvent*)));
+    //m_pMouseController = new Qt3D::QMouseController(this);
+    //m_pMouseInput = new Qt3D::QMouseInput(this);
+    //m_pMouseInput->setController(m_pMouseController);
+    //connect(m_pMouseInput,SIGNAL(clicked(Qt3D::Q3DMouseEvent*)),this,SLOT(onClicked(Qt3D::Q3DMouseEvent*)));
     //connect(m_pMouseInput,SIGNAL(event(Qt3D::Q3DMouseEvent*)),this,SLOT(onEvent(Qt3D::Q3DMouseEvent*)));
 
     /*
@@ -531,7 +535,7 @@ Object::Object(QNode *parent)
     addComponent(m_transform);
     addComponent(m_mesh);
     addComponent(m_material);
-    addComponent(m_pMouseInput);
+    //addComponent(m_pMouseInput);
 }
 
 void Object::setAmbientColor(const QColor &ambientColor)
@@ -565,6 +569,7 @@ QColor Object::diffuseColor()
     return m_material->diffuse();
 }
 
+/*
 void Object::onClicked(Qt3D::Q3DMouseEvent* event)
 {
     std::cout << "Object Clicked\n";
@@ -574,7 +579,7 @@ void Object::onEvent(Qt3D::Q3DMouseEvent* event)
 {
     std::cout << "Object Event\n";
 }
-
+*/
 
 
 // VIEWPORT
@@ -582,14 +587,15 @@ Viewport2::Viewport2(QNode *parent)
     : Qt3D::QEntity(parent),
     m_showGrid(true),
     m_showAxis(true),
+    m_pRoot(new Qt3D::QEntity(this)),
     m_pMouseController(new Qt3D::QMouseController(this))
 {
 
     m_pMouseInput = new Qt3D::QMouseInput(this);
     m_pMouseInput->setController(m_pMouseController);
  
-    m_pGrid = new Grid(this);
-    m_pAxis = new Axis(this);
+    m_pGrid = new Grid(m_pRoot);
+    m_pAxis = new Axis(m_pRoot);
 
     // update the draw items
     feather::draw::DrawItems items;
@@ -606,15 +612,17 @@ Viewport2::Viewport2(QNode *parent)
 
 Viewport2::~Viewport2()
 {
-    qDeleteAll(m_apDrawItems);
     delete m_pGrid;
     m_pGrid=0;
     delete m_pAxis;
     m_pAxis=0;
+    qDeleteAll(m_apDrawItems);
 }
 
 void Viewport2::updateScene()
 {
+    std::cout << "updating vp scene\n";
+    /* 
     feather::draw::DrawItems items;
     feather::qml::command::get_node_draw_items(1,items);
 
@@ -625,11 +633,13 @@ void Viewport2::updateScene()
         buildScene(items);
         //buildScene();
     } else {
+    */
+        /*
         Q_FOREACH (DrawItem* item, m_apDrawItems) {
             item->setParent(this);
         }
-    }
-
+        */
+    //}
 }
 
 bool Viewport2::buildItems(feather::draw::DrawItems& items)
@@ -687,11 +697,11 @@ void Viewport2::buildScene(feather::draw::DrawItems& items)
         switch(item->type){
             case feather::draw::Item::Mesh:
                 std::cout << "build Mesh\n";
-                m_apDrawItems.push_back(new Mesh(*(item),this));
+                m_apDrawItems.append(new Mesh(*(item),m_pRoot));
                 break;
             case feather::draw::Item::Line:
                 std::cout << "build Line\n";
-                m_apDrawItems.push_back(new Line(*(item),this));
+                m_apDrawItems.append(new Line(*(item),m_pRoot));
                 break;
             default:
                 std::cout << "nothing built\n";
@@ -711,23 +721,35 @@ void Viewport2::onClicked(Qt3D::Q3DMouseEvent* event)
 
 void Viewport2::addItems(unsigned int uid)
 {
+    feather::status pass;
+    unsigned int nid = feather::qml::command::get_node_id(uid,pass);
     feather::draw::DrawItems items;
-    feather::qml::command::get_node_draw_items(uid,items);
+    feather::qml::command::get_node_draw_items(nid,items);
+    std::cout << "add draw item " << uid << std::endl;
+
+    m_apDrawItems.clear();
 
     for(auto item : items) {
         switch(item->type){
             case feather::draw::Item::Mesh:
                 std::cout << "add Mesh\n";
-                m_apDrawItems.push_back(new Mesh(*(item),this));
+                m_apDrawItems.append(new Mesh(*(item),m_pRoot));
+                //m_apDrawItems.at(m_apDrawItems.size()-1)->setParent(this);
                 break;
             case feather::draw::Item::Line:
                 std::cout << "add Line\n";
-                m_apDrawItems.push_back(new Line(*(item),this));
+                m_apDrawItems.append(new Line(*(item),m_pRoot));
                 break;
             default:
                 std::cout << "nothing built\n";
         }
     }
+
+    /* 
+    Q_FOREACH(DrawItem* item, m_apDrawItems) {
+        item->setParent(this);
+    }
+    */
 }
 
 

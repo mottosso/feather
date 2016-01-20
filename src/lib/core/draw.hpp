@@ -41,11 +41,16 @@ namespace feather {
         struct Line : public Item
         {
             enum Type { Solid, Dashed };
-            Line(FVertex3D _sp, FVertex3D _ep, FColorRGB _color, Type _type=Solid) : Item(Item::Line), sp(_sp), ep(_ep), color(_color), type(_type) {};
+            Line(FVertex3D _sp, FVertex3D _ep, FColorRGB _color, Type _type=Solid) : Item(Item::Line), sp(_sp), ep(_ep), color(_color), linetype(_type) {};
             FVertex3D sp;
             FVertex3D ep;
             FColorRGB color;
-            Type type;
+            Type linetype;
+        };
+
+        struct Mesh : public Item
+        {
+            Mesh() : Item(Item::Mesh) {};
         };
 
         typedef std::vector<Item*> DrawItems;
@@ -59,5 +64,8 @@ namespace feather {
 
 #define ADD_LINE(__startpoint,__endpoint,__color,__type)\
     items.push_back(new draw::Line(__startpoint,__endpoint,__color,__type));
+ 
+#define ADD_MESH()\
+    items.push_back(new draw::Mesh());
     
 #endif
