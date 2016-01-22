@@ -60,14 +60,6 @@ Rectangle {
                 controlledCamera: camera
             }
 
-            /*
-            SequentialAnimation {
-                running : true
-                loops: Animation.Infinite
-                NumberAnimation {target : sceneRoot; property : "rotationAngle"; to : 360; duration : 2000;}
-            }
-            */
-
             MouseController { id: mouseController }
 
             FrameGraph {
@@ -80,34 +72,6 @@ Rectangle {
                 } // mainViewport
 
             } // frameGraph
-
-            /*
-            PhongMaterial {
-                id: material
-            }
-
-            SphereMesh {
-                id: sphereMesh
-                radius: 3
-            }
-
-            Transform {
-                id: sphereTransform
-                Translate {
-                    translation: Qt.vector3d(20, 0, 0)
-                }
-
-                Rotate {
-                    id: sphereRotation
-                    axis: Qt.vector3d(0, 1, 0)
-                }
-            }
-            
-            Entity {
-                id: sphereEntity
-                components: [ sphereMesh, material, sphereTransform ]
-            }
-            */
 
             Viewport2 {
                 id: vp

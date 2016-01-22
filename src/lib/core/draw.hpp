@@ -50,7 +50,8 @@ namespace feather {
 
         struct Mesh : public Item
         {
-            Mesh() : Item(Item::Mesh) {};
+            Mesh(unsigned int _fid) : Item(Item::Mesh),fid(_fid) {};
+            unsigned int fid;
         };
 
         typedef std::vector<Item*> DrawItems;
@@ -65,7 +66,7 @@ namespace feather {
 #define ADD_LINE(__startpoint,__endpoint,__color,__type)\
     items.push_back(new draw::Line(__startpoint,__endpoint,__color,__type));
  
-#define ADD_MESH()\
-    items.push_back(new draw::Mesh());
+#define ADD_MESH(__fid)\
+    items.push_back(new draw::Mesh(__fid));
     
 #endif

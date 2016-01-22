@@ -587,15 +587,14 @@ Viewport2::Viewport2(QNode *parent)
     : Qt3D::QEntity(parent),
     m_showGrid(true),
     m_showAxis(true),
-    m_pRoot(new Qt3D::QEntity(this)),
     m_pMouseController(new Qt3D::QMouseController(this))
 {
 
     m_pMouseInput = new Qt3D::QMouseInput(this);
     m_pMouseInput->setController(m_pMouseController);
  
-    m_pGrid = new Grid(m_pRoot);
-    m_pAxis = new Axis(m_pRoot);
+    m_pGrid = new Grid(this);
+    m_pAxis = new Axis(this);
 
     // update the draw items
     feather::draw::DrawItems items;
@@ -605,8 +604,8 @@ Viewport2::Viewport2(QNode *parent)
 
     buildScene(items);
     updateScene();
-    addComponent(m_pMouseInput);
-    connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(onEntered()));
+    //addComponent(m_pMouseInput);
+    //connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(onEntered()));
     connect(m_pMouseInput,SIGNAL(clicked(Qt3D::Q3DMouseEvent*)),this,SLOT(onClicked(Qt3D::Q3DMouseEvent*)));
 }
 
@@ -697,11 +696,11 @@ void Viewport2::buildScene(feather::draw::DrawItems& items)
         switch(item->type){
             case feather::draw::Item::Mesh:
                 std::cout << "build Mesh\n";
-                m_apDrawItems.append(new Mesh(*(item),m_pRoot));
+                m_apDrawItems.append(new Mesh(*(item),this));
                 break;
             case feather::draw::Item::Line:
                 std::cout << "build Line\n";
-                m_apDrawItems.append(new Line(*(item),m_pRoot));
+                m_apDrawItems.append(new Line(*(item),this));
                 break;
             default:
                 std::cout << "nothing built\n";
@@ -733,12 +732,12 @@ void Viewport2::addItems(unsigned int uid)
         switch(item->type){
             case feather::draw::Item::Mesh:
                 std::cout << "add Mesh\n";
-                m_apDrawItems.append(new Mesh(*(item),m_pRoot));
+                m_apDrawItems.append(new Mesh(*(item),this));
                 //m_apDrawItems.at(m_apDrawItems.size()-1)->setParent(this);
                 break;
             case feather::draw::Item::Line:
                 std::cout << "add Line\n";
-                m_apDrawItems.append(new Line(*(item),m_pRoot));
+                m_apDrawItems.append(new Line(*(item),this));
                 break;
             default:
                 std::cout << "nothing built\n";

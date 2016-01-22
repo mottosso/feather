@@ -298,7 +298,6 @@ class Viewport2 : public Qt3D::QEntity
         QList<DrawItem*> m_apDrawItems;
         Grid* m_pGrid;
         Axis* m_pAxis;
-        QEntity* m_pRoot;
         Qt3D::QMouseController *m_pMouseController;
         Qt3D::QMouseInput *m_pMouseInput;
         Line* m_pLine;
