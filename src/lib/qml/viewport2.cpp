@@ -28,7 +28,7 @@
 
 // MAIN VIEWPORT
 
-DrawItem::DrawItem(feather::draw::Item _item, Type _type, QNode *parent)
+DrawItem::DrawItem(feather::draw::Item* _item, Type _type, QNode *parent)
     : QEntity(parent),
     m_item(_item),
     m_type(_type)
@@ -37,11 +37,12 @@ DrawItem::DrawItem(feather::draw::Item _item, Type _type, QNode *parent)
 
 DrawItem::~DrawItem()
 {
+    QNode::cleanup();
 }
 
 // MESHES
 
-Mesh::Mesh(feather::draw::Item _item, QNode *parent)
+Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     : DrawItem(_item,DrawItem::Mesh,parent),
     m_pTransform(new Qt3D::QTransform()),
     m_pMaterial(new Qt3D::QPhongMaterial()),
@@ -90,8 +91,23 @@ Mesh::Mesh(feather::draw::Item _item, QNode *parent)
 
 Mesh::~Mesh()
 {
-
+    QNode::cleanup();
+    delete m_meshAttribute;
+    m_meshAttribute=0;
+    delete m_vertexBuffer;
+    m_vertexBuffer=0;
 }
+
+void Mesh::update()
+{
+    feather::FMesh mesh;
+    feather::qml::command::get_field_val(uid(),nid(),static_cast<feather::draw::Mesh*>(item())->fid,mesh);
+    m_vertexBytes.resize(sizeof(feather::FVertex3D) * m_aVertex.size());
+    memcpy(m_vertexBytes.data(), m_aVertex.data(), m_aVertex.size());
+    m_vertexBuffer->setData(m_vertexBytes);
+    m_meshAttribute->setCount(m_aVertex.size());
+}
+
 
 /*
 void Mesh::mouseClicked()
@@ -104,7 +120,7 @@ void Mesh::mouseClicked()
 
 
 // LINE
-Line::Line(feather::draw::Item _item, QNode *parent)
+Line::Line(feather::draw::Item* _item, QNode *parent)
     : DrawItem(_item,DrawItem::Line,parent),
     m_pTransform(new Qt3D::QTransform()),
     m_pMaterial(new Qt3D::QPhongMaterial()),
@@ -152,6 +168,15 @@ Line::Line(feather::draw::Item _item, QNode *parent)
 }
 
 Line::~Line()
+{
+    QNode::cleanup();
+    delete m_meshAttribute;
+    m_meshAttribute=0;
+    delete m_vertexBuffer;
+    m_vertexBuffer=0;
+}
+
+void Line::update()
 {
 
 }
@@ -696,11 +721,11 @@ void Viewport2::buildScene(feather::draw::DrawItems& items)
         switch(item->type){
             case feather::draw::Item::Mesh:
                 std::cout << "build Mesh\n";
-                m_apDrawItems.append(new Mesh(*(item),this));
+                m_apDrawItems.append(new Mesh(item,this));
                 break;
             case feather::draw::Item::Line:
                 std::cout << "build Line\n";
-                m_apDrawItems.append(new Line(*(item),this));
+                m_apDrawItems.append(new Line(item,this));
                 break;
             default:
                 std::cout << "nothing built\n";
@@ -729,21 +754,23 @@ void Viewport2::addItems(unsigned int uid)
     m_apDrawItems.clear();
 
     for(auto item : items) {
+        item->uid=uid;
+        item->nid=nid;
         switch(item->type){
             case feather::draw::Item::Mesh:
                 std::cout << "add Mesh\n";
-                m_apDrawItems.append(new Mesh(*(item),this));
-                //m_apDrawItems.at(m_apDrawItems.size()-1)->setParent(this);
+                m_apDrawItems.append(new Mesh(item,this));
                 break;
             case feather::draw::Item::Line:
                 std::cout << "add Line\n";
-                m_apDrawItems.append(new Line(*(item),this));
+                m_apDrawItems.append(new Line(item,this));
                 break;
             default:
                 std::cout << "nothing built\n";
         }
+        //delete item; // this pointer is not needed anymore;
     }
-
+    
     /* 
     Q_FOREACH(DrawItem* item, m_apDrawItems) {
         item->setParent(this);

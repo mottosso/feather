@@ -36,6 +36,7 @@ namespace feather {
             Item(Type _type=None):type(_type){}; 
             Type type;
             unsigned int uid;
+            unsigned int nid;
         };
 
         struct Line : public Item

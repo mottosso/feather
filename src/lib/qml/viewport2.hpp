@@ -38,12 +38,17 @@ class DrawItem : public Qt3D::QEntity
             Line,
             Mesh
         };
-        DrawItem(feather::draw::Item _item, Type _type=None, Qt3D::QNode *parent=0);
+        DrawItem(feather::draw::Item* _item, Type _type=None, Qt3D::QNode *parent=0);
         ~DrawItem();
         inline void setType(Type t) { m_type=t; };
         inline Type type() { return m_type; };
+        virtual void update(){};
+        inline unsigned int uid() { return m_item->uid; };
+        inline unsigned int nid() { return m_item->nid; };
+        feather::draw::Item* item() { return m_item; };
+        feather::draw::Item* m_item;
+
     private:
-        feather::draw::Item m_item;
         Type m_type;
 };
 
@@ -55,8 +60,9 @@ class Mesh : public DrawItem
     Q_OBJECT
     
     public:
-        Mesh(feather::draw::Item _item, Qt3D::QNode *parent=0);
+        Mesh(feather::draw::Item* _item, Qt3D::QNode *parent=0);
         ~Mesh();
+        void update();
 
     /*
     private Q_SLOTS:
@@ -72,6 +78,7 @@ class Mesh : public DrawItem
         std::vector<feather::FVertex3D> m_aVertex;
         Qt3D::QAttribute *m_meshAttribute;
         Qt3D::QBuffer *m_vertexBuffer;
+        QByteArray m_vertexBytes;
 };
 
 
@@ -83,8 +90,9 @@ class Line : public DrawItem
     Q_OBJECT
     
     public:
-        Line(feather::draw::Item _item, Qt3D::QNode *parent=0);
+        Line(feather::draw::Item* _item, Qt3D::QNode *parent=0);
         ~Line();
+        void update();
 
     /*
     private Q_SLOTS:

@@ -269,6 +269,18 @@ status qml::command::get_field_val(int uid, int node, int field, float& val)
     return status();
 }
 
+status qml::command::get_field_val(int uid, int node, int field, FMesh& val)
+{
+    typedef field::Field<FMesh>* fielddata;
+    fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
+    if(!f)
+        std::cout << uid << "," << node << "," << field << " NULL FIELD\n";
+    else  
+        val=f->value;
+    return status();
+}
+
+
 // SET FIELD VALUE
 
 status qml::command::set_field_val(int uid, int node, int field, bool& val)
