@@ -133,6 +133,10 @@ Rectangle {
     }
 
     function addDrawItems(item) { vp.addItems(item) }
+    function updateDrawItems(uid) { vp.updateItems(uid) }
 
-    Component.onCompleted: { SceneGraph.nodeAddDrawItems.connect(addDrawItems) }
+    Component.onCompleted: {
+        SceneGraph.nodeAddDrawItems.connect(addDrawItems)
+        SceneGraph.nodeUpdateDrawItems.connect(updateDrawItems)
+    }
 }

@@ -108,12 +108,12 @@ void Mesh::update()
     feather::FMesh mesh;
     feather::qml::command::get_field_val(uid(),nid(),static_cast<feather::draw::Mesh*>(item())->fid,mesh);
 
-    mesh.build_gl();
-
     m_vertexBytes.resize(sizeof(feather::FVertex3D) * mesh.glv.size());
     memcpy(m_vertexBytes.data(), mesh.glv.data(), mesh.glv.size());
     m_vertexBuffer->setData(m_vertexBytes);
     m_meshAttribute->setCount(mesh.glv.size());
+
+    std::cout << "updating draw item " << uid() << ", nid:" << nid() << ", fid:" << static_cast<feather::draw::Mesh*>(item())->fid << ", gl size:" << mesh.glv.size() << std::endl;
 }
 
 
@@ -780,4 +780,22 @@ void Viewport2::addItems(unsigned int uid)
     }
 }
 
-
+void Viewport2::updateItems(unsigned int uid)
+{
+    for(auto item : m_apDrawItems) {
+        if(item->item()->uid == uid){
+            switch(item->item()->type){
+                case feather::draw::Item::Mesh:
+                    std::cout << "updating Mesh draw item\n";
+                    static_cast<Mesh*>(item)->update();
+                    break;
+                case feather::draw::Item::Line:
+                    std::cout << "updating Line draw item\n";
+                    static_cast<Line*>(item)->update();
+                    break;
+                default:
+                    std::cout << "nothing built\n";
+            }
+        }
+    }
+}

@@ -281,6 +281,7 @@ class Viewport2 : public Qt3D::QEntity
         bool showAxis();
         Q_INVOKABLE void doUpdate(){ updateScene(); };
         Q_INVOKABLE void addItems(unsigned int uid);
+        Q_INVOKABLE void updateItems(unsigned int uid);
 
     private Q_SLOTS:
         void updateScene();
