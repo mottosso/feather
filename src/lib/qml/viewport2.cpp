@@ -51,6 +51,7 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     m_meshAttribute(new Qt3D::QAttribute(this)),
     m_vertexBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this))
 {
+    /*
     m_aVertex.push_back(feather::FVertex3D(0,0,0));
     m_aVertex.push_back(feather::FVertex3D(0,2,0));
     m_aVertex.push_back(feather::FVertex3D(0,0,2));
@@ -61,11 +62,14 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     memcpy(meshBytes.data(), m_aVertex.data(), size);
 
     m_vertexBuffer->setData(meshBytes);
+    */
+
+    m_vertexBuffer->setData(m_vertexBytes);
 
     m_meshAttribute->setName(Qt3D::QAttribute::defaultPositionAttributeName());
     m_meshAttribute->setDataType(Qt3D::QAttribute::Double);
     m_meshAttribute->setDataSize(3);
-    m_meshAttribute->setCount(m_aVertex.size());
+    //m_meshAttribute->setCount(m_aVertex.size());
     m_meshAttribute->setByteStride(sizeof(feather::FVertex3D));
     m_meshAttribute->setBuffer(m_vertexBuffer);
 
@@ -86,6 +90,7 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     addComponent(m_pMesh);
     addComponent(m_pMaterial);
 
+
     //connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(mouseClicked()));
 }
 
@@ -102,10 +107,13 @@ void Mesh::update()
 {
     feather::FMesh mesh;
     feather::qml::command::get_field_val(uid(),nid(),static_cast<feather::draw::Mesh*>(item())->fid,mesh);
-    m_vertexBytes.resize(sizeof(feather::FVertex3D) * m_aVertex.size());
-    memcpy(m_vertexBytes.data(), m_aVertex.data(), m_aVertex.size());
+
+    mesh.build_gl();
+
+    m_vertexBytes.resize(sizeof(feather::FVertex3D) * mesh.glv.size());
+    memcpy(m_vertexBytes.data(), mesh.glv.data(), mesh.glv.size());
     m_vertexBuffer->setData(m_vertexBytes);
-    m_meshAttribute->setCount(m_aVertex.size());
+    m_meshAttribute->setCount(mesh.glv.size());
 }
 
 
@@ -768,14 +776,8 @@ void Viewport2::addItems(unsigned int uid)
             default:
                 std::cout << "nothing built\n";
         }
-        //delete item; // this pointer is not needed anymore;
+        m_apDrawItems.at(m_apDrawItems.size()-1)->update();
     }
-    
-    /* 
-    Q_FOREACH(DrawItem* item, m_apDrawItems) {
-        item->setParent(this);
-    }
-    */
 }
 
 
