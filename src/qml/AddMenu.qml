@@ -74,6 +74,8 @@ Menu {
             SceneGraph.connect_nodes(plane,2,shape,1)
             SceneGraph.connect_nodes(plane,5,shape,3)
             SceneGraph.triggerUpdate()
+            SceneGraph.nodeUpdateDrawItems(plane)
+            SceneGraph.nodeUpdateDrawItems(shape)
             console.log("plane node = " + plane)
             console.log("shape node = " + shape)
         }

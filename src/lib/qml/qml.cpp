@@ -75,7 +75,7 @@ int SceneGraph::node_id(int uid)
 int SceneGraph::connect_nodes(int n1, int f1, int n2, int f2)
 {
     status p = qml::command::connect_nodes(n1,f1,n2,f2);
-    emit nodeUpdateDrawItems(n2);
+    //emit nodeUpdateDrawItems(n2);
     if(p.state==FAILED)
         std::cout << p.msg << std::endl;
     return p.state;
@@ -118,6 +118,12 @@ int SceneGraph::run_command_string(QString str)
     emit commandMessageChanged(p.state,QString(p.msg.c_str()));
     std::cout << "run command string msg='" << p.msg << "'\n";
     return p.state;
+}
+
+void SceneGraph::triggerUpdate()
+{
+    qml::command::scenegraph_update();
+    emit updateGraph();
 }
 
 void SceneGraph::add_node_to_layer(int uid, int lid)

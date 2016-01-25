@@ -76,7 +76,7 @@ class SceneGraph : public QObject
         Q_INVOKABLE int select_field(int type, int uid, int fid);
         Q_INVOKABLE void clear_selection();
         Q_INVOKABLE int run_command_string(QString str);
-        Q_INVOKABLE void triggerUpdate() { emit updateGraph(); };
+        Q_INVOKABLE void triggerUpdate();
         Q_INVOKABLE void add_node_to_layer(int uid, int lid);
         Q_INVOKABLE bool connected(unsigned int uid, unsigned int fid);
         Q_INVOKABLE QList<unsigned int> connected_fields(unsigned int uid, unsigned int fid);

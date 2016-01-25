@@ -108,12 +108,72 @@ void Mesh::update()
     feather::FMesh mesh;
     feather::qml::command::get_field_val(uid(),nid(),static_cast<feather::draw::Mesh*>(item())->fid,mesh);
 
-    m_vertexBytes.resize(sizeof(feather::FVertex3D) * mesh.glv.size());
-    memcpy(m_vertexBytes.data(), mesh.glv.data(), mesh.glv.size());
-    m_vertexBuffer->setData(m_vertexBytes);
-    m_meshAttribute->setCount(mesh.glv.size());
+    //mesh.build_gl();
 
-    std::cout << "updating draw item " << uid() << ", nid:" << nid() << ", fid:" << static_cast<feather::draw::Mesh*>(item())->fid << ", gl size:" << mesh.glv.size() << std::endl;
+
+    // build gl mesh from mesh
+    feather::FIntArray glei;
+    feather::FIntArray gli;
+    feather::FColorRGBAArray glc;
+    feather::FVertex3DArray glv;
+    uint id=0;
+    int fcount=0; // this is a temp value to test selection
+    std::for_each(mesh.f.begin(), mesh.f.end(), [&mesh,&id,&fcount,&glei,&gli,&glc,&glv](feather::FFace _face){
+
+            for_each(_face.begin(),_face.end(),[&mesh,&glei](feather::FFacePoint _fp){ glei.push_back(_fp.v); });
+            /*
+               std::cout << "build glei\n";
+               for_each(glei.begin(),glei.end(),[this](int _v){ std::cout << _v << " "; });
+               std::cout << std::endl;
+               */
+
+            while(id+2 <= _face.size()) {
+            if(fcount==3) {
+            glc.push_back(feather::FColorRGBA(1.0,0.0,0.0,1.0));
+            glc.push_back(feather::FColorRGBA(1.0,0.0,0.0,1.0));
+            glc.push_back(feather::FColorRGBA(1.0,0.0,0.0,1.0));
+            } else {
+            glc.push_back(feather::FColorRGBA());
+            glc.push_back(feather::FColorRGBA());
+            glc.push_back(feather::FColorRGBA());
+            }
+
+            //std::cout << "v" << id << ":" << _face.at(id).v << ",";
+            glv.push_back(mesh.v.at(_face.at(id).v));
+            //glvn.push_back(vn.at(_face.at(id).vn));
+            gli.push_back(_face.at(id).v);
+
+            //std::cout << "v" << id+1 << ":" << _face.at(id+1).v << ",";
+            glv.push_back(mesh.v.at(_face.at(id+1).v));
+            //glvn.push_back(vn.at(_face.at(id+1).vn));
+            gli.push_back(_face.at(id+1).v);
+
+            if(id+2 < _face.size()) {
+                //std::cout << "v" << id+2 << ":" << _face.at(id+2).v << ",";
+                glv.push_back(mesh.v.at(_face.at(id+2).v));
+                //glvn.push_back(vn.at(_face.at(id+2).vn));
+                gli.push_back(_face.at(id+2).v);
+            } else {
+                //std::cout << "v" << 0 << ":" << _face.at(0).v << ",";
+                glv.push_back(mesh.v.at(_face.at(0).v));
+                //glvn.push_back(vn.at(_face.at(0).vn));
+                gli.push_back(_face.at(0).v);
+            }
+
+            id=id+2;
+            }
+            //std::cout << "\n";
+            fcount++;
+            id=0;
+    });
+
+
+    m_vertexBytes.resize(sizeof(feather::FVertex3D) * glv.size());
+    memcpy(m_vertexBytes.data(), glv.data(), glv.size());
+    m_vertexBuffer->setData(m_vertexBytes);
+    m_meshAttribute->setCount(glv.size());
+
+    std::cout << "updating draw item " << uid() << ", nid:" << nid() << ", fid:" << static_cast<feather::draw::Mesh*>(item())->fid << ", v size:" << mesh.v.size() << ", gl size:" << glv.size() << std::endl;
 }
 
 
