@@ -49,6 +49,7 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     m_pMesh(new Qt3D::QGeometryRenderer()),
     //m_pMouseInput(new Qt3D::QMouseInput(this)),
     m_meshAttribute(new Qt3D::QAttribute(this)),
+    m_paMeshVData(new feather::FVertex3DArray),
     m_vertexBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this))
 {
     /*
@@ -69,7 +70,7 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     m_meshAttribute->setName(Qt3D::QAttribute::defaultPositionAttributeName());
     m_meshAttribute->setDataType(Qt3D::QAttribute::Double);
     m_meshAttribute->setDataSize(3);
-    //m_meshAttribute->setCount(m_aVertex.size());
+    m_meshAttribute->setCount(m_paMeshVData->size());
     m_meshAttribute->setByteStride(sizeof(feather::FVertex3D));
     m_meshAttribute->setBuffer(m_vertexBuffer);
 
@@ -99,12 +100,17 @@ Mesh::~Mesh()
     QNode::cleanup();
     delete m_meshAttribute;
     m_meshAttribute=0;
+    delete m_paMeshVData;
+    m_paMeshVData=0;
     delete m_vertexBuffer;
     m_vertexBuffer=0;
 }
 
 void Mesh::update()
 {
+    // clean out v array
+    //m_paMeshVData->clean();
+
     feather::FMesh mesh;
     feather::qml::command::get_field_val(uid(),nid(),static_cast<feather::draw::Mesh*>(item())->fid,mesh);
 
@@ -115,10 +121,10 @@ void Mesh::update()
     feather::FIntArray glei;
     feather::FIntArray gli;
     feather::FColorRGBAArray glc;
-    feather::FVertex3DArray glv;
+    //feather::FVertex3DArray glv;
     uint id=0;
     int fcount=0; // this is a temp value to test selection
-    std::for_each(mesh.f.begin(), mesh.f.end(), [&mesh,&id,&fcount,&glei,&gli,&glc,&glv](feather::FFace _face){
+    std::for_each(mesh.f.begin(), mesh.f.end(), [this,&mesh,&id,&fcount,&glei,&gli,&glc](feather::FFace _face){
 
             for_each(_face.begin(),_face.end(),[&mesh,&glei](feather::FFacePoint _fp){ glei.push_back(_fp.v); });
             /*
@@ -139,23 +145,23 @@ void Mesh::update()
             }
 
             //std::cout << "v" << id << ":" << _face.at(id).v << ",";
-            glv.push_back(mesh.v.at(_face.at(id).v));
+            m_paMeshVData->push_back(mesh.v.at(_face.at(id).v));
             //glvn.push_back(vn.at(_face.at(id).vn));
             gli.push_back(_face.at(id).v);
 
             //std::cout << "v" << id+1 << ":" << _face.at(id+1).v << ",";
-            glv.push_back(mesh.v.at(_face.at(id+1).v));
+            m_paMeshVData->push_back(mesh.v.at(_face.at(id+1).v));
             //glvn.push_back(vn.at(_face.at(id+1).vn));
             gli.push_back(_face.at(id+1).v);
 
             if(id+2 < _face.size()) {
                 //std::cout << "v" << id+2 << ":" << _face.at(id+2).v << ",";
-                glv.push_back(mesh.v.at(_face.at(id+2).v));
+                m_paMeshVData->push_back(mesh.v.at(_face.at(id+2).v));
                 //glvn.push_back(vn.at(_face.at(id+2).vn));
                 gli.push_back(_face.at(id+2).v);
             } else {
                 //std::cout << "v" << 0 << ":" << _face.at(0).v << ",";
-                glv.push_back(mesh.v.at(_face.at(0).v));
+                m_paMeshVData->push_back(mesh.v.at(_face.at(0).v));
                 //glvn.push_back(vn.at(_face.at(0).vn));
                 gli.push_back(_face.at(0).v);
             }
@@ -168,12 +174,12 @@ void Mesh::update()
     });
 
 
-    m_vertexBytes.resize(sizeof(feather::FVertex3D) * glv.size());
-    memcpy(m_vertexBytes.data(), glv.data(), glv.size());
+    m_vertexBytes.resize(sizeof(feather::FVertex3D) * m_paMeshVData->size());
+    memcpy(m_vertexBytes.data(), m_paMeshVData->data(), m_paMeshVData->size() * sizeof(feather::FVertex3D));
     m_vertexBuffer->setData(m_vertexBytes);
-    m_meshAttribute->setCount(glv.size());
+    m_meshAttribute->setCount(m_paMeshVData->size());
 
-    std::cout << "updating draw item " << uid() << ", nid:" << nid() << ", fid:" << static_cast<feather::draw::Mesh*>(item())->fid << ", v size:" << mesh.v.size() << ", gl size:" << glv.size() << std::endl;
+    std::cout << "updating draw item " << uid() << ", nid:" << nid() << ", fid:" << static_cast<feather::draw::Mesh*>(item())->fid << ", v size:" << mesh.v.size() << ", gl size:" << m_paMeshVData->size() << std::endl;
 }
 
 
