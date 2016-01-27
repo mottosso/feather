@@ -65,7 +65,6 @@ SET(feather_core_HDRS
     texture.hpp
     shader.hpp
     draw.hpp
-    gl.hpp
 )
 
 INSTALL(FILES ${feather_core_HDRS}

@@ -23,7 +23,6 @@
 
 #include "deps.hpp"
 #include "curves.hpp"
-#include "viewportthread.hpp"
 #include "viewport2.hpp"
 #include "sg_editor.hpp"
 #include "field_model.hpp"
@@ -203,7 +202,6 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
 
     qmlRegisterType<BezierCurve>("feather.ui.curves", 1, 0, "BezierCurve");
-    qmlRegisterType<ViewportThread>("feather.viewport", 1, 0, "Viewport");
     qmlRegisterType<Viewport2>("feather.viewport", 1, 0, "Viewport2");
     qmlRegisterType<SceneGraphEditor>("feather.editors", 1, 0, "SceneGraphEditor");
     qmlRegisterSingletonType<SceneGraph>("feather.scenegraph", 1, 0, "SceneGraph", get_scenegraph);
@@ -264,13 +262,6 @@ int main(int argc, char **argv)
         //QQmlApplicationEngine view("ui/main.qml");
         QQmlApplicationEngine view(cnfg.mainpath.c_str());
         execReturn = app.exec();
-    }
-    */
-
-    /*
-    foreach (QThread *t, ViewportThread::threads) {
-        t->wait();
-        delete t;
     }
     */
 

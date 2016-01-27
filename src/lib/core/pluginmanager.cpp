@@ -94,16 +94,6 @@ status PluginManager::draw_it(int node, draw::DrawItems&  items)
 }
 */
 
-void PluginManager::gl_init(FNode& node, FGlInfo& info)
-{
-    std::for_each(m_plugins.begin(),m_plugins.end(), call_gl_init(node,info) );
-}
-
-void PluginManager::gl_draw(FNode& node, FGlInfo& info)
-{
-    std::for_each(m_plugins.begin(),m_plugins.end(), call_gl_draw(node,info) );
-}
-
 status PluginManager::load_node(PluginData &node)
 {
    char *error;
@@ -120,8 +110,6 @@ status PluginManager::load_node(PluginData &node)
     node.author = (std::string(*)())dlsym(node.handle, "author");
     node.do_it = (status(*)(int,field::Fields&))dlsym(node.handle, "do_it");
     //node.draw_it = (status(*)(int,draw::DrawItems&))dlsym(node.handle, "draw_it");
-    node.gl_init = (void(*)(FNode&,FGlInfo&))dlsym(node.handle, "gl_init");
-    node.gl_draw = (void(*)(FNode&,FGlInfo&))dlsym(node.handle, "gl_draw");
     node.node_exist = (bool(*)(int))dlsym(node.handle, "node_exist");
     node.node_drawable = (bool(*)(int))dlsym(node.handle, "node_drawable");
     node.node_draw_items = (status(*)(int,draw::DrawItems&))dlsym(node.handle, "node_draw_items");

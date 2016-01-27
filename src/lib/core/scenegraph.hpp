@@ -112,15 +112,6 @@ namespace feather
         //int get_max_uid() { return plugins.max_uid(); };
         int get_max_uid() { return num_vertices(sg)-1; };
 
-        void gl_init(FNode& node, FGlInfo& info) {
-            plugins.gl_init(node,info); 
-        };
-
-        void gl_draw(FNode& node, FGlInfo& info) {
-            //std::cout << "scenegraph::gl_draw(), uid=" << node.uid << ", node=" << node.node << std::endl;
-            plugins.gl_draw(node,info); 
-        };
-
         status load_plugins() {
             return plugins.load_plugins();
         };
@@ -177,6 +168,8 @@ namespace feather
             // to the list of nodes that have already been added but haven't
             // been updated.
             // An example of this is the viewport editor which needs to create
+
+            // TODO - glinfo is not used anymore
             // glinfo for each node. If a command adds several nodes, the
             // viewport wll use these uids in the state to generate the glinfo
             cstate.add_uid_to_update(uid);
@@ -610,10 +603,6 @@ class node_visitor : public boost::default_bfs_visitor
             void initialize_vertex(Vertex u, const Graph & g) const
             {
                 std::cout << "init nid " << sg[u].node << std::endl;
-                /*
-                if(cstate.sgMode==state::DrawGL)
-                        plugins.draw_gl(sg[u].node);
-                */
             }
 
         // Start Vertex
@@ -791,7 +780,6 @@ namespace scenegraph
            //get(boost::vertex_index, scenegraph))));
         std::cout << "*****UPDATE COMPLETE*****\n";
 
-        //draw_gl();
         return status();
     };
 

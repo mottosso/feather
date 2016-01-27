@@ -369,16 +369,6 @@ void qml::command::get_node_name(const unsigned int uid, std::string& name, stat
     scenegraph::get_node_name(uid,name,error);
 }
 
-void qml::command::gl_init(int uid, FGlInfo& info)
-{
-    scenegraph::gl_init(sg[uid],info);
-}
-
-void qml::command::gl_draw(int uid, FGlInfo& info)
-{
-    scenegraph::gl_draw(sg[uid],info);
-}
-
 void qml::command::scenegraph_update()
 {
     scenegraph::update();

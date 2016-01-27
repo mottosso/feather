@@ -50,8 +50,6 @@ namespace feather
         std::string (*author)();
         status (*do_it)(int,field::Fields&);
         //status (*draw_it)(int,draw::DrawItems&);
-        void (*gl_init)(FNode&,FGlInfo&);
-        void (*gl_draw)(FNode&,FGlInfo&);
         bool (*node_exist)(int); // is there a node with the given type and id in this plugin
         bool (*node_drawable)(int); // can the node be drawn in the viewport
         status (*node_draw_items)(int,draw::DrawItems&); // can the node be drawn in the viewport
@@ -136,48 +134,6 @@ namespace feather
             draw::DrawItems& m_items;
     };
     */
-
-    // GL INIT 
-
-    template <int _Id>
-    struct call_gl_inits {
-        static void exec(FNode& node, FGlInfo& info) { call_gl_inits<_Id-1>::exec(node,info); };
-    };
-
-    template <> struct call_gl_inits<0> { static void exec(FNode& node, FGlInfo& fields) {}; };
- 
-    template <int _Id> void node_gl_init(FNode& node, FGlInfo& info) {};
-
-    struct call_gl_init {
-        call_gl_init(FNode& node, FGlInfo& info): m_node(node), m_info(info){};
-        void operator()(PluginData n) { if(n.node_exist(m_node.node)) { n.gl_init(m_node,m_info); } };
-
-        private:
-            FNode& m_node;
-            FGlInfo& m_info;
-    };
-
-
-    // GL DRAW 
-
-    template <int _Id>
-    struct call_gl_draws {
-        static void exec(FNode& node, FGlInfo& info) { call_gl_draws<_Id-1>::exec(node,info); };
-    };
-
-    template <> struct call_gl_draws<0> { static void exec(FNode& node, FGlInfo& fields) {}; };
- 
-    template <int _Id> void node_gl_draw(FNode& node, FGlInfo& info) {};
-
-    struct call_gl_draw {
-        call_gl_draw(FNode& node, FGlInfo& info): m_node(node), m_info(info){};
-        void operator()(PluginData n) { if(n.node_exist(m_node.node)) { n.gl_draw(m_node,m_info); } };
-
-        private:
-            FNode& m_node;
-            FGlInfo& m_info;
-    };
-
 
 
     // NODE MATCHING
@@ -409,8 +365,6 @@ namespace feather
             status load_plugins();
             status do_it(int node,field::Fields& fields); // this is called by the scenegraph
             //status draw_it(int node,draw::DrawItems& items); // this is called by the scenegraph
-            void gl_init(FNode& node, FGlInfo& info); 
-            void gl_draw(FNode& node, FGlInfo& info); 
             status create_fields(int node, field::Fields& fields); // this will return a new instance of the node's fields 
             void get_draw_items(const int nid, draw::DrawItems& items);
             field::FieldBase* get_fieldBase(int uid, int node, int field, field::Fields& fields);
@@ -439,8 +393,6 @@ namespace feather
     std::string author();\
     feather::status do_it(int, feather::field::Fields&);\
     /*feather::status draw_it(int, feather::draw::DrawItems&);*/\
-    void gl_init(feather::FNode& node, feather::FGlInfo& info);\
-    void gl_draw(feather::FNode& node, feather::FGlInfo& info);\
     bool node_exist(int);\
     bool node_drawable(int);\
     feather::status node_draw_items(int,feather::draw::DrawItems&);\
@@ -472,15 +424,7 @@ namespace feather
     /*feather::status draw_it(int id, feather::draw::DrawItems& items) {*/\
     /*    return call_draw_its<MAX_NODE_ID>::exec(id,items);*/\
     /*};*/\
-    \
-    void gl_init(feather::FNode& node, feather::FGlInfo& info) {\
-        call_gl_inits<MAX_NODE_ID>::exec(node,info);\
-    };\
-    \
-    void gl_draw(feather::FNode& node, feather::FGlInfo& info) {\
-        call_gl_draws<MAX_NODE_ID>::exec(node,info);\
-    };\
-    \
+   \
     /* see if the node is in the plugin */\
     bool node_exist(int id) {\
         return find_nodes<MAX_NODE_ID>::exec(id);\
@@ -533,6 +477,5 @@ namespace feather
     feather::status parameter_name(std::string c, int k, std::string& n) {\
     return feather::command::get_parameter_name<20,800>::exec(c,k,n);\
     };\
-    \
 
 #endif
