@@ -86,8 +86,9 @@ class SceneGraph : public QObject
         void fieldSelected(int uid, int fid);
         void commandMessageChanged(int code, QString msg);
         void updateGraph();
-        void nodeAdded(int uid);
-        void nodesAdded();
+        void nodeAdded(unsigned int uid);
+        //void nodesAdded();
+        //void nodesAdded(QList<unsigned int> uids);
         void nodeAddDrawItems(unsigned int uid);
         void nodeUpdateDrawItems(unsigned int uid);
         void nodeRemoved(int uid);

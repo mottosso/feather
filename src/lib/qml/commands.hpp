@@ -47,7 +47,7 @@ namespace feather
             // Node
 
             unsigned int add_node(const unsigned int node, const std::string name); 
-            bool nodes_added(std::vector<int>& uids);
+            bool nodes_added(std::vector<unsigned int>& uids);
             void remove_node(const unsigned int uid, status& error);
             void nodes_updated();
             bool node_exists(int uid);

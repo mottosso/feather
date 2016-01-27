@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Filename: qml.hpp
+ * Filename: qml.cpp
  *
  * Description: Frontend of the QML wrapper.
  *
@@ -123,6 +123,18 @@ int SceneGraph::run_command_string(QString str)
 void SceneGraph::triggerUpdate()
 {
     qml::command::scenegraph_update();
+    // some widgets need to if nodes where added and what was added
+
+    std::vector<unsigned int> uids;
+    bool n = feather::qml::command::nodes_added(uids);
+
+    std::cout << "triggerUpdate saw that the following uids where added\n";
+
+    if(n){ 
+        for(auto uid : uids)
+            emit nodeAdded(uid);
+    }
+
     emit updateGraph();
 }
 

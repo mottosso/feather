@@ -80,7 +80,7 @@ unsigned int qml::command::add_node(const unsigned int nid, const std::string na
     //return status();
 }
 
-bool qml::command::nodes_added(std::vector<int>& uids)
+bool qml::command::nodes_added(std::vector<unsigned int>& uids)
 {
     uids.assign(cstate.uid_update.begin(),cstate.uid_update.end());
     //cstate.clear_uid_update();

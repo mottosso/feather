@@ -47,7 +47,7 @@ Menu {
             importObjFilename.stringValue = tools.urlToString(importDialog.fileUrl)
             importObj.exec()       
             SceneGraph.triggerUpdate()
-            SceneGraph.nodesAdded()
+            //SceneGraph.nodesAdded()
         }
         onRejected: {} 
     }

@@ -132,10 +132,16 @@ Rectangle {
         onClicked: { console.log("RECT CLICKED") }
     }
 
+    function addNode(uid) {
+        vp.addItems(uid) 
+    }
+
     function addDrawItems(item) { vp.addItems(item) }
+
     function updateDrawItems(uid) { vp.updateItems(uid) }
 
     Component.onCompleted: {
+        SceneGraph.nodeAdded.connect(addNode)
         SceneGraph.nodeAddDrawItems.connect(addDrawItems)
         SceneGraph.nodeUpdateDrawItems.connect(updateDrawItems)
     }
