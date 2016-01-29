@@ -80,6 +80,7 @@ class Mesh : public DrawItem
         feather::FVertex3DArray* m_paMeshVData;
         Qt3D::QBuffer *m_vertexBuffer;
         QByteArray m_vertexBytes;
+        Qt3D::QPointLight* m_pLight;
 };
 
 
@@ -311,6 +312,7 @@ class Viewport2 : public Qt3D::QEntity
         Qt3D::QMouseController *m_pMouseController;
         Qt3D::QMouseInput *m_pMouseInput;
         Line* m_pLine;
+        Qt3D::QPointLight* m_pLight;
 };
 
 #endif

@@ -29,17 +29,24 @@ import Qt3D.Input 2.0
 import feather.viewport 1.0
 import feather.scenegraph 1.0
 
-Rectangle {
+Item {
     id: frame
-    color: "yellow"
+    //color: "yellow"
 
+        Viewport3 {
+            id: vp
+        }
+
+    /*
     Scene3D {
         id: scene3d
         anchors.fill: parent
         anchors.margins: 2
         focus: true
         aspects: "input"
+    */
 
+        /*
         Entity {
             id : sceneRoot
             property real rotationAngle : 0
@@ -82,6 +89,7 @@ Rectangle {
                 }   
                 components: [mouseInput]
             } 
+            */
 
             //property MouseInput mouseInput: MouseInput {
             /*
@@ -122,23 +130,29 @@ Rectangle {
             */
             //components: [frameGraph, sphereEntity]
  
-        }
+        //}
 
-    } // sceneRoot
+    //}// sceneRoot
 
+    /*
     MouseArea {
         anchors.fill: parent
         propagateComposedEvents: true 
         onClicked: { console.log("RECT CLICKED") }
     }
+    */
 
     function addNode(uid) {
-        vp.addItems(uid) 
+        // vp.addItems(uid) 
     }
 
-    function addDrawItems(item) { vp.addItems(item) }
+    function addDrawItems(item) {
+        // vp.addItems(item)
+    }
 
-    function updateDrawItems(uid) { vp.updateItems(uid) }
+    function updateDrawItems(uid) {
+        // vp.updateItems(uid)
+    }
 
     Component.onCompleted: {
         SceneGraph.nodeAdded.connect(addNode)

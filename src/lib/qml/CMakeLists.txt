@@ -22,6 +22,7 @@ SET(feather_qml_SRCS
     tree_model.cpp
     sg_editor.cpp
     viewport2.cpp
+    viewport3.cpp
     qml.cpp
 )
 

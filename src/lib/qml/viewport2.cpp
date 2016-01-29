@@ -50,7 +50,8 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     //m_pMouseInput(new Qt3D::QMouseInput(this)),
     m_meshAttribute(new Qt3D::QAttribute(this)),
     m_paMeshVData(new feather::FVertex3DArray),
-    m_vertexBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this))
+    m_vertexBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this)),
+    m_pLight(new Qt3D::QPointLight())
 {
     /*
     m_aVertex.push_back(feather::FVertex3D(0,0,0));
@@ -82,14 +83,19 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     //m_pMesh->setGeometry(new QGeometry(this));
     
     m_pMaterial->setDiffuse(QColor(Qt::red));
-    m_pMaterial->setAmbient(Qt::red);
-    //m_pMaterial->setSpecular(Qt::black);
-    //m_pMaterial->setShininess(0.0f);
+    m_pMaterial->setAmbient(Qt::gray);
+    m_pMaterial->setSpecular(Qt::white);
+    m_pMaterial->setShininess(0.4f);
 
-    
+    // Light testing
+    m_pLight->setColor(Qt::white);
+    m_pLight->setIntensity(1000.5f);
+    m_pLight->setPosition(QVector3D(4,4,4)); 
+
     addComponent(m_pTransform);
-    addComponent(m_pMesh);
     addComponent(m_pMaterial);
+    addComponent(m_pMesh);
+    addComponent(m_pLight);
 
 
     //connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(mouseClicked()));
@@ -686,7 +692,8 @@ Viewport2::Viewport2(QNode *parent)
     : Qt3D::QEntity(parent),
     m_showGrid(true),
     m_showAxis(true),
-    m_pMouseController(new Qt3D::QMouseController(this))
+    m_pMouseController(new Qt3D::QMouseController(this)),
+    m_pLight(new Qt3D::QPointLight(this))
 {
 
     m_pMouseInput = new Qt3D::QMouseInput(this);
@@ -706,6 +713,14 @@ Viewport2::Viewport2(QNode *parent)
     //addComponent(m_pMouseInput);
     //connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(onEntered()));
     connect(m_pMouseInput,SIGNAL(clicked(Qt3D::Q3DMouseEvent*)),this,SLOT(onClicked(Qt3D::Q3DMouseEvent*)));
+
+    // Light testing
+    m_pLight->setColor(Qt::white);
+    m_pLight->setIntensity(1.5f);
+   
+    m_pLight->setPosition(QVector3D(0,4,0)); 
+ 
+    addComponent(m_pLight);
 }
 
 Viewport2::~Viewport2()
