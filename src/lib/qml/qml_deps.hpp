@@ -80,6 +80,17 @@
 #include <Qt3DRenderer/qgeometry.h>
 #include <Qt3DRenderer/QWindow>
 #include <Qt3DRenderer/QFrameGraph>
+#include <Qt3DRenderer/QPointLight>
+#include <Qt3DRenderer/QSphereMesh>
+#include <Qt3DRenderer/QLayer>
+
+#include <Qt3DRenderer/QLayerFilter>
+#include <Qt3DRenderer/QClearBuffer>
+#include <Qt3DRenderer/QRenderTargetSelector>
+#include <Qt3DRenderer/QRenderPassFilter>
+#include <Qt3DRenderer/QCameraSelector>
+#include <Qt3DRenderer/QViewport>
+#include <QtCore/QRectF>
 
 #include <Qt3DInput/QMouseInput>
 #include <Qt3DInput/QMouseController>

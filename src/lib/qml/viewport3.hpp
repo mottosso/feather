@@ -20,12 +20,51 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  ***********************************************************************/
-#ifndef VIEWPORT3_HPP                                                      
+#ifndef VIEWPORT3_HPP
 #define VIEWPORT3_HPP
 
 #include "deps.hpp"
-#include "qml_deps.hpp"                                                    
-#include "types.hpp"                                                       
+#include "qml_deps.hpp"
+#include "types.hpp"
+
+class Root : public Qt3D::QEntity
+{
+    Q_OBJECT
+
+    public:
+        Root(Qt3D::QNode* parent=0);
+        ~Root();
+
+    private:
+
+};
+
+
+class DeferredRenderer : public Qt3D::QViewport
+{
+    Q_OBJECT
+
+    public:
+        DeferredRenderer(Qt3D::QNode* parent=0);
+        ~DeferredRenderer();
+        void setSceneCamera(Qt3D::QEntity* camera);
+        void setGBuffer(Qt3D::QRenderTarget* gBuffer);
+        void setGeometryPassCriteria(QList<Qt3D::QAnnotation*> criteria);
+        void setFinalPassCriteria(QList<Qt3D::QAnnotation*> criteria);
+        void setGBufferLayers(const QStringList &layerNames);
+        void setScreenQuadLayers(const QStringList &layerNames);
+
+    private:
+        Qt3D::QLayerFilter* m_pSceneFilter;
+        Qt3D::QLayerFilter* m_pScreenQuadFilter;
+        Qt3D::QClearBuffer* m_pClearScreenQuad;
+        Qt3D::QRenderTargetSelector* m_pBufferTargetSelector;
+        Qt3D::QClearBuffer* m_pClearGBuffer;
+        Qt3D::QRenderPassFilter* m_pGeometryPassFilter;
+        Qt3D::QRenderPassFilter* m_pFinalPassFilter;
+        Qt3D::QCameraSelector* m_pSceneCameraSelector;
+};
+
 
 class Viewport3 : public Qt3D::QWindow
 {
@@ -36,8 +75,12 @@ class Viewport3 : public Qt3D::QWindow
         ~Viewport3();
 
     private:
-        Qt3D::QFrameGraph* m_pFrame;
+        Qt3D::QFrameGraph* m_pFrameGraph;
         Qt3D::QCamera* m_pCamera;
+        Qt3D::QLayer* m_pSceneLayer;
+        Qt3D::QLayer* m_pQuadLayer;
+        DeferredRenderer* m_pDeferredRenderer;
+        Root* m_pRoot;
 };
 
 #endif
