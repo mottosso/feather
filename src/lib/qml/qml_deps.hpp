@@ -41,6 +41,8 @@
 
 #include <qmath.h>
 
+#include <QtCore/QRectF>
+
 // QtOpenGL
 #include <QtGui/QOpenGLContext>
 #include <QtGui/QOpenGLFramebufferObject>
@@ -90,8 +92,13 @@
 #include <Qt3DRenderer/QRenderPassFilter>
 #include <Qt3DRenderer/QCameraSelector>
 #include <Qt3DRenderer/QViewport>
-#include <QtCore/QRectF>
+#include <Qt3DRenderer/QAbstractTextureProvider>
+#include <Qt3DRenderer/QRenderTarget>
+#include <Qt3DRenderer/QRenderAttachment>
+#include <Qt3DRenderer/QTextureWrapMode>
+#include <Qt3DRenderer/QTexture2D>
 
+#include <Qt3DInput/QInputAspect>
 #include <Qt3DInput/QMouseInput>
 #include <Qt3DInput/QMouseController>
 #include <Qt3DInput/Q3DMouseEvent>

@@ -35,10 +35,86 @@ class Root : public Qt3D::QEntity
         Root(Qt3D::QNode* parent=0);
         ~Root();
 
-    private:
+    protected slots:
+        void mouseClicked(Qt3D::Q3DMouseEvent* event);
 
+    private:
+        Qt3D::QMouseController* m_pMouseController;
+        Qt3D::QMouseInput* m_pMouseInput;
 };
 
+
+// GBUFFER
+
+class GBuffer : public Qt3D::QRenderTarget
+{
+    public:
+        explicit GBuffer(Qt3D::QNode *parent = 0);
+
+        enum Attachments {
+            Color = 0,
+            Position,
+            Normal,
+            Depth,
+            AttachmentsCount
+        };
+
+        Qt3D::QAbstractTextureProvider *colorTexture() const;
+        Qt3D::QAbstractTextureProvider *positionTexture() const;
+        Qt3D::QAbstractTextureProvider *normalTexture() const;
+        Qt3D::QAbstractTextureProvider *depthTexture() const;
+
+    private:
+        Qt3D::QAbstractTextureProvider *m_textures[AttachmentsCount];
+        Qt3D::QRenderAttachment *m_attachments[AttachmentsCount];
+};
+
+
+// FINAL EFFECT
+
+class FinalEffect : public Qt3D::QEffect
+{
+    //Q_OBJECT
+
+    public:
+        FinalEffect(Qt3D::QNode* parent=0);
+        ~FinalEffect();
+
+        QList<Qt3D::QAnnotation*> passCriteria() const;
+        inline Qt3D::QTechnique *gl3Technique() const { return m_pGl3Technique; }
+        inline Qt3D::QTechnique *gl2Technique() const { return m_pGl2Technique; }
+
+    private:
+        Qt3D::QTechnique* m_pGl2Technique;
+        Qt3D::QTechnique* m_pGl3Technique;
+        Qt3D::QRenderPass* m_pGl2Pass;
+        Qt3D::QRenderPass* m_pGl3Pass;
+        Qt3D::QAnnotation* m_pPassCriterion; 
+};
+
+
+// SCENE EFFECT
+
+class SceneEffect : public Qt3D::QEffect
+{
+    //Q_OBJECT
+
+    public:
+        SceneEffect(Qt3D::QNode* parent=0);
+        ~SceneEffect();
+
+        QList<Qt3D::QAnnotation*> passCriteria() const;
+
+    private:
+        Qt3D::QTechnique* m_pGl2Technique;
+        Qt3D::QTechnique* m_pGl3Technique;
+        Qt3D::QRenderPass* m_pGl2Pass;
+        Qt3D::QRenderPass* m_pGl3Pass;
+        Qt3D::QAnnotation* m_pPassCriterion; 
+};
+
+
+// DEFERRED RENDERER
 
 class DeferredRenderer : public Qt3D::QViewport
 {
@@ -66,6 +142,8 @@ class DeferredRenderer : public Qt3D::QViewport
 };
 
 
+// VIEWPORT
+
 class Viewport3 : public Qt3D::QWindow
 {
     Q_OBJECT
@@ -73,14 +151,23 @@ class Viewport3 : public Qt3D::QWindow
     public:
         Viewport3(Qt3D::QWindow* parent=0);
         ~Viewport3();
+    //protected slots:
+    //    void mouseClicked(Qt3D::Q3DMouseEvent* event);
 
     private:
+        //Qt3D::QMouseController* m_pMouseController;
+        //Qt3D::QMouseInput* m_pMouseInput;
+        Qt3D::QInputAspect* m_pInput;
         Qt3D::QFrameGraph* m_pFrameGraph;
         Qt3D::QCamera* m_pCamera;
-        Qt3D::QLayer* m_pSceneLayer;
-        Qt3D::QLayer* m_pQuadLayer;
+        //Qt3D::QLayer* m_pSceneLayer;
+        //Qt3D::QLayer* m_pQuadLayer;
+        //GBuffer* m_pGBuffer;
         DeferredRenderer* m_pDeferredRenderer;
+        //FinalEffect* m_pFinalEffect;
+        //SceneEffect* m_pSceneEffect;
         Root* m_pRoot;
+        
 };
 
 #endif

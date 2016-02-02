@@ -33,18 +33,62 @@ Item {
     id: frame
     //color: "yellow"
 
+    /*
         Viewport3 {
             id: vp
         }
+    */
 
-    /*
     Scene3D {
         id: scene3d
         anchors.fill: parent
         anchors.margins: 2
         focus: true
         aspects: "input"
-    */
+
+        Entity {
+            id : sceneRoot
+ 
+            Camera {
+                id: camera
+                projectionType: CameraLens.PerspectiveProjection
+                fieldOfView: 45
+                //aspectRatio: frame.width/frame.height
+                nearPlane : 0.1
+                farPlane : 1000.0
+                position: Qt.vector3d( 0.0, 0.0, 20.0 )
+                upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
+                viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
+            }
+
+            Configuration  {
+                controlledCamera: camera
+            }
+
+            //Viewport3 {}
+
+
+            FrameGraph {
+                id : frameGraph
+
+                activeFrameGraph: DeferredRenderer {
+                    id: renderer
+                    clearColor: "grey"
+                    //camera: camera
+                }
+
+                /*                
+                activeFrameGraph: ForwardRenderer {
+                    id : mainViewport
+                    clearColor: "grey"
+                    camera: camera 
+                } // mainViewport
+                */
+
+            } // frameGraph
+
+            Viewport2 { id: vp }
+        }
 
         /*
         Entity {
@@ -132,7 +176,7 @@ Item {
  
         //}
 
-    //}// sceneRoot
+    } //sceneRoot
 
     /*
     MouseArea {
@@ -143,15 +187,15 @@ Item {
     */
 
     function addNode(uid) {
-        // vp.addItems(uid) 
+        vp.addItems(uid) 
     }
 
     function addDrawItems(item) {
-        // vp.addItems(item)
+        vp.addItems(item)
     }
 
     function updateDrawItems(uid) {
-        // vp.updateItems(uid)
+        vp.updateItems(uid)
     }
 
     Component.onCompleted: {
