@@ -29,9 +29,9 @@ import Qt3D.Input 2.0
 import feather.viewport 1.0
 import feather.scenegraph 1.0
 
-Item {
+Rectangle {
     id: frame
-    //color: "yellow"
+    color: "yellow"
 
     /*
         Viewport3 {
@@ -53,7 +53,7 @@ Item {
                 id: camera
                 projectionType: CameraLens.PerspectiveProjection
                 fieldOfView: 45
-                //aspectRatio: frame.width/frame.height
+                aspectRatio: frame.width/frame.height
                 nearPlane : 0.1
                 farPlane : 1000.0
                 position: Qt.vector3d( 0.0, 0.0, 20.0 )
