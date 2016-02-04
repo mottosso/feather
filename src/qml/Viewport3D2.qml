@@ -65,29 +65,39 @@ Item {
                 controlledCamera: camera
             }
 
-            //Viewport3 {}
+            MouseController { id: mouseController }
 
+            //Viewport3 {}
 
             FrameGraph {
                 id : frameGraph
 
+                /*
                 activeFrameGraph: DeferredRenderer {
                     id: renderer
                     clearColor: "grey"
                     //camera: camera
                 }
+                */
 
-                /*                
                 activeFrameGraph: ForwardRenderer {
                     id : mainViewport
                     clearColor: "grey"
                     camera: camera 
                 } // mainViewport
-                */
 
             } // frameGraph
 
-            Viewport2 { id: vp }
+            Viewport2 {
+                id: vp
+                MouseInput {
+                    id: mouseInput
+                    controller: mouseController
+                    onClicked: { console.log("VP CLICKED") }
+                }   
+                components: [mouseInput]
+            } 
+ 
         }
 
         /*

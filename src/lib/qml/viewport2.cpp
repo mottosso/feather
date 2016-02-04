@@ -48,9 +48,12 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     m_pMaterial(new Qt3D::QPhongMaterial()),
     m_pMesh(new Qt3D::QGeometryRenderer()),
     //m_pMouseInput(new Qt3D::QMouseInput(this)),
-    m_meshAttribute(new Qt3D::QAttribute(this)),
+    m_pVAttribute(new Qt3D::QAttribute(this)),
+    m_pVnAttribute(new Qt3D::QAttribute(this)),
     m_paMeshVData(new feather::FVertex3DArray),
+    m_paMeshVnData(new feather::FVertex3DArray),
     m_vertexBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this)),
+    m_normalBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this)),
     m_pLight(new Qt3D::QPointLight())
 {
     /*
@@ -66,30 +69,44 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     m_vertexBuffer->setData(meshBytes);
     */
 
+    // Vertex Data
     m_vertexBuffer->setData(m_vertexBytes);
 
-    m_meshAttribute->setName(Qt3D::QAttribute::defaultPositionAttributeName());
-    m_meshAttribute->setDataType(Qt3D::QAttribute::Double);
-    m_meshAttribute->setDataSize(3);
-    m_meshAttribute->setCount(m_paMeshVData->size());
-    m_meshAttribute->setByteStride(sizeof(feather::FVertex3D));
-    m_meshAttribute->setBuffer(m_vertexBuffer);
+    m_pVAttribute->setName(Qt3D::QAttribute::defaultPositionAttributeName());
+    m_pVAttribute->setDataType(Qt3D::QAttribute::Double);
+    m_pVAttribute->setDataSize(3);
+    m_pVAttribute->setCount(m_paMeshVData->size());
+    m_pVAttribute->setByteStride(sizeof(feather::FVertex3D));
+    m_pVAttribute->setBuffer(m_vertexBuffer);
+
+    // Normal Data
+    m_normalBuffer->setData(m_normalBytes);
+
+    m_pVnAttribute->setName(Qt3D::QAttribute::defaultNormalAttributeName());
+    m_pVnAttribute->setDataType(Qt3D::QAttribute::Double);
+    m_pVnAttribute->setDataSize(3);
+    m_pVnAttribute->setCount(m_paMeshVnData->size());
+    m_pVnAttribute->setByteStride(sizeof(feather::FVertex3D));
+    m_pVnAttribute->setBuffer(m_normalBuffer);
+
 
     //setVerticesPerPatch(4);
     m_pMesh->setGeometry(new Qt3D::QGeometry(this));
-    m_pMesh->geometry()->addAttribute(m_meshAttribute);
+    m_pMesh->geometry()->addAttribute(m_pVAttribute);
+    m_pMesh->geometry()->addAttribute(m_pVnAttribute);
 
     m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::Triangles);
     //m_pMesh->setGeometry(new QGeometry(this));
-    
+  
+    //m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("meshColor"),QColor(Qt::blue)));  
     m_pMaterial->setDiffuse(QColor(Qt::red));
-    m_pMaterial->setAmbient(Qt::gray);
+    //m_pMaterial->setAmbient(Qt::gray);
     m_pMaterial->setSpecular(Qt::white);
     m_pMaterial->setShininess(0.4f);
 
     // Light testing
     m_pLight->setColor(Qt::white);
-    m_pLight->setIntensity(1000.5f);
+    m_pLight->setIntensity(1.5f);
     m_pLight->setPosition(QVector3D(4,4,4)); 
 
     addComponent(m_pTransform);
@@ -104,12 +121,20 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
 Mesh::~Mesh()
 {
     QNode::cleanup();
-    delete m_meshAttribute;
-    m_meshAttribute=0;
+
+    delete m_pVAttribute;
+    m_pVAttribute=0;
     delete m_paMeshVData;
     m_paMeshVData=0;
     delete m_vertexBuffer;
     m_vertexBuffer=0;
+
+    delete m_pVnAttribute;
+    m_pVnAttribute=0;
+    delete m_paMeshVnData;
+    m_paMeshVnData=0;
+    delete m_normalBuffer;
+    m_normalBuffer=0;
 }
 
 void Mesh::update()
@@ -152,22 +177,26 @@ void Mesh::update()
 
             //std::cout << "v" << id << ":" << _face.at(id).v << ",";
             m_paMeshVData->push_back(mesh.v.at(_face.at(id).v));
+            m_paMeshVnData->push_back(mesh.vn.at(_face.at(id).vn));
             //glvn.push_back(vn.at(_face.at(id).vn));
             gli.push_back(_face.at(id).v);
 
             //std::cout << "v" << id+1 << ":" << _face.at(id+1).v << ",";
             m_paMeshVData->push_back(mesh.v.at(_face.at(id+1).v));
+            m_paMeshVnData->push_back(mesh.vn.at(_face.at(id+1).vn));
             //glvn.push_back(vn.at(_face.at(id+1).vn));
             gli.push_back(_face.at(id+1).v);
 
             if(id+2 < _face.size()) {
                 //std::cout << "v" << id+2 << ":" << _face.at(id+2).v << ",";
                 m_paMeshVData->push_back(mesh.v.at(_face.at(id+2).v));
+                m_paMeshVnData->push_back(mesh.vn.at(_face.at(id+2).vn));
                 //glvn.push_back(vn.at(_face.at(id+2).vn));
                 gli.push_back(_face.at(id+2).v);
             } else {
                 //std::cout << "v" << 0 << ":" << _face.at(0).v << ",";
                 m_paMeshVData->push_back(mesh.v.at(_face.at(0).v));
+                m_paMeshVnData->push_back(mesh.vn.at(_face.at(0).vn));
                 //glvn.push_back(vn.at(_face.at(0).vn));
                 gli.push_back(_face.at(0).v);
             }
@@ -181,11 +210,27 @@ void Mesh::update()
 
 
     m_vertexBytes.resize(sizeof(feather::FVertex3D) * m_paMeshVData->size());
-    memcpy(m_vertexBytes.data(), m_paMeshVData->data(), m_paMeshVData->size() * sizeof(feather::FVertex3D));
-    m_vertexBuffer->setData(m_vertexBytes);
-    m_meshAttribute->setCount(m_paMeshVData->size());
+    m_normalBytes.resize(sizeof(feather::FVertex3D) * m_paMeshVnData->size());
 
-    std::cout << "updating draw item " << uid() << ", nid:" << nid() << ", fid:" << static_cast<feather::draw::Mesh*>(item())->fid << ", v size:" << mesh.v.size() << ", gl size:" << m_paMeshVData->size() << std::endl;
+
+    memcpy(m_vertexBytes.data(), m_paMeshVData->data(), m_paMeshVData->size() * sizeof(feather::FVertex3D));
+    memcpy(m_normalBytes.data(), m_paMeshVnData->data(), m_paMeshVnData->size() * sizeof(feather::FVertex3D));
+
+    m_vertexBuffer->setData(m_vertexBytes);
+    m_pVAttribute->setCount(m_paMeshVData->size());
+
+    m_normalBuffer->setData(m_normalBytes);
+    m_pVnAttribute->setCount(m_paMeshVnData->size());
+
+    std::cout << "updating draw item " 
+<< uid() << ", nid:" << nid()
+<< ", fid:" << static_cast<feather::draw::Mesh*>(item())->fid
+<< ", v size:" << mesh.v.size()
+<< ", vn size:" << mesh.vn.size()
+<< ", gl v size:" << m_paMeshVData->size()
+<< ", gl vn size:" << m_paMeshVnData->size()
+<< std::endl;
+
 }
 
 
@@ -692,8 +737,8 @@ Viewport2::Viewport2(QNode *parent)
     : Qt3D::QEntity(parent),
     m_showGrid(true),
     m_showAxis(true),
-    m_pMouseController(new Qt3D::QMouseController(this)),
-    m_pLight(new Qt3D::QPointLight(this))
+    m_pMouseController(new Qt3D::QMouseController()),
+    m_pLight(new Qt3D::QPointLight())
 {
 
     m_pMouseInput = new Qt3D::QMouseInput(this);
@@ -715,12 +760,12 @@ Viewport2::Viewport2(QNode *parent)
     connect(m_pMouseInput,SIGNAL(clicked(Qt3D::Q3DMouseEvent*)),this,SLOT(onClicked(Qt3D::Q3DMouseEvent*)));
 
     // Light testing
-    m_pLight->setColor(Qt::white);
-    m_pLight->setIntensity(1.5f);
+    //m_pLight->setColor(Qt::white);
+    //m_pLight->setIntensity(1.5f);
    
-    m_pLight->setPosition(QVector3D(0,4,0)); 
+    //m_pLight->setPosition(QVector3D(0,4,0)); 
  
-    addComponent(m_pLight);
+    //addComponent(m_pLight);
 }
 
 Viewport2::~Viewport2()

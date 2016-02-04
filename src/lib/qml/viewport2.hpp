@@ -76,10 +76,14 @@ class Mesh : public DrawItem
         Qt3D::QGeometryRenderer *m_pMesh;
         //Qt3D::QMouseInput *m_pMouseInput;
         std::vector<feather::FVertex3D> m_aVertex;
-        Qt3D::QAttribute *m_meshAttribute;
+        Qt3D::QAttribute* m_pVAttribute;
+        Qt3D::QAttribute* m_pVnAttribute;
         feather::FVertex3DArray* m_paMeshVData;
+        feather::FVertex3DArray* m_paMeshVnData;
         Qt3D::QBuffer *m_vertexBuffer;
         QByteArray m_vertexBytes;
+        Qt3D::QBuffer *m_normalBuffer;
+        QByteArray m_normalBytes;
         Qt3D::QPointLight* m_pLight;
 };
 
