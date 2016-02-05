@@ -32,7 +32,7 @@ namespace feather {
     namespace draw {
 
         struct Item {
-            enum Type { None, Mesh, Line };
+            enum Type { None, PerspCamera, OrthoCamera, Mesh, Line };
             Item(Type _type=None):type(_type){}; 
             Type type;
             unsigned int uid;
@@ -55,6 +55,12 @@ namespace feather {
             unsigned int fid;
         };
 
+        struct PerspCamera : public Item
+        {
+            PerspCamera(unsigned int _fovfid) : Item(Item::PerspCamera),fovfid(_fovfid) {};
+            unsigned int fovfid;
+        };
+
         typedef std::vector<Item*> DrawItems;
 
     } // namespace draw
@@ -69,5 +75,8 @@ namespace feather {
  
 #define ADD_MESH(__fid)\
     items.push_back(new draw::Mesh(__fid));
+ 
+#define ADD_PERSP_CAMERA(__fovfid)\
+    items.push_back(new draw::PerspCamera(__fovfid));
     
 #endif

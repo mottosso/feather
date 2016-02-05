@@ -36,7 +36,10 @@ status qml::command::init() {
     cstate.sgState.maxUid=0;
 
     status e;
-    add_node(1,"root"); // PolyCube
+    int root = add_node(1,"root"); // Empty 
+    int camera = add_node(2,"camera"); // Camera 
+    connect_nodes(root,2,camera,1);
+
     //int uid1 = add_node(320,"CubeShape"); // PolyShape
     //scenegraph::connect(0,4,uid1,1); // connect PolyCube.out to PolyShape.in
 
