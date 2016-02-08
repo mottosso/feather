@@ -40,6 +40,25 @@ DrawItem::~DrawItem()
     QNode::cleanup();
 }
 
+// PERSPECTIVE CAMERA 
+
+PerspCamera::PerspCamera(feather::draw::Item* _item, QNode *parent)
+    : DrawItem(_item,DrawItem::PerspCamera,parent)
+{
+
+}
+
+PerspCamera::~PerspCamera()
+{
+    QNode::cleanup();
+}
+
+void PerspCamera::update()
+{
+
+}
+
+ 
 // MESHES
 
 Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
@@ -861,6 +880,10 @@ void Viewport2::buildScene(feather::draw::DrawItems& items)
                 std::cout << "build Line\n";
                 m_apDrawItems.append(new Line(item,this));
                 break;
+            case feather::draw::Item::PerspCamera:
+                std::cout << "build Line\n";
+                m_apDrawItems.append(new PerspCamera(item,this));
+                break;
             default:
                 std::cout << "nothing built\n";
         }
@@ -899,6 +922,10 @@ void Viewport2::addItems(unsigned int uid)
                 std::cout << "add Line\n";
                 m_apDrawItems.append(new Line(item,this));
                 break;
+            case feather::draw::Item::PerspCamera:
+                std::cout << "updating Perspective Camear draw item\n";
+                m_apDrawItems.append(new PerspCamera(item,this));
+                break;
             default:
                 std::cout << "nothing built\n";
         }
@@ -919,7 +946,11 @@ void Viewport2::updateItems(unsigned int uid)
                     std::cout << "updating Line draw item\n";
                     static_cast<Line*>(item)->update();
                     break;
-                default:
+                case feather::draw::Item::PerspCamera:
+                    std::cout << "updating Perspective Camear draw item\n";
+                    static_cast<PerspCamera*>(item)->update();
+                    break;
+                 default:
                     std::cout << "nothing built\n";
             }
         }

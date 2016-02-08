@@ -36,7 +36,8 @@ class DrawItem : public Qt3D::QEntity
         enum Type{
             None,
             Line,
-            Mesh
+            Mesh,
+            PerspCamera
         };
         DrawItem(feather::draw::Item* _item, Type _type=None, Qt3D::QNode *parent=0);
         ~DrawItem();
@@ -51,6 +52,20 @@ class DrawItem : public Qt3D::QEntity
     private:
         Type m_type;
 };
+
+
+// PERSPECTIVE CAMERA 
+
+class PerspCamera : public DrawItem 
+{
+    Q_OBJECT
+    
+    public:
+        PerspCamera(feather::draw::Item* _item, Qt3D::QNode *parent=0);
+        ~PerspCamera();
+        void update();
+};
+
 
 
 // MESH 
