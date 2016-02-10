@@ -58,13 +58,76 @@ void PerspCamera::update()
 
 }
 
+WireEffect::WireEffect(QNode* parent)
+    : QEffect(parent),
+    m_pPassCriterion(new Qt3D::QAnnotation()),
+    m_pRenderPass(new Qt3D::QRenderPass()),
+    m_pTechnique(new Qt3D::QTechnique())
+{
+    addParameter(new Qt3D::QParameter("ambient",QVector3D(0.1,0.1,0.1)));
+    addParameter(new Qt3D::QParameter("diffuse",QVector3D(0.7,0.7,0.7)));
+    addParameter(new Qt3D::QParameter("specular",QVector3D(0.95,0.95,0.95)));
+    addParameter(new Qt3D::QParameter("shininess",150.0));
+ 
+
+    m_pTechnique->openGLFilter()->setProfile(Qt3D::QOpenGLFilter::Core);
+    m_pTechnique->openGLFilter()->setApi(Qt3D::QOpenGLFilter::Desktop);
+    m_pTechnique->openGLFilter()->setMajorVersion(3);               
+    m_pTechnique->openGLFilter()->setMinorVersion(1);
+
+    m_pTechnique->addParameter(new Qt3D::QParameter("light.position",QVector4D(0,0,0,1)));
+    m_pTechnique->addParameter(new Qt3D::QParameter("light.intensity",QVector3D(1,1,1)));
+    m_pTechnique->addParameter(new Qt3D::QParameter("line.width",1.0));
+    m_pTechnique->addParameter(new Qt3D::QParameter("line.color",QVector4D(1,1,1,1)));
+
+    m_pRenderPass->addBinding(new Qt3D::QParameterMapping("ambient","ka",Qt3D::QParameterMapping::Uniform)); 
+    m_pRenderPass->addBinding(new Qt3D::QParameterMapping("diffuse","kd",Qt3D::QParameterMapping::Uniform)); 
+    m_pRenderPass->addBinding(new Qt3D::QParameterMapping("specular","ks",Qt3D::QParameterMapping::Uniform)); 
+ 
+    m_pPassCriterion->setName(QStringLiteral("renderingStyle"));
+    m_pPassCriterion->setValue(QStringLiteral("forward"));
+     
+    Qt3D::QShaderProgram *gl3Shader = new Qt3D::QShaderProgram();
+    // Vert Shader
+    QFile* gl3VertFile = new QFile("/usr/local/feather/shaders/vert/robustwireframe.vert");
+    gl3VertFile->open(QIODevice::ReadOnly);
+    gl3Shader->setVertexShaderCode(gl3VertFile->readAll());
+    gl3VertFile->flush();
+    gl3VertFile->close();
+    // Frag Shader
+    QFile* gl3FragFile = new QFile("/usr/local/feather/shaders/frag/robustwireframe.frag");
+    gl3FragFile->open(QIODevice::ReadOnly);
+    gl3Shader->setFragmentShaderCode(gl3FragFile->readAll());
+    gl3FragFile->flush();
+    gl3FragFile->close();
+    // Geom Shader
+    QFile* gl3GeomFile = new QFile("/usr/local/feather/shaders/geom/robustwireframe.geom");
+    gl3GeomFile->open(QIODevice::ReadOnly);
+    gl3Shader->setGeometryShaderCode(gl3GeomFile->readAll());
+    gl3GeomFile->flush();
+    gl3GeomFile->close();
+    
+    m_pRenderPass->addAnnotation(m_pPassCriterion);
+    m_pRenderPass->setShaderProgram(gl3Shader);
+    m_pTechnique->addPass(m_pRenderPass);
+
+    addTechnique(m_pTechnique);
+
+}
+
+WireEffect::~WireEffect()
+{
+
+}
  
 // MESHES
 
 Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     : DrawItem(_item,DrawItem::Mesh,parent),
     m_pTransform(new Qt3D::QTransform()),
-    m_pMaterial(new Qt3D::QPhongMaterial()),
+    m_pMaterial(new Qt3D::QMaterial()),
+    m_pMaterialEffect(new WireEffect()),
+    //m_pWireMaterial(new Qt3D::QPhongMaterial()),
     m_pMesh(new Qt3D::QGeometryRenderer()),
     //m_pMouseInput(new Qt3D::QMouseInput(this)),
     m_pVAttribute(new Qt3D::QAttribute(this)),
@@ -114,25 +177,41 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     m_pMesh->geometry()->addAttribute(m_pVAttribute);
     m_pMesh->geometry()->addAttribute(m_pVnAttribute);
 
+    //m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::Lines);
     m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::Triangles);
     //m_pMesh->setGeometry(new QGeometry(this));
-  
+ 
+    // Shaded Material 
     //m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("meshColor"),QColor(Qt::blue)));  
-    m_pMaterial->setDiffuse(QColor(Qt::red));
+    //m_pMaterial->setDiffuse(QColor(Qt::red));
     //m_pMaterial->setAmbient(Qt::gray);
-    m_pMaterial->setSpecular(Qt::white);
-    m_pMaterial->setShininess(0.4f);
+    //m_pMaterial->setSpecular(Qt::white);
+    //m_pMaterial->setShininess(0.4f);
+
+    // Wire Material
+    //m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("meshColor"),QColor(Qt::blue)));  
+    //m_pMaterial->setDiffuse(QColor(Qt::red));
+    //m_pWireMaterial->setAmbient(Qt::blue);
+
+
+    m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("ambient"),QColor(Qt::blue)));
+    m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("diffuse"),QColor(Qt::red)));
+    m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("specular"),QColor(Qt::white)));
+    m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("shininess"),150.0));
+    m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("line.width"),0.8));
+    m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("line.color"),QColor(Qt::black)));
+
+    m_pMaterial->setEffect(m_pMaterialEffect);
 
     // Light testing
-    m_pLight->setColor(Qt::white);
-    m_pLight->setIntensity(1.5f);
+    m_pLight->setColor(Qt::blue);
+    m_pLight->setIntensity(10.5f);
     m_pLight->setPosition(QVector3D(4,4,4)); 
 
     addComponent(m_pTransform);
     addComponent(m_pMaterial);
     addComponent(m_pMesh);
     addComponent(m_pLight);
-
 
     //connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(mouseClicked()));
 }
@@ -241,6 +320,15 @@ void Mesh::update()
     m_normalBuffer->setData(m_normalBytes);
     m_pVnAttribute->setCount(m_paMeshVnData->size());
 
+    //removeComponent(m_pMaterial);
+    //addComponent(m_pWireMaterial);
+    //m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::LineLoop);
+
+    //removeComponent(m_pWireMaterial);
+    //addComponent(m_pMaterial);
+    //m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::Triangles);
+ 
+    /*
     std::cout << "updating draw item " 
 << uid() << ", nid:" << nid()
 << ", fid:" << static_cast<feather::draw::Mesh*>(item())->fid
@@ -249,7 +337,7 @@ void Mesh::update()
 << ", gl v size:" << m_paMeshVData->size()
 << ", gl vn size:" << m_paMeshVnData->size()
 << std::endl;
-
+    */
 }
 
 
@@ -779,7 +867,7 @@ Viewport2::Viewport2(QNode *parent)
     connect(m_pMouseInput,SIGNAL(clicked(Qt3D::Q3DMouseEvent*)),this,SLOT(onClicked(Qt3D::Q3DMouseEvent*)));
 
     // Light testing
-    //m_pLight->setColor(Qt::white);
+    //m_pLight->setColor(Qt::blue);
     //m_pLight->setIntensity(1.5f);
    
     //m_pLight->setPosition(QVector3D(0,4,0)); 
