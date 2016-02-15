@@ -23,22 +23,52 @@
 import QtQuick 2.5
 
 Rectangle {
+    id: window
+    color: "darkgrey"
+
+    //scale: 0.5
+
+Canvas {
     id: scenegraph
-    color: "black"
+    contextType: "2d"
+    anchors.fill: parent
 
-    Item {
-        id: nodes
+    Path {
+        id: path
 
-        SceneGraphNode {
-            id: a 
+        startX: 0
+        startY: 0
+
+        PathLine {
+            id: target 
+            x: 200
+            y: 200
         }
-
-        SceneGraphNode {
-            id: b
-            y: 50 
-            x: 150
-        }
-
-
     }
+
+    onPaint: {
+        context.reset()
+        // draw connections
+        context.strokeStyle = "#090909"
+        context.path = path
+        context.lineWidth = 1
+        context.stroke()
+    }
+
+    SceneGraphNode {
+        id: a 
+        name: "test"
+    }
+
+    function updateConnections(x,y,uid) {
+        path.startX=x
+        path.startY=y 
+        requestPaint()
+    }
+
+    Component.onCompleted: {
+        a.moved.connect(updateConnections)                        
+    }
+}
+
 }
