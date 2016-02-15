@@ -85,15 +85,14 @@ status PluginManager::do_it(int node, field::Fields&  fields)
     return status();
 }
 
-void PluginManager::gl_init(FNode& node, FGlInfo& info)
+/*
+status PluginManager::draw_it(int node, draw::DrawItems&  items)
 {
-    std::for_each(m_plugins.begin(),m_plugins.end(), call_gl_init(node,info) );
+    std::cout << "call node " << node << std::endl;
+    std::for_each(m_plugins.begin(),m_plugins.end(), call_draw_it(node,items) );
+    return status();
 }
-
-void PluginManager::gl_draw(FNode& node, FGlInfo& info)
-{
-    std::for_each(m_plugins.begin(),m_plugins.end(), call_gl_draw(node,info) );
-}
+*/
 
 status PluginManager::load_node(PluginData &node)
 {
@@ -110,9 +109,10 @@ status PluginManager::load_node(PluginData &node)
     node.description = (std::string(*)())dlsym(node.handle, "description");
     node.author = (std::string(*)())dlsym(node.handle, "author");
     node.do_it = (status(*)(int,field::Fields&))dlsym(node.handle, "do_it");
-    node.gl_init = (void(*)(FNode&,FGlInfo&))dlsym(node.handle, "gl_init");
-    node.gl_draw = (void(*)(FNode&,FGlInfo&))dlsym(node.handle, "gl_draw");
+    //node.draw_it = (status(*)(int,draw::DrawItems&))dlsym(node.handle, "draw_it");
     node.node_exist = (bool(*)(int))dlsym(node.handle, "node_exist");
+    node.node_drawable = (bool(*)(int))dlsym(node.handle, "node_drawable");
+    node.node_draw_items = (status(*)(int,draw::DrawItems&))dlsym(node.handle, "node_draw_items");
     node.node_type = (status(*)(int,node::Type&))dlsym(node.handle, "node_type");
     node.node_icon = (bool(*)(int,std::string&))dlsym(node.handle, "node_icon");
     node.create_fields = (status(*)(int,field::Fields&))dlsym(node.handle,"create_fields");
@@ -145,6 +145,11 @@ status PluginManager::create_fields(int node, field::Fields& fields)
             return m_plugins[i].create_fields(node,fields);
     }
     return status();
+}
+
+void PluginManager::get_draw_items(int nid, draw::DrawItems& items)
+{
+    std::for_each(m_plugins.begin(),m_plugins.end(), call_draw_item(nid,items) );
 }
 
 field::FieldBase* PluginManager::get_fieldBase(int uid, int node, int field, field::Fields& fields)

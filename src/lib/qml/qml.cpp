@@ -1,6 +1,6 @@
 /***********************************************************************
  *
- * Filename: qml.hpp
+ * Filename: qml.cpp
  *
  * Description: Frontend of the QML wrapper.
  *
@@ -46,31 +46,36 @@ int SceneGraph::add_node(int node, QString name)
 {
     int uid = qml::command::add_node(node,name.toStdString());
     emit nodeAdded(uid);
+    emit nodeAddDrawItems(uid);
     return uid;
 }
 
 bool SceneGraph::remove_node(int uid)
 {
-    status p = qml::command::remove_node(uid);
+    status e;
+    qml::command::remove_node(uid,e);
     emit nodeRemoved(uid);
-    return p.state;
+    return e.state;
 }
 
 QString SceneGraph::node_name(int uid)
 {
-    return qml::command::get_node_name(uid).c_str();
+    std::string name;
+    status e;
+    qml::command::get_node_name(uid,name,e);
+    return QString(name.c_str());
 }
 
 int SceneGraph::node_id(int uid)
 {
-    int nid;
-    qml::command::get_node_id(uid,nid);
-    return nid;
+    status e;
+    return qml::command::get_node_id(uid,e);
 }
 
 int SceneGraph::connect_nodes(int n1, int f1, int n2, int f2)
 {
     status p = qml::command::connect_nodes(n1,f1,n2,f2);
+    //emit nodeUpdateDrawItems(n2);
     if(p.state==FAILED)
         std::cout << p.msg << std::endl;
     return p.state;
@@ -115,6 +120,24 @@ int SceneGraph::run_command_string(QString str)
     return p.state;
 }
 
+void SceneGraph::triggerUpdate()
+{
+    qml::command::scenegraph_update();
+    // some widgets need to if nodes where added and what was added
+
+    std::vector<unsigned int> uids;
+    bool n = feather::qml::command::nodes_added(uids);
+
+    std::cout << "triggerUpdate saw that the following uids where added\n";
+
+    if(n){ 
+        for(auto uid : uids)
+            emit nodeAdded(uid);
+    }
+
+    emit updateGraph();
+}
+
 void SceneGraph::add_node_to_layer(int uid, int lid)
 {
     qml::command::add_node_to_layer(uid,lid);
@@ -122,9 +145,9 @@ void SceneGraph::add_node_to_layer(int uid, int lid)
 
 bool SceneGraph::connected(unsigned int uid, unsigned int fid)
 {
+    status e;
     bool conn;
-    int nid;
-    qml::command::get_node_id(uid,nid);
+    unsigned int nid = qml::command::get_node_id(uid,e);
     qml::command::get_field_connection_status(uid,nid,fid,conn);
     return conn; 
 }

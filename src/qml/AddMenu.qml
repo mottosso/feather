@@ -69,6 +69,13 @@ Menu {
             var plane
             plane = SceneGraph.add_node(321,"Plane01")
             shape = SceneGraph.add_node(320,"PlaneShape01")
+            var suid = SceneGraph.selected_node()
+            SceneGraph.connect_nodes(suid,2,plane,1)
+            SceneGraph.connect_nodes(plane,2,shape,1)
+            SceneGraph.connect_nodes(plane,5,shape,3)
+            SceneGraph.triggerUpdate()
+            SceneGraph.nodeUpdateDrawItems(plane)
+            SceneGraph.nodeUpdateDrawItems(shape)
             console.log("plane node = " + plane)
             console.log("shape node = " + shape)
         }

@@ -25,6 +25,7 @@
 #include "commands.hpp"
 #include "selection.hpp"
 #include "field.hpp"
+#include "state.hpp"
 
 #define BACKGROUND_COLOR "#444444"
 #define NODE_TEXT_COLOR "#000000"
@@ -144,6 +145,8 @@ SceneGraphNode::SceneGraphNode(int uid, int nid, QQuickItem* parent) :
     m_layerFillBrush(QBrush(QColor("#DDDDDD"))),
     m_nodeTitleBrush(QBrush(QColor(NODE_TITLE_BLOCK_COLOR)))
 {
+    feather::status e;
+
     if(feather::smg::Instance()->selected(m_uid))
         m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
     else
@@ -169,7 +172,7 @@ SceneGraphNode::SceneGraphNode(int uid, int nid, QQuickItem* parent) :
     m_pOutConn->setY(NODE_HEIGHT/2+14);
     connect(m_pOutConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
 
-    feather::qml::command::get_node_icon(m_nid,m_imgFile);
+    feather::qml::command::get_node_icon(m_nid,m_imgFile,e);
     m_imgPath << m_imgDir << m_imgFile;
 }
 
@@ -186,6 +189,7 @@ void SceneGraphNode::ConnPressed(Qt::MouseButton button, SceneGraphConnection::C
 
 void SceneGraphNode::paint(QPainter* painter)
 {
+    feather::status e;
     painter->setRenderHints(QPainter::Antialiasing, true);
  
     QPen trimPen = QPen(QColor(0,0,0),1);
@@ -227,7 +231,9 @@ void SceneGraphNode::paint(QPainter* painter)
     // node label 
     painter->setPen(textPen);
     painter->setFont(textFont);
-    painter->drawText(QRect(0,2,NODE_WIDTH,NODE_HEIGHT),Qt::AlignHCenter|Qt::AlignTop,feather::qml::command::get_node_name(m_uid).c_str());
+    std::string name;
+    feather::qml::command::get_node_name(m_uid,name,e);
+    painter->drawText(QRect(0,2,NODE_WIDTH,NODE_HEIGHT),Qt::AlignHCenter|Qt::AlignTop,name.c_str());
 
 }
 
@@ -518,8 +524,8 @@ void SceneGraphEditor::updateGraph()
 
 void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int ypos)
 {
-    int nid=0;
-    feather::status s = feather::qml::command::get_node_id(uid,nid);
+    feather::status e;
+    unsigned int nid = feather::qml::command::get_node_id(uid,e);
 
     // if the node is already in the draw list, don't add a new one
     SceneGraphNode *node = getNode(uid);

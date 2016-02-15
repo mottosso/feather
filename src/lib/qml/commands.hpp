@@ -31,6 +31,7 @@
 #include "command.hpp"
 #include "pluginmanager.hpp"
 #include "field.hpp"
+#include "draw.hpp"
 
 namespace feather
 {
@@ -45,16 +46,17 @@ namespace feather
 
             // Node
 
-            int add_node(int node, std::string name); 
-            bool nodes_added(std::vector<int>& uids);
-            status remove_node(int uid);
+            unsigned int add_node(const unsigned int node, const std::string name); 
+            bool nodes_added(std::vector<unsigned int>& uids);
+            void remove_node(const unsigned int uid, status& error);
             void nodes_updated();
             bool node_exists(int uid);
             status connect_nodes(int n1, int f1, int n2, int f2); 
-            status get_node_icon(int nid, std::string& file);
-            status get_node_id(int uid, int& nid);
+            void get_node_icon(const unsigned int nid, std::string& file, status& error);
+            unsigned int get_node_id(const unsigned int uid, status& error);
             status get_node_connected_uids(int uid, std::vector<int>& uids);
             status get_node_connected_uids(int uid, int fid, std::vector<int>& uids);
+            status get_node_draw_items(int nid, draw::DrawItems& items);
             status load_plugins();
             status run_command(std::string cmd, feather::parameter::ParameterList params);
             status run_command_string(std::string str);
@@ -91,6 +93,7 @@ namespace feather
             status get_field_val(int uid, int node, int field, bool& val);
             status get_field_val(int uid, int node, int field, int& val);
             status get_field_val(int uid, int node, int field, float& val);
+            status get_field_val(int uid, int node, int field, FMesh& val);
             // set the field value
             status set_field_val(int uid, int node, int field, bool& val);
             status set_field_val(int uid, int node, int field, int& val);
@@ -105,11 +108,9 @@ namespace feather
 
             // SG EDITOR
             void clear();
-            void get_node_out_connections(int uid, std::vector<int>& nodes);
+            void get_node_out_connections(const unsigned int uid, std::vector<unsigned int>& uids);
             int get_node_connection_count(int uid);
-            std::string get_node_name(int uid);
-            void gl_init(int uid, FGlInfo& info);
-            void gl_draw(int uid, FGlInfo& info);
+            void get_node_name(const unsigned int uid, std::string& name, status& error);
             void scenegraph_update();
             int get_min_uid();
             int get_max_uid();

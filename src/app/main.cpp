@@ -23,7 +23,8 @@
 
 #include "deps.hpp"
 #include "curves.hpp"
-#include "viewportthread.hpp"
+#include "viewport2.hpp"
+#include "viewport3.hpp"
 #include "sg_editor.hpp"
 #include "field_model.hpp"
 #include "layer_model.hpp"
@@ -33,6 +34,10 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 
+#include <QtQuick/QQuickView>
+#include <Qt3DRenderer/QRenderAspect>
+#include <Qt3DInput/QInputAspect>
+#include <Qt3DQuick/QQmlAspectEngine>
 
 // CONFIG DATA
 
@@ -198,7 +203,9 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
 
     qmlRegisterType<BezierCurve>("feather.ui.curves", 1, 0, "BezierCurve");
-    qmlRegisterType<ViewportThread>("feather.viewport", 1, 0, "Viewport");
+    qmlRegisterType<Viewport2>("feather.viewport", 1, 0, "Viewport2");
+    qmlRegisterType<DeferredRenderer>("feather.viewport", 1, 0, "DeferredRenderer");
+    //qmlRegisterType<Viewport3>("feather.viewport", 1, 0, "Viewport3");
     qmlRegisterType<SceneGraphEditor>("feather.editors", 1, 0, "SceneGraphEditor");
     qmlRegisterSingletonType<SceneGraph>("feather.scenegraph", 1, 0, "SceneGraph", get_scenegraph);
     qmlRegisterType<TreeModel>("feather.outliner", 1, 0, "OutlinerModel");
@@ -220,17 +227,46 @@ int main(int argc, char **argv)
     config cnfg;
     bool p = load_config(cnfg);
 
+    QQmlApplicationEngine view(cnfg.mainpath.c_str());
+    //QQmlApplicationEngine view;
+    //QQuickView view;
 
+    //view.aspectEngine()->registerAspect(new Qt3D::QRenderAspect());
+    //view.aspectEngine()->registerAspect(new Qt3D::QInputAspect());
+
+    /*
+    QVariantMap data;
+    data.insert(QStringLiteral("surface"), QVariant::fromValue(static_cast<QQmlApplicationEngine *>(&view)));
+    data.insert(QStringLiteral("eventSource"), QVariant::fromValue(&view));
+    view.aspectEngine()->setData(data);
+    */
+
+    /*
+    Qt3D::Quick::QQmlAspectEngine engine;
+
+    engine.aspectEngine()->registerAspect(new Qt3D::QRenderAspect());
+    engine.aspectEngine()->registerAspect(new Qt3D::QInputAspect());
+
+    QVariantMap data;
+    data.insert(QStringLiteral("surface"), QVariant::fromValue(static_cast<QQmlApplicationEngine *>(&view)));
+    data.insert(QStringLiteral("eventSource"), QVariant::fromValue(&view));
+    engine.aspectEngine()->setData(data);
+
+    //engine.setSource(QUrl(QStringLiteral("main.qml")));
+    engine.setSource(QUrl(cnfg.mainpath.c_str()));
+
+    //view.show();
+    */
+
+    execReturn = app.exec();
+
+    /* 
     {
         //QQmlApplicationEngine view("ui/main.qml");
         QQmlApplicationEngine view(cnfg.mainpath.c_str());
         execReturn = app.exec();
     }
-
-    foreach (QThread *t, ViewportThread::threads) {
-        t->wait();
-        delete t;
-    }
+    */
 
     return execReturn;
 };

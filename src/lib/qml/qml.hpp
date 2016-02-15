@@ -76,7 +76,7 @@ class SceneGraph : public QObject
         Q_INVOKABLE int select_field(int type, int uid, int fid);
         Q_INVOKABLE void clear_selection();
         Q_INVOKABLE int run_command_string(QString str);
-        Q_INVOKABLE void triggerUpdate() { emit updateGraph(); };
+        Q_INVOKABLE void triggerUpdate();
         Q_INVOKABLE void add_node_to_layer(int uid, int lid);
         Q_INVOKABLE bool connected(unsigned int uid, unsigned int fid);
         Q_INVOKABLE QList<unsigned int> connected_fields(unsigned int uid, unsigned int fid);
@@ -86,8 +86,11 @@ class SceneGraph : public QObject
         void fieldSelected(int uid, int fid);
         void commandMessageChanged(int code, QString msg);
         void updateGraph();
-        void nodeAdded(int uid);
-        void nodesAdded();
+        void nodeAdded(unsigned int uid);
+        //void nodesAdded();
+        //void nodesAdded(QList<unsigned int> uids);
+        void nodeAddDrawItems(unsigned int uid);
+        void nodeUpdateDrawItems(unsigned int uid);
         void nodeRemoved(int uid);
         void nodesRemoved();
         void cleared();
@@ -174,6 +177,7 @@ class Field: public QObject
             Bool=field::Bool,
             Int=field::Int,
             Float=field::Float,
+            Double=field::Double,
             Vertex=field::Vertex,
             Vector=field::Vector,
             Mesh=field::Mesh,

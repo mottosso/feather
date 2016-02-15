@@ -155,15 +155,7 @@ namespace feather
         FTextureCoordArray st;
         FVertex3DArray vn;
         FFaceArray f;
-        // gl
-        FVertex3DArray glv;
-        FVertex3DArray glvn;
-        FIntArray gli; // for tris
-        FColorRGBAArray glc;
-        // gl face edges
-        FIntArray glec; // edge count
-        FIntArray glei; // edge indics
- 
+
         inline void add_face(const FFace face) { f.push_back(face); };
 
         inline void assign_v(const FVertex3DArray& _v) { v.assign(_v.begin(),_v.end()); };
@@ -171,66 +163,8 @@ namespace feather
         inline void assign_vn(const FVertex3DArray& _vn) { vn.assign(_vn.begin(),_vn.end()); };
         inline void assign_f(const FFaceArray& _f) { f.assign(_f.begin(),_f.end()); };
 
-        inline void build_gl() {
-            glv.clear();
-            glvn.clear();
-            gli.clear();
-            glc.clear();
-            glei.clear();
-            uint id=0;
-            int fcount=0; // this is a temp value to test selection
-            std::for_each(f.begin(), f.end(), [this,&id,&fcount](FFace _face){
-
-                for_each(_face.begin(),_face.end(),[this](FFacePoint _fp){ glei.push_back(_fp.v); });
-                /*
-                std::cout << "build glei\n";
-                for_each(glei.begin(),glei.end(),[this](int _v){ std::cout << _v << " "; });
-                std::cout << std::endl;
-                */
-
-                while(id+2 <= _face.size()) {
-                    if(fcount==3) {
-                        glc.push_back(FColorRGBA(1.0,0.0,0.0,1.0));
-                        glc.push_back(FColorRGBA(1.0,0.0,0.0,1.0));
-                        glc.push_back(FColorRGBA(1.0,0.0,0.0,1.0));
-                    } else {
-                        glc.push_back(FColorRGBA());
-                        glc.push_back(FColorRGBA());
-                        glc.push_back(FColorRGBA());
-                    }
-
-                    //std::cout << "v" << id << ":" << _face.at(id).v << ",";
-                    //glv.push_back(v.at(_face.at(id).v));
-                    //glvn.push_back(vn.at(_face.at(id).vn));
-                    gli.push_back(_face.at(id).v);
- 
-                    //std::cout << "v" << id+1 << ":" << _face.at(id+1).v << ",";
-                    //glv.push_back(v.at(_face.at(id+1).v));
-                    //glvn.push_back(vn.at(_face.at(id+1).vn));
-                    gli.push_back(_face.at(id+1).v);
-
-                    if(id+2 < _face.size()) {
-                        //std::cout << "v" << id+2 << ":" << _face.at(id+2).v << ",";
-                        //glv.push_back(v.at(_face.at(id+2).v));
-                        //glvn.push_back(vn.at(_face.at(id+2).vn));
-                        gli.push_back(_face.at(id+2).v);
-                    } else {
-                        //std::cout << "v" << 0 << ":" << _face.at(0).v << ",";
-                        //glv.push_back(v.at(_face.at(0).v));
-                        //glvn.push_back(vn.at(_face.at(0).vn));
-                        gli.push_back(_face.at(0).v);
-                    }
-
-                    id=id+2;
-                }
-                //std::cout << "\n";
-                fcount++;
-                id=0;
-            });
-        };
-
         // remove all the vertex, normals, tex coords and faces from the mesh
-        inline void clear() { v.clear(); st.clear(); vn.clear(); glv.clear(); glvn.clear(); gli.clear(); };
+        inline void clear() { v.clear(); st.clear(); vn.clear(); };
 
         // cut the face along two edges
         inline bool split_face(const uint face, const uint v1, const uint v2) {
@@ -290,36 +224,26 @@ namespace feather
     typedef std::pair<FSceneGraph::edge_descriptor, bool> FFieldConnection;
 
     struct PluginNodeFields;
- 
+
+};
+
+#include "draw.hpp"
+
+namespace feather
+{        
+
     struct FNode
     {
-        FNode(node::Type t=node::Empty) : type(t),parent(NULL) {};
+        FNode(node::Type t=node::Empty) : type(t)/*, parent(NULL),*/ {};
         int uid; // unique id number
         int node; // node type enum
         field::Fields fields; // this holds the field data
+        draw::DrawItems items; // holds descriptions of how to draw the node
         std::string name;
         node::Type type; // this is the node group type
         int layer; // what layer is the node stored in
-        DataObject* parent; // ??still used??
-        FAttributeArray* attrs; // ??still used??
-        // GL
-        int glVertex;
-        int glColor;
-        int glMatrix;
-        int glNormal;
-        int glView; // 0=face, 1=edge, 2=point
-        int glSelected;
-        int glLayerColor;
-        int glLightPosition;
-        int glLightAmbient;
-        int glLightDiffuse;
-        int glLightSpecular;
-        int glMaterialAmbient;
-        int glMaterialDiffuse;
-        int glMaterialSpecular;
-        int glMaterialShininess;
-        int glCameraPosition;
-        int glShaderDiffuse;
+        //DataObject* parent; // ??still used??
+        //FAttributeArray* attrs; // ??still used??
     };
 
     typedef std::vector<FNode*> FNodeArray;
@@ -339,17 +263,6 @@ namespace feather
         //FField* pfield; // parent field
         //FNode* pnode; // parent node
         //int field;
-    };
-
-    struct FGlInfo
-    {
-        int uid;
-        std::vector<FVector3D>* mesh;
-        FTransform position;
-        QMatrix4x4* view;
-        QOpenGLShader* vertShader;
-        QOpenGLShader* fragShader;
-        QOpenGLShaderProgram* program;
     };
 
 } // namespace feather

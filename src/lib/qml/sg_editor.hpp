@@ -26,7 +26,6 @@
 
 #include "deps.hpp"
 #include "qml_deps.hpp"
-//#include "field.hpp"
 #include "field_model.hpp"
 
 #define NODE_WIDTH 100

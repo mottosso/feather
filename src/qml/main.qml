@@ -30,7 +30,7 @@ import feather.scenegraph 1.0
 ApplicationWindow {
     id: window
     width: 1200
-    height: 800
+    height: 700
     visible: true
     title: "Feather 0.1"
     //flags: Qt.FramelessWindowHint
@@ -54,7 +54,7 @@ ApplicationWindow {
             id: sgEditor
             width: 200
             properties: properties
-            fieldModel: fields
+            //fieldModel: fields
         }
 
         ViewportEditor {

@@ -34,21 +34,29 @@ status qml::command::init() {
     load_plugins();
     cstate.sgState.minUid=0;
     cstate.sgState.maxUid=0;
-    add_node(1,"root"); // PolyCube
+
+    status e;
+    int root = add_node(1,"root"); // Empty 
+    int camera = add_node(2,"camera"); // Camera 
+    connect_nodes(root,2,camera,1);
+
     //int uid1 = add_node(320,"CubeShape"); // PolyShape
     //scenegraph::connect(0,4,uid1,1); // connect PolyCube.out to PolyShape.in
 
     smg::Instance()->add_state(selection::Node,0,0,0);
  
     // just testing the do_it plugin calls
+    cstate.sgMode = state::DoIt;
     scenegraph::update();
     scenegraph::nodes_updated(); // clear out the uids to update
+    cstate.sgMode = state::None;
     return status();
 }
 
-int qml::command::add_node(int node, std::string name)
+unsigned int qml::command::add_node(const unsigned int nid, const std::string name)
 {
-    int uid =  scenegraph::add_node(node,name);
+    status e;
+    unsigned int uid =  scenegraph::add_node(nid,name,e);
     cstate.sgState.maxUid = uid;
     return uid;
     /*
@@ -75,7 +83,7 @@ int qml::command::add_node(int node, std::string name)
     //return status();
 }
 
-bool qml::command::nodes_added(std::vector<int>& uids)
+bool qml::command::nodes_added(std::vector<unsigned int>& uids)
 {
     uids.assign(cstate.uid_update.begin(),cstate.uid_update.end());
     //cstate.clear_uid_update();
@@ -88,9 +96,9 @@ bool qml::command::nodes_added(std::vector<int>& uids)
     return true;
 }
 
-status qml::command::remove_node(int uid)
+void qml::command::remove_node(const unsigned int uid, status& error)
 {
-    return scenegraph::remove_node(uid);
+    scenegraph::remove_node(uid,error);
 }
 
 void qml::command::nodes_updated()
@@ -113,14 +121,14 @@ status qml::command::connect_nodes(int n1, int f1, int n2, int f2)
     return p;
 }
 
-status qml::command::get_node_icon(int nid, std::string& file)
+void qml::command::get_node_icon(const unsigned int nid, std::string& file, status& e)
 {
-    return scenegraph::get_node_icon(nid,file);
+    scenegraph::get_node_icon(nid,file,e);
 }
 
-status qml::command::get_node_id(int uid, int& nid)
+unsigned int qml::command::get_node_id(const unsigned int uid, status& e)
 {
-    return scenegraph::get_node_id(uid,nid);
+    return scenegraph::get_node_id(uid,e);
 }
 
 status qml::command::get_node_connected_uids(int uid, std::vector<int>& uids)
@@ -131,6 +139,11 @@ status qml::command::get_node_connected_uids(int uid, std::vector<int>& uids)
 status qml::command::get_node_connected_uids(int uid, int fid, std::vector<int>& uids)
 {
     return scenegraph::get_node_connected_uids(uid,fid,uids);
+}
+
+status qml::command::get_node_draw_items(int nid, draw::DrawItems& items)
+{
+    return scenegraph::get_node_draw_items(nid,items);
 }
 
 status qml::command::load_plugins()
@@ -259,6 +272,18 @@ status qml::command::get_field_val(int uid, int node, int field, float& val)
     return status();
 }
 
+status qml::command::get_field_val(int uid, int node, int field, FMesh& val)
+{
+    typedef field::Field<FMesh>* fielddata;
+    fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
+    if(!f)
+        std::cout << uid << "," << node << "," << field << " NULL FIELD\n";
+    else  
+        val=f->value;
+    return status();
+}
+
+
 // SET FIELD VALUE
 
 status qml::command::set_field_val(int uid, int node, int field, bool& val)
@@ -331,9 +356,9 @@ void qml::command::clear()
     scenegraph::clear();
 }
 
-void qml::command::get_node_out_connections(int uid, std::vector<int>& nodes)
+void qml::command::get_node_out_connections(const unsigned int uid, std::vector<unsigned int>& uids)
 {
-    scenegraph::get_node_out_connections(uid,nodes);
+    scenegraph::get_node_out_connections(uid,uids);
 }
 
 int qml::command::get_node_connection_count(int uid)
@@ -342,19 +367,9 @@ int qml::command::get_node_connection_count(int uid)
     return 0; 
 }
 
-std::string qml::command::get_node_name(int uid)
+void qml::command::get_node_name(const unsigned int uid, std::string& name, status& error)
 {
-    return sg[uid].name;
-}
-
-void qml::command::gl_init(int uid, FGlInfo& info)
-{
-    scenegraph::gl_init(sg[uid],info);
-}
-
-void qml::command::gl_draw(int uid, FGlInfo& info)
-{
-    scenegraph::gl_draw(sg[uid],info);
+    scenegraph::get_node_name(uid,name,error);
 }
 
 void qml::command::scenegraph_update()

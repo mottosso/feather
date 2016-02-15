@@ -112,15 +112,6 @@ namespace feather
         //int get_max_uid() { return plugins.max_uid(); };
         int get_max_uid() { return num_vertices(sg)-1; };
 
-        void gl_init(FNode& node, FGlInfo& info) {
-            plugins.gl_init(node,info); 
-        };
-
-        void gl_draw(FNode& node, FGlInfo& info) {
-            //std::cout << "scenegraph::gl_draw(), uid=" << node.uid << ", node=" << node.node << std::endl;
-            plugins.gl_draw(node,info); 
-        };
-
         status load_plugins() {
             return plugins.load_plugins();
         };
@@ -130,8 +121,8 @@ namespace feather
         // NODES
 
         bool node_exist(unsigned int uid) {
-            int count = num_vertices(sg);
-            for(int i=0; i < count; i++) {
+            unsigned int count = num_vertices(sg);
+            for(unsigned int i=0; i < count; i++) {
                 if(i==uid)
                     return true;
             }
@@ -149,7 +140,7 @@ namespace feather
         */
 
         //int add_node(int t, int n, std::string name) {
-        int add_node(int n, std::string name) {
+        unsigned int add_node(const unsigned int n, const std::string name, status& error) {
             //std::cout << "add node: " << n << ", type: " << t << std::endl;
             feather::node::Type ntype;
             plugins.node_type(n,ntype);
@@ -177,6 +168,8 @@ namespace feather
             // to the list of nodes that have already been added but haven't
             // been updated.
             // An example of this is the viewport editor which needs to create
+
+            // TODO - glinfo is not used anymore
             // glinfo for each node. If a command adds several nodes, the
             // viewport wll use these uids in the state to generate the glinfo
             cstate.add_uid_to_update(uid);
@@ -186,13 +179,12 @@ namespace feather
         };
 
         /* Remove node from scenegraph */
-        status remove_node(int uid) {
+        void remove_node(const unsigned int uid, status& error) {
              // this is currently needed to update sg
             smg::Instance()->clear();
             smg::Instance()->add_state(static_cast<selection::Type>(sg[0].type),0,sg[0].node);
             boost::clear_vertex(uid,sg);
             boost::remove_vertex(uid,sg);
-            return status(); 
         };
 
         /* This gets called when all the nodes have been updated.
@@ -207,7 +199,7 @@ namespace feather
      *  will add all the nodes connected to the
      *  uid to the nodes reference
      */
-    void get_node_out_connections(int uid, std::vector<int>& nodes) {
+    void get_node_out_connections(const unsigned int uid, std::vector<unsigned int>& uids) {
         typedef boost::graph_traits<FSceneGraph>::out_edge_iterator OutConn;
         std::pair<OutConn,OutConn> out = boost::out_edges(uid,sg);
 
@@ -218,7 +210,7 @@ namespace feather
         } else {
             std::cout << "edges don't match for " << uid << std::endl;
             boost::graph_traits<FSceneGraph>::edge_descriptor c = *out.first;
-            nodes.push_back(sg[boost::target(c,sg)].uid);
+            uids.push_back(sg[boost::target(c,sg)].uid);
         }
     };
 
@@ -232,20 +224,19 @@ namespace feather
     }
 
 
-    status get_node_name(int uid, std::string& name) {
+    void get_node_name(const unsigned int uid, std::string& name, status& error) {
+        // TODO verify that uid exist and set the error if it doesn't
         name = sg[uid].name;
-        return status();
     };
 
 
-    status get_node_icon(int nid, std::string& file) {
-        return plugins.node_icon_file(nid,file);
+    void get_node_icon(const unsigned int nid, std::string& file, status& error) {
+        error = plugins.node_icon_file(nid,file);
     };
 
 
-    status get_node_id(int uid, int& nid) {
-        nid=sg[uid].node;
-        return status();
+    unsigned int get_node_id(const unsigned int uid, status& error) {
+        return sg[uid].node;
     };
 
 
@@ -278,6 +269,13 @@ namespace feather
         return status();
     };
 
+    
+    /* return a description of how the node is to be draw, if at all */
+    status get_node_draw_items(int nid, draw::DrawItems& items) {
+        plugins.get_draw_items(nid,items);
+        // TODO add a fail status if there is no draw call or failed to get the draw items
+        return status();
+    };
 
 
     // FIELDS
@@ -315,8 +313,8 @@ namespace feather
      * If you want to get the base of the node's fid, even if it's connected, use get_node_fieldBase().
      */
     field::FieldBase* get_fieldBase(int uid, int fid) {
-        int nid=0;
-        get_node_id(uid,nid);
+        status e;
+        unsigned int nid = get_node_id(uid,e);
         return get_fieldBase(uid,nid,fid);
     };
 
@@ -605,10 +603,6 @@ class node_visitor : public boost::default_bfs_visitor
             void initialize_vertex(Vertex u, const Graph & g) const
             {
                 std::cout << "init nid " << sg[u].node << std::endl;
-                /*
-                if(cstate.sgMode==state::DrawGL)
-                        plugins.draw_gl(sg[u].node);
-                */
             }
 
         // Start Vertex
@@ -631,12 +625,25 @@ class node_visitor : public boost::default_bfs_visitor
                 std::cout << "discover vertex(uid):" << u << " nid:" << sg[u].node << std::endl;
                 //scenegraph::do_it<node::N>::exec(u);
 
+                status p = plugins.do_it(sg[u].node,sg[u].fields);
+
+                /* 
                 if(cstate.sgMode==state::DoIt)
                 {
                     status p = plugins.do_it(sg[u].node,sg[u].fields);
                     if(!p.state)
                         std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
                 }
+                */
+
+                /*
+                if(cstate.sgMode==state::DrawIt)
+                {
+                    status p = plugins.draw_it(sg[u].node,sg[u].items);
+                    if(!p.state)
+                        std::cout << "NODE FAILED! : \"" << p.msg << "\"\n";
+                }
+                */
 
                 // This might still come in handy later on
                 /*
@@ -726,15 +733,44 @@ class node_visitor : public boost::default_bfs_visitor
 namespace scenegraph
 {
 
+    /*!
+     * Update all the scenegraph based on the current state mode.
+     * State Modes = { None, DoIt, DrawIt, DrawGL, DrawSelection } 
+     */
     status update()
     {
         // Temporary turn off do_it updating for testing
         // set the state node update 
-        cstate.sgMode = state::DoIt;
+        //cstate.sgMode = state::DoIt;
 
         node_visitor vis;
         //node_d_visitor vis;
         std::cout << "\n*****GRAPH UPDATE*****\n";
+        /*
+        std::cout << "Currently in the ";
+        switch(cstate.sgMode)
+        {
+            case state::None:
+                std::cout << "None";
+                break;
+            case state::DoIt:
+                std::cout << "DoIt";
+                break;
+            case state::DrawIt:
+                std::cout << "DrawIt";
+                break;
+            case state::DrawGL:
+                std::cout << "DrawGL";
+                break;
+            case state::DrawSelection:
+                std::cout << "DrawSelection";
+                break;
+            default:
+                std::cout << "Unknown";
+                break;
+        }
+        std::cout << " state\n";
+        */
         breadth_first_search(sg, vertex(0, sg), visitor(vis));
         //FNodeDescriptor s = vertex(0, scenegraph);
            
@@ -744,9 +780,9 @@ namespace scenegraph
            //get(boost::vertex_index, scenegraph))));
         std::cout << "*****UPDATE COMPLETE*****\n";
 
-        //draw_gl();
         return status();
     };
+
 
     /*!
      * Connect two node fields together.
@@ -832,7 +868,34 @@ namespace scenegraph
         return status();
     };
 
-    
+
+    /*!
+     * Disconnect node n1 for n2
+     */
+    status disconnect(int suid, int sfid, int tuid, int tfid)
+    {
+        // verify that the disconnect rules are meet
+        if(suid == tuid)
+            return status(FAILED,"Node 1 can't be the same as Node 2");
+
+        // still need to test that sfid is an input and tfid is an output
+       
+        // get the out edges of the source node
+        typedef typename boost::graph_traits<FSceneGraph>::out_edge_iterator eo;
+        std::pair<eo,eo> p = boost::out_edges(suid,sg);
+
+        for(;p.first!=p.second;++p.first){
+            if(sg[*p.first].f1 == sfid && sg[*p.first].f2 == tfid) {
+                // TODO - there might be some cleanup to do here
+                boost::remove_edge(p.first,sg);
+                //std::cout << "found connection to disconnect!\n";
+            }
+        }
+
+
+        return status();   
+    }
+ 
     //template <int _Type, int _Node>
     //status add_node(int id) { return status(FAILED,"no matching node for add_node"); };
 

@@ -362,14 +362,17 @@ void TreeModel::clearTree()
 
 void TreeModel::loadChildren(const int uid, Leaf* parent)
 {
+    feather::status e;
+    std::string name;
     QList<QVariant> data;
     // create data
-    data.append(feather::qml::command::get_node_name(uid).c_str()); // name
+    feather::qml::command::get_node_name(uid,name,e);
+    data.append(name.c_str()); // name
     data.append(true); // visible
     int nid;
     std::string icon;
-    feather::qml::command::get_node_id(uid,nid); 
-    feather::qml::command::get_node_icon(nid,icon); 
+    nid = feather::qml::command::get_node_id(uid,e); 
+    feather::qml::command::get_node_icon(nid,icon,e); 
     data.append(icon.c_str()); // icon 
     data.append(uid); // uid
     data.append(0); // nid

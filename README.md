@@ -1,47 +1,38 @@
 Feather
 =======
 
+Current Status
+---------------
+Feather is still a WIP that has not yet reached v0.1. I hope to release v0.1 sometime in 2016.
+
 ![Feather Logo](https://raw.githubusercontent.com/richardlayman/feather/master/assets/images/logo.png)
 
-3d polygon modeller based off of Wings3d
+3d modeling and animation application.
 
 ![Feather UI](https://raw.githubusercontent.com/richardlayman/feather/master/assets/images/ui_v0_1.png)
 
 Introduction
 ---------------
-Feather is 3d polygon modeling application based on Wings3d with some influences from Maya. Feather has a C++ core while it's interface is written in Qt's QML language making it easy for the user to modify it or create new tools. Feather's scenegraph depends on nodes which are created by C++ plugins that can be coded by the user or other developers outside of Feather (you don't need to recompile Feather to build the plugin). Feather also has commands for doing one-time processes. These commands can be written into the C++ plugin or at the interface level using the QML scripting language. The application will have the ability to model polygon objects with the ease of Wings3D and while having the flexiblity of Maya due to having a scenegraph that connects nodes together to give the model a history which you can go back and modify, connect fields from different nodes together, create your own node fields and use them to drive other nodes. Feather is currently only targeted for Linux but others may be added later.
+Feather is a 3D application targeted for small studios and indie animators. Feather focuses on being easy to modify with idea being that it's a tool that the artist can change to suite their needs. This could be modifying the UI, creating new nodes or commands, or using Feather from the command line. This is achieved by having a fully scripted QML interface and a very simple way of creating plugins. Everything in Feather is a node who's output fields can be plugged into any input node field of the same type. This provides the user with a great amount of flexiblity when dealing with complex problems.
 
 v0.1 Features
 ---------------
 * C++ core
 * QtQuick interface
 * Open/Save feather project files
-* DAG with field connections between different nodes
-* Users can add custom node fields to any node and connect this field to any other field of the same type in another node
-* Nodes can be added to layers and modified using the layer editor. The layer's name and color can also be changed making groups easier to find.
-* Plugin architecture
+* DAG scenegraph
+* C++ Plugin architecture
 * Import/Export obj files
 * Outliner Editor
 * SceneGraph Editor
 * Field Editor
 * Layer Editor
 * 3D Viewport Editor
-* Polygon Tools - Bevel, Extrude, Inset
+* Objects - Curves, Plane, Cube, MeshShape
+* Modify Tools - Bevel, Extrude, Inset
 * Selection Tools - Pick, Box, Ring, Loop
 * Component Selection - Vertex, Edge, Face, Object
 * Transformation Tools (all components) - Translate, Rotate, Scale
-
-v1.0 Target Features
----------------
-These are some addition features that are targeted to be included in the final 1.0 version. This is set to change at any time.
-* Full clone of Wings tools for all components (vertex, edge, face and object)
-* Layer Editor
-* Material Editor
-* LuxRender support
-* PTex support
-* Support for 3DConnexion SpaceNavigator
-
-Current Status
----------------
-Currently Feather is getting closer to a v0.1 release but there is still some work left to do before it's ready. Once the project gets to a point where it's usable (you can open, modify and save your changes) I'll post instructions on how to build and install the application. 
+* Limited Lux Support - Camera, MeshLight, MatteShader, GlossyShader, Scene, Globals
+* Export lxs files
 

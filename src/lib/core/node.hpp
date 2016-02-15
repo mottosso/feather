@@ -64,14 +64,10 @@ namespace feather
 
 } // namespace feather
 
+
 #define DO_IT(__node_enum)\
     template <> status node_do_it<__node_enum>(field::Fields& fields)
 
-#define GL_INIT(__node_enum)\
-    template <> void node_gl_init<__node_enum>(FNode& node, FGlInfo& info)
-
-#define GL_DRAW(__node_enum)\
-    template <> void node_gl_draw<__node_enum>(FNode& node, FGlInfo& info)
 
 #define NODE_INIT(__node_enum,__node_type,__node_icon)\
     namespace feather {\
@@ -85,24 +81,22 @@ namespace feather
             };\
         };\
         \
-        template <> struct call_gl_inits<__node_enum> {\
-            static void exec(FNode& node, FGlInfo& info) {\
-                /*std::cout << "call_gl_init\n";*/\
-                if(node.node==__node_enum){\
-                    node_gl_init<__node_enum>(node,info);\
+        template <> struct find_node_drawable<__node_enum> {\
+            static bool exec(int id) {\
+                if(id==__node_enum){\
+                    return true;\
                 } else {\
-                    call_gl_inits<__node_enum-1>::exec(node,info);\
+                    return find_node_drawable<__node_enum-1>::exec(id);\
                 }\
             };\
         };\
         \
-        template <> struct call_gl_draws<__node_enum> {\
-            static void exec(FNode& node, FGlInfo& info) {\
-                /*std::cout << "call_gl_draws\n";*/\
-                if(node.node==__node_enum){\
-                    node_gl_draw<__node_enum>(node,info);\
+        template <> struct call_draw_items<__node_enum> {\
+            static status exec(int id, draw::DrawItems& items) {\
+                if(id==__node_enum){\
+                    return node_draw_it<__node_enum>(items);\
                 } else {\
-                    call_gl_draws<__node_enum-1>::exec(node,info);\
+                    return call_draw_items<__node_enum-1>::exec(id,items);\
                 }\
             };\
         };\
