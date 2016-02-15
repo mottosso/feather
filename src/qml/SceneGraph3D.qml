@@ -20,44 +20,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  ***********************************************************************/
-import Qt3D 2.0
-import Qt3D.Renderer 2.0
-import QtQuick.Scene3D 2.0
+import QtQuick 2.5
 
+Rectangle {
+    id: scenegraph
+    color: "black"
 
-Scene3D {
-    id: scene3d
-    anchors.fill: parent
-    anchors.margins: 2
-    focus: true
-    aspects: "input"
+    Item {
+        id: nodes
 
-
-    Entity {
-        id: root
-
-        // Render from the mainCamera
-        components: [
-            FrameGraph {
-                activeFrameGraph: ForwardRenderer {
-                    id: renderer
-                    camera: mainCamera
-                    clearColor: "black"
-                }
-            }
-        ]
-
-        Camera {
-            id: mainCamera
-            position: Qt.vector3d( 0.0, 0.0, 15.0 )
-        }
-
-        Configuration  {
-            controlledCamera: mainCamera
+        SceneGraphNode {
+            id: a 
         }
 
         SceneGraphNode {
-            id: testNode 
+            id: b
+            y: 50 
+            x: 150
         }
+
+
     }
 }
