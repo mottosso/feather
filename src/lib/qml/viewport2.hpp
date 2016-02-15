@@ -68,6 +68,7 @@ class PerspCamera : public DrawItem
 
 
 // WIREFRAME EFFECT
+/*
 class WireEffect : public Qt3D::QEffect
 {
     Q_OBJECT
@@ -81,7 +82,7 @@ class WireEffect : public Qt3D::QEffect
         Qt3D::QRenderPass* m_pRenderPass; 
         Qt3D::QTechnique* m_pTechnique;
 };
-
+*/
 
 // MESH 
 
@@ -102,9 +103,9 @@ class Mesh : public DrawItem
     private:
         void build();
         Qt3D::QTransform *m_pTransform;
-        Qt3D::QMaterial *m_pMaterial;
-        WireEffect* m_pMaterialEffect;
-        //Qt3D::QPhongMaterial *m_pMaterial;
+        //Qt3D::QMaterial *m_pMaterial;
+        //WireEffect* m_pMaterialEffect;
+        Qt3D::QPhongMaterial *m_pMaterial;
         //Qt3D::QPhongMaterial *m_pWireMaterial;
         Qt3D::QGeometryRenderer *m_pMesh;
         //Qt3D::QMouseInput *m_pMouseInput;

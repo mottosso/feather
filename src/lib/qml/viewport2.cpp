@@ -58,6 +58,10 @@ void PerspCamera::update()
 
 }
 
+// CAN NOT GET SHADERS TO WORK IN QT3D
+// YET BUT I'M LEAVING THIS HERE FOR
+// WHEN I CAN
+/*
 WireEffect::WireEffect(QNode* parent)
     : QEffect(parent),
     m_pPassCriterion(new Qt3D::QAnnotation()),
@@ -119,14 +123,15 @@ WireEffect::~WireEffect()
 {
 
 }
+*/
  
 // MESHES
 
 Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     : DrawItem(_item,DrawItem::Mesh,parent),
     m_pTransform(new Qt3D::QTransform()),
-    m_pMaterial(new Qt3D::QMaterial()),
-    m_pMaterialEffect(new WireEffect()),
+    m_pMaterial(new Qt3D::QPhongMaterial()),
+    //m_pMaterialEffect(new WireEffect()),
     //m_pWireMaterial(new Qt3D::QPhongMaterial()),
     m_pMesh(new Qt3D::QGeometryRenderer()),
     //m_pMouseInput(new Qt3D::QMouseInput(this)),
@@ -183,10 +188,10 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
  
     // Shaded Material 
     //m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("meshColor"),QColor(Qt::blue)));  
-    //m_pMaterial->setDiffuse(QColor(Qt::red));
-    //m_pMaterial->setAmbient(Qt::gray);
-    //m_pMaterial->setSpecular(Qt::white);
-    //m_pMaterial->setShininess(0.4f);
+    m_pMaterial->setDiffuse(QColor(Qt::red));
+    m_pMaterial->setAmbient(Qt::black);
+    m_pMaterial->setSpecular(Qt::white);
+    m_pMaterial->setShininess(0.4f);
 
     // Wire Material
     //m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("meshColor"),QColor(Qt::blue)));  
@@ -194,14 +199,15 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     //m_pWireMaterial->setAmbient(Qt::blue);
 
 
+    // THIS WAS FROM SHADER TESTING
+    /*
     m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("ambient"),QColor(Qt::blue)));
     m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("diffuse"),QColor(Qt::red)));
     m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("specular"),QColor(Qt::white)));
     m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("shininess"),150.0));
     m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("line.width"),0.8));
     m_pMaterial->addParameter(new Qt3D::QParameter(QStringLiteral("line.color"),QColor(Qt::black)));
-
-    m_pMaterial->setEffect(m_pMaterialEffect);
+    */
 
     // Light testing
     m_pLight->setColor(Qt::blue);
@@ -211,8 +217,9 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     addComponent(m_pTransform);
     addComponent(m_pMaterial);
     addComponent(m_pMesh);
-    addComponent(m_pLight);
+    //addComponent(m_pLight);
 
+    //m_pMaterial->setEffect(m_pMaterialEffect);
     //connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(mouseClicked()));
 }
 
