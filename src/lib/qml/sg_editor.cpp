@@ -57,11 +57,12 @@ std::vector<SceneGraphConnection*> SGState::selectedConnections = std::vector<Sc
 
 // SCENEGRAPH
 
-SceneGraphConnection::SceneGraphConnection(SceneGraphNode* node, SceneGraphConnection::Connection type, QQuickItem* parent) :
+SceneGraphConnection::SceneGraphConnection(int fid, SceneGraphNode* node, SceneGraphConnection::Connection type, QQuickItem* parent) :
     QQuickPaintedItem(parent),
     m_selected(false),
     m_type(type),
-    m_node(node)
+    m_node(node),
+    m_fid(fid)
 {
     setWidth(CONNECTION_WIDTH);
     setHeight(CONNECTION_HEIGHT);
@@ -81,6 +82,12 @@ SceneGraphConnection::~SceneGraphConnection()
 void SceneGraphConnection::paint(QPainter* painter)
 {
     painter->setRenderHints(QPainter::Antialiasing, true);
+ 
+    QPen textPen(QColor(NODE_TEXT_COLOR),2);
+    QFont textFont("DejaVuSans",6);
+    painter->setPen(textPen);
+    painter->setFont(textFont);
+    painter->drawText(QRect(0,2,NODE_WIDTH/2,10),Qt::AlignHCenter|Qt::AlignTop,"TEST");
 
     if(!m_selected){
         if(m_type == In)
@@ -90,9 +97,9 @@ void SceneGraphConnection::paint(QPainter* painter)
     } else {
         m_connFillBrush = QBrush(QColor(SELECTED_CONNECTOR_COLOR));
     }
-
+    
     painter->setBrush(m_connFillBrush);
-    painter->drawEllipse(QPoint(5,5),CONNECTION_WIDTH/2,CONNECTION_HEIGHT/2);
+    painter->drawEllipse(QPoint(5,5),CONNECTION_HEIGHT/2,CONNECTION_HEIGHT/2);
 }
 
 void SceneGraphConnection::mousePressEvent(QMouseEvent* event)
@@ -162,12 +169,14 @@ SceneGraphNode::SceneGraphNode(int uid, int nid, QQuickItem* parent) :
     m_outConnCount = feather::qml::command::get_out_field_count(m_uid);
     m_connCount = feather::qml::command::get_field_count(m_uid);
     
-    m_pInConn = new SceneGraphConnection(this,SceneGraphConnection::In,this);
+    // add the input fields here
+    m_pInConn = new SceneGraphConnection(0,this,SceneGraphConnection::In,this);
     m_pInConn->setX(-2);
     m_pInConn->setY(NODE_HEIGHT/2+14);
     connect(m_pInConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
 
-    m_pOutConn = new SceneGraphConnection(this,SceneGraphConnection::Out,this);
+    // add the output fields here
+    m_pOutConn = new SceneGraphConnection(0,this,SceneGraphConnection::Out,this);
     m_pOutConn->setX(NODE_WIDTH-4);
     m_pOutConn->setY(NODE_HEIGHT/2+14);
     connect(m_pOutConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
