@@ -30,7 +30,7 @@
 
 #define NODE_WIDTH 100
 #define NODE_HEIGHT 30
-#define CONNECTION_WIDTH 10 
+#define CONNECTION_WIDTH 100 
 #define CONNECTION_HEIGHT 10 
 
 
@@ -68,7 +68,7 @@ class SceneGraphConnection : public QQuickPaintedItem
     public:
         enum Connection { In, Out };
 
-        SceneGraphConnection(SceneGraphNode* node, Connection type, QQuickItem* parent=0);
+        SceneGraphConnection(int fid, SceneGraphNode* node, Connection type, QQuickItem* parent=0);
         ~SceneGraphConnection();
         void paint(QPainter* painter);
         SceneGraphNode* node() { return m_node; };
@@ -90,6 +90,7 @@ class SceneGraphConnection : public QQuickPaintedItem
         Connection m_type;
         QBrush m_connFillBrush;
         SceneGraphNode* m_node;
+        int m_fid;
 };
 
 class SceneGraphNode : public QQuickPaintedItem
