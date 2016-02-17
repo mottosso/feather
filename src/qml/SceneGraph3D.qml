@@ -26,38 +26,43 @@ Rectangle {
     id: window
     color: "darkgrey"
 
+    property variant nodes: []
+
     //scale: 0.5
 
-Canvas {
-    id: scenegraph
-    contextType: "2d"
-    anchors.fill: parent
+    Canvas {
+        id: scenegraph
+        contextType: "2d"
+        anchors.fill: parent
 
-    Path {
-        id: path
+        Path {
+            id: path
 
-        startX: 0
-        startY: 0
+            startX: 0
+            startY: 0
 
-        PathLine {
-            id: target 
-            x: 200
-            y: 200
+            PathLine {
+                id: target 
+                x: 200
+                y: 200
+            }
         }
-    }
 
-    onPaint: {
-        context.reset()
-        // draw connections
-        context.strokeStyle = "#090909"
-        context.path = path
-        context.lineWidth = 1
-        context.stroke()
-    }
-
-    SceneGraphNode {
-        id: a 
-        name: "test"
+        onPaint: {
+            context.reset()
+            // draw connections
+            context.strokeStyle = "#090909"
+            context.path = path
+            context.lineWidth = 1
+            context.stroke()
+            path.startY = path.startY + 100
+            context.path = path
+            context.strokeStyle = "#f90909"
+ 
+            context.stroke()
+            SceneGraphNode{ id: node };
+        }
+    
     }
 
     function updateConnections(x,y,uid) {
@@ -66,9 +71,11 @@ Canvas {
         requestPaint()
     }
 
+
     Component.onCompleted: {
-        a.moved.connect(updateConnections)                        
+        //children.append(SceneGraphNode{})
+
+        //a.moved.connect(updateConnections)                        
     }
-}
 
 }

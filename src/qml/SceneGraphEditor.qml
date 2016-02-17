@@ -34,7 +34,7 @@ Rectangle {
     color: "black" 
     
     property Properties properties: Null
-    //property alias fieldModel: sg_editor.connection
+    property alias fieldModel: sg_editor.connection
  
     // Dialogs
     AddNodeDialog{ id: addNodeDialog; properties: sgWindow.properties }
@@ -65,7 +65,7 @@ Rectangle {
         id: addConnection 
         tooltip: "connect the two selected node connections"
         onTriggered: {
-            //sg_editor.connectNodes()
+            sg_editor.connectNodes()
             SceneGraph.triggerUpdate()
         }
     }
@@ -75,7 +75,7 @@ Rectangle {
         id: deleteConnection 
         tooltip: "disconnect the two selected node connections"
         onTriggered: {
-            //sg_editor.disconnectNodes()
+            sg_editor.disconnectNodes()
         }
     }
 
@@ -134,16 +134,6 @@ Rectangle {
 
     //FieldModel { id: connModel }
 
-    SceneGraph3D {
-        id: sq_editor_qt3d
-        anchors.top: toolBar.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.margins: 2
-    }
-
-    /*
     SceneGraphEditor {
         id: sg_editor
         anchors.top: toolBar.bottom
@@ -152,7 +142,6 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.margins: 2
     }    
-    */
 
     //PopupMenu { id: connMenu; model: connModel }
     PopupMenu { id: connMenu; model: sgWindow.fieldModel }
@@ -171,20 +160,20 @@ Rectangle {
       }
 
     function connectionButtonPressed(button,uid,nid,fid) {
-        //sg_editor.connectionMousePressed(button,uid,nid,fid);
+        sg_editor.connectionMousePressed(button,uid,nid,fid);
         SceneGraph.select_node(0,uid,nid,fid);
     }
 
     function connectionButtonReleased(button,uid,nid,fid) {
-        //sg_editor.connectionMouseReleased(button,uid,nid,fid);
+        sg_editor.connectionMouseReleased(button,uid,nid,fid);
     }
 
     function connectionButtonClicked(button,uid,nid,fid) {
-        //sg_editor.connectionMouseClicked(button,uid,nid,fid);
+        sg_editor.connectionMouseClicked(button,uid,nid,fid);
     }
 
     function selectNode() {
-        //sg_editor.updateNodes()
+        sg_editor.updateNodes()
     }
     
     function add_node(name,nid) {
@@ -198,14 +187,14 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        //sg_editor.openConnMenu.connect(openConnectionMenu)
-        //sg_editor.nodeSelection.connect(nodeSelection)
+        sg_editor.openConnMenu.connect(openConnectionMenu)
+        sg_editor.nodeSelection.connect(nodeSelection)
         //connMenu.connectionButtonPressed.connect(connectionButtonPressed)
         //connMenu.connectionButtonReleased.connect(connectionButtonReleased)
         //connMenu.connectionButtonClicked.connect(connectionButtonClicked)
         SceneGraph.nodeSelected.connect(selectNode)
-        //SceneGraph.updateGraph.connect(sg_editor.update_sg)
-        //SceneGraph.cleared.connect(sg_editor.update_sg)
+        SceneGraph.updateGraph.connect(sg_editor.update_sg)
+        SceneGraph.cleared.connect(sg_editor.update_sg)
         addNodeDialog.addNode.connect(add_node)
     }
 
