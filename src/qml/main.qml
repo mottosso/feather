@@ -54,7 +54,7 @@ ApplicationWindow {
             id: sgEditor
             width: 200
             properties: properties
-            //fieldModel: fields
+            fieldModel: fields
         }
 
         ViewportEditor {

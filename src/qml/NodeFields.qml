@@ -28,8 +28,14 @@ FieldModel {
 
     Component.onCompleted: {
         // Empty
-        addFieldName("Parent",1,1)
-        addFieldName("Child",1,2)
+        addFieldName("parent",1,1)
+        addFieldName("child",1,2)
+
+        // Camera 
+        addFieldName("parent",2,1)
+        addFieldName("child",2,2)
+        addFieldName("type",2,3)
+        addFieldName("fov",2,4)
 
         // Transform
         addFieldName("tX",3,3)

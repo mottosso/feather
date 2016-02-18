@@ -106,11 +106,15 @@ void FieldModel::addFields(int uid, int nid)
 
 void FieldModel::addFieldName(QString name, int nid, int fid)
 {
+    std::cout << "adding field name\n";
     m_fieldnames.push_back(new FieldName{name,nid,fid});
 }
 
 QString FieldModel::getFieldName(int nid, int fid){
+    std::cout << "getFieldName\n";
     for(auto fn : m_fieldnames){
+        std::cout << "looking for " << nid << " " << fid << std::endl;
+        std::cout << "\tin: " << fn->nid << " " << fn->fid << " " << fn->name.toStdString().c_str() << std::endl;
         if((fn->nid==nid) && (fn->fid==fid))
             return fn->name;
     }

@@ -68,7 +68,7 @@ class SceneGraphConnection : public QQuickPaintedItem
     public:
         enum Connection { In, Out };
 
-        SceneGraphConnection(int fid, SceneGraphNode* node, Connection type, QQuickItem* parent=0);
+        SceneGraphConnection(QString name, int fid, SceneGraphNode* node, Connection type, QQuickItem* parent=0);
         ~SceneGraphConnection();
         void paint(QPainter* painter);
         SceneGraphNode* node() { return m_node; };
@@ -86,6 +86,7 @@ class SceneGraphConnection : public QQuickPaintedItem
         void connClicked(Qt::MouseButton button, SceneGraphConnection::Connection conn);
 
     private:
+        QString m_name;
         bool m_selected;
         Connection m_type;
         QBrush m_connFillBrush;
@@ -98,7 +99,7 @@ class SceneGraphNode : public QQuickPaintedItem
     Q_OBJECT
 
     public:
-        SceneGraphNode(int uid, int nid, QQuickItem* parent=0);
+        SceneGraphNode(int uid, int nid, FieldModel* model, QQuickItem* parent=0);
         ~SceneGraphNode();
         void paint(QPainter* painter);
         void inConnectionPoint(unsigned int fid, QPointF& point);
@@ -139,6 +140,7 @@ class SceneGraphNode : public QQuickPaintedItem
         int m_nodeHeight;
         SceneGraphConnection* m_pInConn;
         SceneGraphConnection* m_pOutConn;
+        FieldModel* m_pFieldNames;
 };
 
 

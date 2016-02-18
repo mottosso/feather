@@ -132,8 +132,6 @@ Rectangle {
 
     } 
 
-    //FieldModel { id: connModel }
-
     SceneGraphEditor {
         id: sg_editor
         anchors.top: toolBar.bottom
@@ -196,6 +194,7 @@ Rectangle {
         SceneGraph.updateGraph.connect(sg_editor.update_sg)
         SceneGraph.cleared.connect(sg_editor.update_sg)
         addNodeDialog.addNode.connect(add_node)
+
     }
 
 }
