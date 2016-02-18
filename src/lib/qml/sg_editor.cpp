@@ -57,8 +57,9 @@ std::vector<SceneGraphConnection*> SGState::selectedConnections = std::vector<Sc
 
 // SCENEGRAPH
 
-SceneGraphConnection::SceneGraphConnection(int fid, SceneGraphNode* node, SceneGraphConnection::Connection type, QQuickItem* parent) :
+SceneGraphConnection::SceneGraphConnection(QString name, int fid, SceneGraphNode* node, SceneGraphConnection::Connection type, QQuickItem* parent) :
     QQuickPaintedItem(parent),
+    m_name(name),
     m_selected(false),
     m_type(type),
     m_node(node),
@@ -84,10 +85,10 @@ void SceneGraphConnection::paint(QPainter* painter)
     painter->setRenderHints(QPainter::Antialiasing, true);
  
     QPen textPen(QColor(NODE_TEXT_COLOR),2);
-    QFont textFont("DejaVuSans",6);
+    QFont textFont("DejaVuSans",8);
     painter->setPen(textPen);
     painter->setFont(textFont);
-    painter->drawText(QRect(0,2,NODE_WIDTH/2,10),Qt::AlignHCenter|Qt::AlignTop,"TEST");
+    painter->drawText(QRect(0,2,NODE_WIDTH/2,10),Qt::AlignHCenter|Qt::AlignTop,m_name);
 
     if(!m_selected){
         if(m_type == In)
@@ -141,7 +142,7 @@ void SceneGraphConnection::mouseMoveEvent(QMouseEvent* event)
 
 
 // Node
-SceneGraphNode::SceneGraphNode(int uid, int nid, QQuickItem* parent) : 
+SceneGraphNode::SceneGraphNode(int uid, int nid, FieldModel* model, QQuickItem* parent) : 
     QQuickPaintedItem(parent),
     m_uid(uid),
     m_nid(nid),
@@ -150,7 +151,8 @@ SceneGraphNode::SceneGraphNode(int uid, int nid, QQuickItem* parent) :
     m_imgDir("ui/icons/"),
     m_nodeFillBrush(QBrush(QColor(DESELECTED_NODE_COLOR))),
     m_layerFillBrush(QBrush(QColor("#DDDDDD"))),
-    m_nodeTitleBrush(QBrush(QColor(NODE_TITLE_BLOCK_COLOR)))
+    m_nodeTitleBrush(QBrush(QColor(NODE_TITLE_BLOCK_COLOR))),
+    m_pFieldNames(model)
 {
     feather::status e;
 
@@ -168,18 +170,32 @@ SceneGraphNode::SceneGraphNode(int uid, int nid, QQuickItem* parent) :
     m_inConnCount = feather::qml::command::get_in_field_count(m_uid);
     m_outConnCount = feather::qml::command::get_out_field_count(m_uid);
     m_connCount = feather::qml::command::get_field_count(m_uid);
-    
-    // add the input fields here
-    m_pInConn = new SceneGraphConnection(0,this,SceneGraphConnection::In,this);
-    m_pInConn->setX(-2);
-    m_pInConn->setY(NODE_HEIGHT/2+14);
-    connect(m_pInConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
 
-    // add the output fields here
-    m_pOutConn = new SceneGraphConnection(0,this,SceneGraphConnection::Out,this);
-    m_pOutConn->setX(NODE_WIDTH-4);
-    m_pOutConn->setY(NODE_HEIGHT/2+14);
-    connect(m_pOutConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
+    std::vector<feather::field::FieldBase*> inFields;
+    std::vector<feather::field::FieldBase*> outFields;
+  
+    feather::qml::command::get_fid_list(m_uid,m_nid,feather::field::connection::In,inFields);
+    feather::qml::command::get_fid_list(m_uid,m_nid,feather::field::connection::Out,outFields);
+ 
+    for(auto field : inFields) { 
+        // add the input fields here
+        int fid = field->id;
+        std::cout << "nid:" << m_nid << ", fid:" << fid << std::endl;
+        m_pInConn = new SceneGraphConnection(FieldModel::getFieldName(m_nid,fid),fid,this,SceneGraphConnection::In,this);
+        m_pInConn->setX(-2);
+        m_pInConn->setY(NODE_HEIGHT/2+14);
+        connect(m_pInConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
+    }
+
+    for(auto field : outFields) { 
+        // add the input fields here
+        int fid = field->id;
+        // add the output fields here
+        m_pOutConn = new SceneGraphConnection(FieldModel::getFieldName(m_nid,fid),fid,this,SceneGraphConnection::Out,this);
+        m_pOutConn->setX(NODE_WIDTH-4);
+        m_pOutConn->setY(NODE_HEIGHT/2+14);
+        connect(m_pOutConn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
+    }
 
     feather::qml::command::get_node_icon(m_nid,m_imgFile,e);
     m_imgPath << m_imgDir << m_imgFile;
@@ -540,7 +556,7 @@ void SceneGraphEditor::updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int 
     SceneGraphNode *node = getNode(uid);
     if(!node){
         std::cout << "ADDING NODE TO SG EDITOR\n";
-        node = new SceneGraphNode(uid,nid,this);
+        node = new SceneGraphNode(uid,nid,m_connection,this);
         m_nodes.push_back(node);
         // setup the node qt connections
         connect(node,SIGNAL(ConnClicked(Qt::MouseButton,SceneGraphConnection::Connection,int,int)),this,SLOT(ConnOption(Qt::MouseButton,SceneGraphConnection::Connection,int,int)));
