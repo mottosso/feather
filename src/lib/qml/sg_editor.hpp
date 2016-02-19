@@ -29,7 +29,7 @@
 #include "field_model.hpp"
 
 #define NODE_WIDTH 100
-#define NODE_HEIGHT 30
+#define NODE_HEIGHT 40
 #define CONNECTION_WIDTH 100 
 #define CONNECTION_HEIGHT 10 
 
@@ -99,7 +99,7 @@ class SceneGraphNode : public QQuickPaintedItem
     Q_OBJECT
 
     public:
-        SceneGraphNode(int uid, int nid, FieldModel* model, QQuickItem* parent=0);
+        SceneGraphNode(int uid, int nid, QQuickItem* parent=0);
         ~SceneGraphNode();
         void paint(QPainter* painter);
         void inConnectionPoint(unsigned int fid, QPointF& point);
@@ -138,9 +138,11 @@ class SceneGraphNode : public QQuickPaintedItem
         int m_outConnCount;
         int m_connCount;
         int m_nodeHeight;
-        SceneGraphConnection* m_pInConn;
-        SceneGraphConnection* m_pOutConn;
-        FieldModel* m_pFieldNames;
+        //SceneGraphConnection* m_pInConn;
+        //SceneGraphConnection* m_pOutConn;
+        std::vector<SceneGraphConnection*> m_pInConns;
+        std::vector<SceneGraphConnection*> m_pOutConns;
+        //FieldModel* m_pFieldNames;
 };
 
 
