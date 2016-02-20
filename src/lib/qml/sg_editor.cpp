@@ -65,7 +65,7 @@ SceneGraphConnection::SceneGraphConnection(QString name, int fid, SceneGraphNode
     m_node(node),
     m_fid(fid)
 {
-    setWidth(CONNECTION_WIDTH);
+    setWidth(CONNECTION_WIDTH+(NODE_WIDTH/2));
     setHeight(CONNECTION_HEIGHT);
     setAcceptedMouseButtons(Qt::AllButtons);
     setAcceptHoverEvents(true);
@@ -88,7 +88,13 @@ void SceneGraphConnection::paint(QPainter* painter)
     QFont textFont("DejaVuSans",7);
     painter->setPen(textPen);
     painter->setFont(textFont);
-    painter->drawText(QRect(0,2,NODE_WIDTH/2,10),Qt::AlignHCenter|Qt::AlignVCenter,m_name);
+    if(m_type == In) {
+        painter->drawText(QRect(CONNECTION_WIDTH+2,0,NODE_WIDTH/2,CONNECTION_HEIGHT),Qt::AlignLeft|Qt::AlignVCenter,m_name);
+    } else {
+        painter->drawText(QRect(0,0,(NODE_WIDTH/2)-2,CONNECTION_HEIGHT),Qt::AlignRight|Qt::AlignVCenter,m_name);
+    }
+
+
 
     if(!m_selected){
         if(m_type == In)
@@ -101,9 +107,9 @@ void SceneGraphConnection::paint(QPainter* painter)
     
     painter->setBrush(m_connFillBrush);
     if(m_type == In) {
-        painter->drawEllipse(QPoint(5,5),CONNECTION_HEIGHT/2,CONNECTION_HEIGHT/2);
+        painter->drawRect(0,0,CONNECTION_WIDTH,CONNECTION_HEIGHT);
     } else {
-        painter->drawEllipse(QPoint(NODE_WIDTH/2,5),CONNECTION_HEIGHT/2,CONNECTION_HEIGHT/2);
+        painter->drawRect(NODE_WIDTH/2,0,CONNECTION_WIDTH,CONNECTION_HEIGHT);
     }
 
 }
@@ -186,7 +192,7 @@ SceneGraphNode::SceneGraphNode(int uid, int nid, QQuickItem* parent) :
         std::cout << "nid:" << m_nid << ", fid:" << fid << std::endl;
         SceneGraphConnection* conn = new SceneGraphConnection(FieldModel::getFieldName(m_nid,fid),fid,this,SceneGraphConnection::In,this);
         m_pInConns.push_back(conn);
-        conn->setX(-2);
+        conn->setX(0);
         conn->setY(((CONNECTION_HEIGHT+2)*i)+12);
         connect(conn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
         i++;
@@ -199,7 +205,7 @@ SceneGraphNode::SceneGraphNode(int uid, int nid, QQuickItem* parent) :
         std::cout << "nid:" << m_nid << ", fid:" << fid << std::endl;
         SceneGraphConnection* conn = new SceneGraphConnection(FieldModel::getFieldName(m_nid,fid),fid,this,SceneGraphConnection::Out,this);
         m_pOutConns.push_back(conn);
-        conn->setX(NODE_WIDTH/2);
+        conn->setX((NODE_WIDTH/2)+CONNECTION_WIDTH);
         conn->setY(((CONNECTION_HEIGHT+2)*i)+12);
         connect(conn,SIGNAL(connClicked(Qt::MouseButton,SceneGraphConnection::Connection)),this,SLOT(ConnPressed(Qt::MouseButton,SceneGraphConnection::Connection)));
         i++;
@@ -215,9 +221,9 @@ SceneGraphNode::SceneGraphNode(int uid, int nid, QQuickItem* parent) :
     else
         max = outFields.size();
 
-    setWidth(NODE_WIDTH+4);
+    setWidth(NODE_WIDTH+(CONNECTION_WIDTH*2));
     //setHeight(NODE_HEIGHT+4);
-    setHeight(((CONNECTION_HEIGHT + 2) * max) + 60);
+    setHeight(((CONNECTION_HEIGHT + 2) * max) + 24 + 24);
 }
 
 SceneGraphNode::~SceneGraphNode()
@@ -247,7 +253,7 @@ void SceneGraphNode::paint(QPainter* painter)
     QPen trimPen = QPen(QColor(0,0,0),1);
     //trimPen.setStyle(Qt::NoPen);
     QPen textPen = QPen(QColor(NODE_TEXT_COLOR),2);
-    QFont textFont("DejaVuSans",12);
+    QFont textFont("DejaVuSans",10);
 
     if(feather::smg::Instance()->selected(m_uid))
         m_nodeFillBrush.setColor(QColor(SELECTED_NODE_COLOR));
@@ -279,14 +285,14 @@ void SceneGraphNode::paint(QPainter* painter)
 
     // draw title block
     painter->setBrush(m_nodeTitleBrush);
-    painter->drawRoundedRect(QRect(12,2,NODE_WIDTH-20,20),2,2);
+    painter->drawRect(CONNECTION_WIDTH+5,2,NODE_WIDTH-10,18);
 
     // draw the node block
     painter->setBrush(m_nodeFillBrush);
-    painter->drawRoundedRect(QRect(2,20,NODE_WIDTH,height()-22),2,2);
+    painter->drawRect(CONNECTION_WIDTH,18,NODE_WIDTH,height()-20);
 
     // node icon
-    QRectF tgt(NODE_WIDTH/2-12,height()-24,24,24);
+    QRectF tgt(CONNECTION_WIDTH + (NODE_WIDTH/2)-12,height()-24,24,24);
     QImage img(m_imgPath.str().c_str());
     painter->drawImage(tgt,img);
 
@@ -295,7 +301,7 @@ void SceneGraphNode::paint(QPainter* painter)
     painter->setFont(textFont);
     std::string name;
     feather::qml::command::get_node_name(m_uid,name,e);
-    painter->drawText(QRect(0,2,NODE_WIDTH,height()),Qt::AlignHCenter|Qt::AlignTop,name.c_str());
+    painter->drawText(QRect(CONNECTION_WIDTH+5,2,NODE_WIDTH-10,18),Qt::AlignHCenter|Qt::AlignVCenter,name.c_str());
 
 }
 
