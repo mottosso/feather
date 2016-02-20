@@ -336,6 +336,13 @@ namespace feather
         return f;
     };
 
+    field::FieldBase* get_node_fieldBase(int uid, int fid) {
+        status e;
+        unsigned int nid = get_node_id(uid,e);
+        return get_node_fieldBase(uid,nid,fid);
+    };
+
+
     int get_field_count(int uid) {
         return sg[uid].fields.size(); 
     }

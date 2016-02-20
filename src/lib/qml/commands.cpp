@@ -309,15 +309,41 @@ status qml::command::set_field_val(int uid, int node, int field, float& val)
 
 status qml::command::get_field_connection_status(int uid, int field, bool& val)
 {
-    field::FieldBase* f = scenegraph::get_fieldBase(uid,field);
+    field::FieldBase* f = scenegraph::get_node_fieldBase(uid,field);
     val = f->connected;
     return status();
 }
 
 status qml::command::get_field_connection_status(int uid, int node, int field, bool& val)
 {
-    field::FieldBase* f = scenegraph::get_fieldBase(uid,node,field);
+    field::FieldBase* f = scenegraph::get_node_fieldBase(uid,node,field);
     val = f->connected;
+    return status();
+}
+
+status qml::command::get_field_connection_status(int suid, int sfid, int tuid, int tfid, bool& val)
+{
+    field::FieldBase* f = scenegraph::get_node_fieldBase(tuid,tfid);
+
+    if(f->connected && f->puid == suid && f->pf == sfid)
+        val = true;
+    else
+        val = false;
+
+    return status();
+}
+
+status qml::command::get_connected_fid(int uid, int fid, int& suid, int& sfid)
+{
+    // if nothing is connected, set the source to 0
+    field::FieldBase* f = scenegraph::get_fieldBase(uid,fid);
+    if(!f->connected){
+        suid=0;
+        sfid=0;
+        return status(FAILED,"nothing connected to node's fid");
+    }
+    suid = f->puid;
+    sfid = f->pf;
     return status();
 }
 

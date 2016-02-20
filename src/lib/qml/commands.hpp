@@ -100,6 +100,8 @@ namespace feather
             status set_field_val(int uid, int node, int field, float& val);
             status get_field_connection_status(int uid, int field, bool& val);
             status get_field_connection_status(int uid, int node, int field, bool& val);
+            status get_field_connection_status(int suid, int sfid, int tuid, int tfid, bool& val);
+            status get_connected_fid(int uid, int fid, int& suid, int& sfid); // uid and fid are from the node's input
             status get_fid_list(int uid, int nid, field::connection::Type conn, std::vector<field::FieldBase*>& list);
             int get_field_count(int uid);
             int get_in_field_count(int uid);
