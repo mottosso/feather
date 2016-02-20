@@ -255,8 +255,6 @@ namespace feather
                     else {
                         if(f->conn_type==conn)
                             list.push_back(f);
-                        if(f->conn_type==conn)
-                            list.push_back(f);
                     }
                 }
                 return true;
