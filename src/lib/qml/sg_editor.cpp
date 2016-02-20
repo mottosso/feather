@@ -621,7 +621,8 @@ void SceneGraphEditor::updateGraph()
     //    updateLeaf(nullptr,uids[i],xpos,ypos);
     //}
     updateNode(nullptr,0,xpos,ypos);
-    updateLinks(0);
+    for(auto n : m_nodes) 
+        updateLinks(n->uid());
 }
 
 
