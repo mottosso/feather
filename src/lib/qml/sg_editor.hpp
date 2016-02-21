@@ -31,7 +31,7 @@
 #define NODE_WIDTH 100
 #define NODE_HEIGHT 40
 #define CONNECTION_WIDTH 10
-#define CONNECTION_HEIGHT 10 
+#define CONNECTION_HEIGHT 12 
 
 
 class SceneGraphEditor;
@@ -52,6 +52,10 @@ struct SGState {
     static int tgtFid;
     static SceneGraphEditor* pSge;
     static std::vector<SceneGraphConnection*> selectedConnections;
+    static void remove(SceneGraphConnection* conn) {
+        int count = 0;
+        std::for_each(selectedConnections.begin(), selectedConnections.end(),[&conn,&count](SceneGraphConnection* c){ if(c==conn){ selectedConnections.erase(selectedConnections.begin()+count); } else { count++; } });
+    }
 };
 
 
@@ -73,6 +77,7 @@ class SceneGraphConnection : public QQuickPaintedItem
         void paint(QPainter* painter);
         SceneGraphNode* node() { return m_node; };
         inline Connection type() { return m_type; };
+        inline unsigned int fid() { return m_fid; };
         inline void setSelected(bool s) { m_selected=s; };
 
     protected:
@@ -91,7 +96,7 @@ class SceneGraphConnection : public QQuickPaintedItem
         Connection m_type;
         QBrush m_connFillBrush;
         SceneGraphNode* m_node;
-        int m_fid;
+        unsigned int m_fid;
 };
 
 class SceneGraphNode : public QQuickPaintedItem
@@ -104,6 +109,10 @@ class SceneGraphNode : public QQuickPaintedItem
         void paint(QPainter* painter);
         void inConnectionPoint(unsigned int fid, QPointF& point);
         void outConnectionPoint(unsigned int fid, QPointF& point);
+        SceneGraphConnection* inConnection(unsigned int fid);
+        SceneGraphConnection* outConnection(unsigned int fid);
+        std::vector<SceneGraphConnection*>& inConnections();
+        std::vector<SceneGraphConnection*>& outConnections();
         inline int nid() { return m_nid; };
         inline int uid() { return m_uid; }; /*! Node's unique id assigned by the scenegraph. */
  
@@ -153,13 +162,15 @@ class SceneGraphLink : public QQuickPaintedItem
     Q_OBJECT
     
     public:
-        SceneGraphLink(SceneGraphNode* snode, SceneGraphNode* tnode, QQuickItem* parent=0);
+        SceneGraphLink(SceneGraphConnection* sconn, SceneGraphConnection* tconn, QQuickItem* parent=0);
         ~SceneGraphLink();
         void paint(QPainter* painter);
 
     private:
-        SceneGraphNode* m_snode; // source node
-        SceneGraphNode* m_tnode; // target node
+        //SceneGraphNode* m_snode; // source node
+        //SceneGraphNode* m_tnode; // target node
+        SceneGraphConnection* m_sconnection; // source connection
+        SceneGraphConnection* m_tconnection; // target connection
 };
 
 
@@ -220,7 +231,8 @@ class SceneGraphEditor : public QQuickPaintedItem
 
     private:
         void updateGraph();
-        void updateLeaf(SceneGraphNode* pnode, int uid, int xpos, int ypos);
+        void updateNode(SceneGraphNode* pnode, int uid, int xpos, int ypos);
+        void updateLinks(int uid);
         inline SceneGraphNode* getNode(int uid) { for(auto n : m_nodes){ if(n->uid()==uid){ return n; } } return nullptr; }; /*! Used to get the pointer of a node already in the node draw list. If the node's uid is not in the list a null pointer is returned. */
         int m_scale;
         int m_nodeWidth;
