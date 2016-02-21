@@ -66,6 +66,11 @@ FieldModel {
         addFieldName("world_rY",3,28)
         addFieldName("world_rZ",3,29)
  
+        // Empty
+        addFieldName("parent",5,1)
+        addFieldName("child",5,2)
+        addFieldName("time",5,3)
+
         // Polygon Shape 
         addFieldName("Parent",320,1)
         addFieldName("Mesh",320,3)

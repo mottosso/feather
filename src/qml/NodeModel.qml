@@ -29,6 +29,7 @@ ListModel {
     // Empty
     ListElement { text: "Empty"; nid: 1; type: Node.Empty }
     ListElement { text: "Camera"; nid: 2; type: Node.Camera }
+    ListElement { text: "Time"; nid: 5; type: Node.Time }
     //ListElement { text: "Light"; type: Node.Light }
     //ListElement { text: "Texture"; type: Node.Texture }
     //ListElement { text: "Modifier"; type: Node.Modifier }

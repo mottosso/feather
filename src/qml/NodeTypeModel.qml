@@ -27,6 +27,7 @@ import feather.node 1.0
 ListModel {
     //ListElement { text: "Null"; type: Node.Null }// will get an error if you use Null as an ListElement
     ListElement { text: "Empty"; type: Node.Empty }
+    ListElement { text: "Time"; type: Node.Time }
     //ListElement { text: "Camera"; type: Node.Camera }
     //ListElement { text: "Light"; type: Node.Light }
     //ListElement { text: "Texture"; type: Node.Texture }
