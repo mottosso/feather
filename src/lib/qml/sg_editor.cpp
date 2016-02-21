@@ -83,19 +83,7 @@ SceneGraphConnection::~SceneGraphConnection()
 void SceneGraphConnection::paint(QPainter* painter)
 {
     painter->setRenderHints(QPainter::Antialiasing, true);
- 
-    QPen textPen(QColor(NODE_TEXT_COLOR),2);
-    QFont textFont("DejaVuSans",7);
-    painter->setPen(textPen);
-    painter->setFont(textFont);
-    if(m_type == In) {
-        painter->drawText(QRect(CONNECTION_WIDTH+2,0,NODE_WIDTH/2,CONNECTION_HEIGHT),Qt::AlignLeft|Qt::AlignVCenter,m_name);
-    } else {
-        painter->drawText(QRect(0,0,(NODE_WIDTH/2)-2,CONNECTION_HEIGHT),Qt::AlignRight|Qt::AlignVCenter,m_name);
-    }
-
-
-
+    
     if(!m_selected){
         if(m_type == In)
             m_connFillBrush = QBrush(QColor(DESELECTED_IN_CONNECTOR_COLOR));
@@ -104,8 +92,26 @@ void SceneGraphConnection::paint(QPainter* painter)
     } else {
         m_connFillBrush = QBrush(QColor(SELECTED_CONNECTOR_COLOR));
     }
-    
+   
     painter->setBrush(m_connFillBrush);
+
+    // text block 
+    if(m_type == In)
+        painter->drawRect(CONNECTION_WIDTH+2,0,width(),height());
+    else
+        painter->drawRect(0,0,width()-CONNECTION_WIDTH,height());
+ 
+    QPen textPen(QColor(NODE_TEXT_COLOR),2);
+    QFont textFont("DejaVuSans",7);
+    painter->setPen(textPen);
+    painter->setFont(textFont);
+    if(m_type == In) {
+        painter->drawText(QRect(CONNECTION_WIDTH+2,0,NODE_WIDTH/2,height()),Qt::AlignLeft|Qt::AlignVCenter,m_name);
+    } else {
+        painter->drawText(QRect(0,0,(NODE_WIDTH/2)-2,height()),Qt::AlignRight|Qt::AlignVCenter,m_name);
+    }
+
+
     if(m_type == In) {
         painter->drawRect(0,0,CONNECTION_WIDTH,CONNECTION_HEIGHT);
     } else {
@@ -116,9 +122,21 @@ void SceneGraphConnection::paint(QPainter* painter)
 
 void SceneGraphConnection::mousePressEvent(QMouseEvent* event)
 {
+    std::cout << "connector mouse press event\n";
     MouseInfo::clickX = event->windowPos().x();
     MouseInfo::clickY = event->windowPos().y();
-    //update();
+
+    // add to selected connections
+    if(!m_selected) {
+        m_selected=true;
+        SGState::selectedConnections.push_back(this);
+    } else {
+        m_selected=false;
+        SGState::remove(this);
+    }
+
+    connClicked(event->button(),m_type);
+    update();
 }
 
 void SceneGraphConnection::mouseReleaseEvent(QMouseEvent* event)
@@ -242,6 +260,7 @@ SceneGraphNode::~SceneGraphNode()
 
 void SceneGraphNode::ConnPressed(Qt::MouseButton button, SceneGraphConnection::Connection conn)
 {
+    std::cout << "node got connector event\n";
     ConnClicked(button,conn,m_uid,m_nid); 
 }
 
@@ -478,10 +497,13 @@ SceneGraphEditor::~SceneGraphEditor()
 
 void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::Connection conn, int uid, int nid)
 {
+    std::cout << "sg editor got node connector event\n";
+
     feather::field::FieldBase* pfield;
     int i=1;
     feather::qml::command::get_field_base(uid,i,pfield);
 
+    /*
     m_connection->clear();
  
     while(pfield!=NULL)
@@ -502,6 +524,7 @@ void SceneGraphEditor::ConnOption(Qt::MouseButton button, SceneGraphConnection::
 
     m_connection->layoutChanged();
     openConnMenu();
+    */
 }
 
 void SceneGraphEditor::nodePressed(Qt::MouseButton button, int uid, int nid)
@@ -566,7 +589,7 @@ bool SceneGraphEditor::connectNodes()
                 if(c->type() == SceneGraphConnection::Out) {
                     // are they are two connections already connected?
                     feather::qml::command::connect_nodes(c->node()->uid(),c->fid(),in->node()->uid(),in->fid()); 
-                    m_links.push_back(new SceneGraphLink(c,in,this));
+                    m_links.push_back(new SceneGraphLink(in,c,this));
                  }
             }
         }
@@ -649,7 +672,7 @@ void SceneGraphEditor::updateNode(SceneGraphNode* pnode, int uid, int xpos, int 
         for(auto c : cuids) {
             // add the child node to draw list and get it's links
             updateNode(node, c, xpos+200, ypos+ystep);
-            ystep+=40;
+            ystep+=node->height()+40;
         } 
 
     }

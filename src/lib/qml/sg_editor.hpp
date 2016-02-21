@@ -31,7 +31,7 @@
 #define NODE_WIDTH 100
 #define NODE_HEIGHT 40
 #define CONNECTION_WIDTH 10
-#define CONNECTION_HEIGHT 10 
+#define CONNECTION_HEIGHT 12 
 
 
 class SceneGraphEditor;
@@ -52,6 +52,10 @@ struct SGState {
     static int tgtFid;
     static SceneGraphEditor* pSge;
     static std::vector<SceneGraphConnection*> selectedConnections;
+    static void remove(SceneGraphConnection* conn) {
+        int count = 0;
+        std::for_each(selectedConnections.begin(), selectedConnections.end(),[&conn,&count](SceneGraphConnection* c){ if(c==conn){ selectedConnections.erase(selectedConnections.begin()+count); } else { count++; } });
+    }
 };
 
 
