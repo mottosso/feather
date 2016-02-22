@@ -53,7 +53,7 @@ Rectangle {
             // draw connections
             context.strokeStyle = "#090909"
             context.path = path
-            context.lineWidth = 1
+            context.lineWidth = 2
             context.stroke()
             path.startY = path.startY + 100
             context.path = path
