@@ -21,7 +21,7 @@
  *
  ***********************************************************************/
 
-import QtQuick 2.3
+import QtQuick 2.5
 import feather.node 1.0
 
 ListModel {
@@ -33,6 +33,7 @@ ListModel {
     //ListElement { text: "Modifier"; type: Node.Modifier }
     //ListElement { text: "Deformer"; type: Node.Deformer }
     ListElement { text: "Manipulator"; type: Node.Manipulator }
+    ListElement { text: "Time"; type: Node.Time }
     //ListElement { text: "Shader"; type: Node.Shader }
     //ListElement { text: "Object"; type: Node.Object }
     //ListElement { text: "Curve"; type: Node.Curve }

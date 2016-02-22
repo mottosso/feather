@@ -47,7 +47,7 @@ ApplicationWindow {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottom: cmdLineId.top
+        anchors.bottom: timeEditor.top
         orientation: Qt.Horizontal
 
         SceneGraphEditor{
@@ -88,6 +88,13 @@ ApplicationWindow {
 
         }
 
+    }
+
+    TimeEditor {
+        id: timeEditor
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: cmdLineId.top
     }
  
     CommandLine {

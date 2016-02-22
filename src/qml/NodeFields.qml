@@ -37,59 +37,72 @@ FieldModel {
         addFieldName("type",2,3)
         addFieldName("fov",2,4)
 
-        // Transform
-        addFieldName("tX",3,3)
-        addFieldName("tY",3,4)
-        addFieldName("tZ",3,5)
-        addFieldName("sX",3,6)
-        addFieldName("sY",3,7)
-        addFieldName("sZ",3,8)
-        addFieldName("rX",3,9)
-        addFieldName("rY",3,10)
-        addFieldName("rZ",3,11)
-        addFieldName("local_tX",3,12)
-        addFieldName("local_tY",3,13)
-        addFieldName("local_tZ",3,14)
-        addFieldName("local_sX",3,15)
-        addFieldName("local_sY",3,16)
-        addFieldName("local_sZ",3,17)
-        addFieldName("local_rX",3,18)
-        addFieldName("local_rY",3,19)
-        addFieldName("local_rZ",3,20)
-        addFieldName("world_tX",3,21)
-        addFieldName("world_tY",3,22)
-        addFieldName("world_tZ",3,23)
-        addFieldName("world_sX",3,24)
-        addFieldName("world_sY",3,25)
-        addFieldName("world_sZ",3,26)
-        addFieldName("world_rX",3,27)
-        addFieldName("world_rY",3,28)
-        addFieldName("world_rZ",3,29)
+        // Shape 
+        addFieldName("parent",3,1)
+        addFieldName("child",3,2)
+        addFieldName("meshIn",3,3)
+        addFieldName("meshOut",3,4)
  
-        // Polygon Shape 
-        addFieldName("Parent",320,1)
-        addFieldName("Mesh",320,3)
-        addFieldName("Test",320,4)
-        // Out
-        addFieldName("Child",320,2)
+        // Time 
+        addFieldName("parent",4,1)
+        addFieldName("child",4,2)
+        addFieldName("time",4,3)
+
+        // Transform
+        addFieldName("parent",5,1)
+        addFieldName("child",5,2)
+        addFieldName("tX",5,3)
+        addFieldName("tY",5,4)
+        addFieldName("tZ",5,5)
+        addFieldName("sX",5,6)
+        addFieldName("sY",5,7)
+        addFieldName("sZ",5,8)
+        addFieldName("rX",5,9)
+        addFieldName("rY",5,10)
+        addFieldName("rZ",5,11)
+        addFieldName("local_tX",5,12)
+        addFieldName("local_tY",5,13)
+        addFieldName("local_tZ",5,14)
+        addFieldName("local_sX",5,15)
+        addFieldName("local_sY",5,16)
+        addFieldName("local_sZ",5,17)
+        addFieldName("local_rX",5,18)
+        addFieldName("local_rY",5,19)
+        addFieldName("local_rZ",5,20)
+        addFieldName("world_tX",5,21)
+        addFieldName("world_tY",5,22)
+        addFieldName("world_tZ",5,23)
+        addFieldName("world_sX",5,24)
+        addFieldName("world_sY",5,25)
+        addFieldName("world_sZ",5,26)
+        addFieldName("world_rX",5,27)
+        addFieldName("world_rY",5,28)
+        addFieldName("world_rZ",5,29)
 
         // Polygon Shape 
-        addFieldName("Parent",321,1)
-        addFieldName("SubX",321,3)
-        addFieldName("SubY",321,4)
+        addFieldName("parent",320,1)
+        addFieldName("mesh",320,3)
+        addFieldName("test",320,4)
         // Out
-        addFieldName("Child",321,2)
-        addFieldName("Mesh",321,5)
+        addFieldName("child",320,2)
+
+        // Polygon Shape 
+        addFieldName("parent",321,1)
+        addFieldName("subX",321,3)
+        addFieldName("subY",321,4)
+        // Out
+        addFieldName("child",321,2)
+        addFieldName("mesh",321,5)
 
         // Polygon Cube
         // In
-        addFieldName("Parent",322,1)
-        addFieldName("SubX",322,3)
-        addFieldName("SubY",322,4)
-        addFieldName("SubZ",322,5)
+        addFieldName("parent",322,1)
+        addFieldName("subX",322,3)
+        addFieldName("subY",322,4)
+        addFieldName("subZ",322,5)
         // Out 
-        addFieldName("Child",322,2)
-        addFieldName("Mesh",322,6)
+        addFieldName("child",322,2)
+        addFieldName("mesh",322,6)
     }
 
 }

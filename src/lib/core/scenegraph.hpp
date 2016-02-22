@@ -68,10 +68,9 @@ namespace feather
 
     static state::FState cstate;
     static std::vector<FLayer> layers;
+    static FTime time;
     static FSceneGraph sg;
-
     static PluginManager plugins;
-
     static std::vector<FNodeDescriptor> node_selection;
 
     namespace scenegraph
@@ -902,6 +901,10 @@ namespace scenegraph
 
         return status();   
     }
+
+    FTime get_time() { return time; };
+ 
+    void set_time(FTime t) { time=t; };
  
     //template <int _Type, int _Node>
     //status add_node(int id) { return status(FAILED,"no matching node for add_node"); };

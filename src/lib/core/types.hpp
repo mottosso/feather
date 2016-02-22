@@ -134,6 +134,21 @@ namespace feather
     };
 
 
+    // Time
+    struct FTime
+    {
+        double time; // time in milliseconds
+        double fps; // frames per second
+    };
+
+    struct FSmpte
+    {
+        int hour;
+        int minute;
+        int second;
+        int frame;
+    };
+
 
     // Mesh Components
 

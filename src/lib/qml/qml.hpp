@@ -189,7 +189,8 @@ class Field: public QObject
             VertexArray=field::VertexArray,
             VectorArray=field::VectorArray,
             RGBArray=field::RGBArray,
-            RGBAArray=field::RGBAArray
+            RGBAArray=field::RGBAArray,
+            Time=field::Time
         };
 
     signals:
@@ -265,6 +266,7 @@ class Node: public QObject
         enum Type {
             Empty = node::Empty,
             Camera = node::Camera,
+            Time = node::Time,
             Light = node::Light,
             Texture = node::Texture,
             Modifier = node::Modifier,

@@ -40,6 +40,7 @@ namespace feather
             Null,
             Empty,
             Camera,
+            Time,
             Light,
             Texture,
             Modifier,
