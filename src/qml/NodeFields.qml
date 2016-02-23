@@ -46,7 +46,14 @@ FieldModel {
         // Time 
         addFieldName("parent",4,1)
         addFieldName("child",4,2)
-        addFieldName("time",4,3)
+        addFieldName("stime",4,3)
+        addFieldName("etime",4,4)
+        addFieldName("cpos",4,5)
+        addFieldName("fps",4,6)
+        addFieldName("stime",4,7)
+        addFieldName("etime",4,8)
+        addFieldName("cpos",4,9)
+        addFieldName("fps",4,10)
 
         // Transform
         addFieldName("parent",5,1)

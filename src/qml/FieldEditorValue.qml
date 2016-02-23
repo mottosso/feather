@@ -21,7 +21,7 @@
  *
  ***********************************************************************/
 
-import QtQuick 2.3
+import QtQuick 2.5
 import feather.field 1.0
 
 Rectangle {
@@ -33,7 +33,24 @@ Rectangle {
     property alias fieldKey: field.field // this is the fields number assigned by the plugin
     //property alias label: label.text 
     property int fieldType: 0 
-    property int value: field.intVal
+    property int value: {
+        switch(field.type) {
+            case Field.Bool:
+                return field.boolVal
+                break
+            case Field.Int:
+                return field.intVal
+                break
+            case Field.Float:
+                return field.floatVal
+                break
+            case Field.Double:
+                return field.doubleVal
+                break
+            default:
+                return field.intVal
+        }
+    }
     property Properties properties: Null
     property alias label: label.text
 
@@ -182,13 +199,29 @@ Rectangle {
         onReleased: { intField.state="normal" }
         onEntered: { intField.state="hover" }
         onExited: { intField.state="normal" }
-        onWheel: { field.intVal = field.intVal+1 }
+        onWheel: {
+            console.log("fieldType:" + field.type)
+            switch(field.type) {
+                case Field.Bool || Field.BoolArray: field.boolVal = (!field.boolVal) ? true : false ; break;
+                case Field.Int || Field.IntArray: field.intVal = field.intVal + 1; break;
+                case Field.Float || Field.FloatArray: field.floatVal = field.floatVal + 1 ; break;
+                case Field.Double || Field.DoubleArray: field.doubleVal = field.doubleVal + 1 ; break;
+                case Field.Vertex || Field.VertexArray: ; break;
+                case Field.Vector || Field.VectorArray: ; break;
+                case Field.Mesh: ; break;
+                case Field.RGB || Field.RGBA: ; break;
+                default: ;
+            }
+ 
+            //field.intVal = field.intVal+1
+        }
     }
 
     Component.onCompleted: { intField.state="normal" }
 
     function typeNormalStateColor(t) {
-        switch(intField.fieldType) {
+        //switch(intField.fieldType) {
+        switch(field.type) {
             case Field.Bool || Field.BoolArray: return properties.getColor("boolType"); break;
             case Field.Int || Field.IntArray: return properties.getColor("intType"); break;
             case Field.Float || Field.FloatArray: return properties.getColor("floatType"); break;
