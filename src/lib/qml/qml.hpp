@@ -104,9 +104,11 @@ class Field: public QObject
         Q_PROPERTY(int uid READ uid WRITE setUid)
         Q_PROPERTY(int node READ node WRITE setNode)
         Q_PROPERTY(int field READ field WRITE setField)
+        Q_PROPERTY(int type READ type NOTIFY typeChanged)
         Q_PROPERTY(bool boolVal READ boolVal WRITE setBoolVal NOTIFY boolValChanged)
         Q_PROPERTY(int intVal READ intVal WRITE setIntVal NOTIFY intValChanged)
         Q_PROPERTY(float floatVal READ floatVal WRITE setFloatVal NOTIFY floatValChanged)
+        Q_PROPERTY(double doubleVal READ doubleVal WRITE setDoubleVal NOTIFY doubleValChanged)
         Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
  
     public:
@@ -140,19 +142,24 @@ class Field: public QObject
 
         int field() { return m_field; }
 
+        // type 
+        int type();
+
         // boolVal 
         void setBoolVal(bool& v) {
             if(m_boolVal != v) {
                 m_boolVal = v;
+                set_bool_val();
                 emit boolValChanged();
             }
         }
 
-        bool boolVal() { return m_boolVal; }
+        bool boolVal() { get_bool_val(); return m_boolVal; }
 
         // intVal 
         void setIntVal(int& v) {
             if(m_intVal != v) {
+                //std::cout << "int changed\n";
                 m_intVal = v;
                 set_int_val(); 
                 emit intValChanged();
@@ -164,12 +171,26 @@ class Field: public QObject
         // floatVal 
         void setFloatVal(float& v) {
             if(m_floatVal != v) {
+                //std::cout << "float changed\n";
                 m_floatVal = v;
+                set_float_val();
                 emit floatValChanged();
             }
         }
 
-        float floatVal() { return m_floatVal; };
+        float floatVal() { get_float_val(); return m_floatVal; };
+
+        // doubleVal 
+        void setDoubleVal(double& v) {
+            if(m_doubleVal != v) {
+                //std::cout << "double changed\n";
+                m_doubleVal = v;
+                set_double_val();
+                emit doubleValChanged();
+            }
+        }
+
+        double doubleVal() { get_double_val(); return m_doubleVal; };
 
         bool connected() { get_connected(); return m_connected; };
 
@@ -194,9 +215,11 @@ class Field: public QObject
         };
 
     signals:
+        void typeChanged();
         void boolValChanged();
         void intValChanged();
         void floatValChanged();
+        void doubleValChanged();
         void connectedChanged();
 
     private:
@@ -204,19 +227,24 @@ class Field: public QObject
         void get_bool_val();
         void get_int_val();
         void get_float_val();
+        void get_double_val();
+
         // set feild value
         void set_bool_val();
         void set_int_val();
         void set_float_val();
+        void set_double_val();
 
         void get_connected();
 
         int m_uid; // unique number of the node in the sg
         int m_node; // node key
         int m_field; // field key
+        Type m_type; // type
         bool m_boolVal;
         int m_intVal;
         float m_floatVal;
+        double m_doubleVal;
         bool m_connected;
 };
 
