@@ -37,7 +37,9 @@ status qml::command::init() {
 
     status e;
     int root = add_node(1,"root"); // Empty 
+    int time = add_node(4,"time"); // Time 
     int camera = add_node(2,"camera"); // Camera 
+    connect_nodes(root,2,time,1);
     connect_nodes(root,2,camera,1);
 
     //int uid1 = add_node(320,"CubeShape"); // PolyShape
@@ -124,6 +126,16 @@ status qml::command::connect_nodes(int n1, int f1, int n2, int f2)
 void qml::command::get_node_icon(const unsigned int nid, std::string& file, status& e)
 {
     scenegraph::get_node_icon(nid,file,e);
+}
+
+void qml::command::get_node_by_name(std::string name, unsigned int& uid)
+{
+    scenegraph::get_node_by_name(name,uid);
+}
+
+void qml::command::get_node_by_type(node::Type type, std::vector<unsigned int>& uids)
+{
+    scenegraph::get_node_by_type(type,uids);
 }
 
 unsigned int qml::command::get_node_id(const unsigned int uid, status& e)

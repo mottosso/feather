@@ -222,6 +222,21 @@ namespace feather
             uids.push_back(i);
     }
 
+    void get_node_by_name(std::string name, unsigned int& uid) {
+        int count = num_vertices(sg);
+        for(int i=0; i < count; i++){
+            if(sg[i].name == name)
+                uid = i;
+        }
+    }
+
+    void get_node_by_type(node::Type type, std::vector<unsigned int>& uids) {
+        int count = num_vertices(sg);
+        for(int i=0; i < count; i++){
+            if(sg[i].type == type)
+                uids.push_back(i);
+        }
+    }
 
     void get_node_name(const unsigned int uid, std::string& name, status& error) {
         // TODO verify that uid exist and set the error if it doesn't

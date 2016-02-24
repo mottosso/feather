@@ -68,6 +68,7 @@ class SceneGraph : public QObject
         Q_INVOKABLE int add_node(int node, QString name);
         Q_INVOKABLE bool remove_node(int uid);
         Q_INVOKABLE QString node_name(int uid);
+        Q_INVOKABLE int get_node_by_name(QString name);
         Q_INVOKABLE int node_id(int uid);
         Q_INVOKABLE int connect_nodes(int n1, int f1, int n2, int f2);
         Q_INVOKABLE int selected_node();
@@ -94,6 +95,7 @@ class SceneGraph : public QObject
         void nodeRemoved(int uid);
         void nodesRemoved();
         void cleared();
+        void nodeFieldChanged(unsigned int uid, unsigned int nid, unsigned int fid);
 };
 
 // FIELD 
@@ -221,7 +223,7 @@ class Field: public QObject
         void floatValChanged();
         void doubleValChanged();
         void connectedChanged();
-
+        
     private:
         // get field value
         void get_bool_val();

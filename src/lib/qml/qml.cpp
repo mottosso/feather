@@ -66,6 +66,13 @@ QString SceneGraph::node_name(int uid)
     return QString(name.c_str());
 }
 
+int SceneGraph::get_node_by_name(QString name)
+{
+    unsigned int uid=0;
+    qml::command::get_node_by_name(name.toStdString(),uid);
+    return uid;
+}
+
 int SceneGraph::node_id(int uid)
 {
     status e;
