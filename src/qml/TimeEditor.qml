@@ -22,6 +22,7 @@
  ***********************************************************************/
 
 import QtQuick 2.5
+import feather.scenegraph 1.0
 
 Rectangle {
     id: editor
@@ -113,5 +114,9 @@ Rectangle {
         anchors.top: controller.bottom
         anchors.left: slider.right
         anchors.margins: 2
+    }
+
+    Component.onCompleted: {
+        console.log("time node uid = " + SceneGraph.get_node_by_name("time"))
     }
 }

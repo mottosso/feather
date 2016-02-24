@@ -53,6 +53,8 @@ namespace feather
             bool node_exists(int uid);
             status connect_nodes(int n1, int f1, int n2, int f2); 
             void get_node_icon(const unsigned int nid, std::string& file, status& error);
+            void get_node_by_name(std::string name, unsigned int& uid);
+            void get_node_by_type(node::Type type, std::vector<unsigned int>& uids);
             unsigned int get_node_id(const unsigned int uid, status& error);
             status get_node_connected_uids(int uid, std::vector<int>& uids);
             status get_node_connected_uids(int uid, int fid, std::vector<int>& uids);
