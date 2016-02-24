@@ -23,12 +23,13 @@
 
 import QtQuick 2.5
 import feather.field 1.0
+import feather.scenegraph 1.0
 
 Rectangle {
     id: intField
     height: 14
    
-    property alias uId: field.uid // this is a unique of the node 
+    property alias uId: field.uid // NOTE - you will get a seg fault if you change to uid instead of uId 
     property alias nodeKey: field.node // this if the node's number assigned by the plugin
     property alias fieldKey: field.field // this is the fields number assigned by the plugin
     //property alias label: label.text 
@@ -205,7 +206,7 @@ Rectangle {
                 case Field.Bool || Field.BoolArray: field.boolVal = (!field.boolVal) ? true : false ; break;
                 case Field.Int || Field.IntArray: field.intVal = field.intVal + 1; break;
                 case Field.Float || Field.FloatArray: field.floatVal = field.floatVal + 1 ; break;
-                case Field.Double || Field.DoubleArray: field.doubleVal = field.doubleVal + 1 ; break;
+                case Field.Double || Field.DoubleArray: field.doubleVal = field.doubleVal + 1; SceneGraph.nodeFieldChanged(uId,nodeKey,fieldKey); break;
                 case Field.Vertex || Field.VertexArray: ; break;
                 case Field.Vector || Field.VectorArray: ; break;
                 case Field.Mesh: ; break;

@@ -23,6 +23,7 @@
 
 import QtQuick 2.5
 import feather.scenegraph 1.0
+import feather.field 1.0
 
 Rectangle {
     id: editor
@@ -30,6 +31,8 @@ Rectangle {
     border.width: 1
     radius: 2
     color: "darkgrey"
+
+    property int uid: 0 
 
     Rectangle {
         id: start_time_box
@@ -45,7 +48,7 @@ Rectangle {
             id: stime
             anchors.fill: parent
             anchors.margins: 2
-            text: "0"
+            text: "0" 
             font.pixelSize: 14
             horizontalAlignment: TextEdit.AlignHCenter
             verticalAlignment: TextEdit.AlignVCenter
@@ -84,7 +87,7 @@ Rectangle {
             id: etime
             anchors.fill: parent
             anchors.margins: 2
-            text: "0"
+            text: "0" 
             font.pixelSize: 14
             horizontalAlignment: TextEdit.AlignHCenter
             verticalAlignment: TextEdit.AlignVCenter
@@ -116,7 +119,22 @@ Rectangle {
         anchors.margins: 2
     }
 
+    Field {
+        id: etimeField
+        //uid: SceneGraph.get_node_by_name("time")
+        uid: 1
+        field: 5
+    }
+
+    function updateFields(uid,nid,fid) {
+        console.log("update " + uid + " " + nid + " " + fid)
+        //etimeField.type = Field.Double
+        //etime.text = etimeField.doubleVal
+    }
+
     Component.onCompleted: {
-        console.log("time node uid = " + SceneGraph.get_node_by_name("time"))
+        editor.uid = SceneGraph.get_node_by_name("time") 
+        //etimeField.uid = uid
+        SceneGraph.nodeFieldChanged.connect(updateFields)
     }
 }
