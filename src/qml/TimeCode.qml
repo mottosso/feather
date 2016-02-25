@@ -31,8 +31,8 @@ Rectangle {
 
     property alias timeSize: label.font.pixelSize
     property alias timeColor: label.color
-    //property SMPTE smpte: SMPTE{} 
     property int mode: 0 // 0=stopped, 1=playing
+    property double pos: 0 // in seconds 
 
     Text {
         id: label
@@ -41,8 +41,7 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: 12
-        text: "00:00:00:00" 
-        //text: smpte.text 
+        text: pos 
     }    
 
 }

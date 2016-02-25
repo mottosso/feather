@@ -34,34 +34,23 @@ Rectangle {
 
     property int uid: 0 
 
-    Rectangle {
-        id: start_time_box
+    FieldValue {
+        id: stime
         width: 50
-        height: controller.height
+        height: controller.height 
         anchors.top: parent.top
         anchors.left: parent.left
-        border.width: 1
-        radius: 2
-        color: "grey"
-
-        TextEdit {
-            id: stime
-            anchors.fill: parent
-            anchors.margins: 2
-            text: "0" 
-            font.pixelSize: 14
-            horizontalAlignment: TextEdit.AlignHCenter
-            verticalAlignment: TextEdit.AlignVCenter
-        }
+        uid: SceneGraph.get_node_by_name("time")
+        nid: 4
+        fid: 3
     }
-
     
     Rectangle {
         id: bar_box
         height: controller.height 
-        anchors.left: start_time_box.right
+        anchors.left: stime.right
         anchors.top: parent.top
-        anchors.right: end_time_box.left
+        anchors.right: etime.left
         border.width: 1
         radius: 2
         color: "orange"
@@ -73,27 +62,16 @@ Rectangle {
         }
     }
 
-    Rectangle {
-        id: end_time_box
+    FieldValue {
+        id: etime
         width: 50
         height: controller.height 
         anchors.top: parent.top
         anchors.right: controller.left
-        border.width: 1
-        radius: 2
-        color: "grey"
-
-        TextEdit {
-            id: etime
-            anchors.fill: parent
-            anchors.margins: 2
-            text: "0" 
-            font.pixelSize: 14
-            horizontalAlignment: TextEdit.AlignHCenter
-            verticalAlignment: TextEdit.AlignVCenter
-        }
+        uid: SceneGraph.get_node_by_name("time")
+        nid: 4
+        fid: 4
     }
-
 
     TimeController {
         id: controller
@@ -119,22 +97,21 @@ Rectangle {
         anchors.margins: 2
     }
 
+
     Field {
-        id: etimeField
-        //uid: SceneGraph.get_node_by_name("time")
-        uid: 1
+        id: cposField
+        uid: SceneGraph.get_node_by_name("time")
+        node: 4
         field: 5
     }
 
     function updateFields(uid,nid,fid) {
-        console.log("update " + uid + " " + nid + " " + fid)
-        //etimeField.type = Field.Double
-        //etime.text = etimeField.doubleVal
+        stime.updateValue()
+        etime.updateValue()
+        timecode.pos = cposField.doubleVal
     }
 
     Component.onCompleted: {
-        editor.uid = SceneGraph.get_node_by_name("time") 
-        //etimeField.uid = uid
         SceneGraph.nodeFieldChanged.connect(updateFields)
     }
 }
