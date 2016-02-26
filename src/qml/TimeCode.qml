@@ -33,6 +33,13 @@ Rectangle {
     property alias timeColor: label.color
     property int mode: 0 // 0=stopped, 1=playing
     property double pos: 0 // in seconds 
+    property double fps: 24
+
+    SMPTE {
+        id: smpte
+        position: window.pos
+        fps: window.fps
+    }
 
     Text {
         id: label
@@ -41,7 +48,7 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: 12
-        text: pos 
+        text: smpte.timecode 
     }    
 
 }

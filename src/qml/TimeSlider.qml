@@ -28,9 +28,24 @@ Rectangle {
     color: "darkgrey"
     border.width: 1
     radius: 2
-
     width: 500
     height: 20
+    
+    // all these times are in seconds
+    property double stime: 0
+    property double etime: 10
+    property double spos: 0
+    property double epos: 10
+   
+    SMPTE {
+        id: spos_timecode
+        position: spos
+     }
+  
+    SMPTE {
+        id: epos_timecode
+        position: epos
+    }
 
     Rectangle {
         id: viewable
@@ -64,7 +79,7 @@ Rectangle {
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: 10
-            text: "00:00:00" 
+            text: spos_timecode.timecode
         }    
  
         Text {
@@ -77,7 +92,7 @@ Rectangle {
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: 10
-            text: "00:00:00" 
+            text: epos_timecode.timecode 
         }    
         
         Rectangle {
