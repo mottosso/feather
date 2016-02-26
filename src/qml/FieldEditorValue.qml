@@ -206,7 +206,7 @@ Rectangle {
                 case Field.Bool || Field.BoolArray: field.boolVal = (!field.boolVal) ? true : false ; break;
                 case Field.Int || Field.IntArray: field.intVal = field.intVal + 1; break;
                 case Field.Float || Field.FloatArray: field.floatVal = field.floatVal + 1 ; break;
-                case Field.Double || Field.DoubleArray: field.doubleVal = field.doubleVal + 1; SceneGraph.nodeFieldChanged(uId,nodeKey,fieldKey); break;
+                case Field.Double || Field.DoubleArray: field.doubleVal = field.doubleVal + 0.1; valueText.text = field.doubleVal.toFixed(2); SceneGraph.nodeFieldChanged(uId,nodeKey,fieldKey); break;
                 case Field.Vertex || Field.VertexArray: ; break;
                 case Field.Vector || Field.VectorArray: ; break;
                 case Field.Mesh: ; break;
