@@ -59,7 +59,7 @@ Rectangle {
             id: bar
             anchors.fill: parent
             anchors.margins: 2
-        }
+       }
     }
 
     FieldValue {
@@ -99,7 +99,7 @@ Rectangle {
 
 
     Field {
-        id: cposField
+        id: cpos
         uid: SceneGraph.get_node_by_name("time")
         node: 4
         field: 5
@@ -108,10 +108,19 @@ Rectangle {
     function updateFields(uid,nid,fid) {
         stime.updateValue()
         etime.updateValue()
-        timecode.pos = cposField.doubleVal
+        timecode.pos = cpos.doubleVal
+        bar.stime = stime.doubleValue
+        bar.etime = etime.doubleValue
+        bar.cpos = cpos.doubleVal
+        bar.updateBar()
     }
 
     Component.onCompleted: {
+        bar.stime = stime.doubleValue
+        bar.etime = etime.doubleValue
+        bar.cpos = cpos.doubleVal
+        //bar.updateBar()
+ 
         SceneGraph.nodeFieldChanged.connect(updateFields)
     }
 }
