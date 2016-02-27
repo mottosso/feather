@@ -30,9 +30,9 @@ Rectangle {
     width: 500
     height: 20
 
-    property double stime: 10.0
-    property double etime: 10000.0 // millisecs
-    property double cpos: 5000
+    property double stime: 0 // seconds
+    property double etime: 10 // seconds 
+    property double cpos: 5 // seconds
     property double duration: etime - stime
     property int display: 0 // 0=frames, 1=seconds, 2=smpte
     property double fps: 24
@@ -47,52 +47,93 @@ Rectangle {
 
             context.reset()
 
-            var secondX = width/(20*24)
-            var ppms = duration/width // pixels per msec
-            var mspf = 1000/fps // msec per frame
-            var ppf = width / ppms // pixels per frame
-            var spos = ( ( stime/mspf ) * ppms )
-            var cposX = ( ( cpos / ppms ) - ( stime / ppms ) )
-            var frameX = spos 
+            var length = (etime - stime)
+            var framecount = length * fps
+            var pps = width/length // pixels per second 
+            var ppf = pps/fps // pixels per frame
+            var fm = 100/ppf // frame multiplier
+            var spf = 1.0/fps // seconds per frame
+            var frameX = (stime - Math.floor(stime/spf)) * pps
+            var secondX = (stime - Math.floor(stime)) * pps 
+            var cposX = (cpos - stime) * pps
+            var cframe = Math.floor(cpos*fps)
 
-            console.log("duration:" + duration + ", ppf: " +  ppf + ", ppms:" + ppms + ", mspf:" +  mspf + ", spos:" + spos + ", cposX:" + cposX)
-
+            //console.log("duration:" + duration + ", ppf: " +  ppf + ", ppms:" + ppms + ", mspf:" +  mspf + ", spos:" + spos + ", cposX:" + cposX)
+ 
             // frames 
+
+            context.beginPath()
             while(frameX < width) {
                 // draw lines
-                context.strokeStyle = "#000000"
+                context.strokeStyle = "#444444"
                 context.lineWidth = 1
-                context.moveTo(frameX,0)
+                context.moveTo(frameX,(height/2))
                 context.lineTo(frameX,height)
                 context.stroke()
                 frameX = frameX + ppf
             }
+            context.stroke()
+ 
+            // seconds 
 
             context.beginPath()
+            while(secondX < width) {
+                // draw lines
+                context.strokeStyle = "#000000"
+                context.lineWidth = 1
+                context.moveTo(secondX,0)
+                context.lineTo(secondX,height)
+                context.stroke()
+                secondX = secondX + pps
+            }
+            context.stroke()
+
             // cpos 
+
+            context.beginPath()
             context.strokeStyle = "#ff0000"
-            context.lineWidth = 2
+            context.lineWidth = ppf 
             context.moveTo(cposX,0)
             context.lineTo(cposX,height)
             context.stroke()
 
-            /*
-            // draw connections
-            context.strokeStyle = "#090909"
-            context.path = path
-            context.lineWidth = 1
-            context.stroke()
-            path.startY = path.startY + 100
-            context.path = path
-            context.strokeStyle = "#f90909"
- 
-            context.stroke()
-            */
+            // display the frame number
+            context.fillText(cframe,cposX+4,height/2)
         }
  
     }
 
     function updateBar() {
-        requestPaint()
+        bar.requestPaint()
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true 
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+        onPressed: {
+            //if(mouse.button == Qt.RightButton)
+            // set cpos
+            var length = (etime - stime)
+            var pps = width/length // pixels per second 
+            cpos = stime + ( (width - (width - mouse.x)) / pps)
+            bar.requestPaint()            
+        }
+
+        onPositionChanged: {
+            //console.log("changed")
+            if(mouse.buttons == Qt.LeftButton) {
+                var length = (etime - stime)
+                var pps = width/length // pixels per second 
+                cpos = stime + ( (width - (width - mouse.x)) / pps)
+                bar.requestPaint()
+            }
+        }
+
+        onReleased: { }
+        onEntered: { } 
+        onExited: { }
+        onWheel: { }
     }
 }
