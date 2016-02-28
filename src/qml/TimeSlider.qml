@@ -28,15 +28,18 @@ Rectangle {
     color: "darkgrey"
     border.width: 1
     radius: 2
-    width: 500
     height: 20
-    
+    width: 400
+ 
     // all these times are in seconds
     property double stime: 0
     property double etime: 10
-    property double spos: 0
-    property double epos: 10
-   
+    property double spos: 2
+    property double epos: 9
+    property int cx: 0 // current click location
+
+    signal barChanged()
+
     SMPTE {
         id: spos_timecode
         position: spos
@@ -54,9 +57,9 @@ Rectangle {
         radius: 5
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        x: 100
-        width: 800
-
+        width: (slider.width/(etime-stime)) * (epos-spos)
+        x: (width / (etime - stime)) * spos
+ 
         Rectangle {
             id: viewable_start
             color: "blue"
@@ -67,6 +70,30 @@ Rectangle {
             border.width: 1
             width: height
             radius: height/2
+ 
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true 
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                onPositionChanged: {
+                    if(mouse.buttons == Qt.LeftButton) {
+                        var pos = mapToItem(slider,mouse.x,mouse.y,viewable.width,viewable.height)
+                        var pps = slider.width / (etime - stime)
+                        spos = (pos.x-width)/pps
+                        if(spos < stime)
+                            spos = stime
+                        if(spos > epos)
+                            spos = epos - 10
+                    }
+                }
+
+                onPressed: { viewable_start.color = "yellow"; var pos = mapToItem(slider,mouse.x,mouse.y,viewable.width,viewable.height); cx = pos.x }
+                onReleased: { viewable_start.color="blue" }
+                onEntered: { } 
+                onExited: { }
+                onWheel: { }
+            }
         }
 
         Text {
@@ -105,7 +132,73 @@ Rectangle {
             border.width: 1
             width: height
             radius: height/2
+ 
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true 
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                onPositionChanged: {
+                    if(mouse.buttons == Qt.LeftButton) {
+                        var pos = mapToItem(slider,mouse.x,mouse.y,viewable.width,viewable.height)
+                        var pps = slider.width / (etime - stime)
+                        epos = (pos.x+width)/pps
+                        if(epos > etime)
+                            epos = etime
+                        if(epos < spos)
+                            epos = spos + 10
+                    }
+                }
+
+                onPressed: { viewable_end.color = "yellow"; var pos = mapToItem(slider,mouse.x,mouse.y,viewable.width,viewable.height); cx = pos.x }
+                onReleased: { viewable_end.color="blue" }
+                onEntered: { } 
+                onExited: { }
+                onWheel: { }
+            }
+
         }
 
+        MouseArea {
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: viewable_end.left
+            anchors.left: viewable_start.right  
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+            onPositionChanged: {
+                //console.log("slider position changed")
+                if(mouse.buttons == Qt.LeftButton) {
+                    var pps = slider.width / (etime - stime)
+                    var dsec = (mouse.x - cx) / pps
+                    if((spos + dsec) < stime)
+                        spos = stime
+                    else if((epos + dsec) > etime)
+                        epos = etime
+                    else { 
+                        spos += dsec
+                        epos += dsec
+                    }
+                    viewable.x = pps * spos
+                }
+            }
+
+            onPressed: { cx = mouse.x }
+            onReleased: { }
+            onEntered: { } 
+            onExited: { }
+            onWheel: { }
+        }
     }
+    
+    // this is need since the width at Component.onCompleted is not correct
+    onWidthChanged: {
+        viewable.x = (width / (etime - stime)) * spos
+    }
+
+    onSposChanged: {
+        viewable.x = (width / (etime - stime)) * spos
+    }
+
+    Component.onCompleted: {}
 }
