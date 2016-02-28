@@ -28,6 +28,7 @@ import feather.field 1.0
 Rectangle {
     id: editor
     height: 50
+    width: 100
     border.width: 1
     radius: 2
     color: "darkgrey"
@@ -59,6 +60,8 @@ Rectangle {
             id: bar
             anchors.fill: parent
             anchors.margins: 2
+            stime: slider.spos
+            etime: slider.epos
        }
     }
 
@@ -85,7 +88,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.top: bar_box.bottom
         anchors.right: controller.left
-        anchors.margins: 2 
+        anchors.margins: 2
     }
 
     TimeCode {
@@ -109,17 +112,16 @@ Rectangle {
         stime.updateValue()
         etime.updateValue()
         timecode.pos = cpos.doubleVal
-        bar.stime = stime.doubleValue
-        bar.etime = etime.doubleValue
+        slider.stime = stime.doubleValue
+        slider.etime = etime.doubleValue
         bar.cpos = cpos.doubleVal
         bar.updateBar()
     }
 
     Component.onCompleted: {
-        bar.stime = stime.doubleValue
-        bar.etime = etime.doubleValue
+        slider.stime = stime.doubleValue
+        slider.etime = etime.doubleValue
         bar.cpos = cpos.doubleVal
-        //bar.updateBar()
  
         SceneGraph.nodeFieldChanged.connect(updateFields)
     }

@@ -33,7 +33,6 @@ Rectangle {
     property double stime: 0 // seconds
     property double etime: 10 // seconds 
     property double cpos: 5 // seconds
-    property double duration: etime - stime
     property int display: 0 // 0=frames, 1=seconds, 2=smpte
     property double fps: 24
 
@@ -44,7 +43,6 @@ Rectangle {
         anchors.margins: 2
 
         onPaint: {
-
             context.reset()
 
             var length = (etime - stime)
@@ -58,8 +56,6 @@ Rectangle {
             var cposX = (cpos - stime) * pps
             var cframe = Math.floor(cpos*fps)
 
-            //console.log("duration:" + duration + ", ppf: " +  ppf + ", ppms:" + ppms + ", mspf:" +  mspf + ", spos:" + spos + ", cposX:" + cposX)
- 
             // frames 
 
             context.beginPath()
@@ -102,6 +98,10 @@ Rectangle {
         }
  
     }
+
+    onStimeChanged: { updateBar() }
+
+    onEtimeChanged: { updateBar() }
 
     function updateBar() {
         bar.requestPaint()

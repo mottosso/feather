@@ -1,8 +1,8 @@
 /***********************************************************************
  *
- * Filename: IntField.qml 
+ * Filename: FieldValue.qml 
  *
- * Description: Reads and modifies int fields. 
+ * Description: Reads and modifies fields. 
  *
  * Copyright (C) 2015 Richard Layman, rlayman2000@yahoo.com 
  *
