@@ -30,16 +30,27 @@ Rectangle {
     height: 28 
     color: "lightgrey"
     border.width: 1
-    property int cpos: 0
+    property double cpos: 0
+    property double stime: 0
+    property double etime: 10
+    property double fps: 24
     //property alias smpte: time.smpte
-    property int state: 0 // 0=stop, 1=playforward, 2=playbackward
 
-    signal play()
-    signal seek(int pos) //msec
+    signal play_forward()
+    signal play_backward()
+    signal seek(double pos)
     signal stop()
     signal pause()
+    signal positionChanged(double pos)
 
     ExclusiveGroup { id: group }
+
+    Timer {
+        id: timer
+        repeat: true
+        running: false
+        interval: 1000/fps
+    }
 
     Item {
         id: controller
@@ -126,9 +137,55 @@ Rectangle {
         }
     }
 
-    function on_play(){
-        playForwardButton.checked=true
-        play()
+    onCposChanged: {
+        positionChanged(cpos) 
+    } 
+
+    function on_play_forward(){
+        if(!playForwardButton.checked) {
+            playForwardButton.checked=true
+            timer.start()
+            play_forward()
+        } else {
+            playForwardButton.checked=false
+            timer.stop()
+            stop()
+        }
+    }
+
+    function on_play_backward(){
+        if(!playBackwardButton.checked) {
+            playBackwardButton.checked=true
+            timer.start()
+            play_backward()
+        } else {
+            playBackwardButton.checked=false
+            timer.stop()
+            stop()
+        }
+    }
+
+    function update_play() {
+        if(playForwardButton.checked) {
+            var tpos = cpos + (1/fps)
+            if(tpos > etime) {
+                timer.stop()
+                cpos = etime     
+            } else {
+                cpos = tpos
+            }
+        }
+
+        else if(playBackwardButton.checked) {
+            var tpos = cpos - (1/fps)
+            if(tpos < stime) {
+                timer.stop()
+                cpos = stime     
+            } else {
+                cpos = tpos
+            }
+        }
+
     }
 
     function on_pause(){
@@ -136,8 +193,39 @@ Rectangle {
         pause()
     }
 
+    function on_rewind(){
+        cpos = stime
+    }
+
+    function on_fastforward(){
+        cpos = etime
+    }
+
+    function on_back_frame() {
+        var tpos = cpos - (1/fps)
+        if(tpos < stime)
+            cpos = stime
+        else
+            cpos = tpos
+    }
+
+    function on_forward_frame() {
+        var tpos = cpos + (1/fps)
+        if(tpos > etime)
+            cpos = etime
+        else
+            cpos = tpos
+    }
+
     Component.onCompleted: {
-        playForwardButton.buttonPressed.connect(on_play)
+        playForwardButton.buttonPressed.connect(on_play_forward)
+        playBackwardButton.buttonPressed.connect(on_play_backward)
+        rewindButton.buttonPressed.connect(on_rewind)
+        fastForwardButton.buttonPressed.connect(on_fastforward)
+        backFrameButton.buttonPressed.connect(on_back_frame)
+        forwardFrameButton.buttonPressed.connect(on_forward_frame)
+
+        timer.triggered.connect(update_play)
         //pauseButton.buttonPressed.connect(on_pause)
     }
 }

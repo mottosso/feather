@@ -80,6 +80,10 @@ Rectangle {
         id: controller
         anchors.top: parent.top
         anchors.right: parent.right
+        cpos: cpos.doubleVal
+        fps: fps.doubleVal
+        //stime: stime.doubleValue
+        //etime: etime.doubleValue
     }
 
     TimeSlider {
@@ -108,12 +112,35 @@ Rectangle {
         field: 5
     }
 
+    Field {
+        id: fps 
+        uid: SceneGraph.get_node_by_name("time")
+        node: 4
+        field: 6
+    }
+
+
     function updateFields(uid,nid,fid) {
         stime.updateValue()
         etime.updateValue()
-        timecode.pos = cpos.doubleVal
         slider.stime = stime.doubleValue
         slider.etime = etime.doubleValue
+        controller.stime = stime.doubleValue
+        controller.etime = etime.doubleValue
+        bar.cpos = cpos.doubleVal
+        bar.updateBar()
+        timecode.pos = cpos.doubleVal
+    }
+
+    function updatePosition(pos) {
+        console.log("new pos: " + cpos.doubleVal)
+        cpos.doubleVal = pos
+        //timecode.pos = cpos.doubleVal
+    }
+
+    function updateCPos() {
+        console.log("updating cpos")
+        timecode.pos = cpos.doubleVal
         bar.cpos = cpos.doubleVal
         bar.updateBar()
     }
@@ -122,7 +149,11 @@ Rectangle {
         slider.stime = stime.doubleValue
         slider.etime = etime.doubleValue
         bar.cpos = cpos.doubleVal
- 
+        controller.cpos = cpos.doubleVal
+        controller.stime = stime.doubleValue
+        controller.etime = etime.doubleValue
+        controller.positionChanged.connect(updatePosition) 
         SceneGraph.nodeFieldChanged.connect(updateFields)
+        cpos.doubleValChanged.connect(updateCPos)
     }
 }
