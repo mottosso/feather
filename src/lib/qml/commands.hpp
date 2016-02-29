@@ -96,14 +96,12 @@ namespace feather
             // get the field value
             status get_field_val(int uid, int node, int field, bool& val);
             status get_field_val(int uid, int node, int field, int& val);
-            status get_field_val(int uid, int node, int field, float& val);
-            status get_field_val(int uid, int node, int field, double& val);
+            status get_field_val(int uid, int node, int field, FReal& val);
             status get_field_val(int uid, int node, int field, FMesh& val);
             // set the field value
             status set_field_val(int uid, int node, int field, bool& val);
             status set_field_val(int uid, int node, int field, int& val);
-            status set_field_val(int uid, int node, int field, float& val);
-            status set_field_val(int uid, int node, int field, double& val);
+            status set_field_val(int uid, int node, int field, FReal& val);
 
             status get_field_connection_status(int uid, int field, bool& val);
             status get_field_connection_status(int uid, int node, int field, bool& val);

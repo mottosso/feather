@@ -42,11 +42,16 @@ Rectangle {
             case Field.Int:
                 return field.intVal
                 break
+            /*
             case Field.Float:
-                return field.floatVal
+                return field.realVal
                 break
             case Field.Double:
-                return field.doubleVal
+                return field.realVal
+                break
+            */
+            case Field.Real:
+                return field.realVal
                 break
             default:
                 return field.intVal
@@ -205,8 +210,9 @@ Rectangle {
             switch(field.type) {
                 case Field.Bool || Field.BoolArray: field.boolVal = (!field.boolVal) ? true : false ; break;
                 case Field.Int || Field.IntArray: field.intVal = field.intVal + 1; break;
-                case Field.Float || Field.FloatArray: field.floatVal = field.floatVal + 1 ; break;
-                case Field.Double || Field.DoubleArray: field.doubleVal = field.doubleVal + 0.1; valueText.text = field.doubleVal.toFixed(2); SceneGraph.nodeFieldChanged(uId,nodeKey,fieldKey); break;
+                //case Field.Float || Field.FloatArray: field.realVal = field.floatVal + 1 ; break;
+                //case Field.Double || Field.DoubleArray: field.realVal = field.realVal + 0.1; valueText.text = field.realVal.toFixed(2); SceneGraph.nodeFieldChanged(uId,nodeKey,fieldKey); break;
+                case Field.Real || Field.DoubleArray: field.realVal = field.realVal + 0.1; valueText.text = field.realVal.toFixed(2); SceneGraph.nodeFieldChanged(uId,nodeKey,fieldKey); break;
                 case Field.Vertex || Field.VertexArray: ; break;
                 case Field.Vector || Field.VectorArray: ; break;
                 case Field.Mesh: ; break;
@@ -225,8 +231,9 @@ Rectangle {
         switch(field.type) {
             case Field.Bool || Field.BoolArray: return properties.getColor("boolType"); break;
             case Field.Int || Field.IntArray: return properties.getColor("intType"); break;
-            case Field.Float || Field.FloatArray: return properties.getColor("floatType"); break;
-            case Field.Double || Field.DoubleArray: return properties.getColor("doubleType"); break;
+            //case Field.Float || Field.FloatArray: return properties.getColor("floatType"); break;
+            //case Field.Double || Field.DoubleArray: return properties.getColor("doubleType"); break;
+            case Field.Real || Field.DoubleArray: return properties.getColor("doubleType"); break;
             case Field.Vertex || Field.VertexArray: return properties.getColor("vertexType"); break;
             case Field.Vector || Field.VectorArray: return properties.getColor("vertexType"); break;
             case Field.Mesh: return properties.getColor("meshType"); break;

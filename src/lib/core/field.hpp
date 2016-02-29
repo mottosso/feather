@@ -43,21 +43,22 @@ namespace feather
             Int=2,
             Float=3,
             Double=4,
-            Vertex=5,
-            Vector=6,
-            Mesh=7,
-            RGB=8,
-            RGBA=9,
-            BoolArray=10,
-            IntArray=11,
-            FloatArray=12,
-            VertexArray=13,
-            VectorArray=14,
-            RGBArray=15,
-            RGBAArray=16,
-            Time=17,
-            Node=18,
-            START=19
+            Real=5,
+            Vertex=6,
+            Vector=7,
+            Mesh=8,
+            RGB=9,
+            RGBA=10,
+            BoolArray=11,
+            IntArray=12,
+            FloatArray=13,
+            VertexArray=14,
+            VectorArray=15,
+            RGBArray=16,
+            RGBAArray=17,
+            Time=18,
+            Node=19,
+            START=20
         };
 
         // TODO
@@ -106,6 +107,7 @@ namespace feather
         template <> bool can_connect<Int,Int>() { return true; };
         template <> bool can_connect<Double,Double>() { return true; };
         template <> bool can_connect<Float,Float>() { return true; };
+        template <> bool can_connect<Real,Real>() { return true; };
         template <> bool can_connect<Mesh,Mesh>() { return true; };
         template <> bool can_connect<Node,Node>() { return true; };
         template <> bool can_connect<Time,Time>() { return true; };

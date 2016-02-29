@@ -80,10 +80,10 @@ Rectangle {
         id: controller
         anchors.top: parent.top
         anchors.right: parent.right
-        cpos: cpos.doubleVal
-        fps: fps.doubleVal
-        //stime: stime.doubleValue
-        //etime: etime.doubleValue
+        cpos: cpos.realVal
+        fps: fps.realVal
+        //stime: stime.realValue
+        //etime: etime.realValue
     }
 
     TimeSlider {
@@ -123,37 +123,37 @@ Rectangle {
     function updateFields(uid,nid,fid) {
         stime.updateValue()
         etime.updateValue()
-        slider.stime = stime.doubleValue
-        slider.etime = etime.doubleValue
-        controller.stime = stime.doubleValue
-        controller.etime = etime.doubleValue
-        bar.cpos = cpos.doubleVal
+        slider.stime = stime.realValue
+        slider.etime = etime.realValue
+        controller.stime = stime.realValue
+        controller.etime = etime.realValue
+        bar.cpos = cpos.realVal
         bar.updateBar()
-        timecode.pos = cpos.doubleVal
+        timecode.pos = cpos.realVal
     }
 
     function updatePosition(pos) {
-        console.log("new pos: " + cpos.doubleVal)
-        cpos.doubleVal = pos
-        //timecode.pos = cpos.doubleVal
+        console.log("new pos: " + cpos.realVal)
+        cpos.realVal = pos
+        //timecode.pos = cpos.realVal
     }
 
     function updateCPos() {
         console.log("updating cpos")
-        timecode.pos = cpos.doubleVal
-        bar.cpos = cpos.doubleVal
+        timecode.pos = cpos.realVal
+        bar.cpos = cpos.realVal
         bar.updateBar()
     }
 
     Component.onCompleted: {
-        slider.stime = stime.doubleValue
-        slider.etime = etime.doubleValue
-        bar.cpos = cpos.doubleVal
-        controller.cpos = cpos.doubleVal
-        controller.stime = stime.doubleValue
-        controller.etime = etime.doubleValue
+        slider.stime = stime.realValue
+        slider.etime = etime.realValue
+        bar.cpos = cpos.realVal
+        controller.cpos = cpos.realVal
+        controller.stime = stime.realValue
+        controller.etime = etime.realValue
         controller.positionChanged.connect(updatePosition) 
         SceneGraph.nodeFieldChanged.connect(updateFields)
-        cpos.doubleValChanged.connect(updateCPos)
+        cpos.realValChanged.connect(updateCPos)
     }
 }

@@ -36,8 +36,9 @@ Rectangle {
     property alias fid: field.field 
     property alias boolValue: field.boolVal
     property alias intValue: field.intVal
-    property alias floatValue: field.floatVal
-    property alias doubleValue: field.doubleVal
+    //property alias floatValue: field.floatVal
+    //property alias doubleValue: field.doubleVal
+    property alias realValue: field.realVal
 
     Field {
         id: field
@@ -55,11 +56,16 @@ Rectangle {
                 case Field.Int:
                     return field.intVal
                     break
+                /*
                 case Field.Float:
-                    return field.floatVal
+                    return field.realVal
                     break
                 case Field.Double:
-                    return field.doubleVal
+                    return field.realVal
+                    break
+                */
+                case Field.Real:
+                    return field.realVal
                     break
                 default:
                     return field.intVal
@@ -129,11 +135,16 @@ Rectangle {
             case Field.Int:
                 field.intVal = box.value
                 break
+            /*
             case Field.Float:
-                field.floatVal = box.value
+                field.realVal = box.value
                 break
             case Field.Double:
-                field.doubleVal = box.value
+                field.realVal = box.value
+                break
+            */
+            case Field.Real:
+                field.realVal = box.value
                 break
             default:
                 field.intVal = box.value
@@ -157,11 +168,16 @@ Rectangle {
                 case Field.Int:
                     return field.intVal
                     break
+                /*
                 case Field.Float:
-                    return field.floatVal
+                    return field.realVal
                     break
                 case Field.Double:
-                    return field.doubleVal
+                    return field.realVal
+                    break
+                */
+                case Field.Real:
+                    return field.realVal
                     break
                 default:
                     return field.intVal
@@ -184,11 +200,16 @@ Rectangle {
                 case Field.Int:
                     field.intVal = field.intVal + 1
                     break
+                /*
                 case Field.Float:
-                    field.floatVal = field.floatVal + 0.1
+                    field.realVal = field.realVal + 0.1
                     break
                 case Field.Double:
-                    field.doubleVal = field.doubleVal + 0.1
+                    field.realVal = field.realVal + 0.1
+                    break
+                */
+                case Field.Real:
+                    field.realVal = field.realVal + 0.1
                     break
                 default:
                     field.intVal = field.intVal + 1
@@ -205,11 +226,16 @@ Rectangle {
             case Field.Int:
                 label.text = field.intVal
                 break
+            /*
             case Field.Float:
-                label.text = field.floatVal
+                label.text = field.realVal
                 break
             case Field.Double:
-                label.text = field.doubleVal
+                label.text = field.realVal
+                break
+            */
+            case Field.Real:
+                label.text = field.realVal
                 break
             default:
                 label.text = field.intVal

@@ -37,6 +37,7 @@ namespace feather
     typedef unsigned int FUInt;
     typedef float FFloat;
     typedef double FDouble;
+    typedef double FReal;
     typedef std::string FString;
     typedef struct{double x; double y;} FPoint2D;
     typedef struct{double x; double y; double z;} FPoint3D;

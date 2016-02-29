@@ -132,6 +132,8 @@ bool FieldModel::show_fid(int type)
             return true; 
         case feather::field::Double:
             return true; 
+        case feather::field::Real:
+            return true; 
         case feather::field::Vertex:
             return true; 
         case feather::field::Vector:
