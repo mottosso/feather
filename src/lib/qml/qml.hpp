@@ -289,7 +289,9 @@ class Node: public QObject
             Shader = node::Shader,
             Object = node::Object,
             Curve = node::Curve,
-            Polygon = node::Polygon 
+            Polygon = node::Polygon,
+            Shape = node::Shape,
+            Tool = node::Tool
         };
 
     signals:

@@ -51,6 +51,7 @@ namespace feather
             Curve,
             Polygon,
             Shape,
+            Tool,
             N
         };
 
