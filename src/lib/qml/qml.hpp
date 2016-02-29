@@ -109,8 +109,7 @@ class Field: public QObject
         Q_PROPERTY(int type READ type NOTIFY typeChanged)
         Q_PROPERTY(bool boolVal READ boolVal WRITE setBoolVal NOTIFY boolValChanged)
         Q_PROPERTY(int intVal READ intVal WRITE setIntVal NOTIFY intValChanged)
-        Q_PROPERTY(float floatVal READ floatVal WRITE setFloatVal NOTIFY floatValChanged)
-        Q_PROPERTY(double doubleVal READ doubleVal WRITE setDoubleVal NOTIFY doubleValChanged)
+        Q_PROPERTY(double realVal READ realVal WRITE setRealVal NOTIFY realValChanged)
         Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
  
     public:
@@ -170,29 +169,17 @@ class Field: public QObject
 
         int intVal() { get_int_val(); return m_intVal; }
 
-        // floatVal 
-        void setFloatVal(float& v) {
-            if(m_floatVal != v) {
-                //std::cout << "float changed\n";
-                m_floatVal = v;
-                set_float_val();
-                emit floatValChanged();
+        // realVal 
+        void setRealVal(double& v) {
+            if(m_realVal != v) {
+                //std::cout << "real changed\n";
+                m_realVal = v;
+                set_real_val();
+                emit realValChanged();
             }
         }
 
-        float floatVal() { get_float_val(); return m_floatVal; };
-
-        // doubleVal 
-        void setDoubleVal(double& v) {
-            if(m_doubleVal != v) {
-                //std::cout << "double changed\n";
-                m_doubleVal = v;
-                set_double_val();
-                emit doubleValChanged();
-            }
-        }
-
-        double doubleVal() { get_double_val(); return m_doubleVal; };
+        FReal realVal() { get_real_val(); return m_realVal; };
 
         bool connected() { get_connected(); return m_connected; };
 
@@ -201,6 +188,7 @@ class Field: public QObject
             Int=field::Int,
             Float=field::Float,
             Double=field::Double,
+            Real=field::Real,
             Vertex=field::Vertex,
             Vector=field::Vector,
             Mesh=field::Mesh,
@@ -220,22 +208,19 @@ class Field: public QObject
         void typeChanged();
         void boolValChanged();
         void intValChanged();
-        void floatValChanged();
-        void doubleValChanged();
+        void realValChanged();
         void connectedChanged();
         
     private:
         // get field value
         void get_bool_val();
         void get_int_val();
-        void get_float_val();
-        void get_double_val();
+        void get_real_val();
 
-        // set feild value
+        // set field value
         void set_bool_val();
         void set_int_val();
-        void set_float_val();
-        void set_double_val();
+        void set_real_val();
 
         void get_connected();
 
@@ -245,8 +230,7 @@ class Field: public QObject
         Type m_type; // type
         bool m_boolVal;
         int m_intVal;
-        float m_floatVal;
-        double m_doubleVal;
+        FReal m_realVal;
         bool m_connected;
 };
 

@@ -168,7 +168,7 @@ QList<unsigned int> SceneGraph::connected_fields(unsigned int uid, unsigned int 
 
 
 // Field
-Field::Field(QObject* parent): m_uid(0),m_node(0),m_field(0),m_boolVal(false),m_intVal(0),m_floatVal(0.0),m_doubleVal(0.0),m_connected(false)
+Field::Field(QObject* parent): m_uid(0),m_node(0),m_field(0),m_boolVal(false),m_intVal(0),m_realVal(0.0),m_connected(false)
 {
 }
 
@@ -195,14 +195,9 @@ void Field::get_int_val()
     qml::command::get_field_val(m_uid,m_node,m_field,m_intVal);
 }
 
-void Field::get_float_val()
+void Field::get_real_val()
 {
-    qml::command::get_field_val(m_uid,m_node,m_field,m_floatVal);
-}
-
-void Field::get_double_val()
-{
-    qml::command::get_field_val(m_uid,m_node,m_field,m_doubleVal);
+    qml::command::get_field_val(m_uid,m_node,m_field,m_realVal);
 }
 
 // SET FEILD VALUES
@@ -217,14 +212,9 @@ void Field::set_int_val()
     qml::command::set_field_val(m_uid,m_node,m_field,m_intVal);
 }
 
-void Field::set_float_val()
+void Field::set_real_val()
 {
-    qml::command::set_field_val(m_uid,m_node,m_field,m_floatVal);
-}
-
-void Field::set_double_val()
-{
-    qml::command::set_field_val(m_uid,m_node,m_field,m_doubleVal);
+    qml::command::set_field_val(m_uid,m_node,m_field,m_realVal);
 }
 
 // GET CONNECTED

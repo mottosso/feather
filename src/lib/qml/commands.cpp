@@ -287,20 +287,13 @@ status qml::command::get_field_val(int uid, int node, int field, int& val)
     return status();
 }
 
-// float
-status qml::command::get_field_val(int uid, int node, int field, float& val)
+// real 
+status qml::command::get_field_val(int uid, int node, int field, FReal& val)
 {
-    val=0.0;
-    return status();
-}
-
-// double
-status qml::command::get_field_val(int uid, int node, int field, double& val)
-{
-    typedef field::Field<double>* fielddata;
+    typedef field::Field<FReal>* fielddata;
     fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
     if(!f)
-        std::cout << uid << "," << node << "," << field << " NULL DOUBLE FIELD\n";
+        std::cout << uid << "," << node << "," << field << " NULL REAL FIELD\n";
     else  
         val=f->value;
     return status();
@@ -339,27 +332,13 @@ status qml::command::set_field_val(int uid, int node, int field, int& val)
     return status();
 }
 
-// float 
-status qml::command::set_field_val(int uid, int node, int field, float& val)
+// real 
+status qml::command::set_field_val(int uid, int node, int field, FReal& val)
 {
-    //std::cout << "command float changed\n";
-    typedef field::Field<float>* fielddata;
+    typedef field::Field<FReal>* fielddata;
     fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
     if(!f)
-        std::cout << "NULL FLOAT FIELD\n";
-    else  
-        f->value=val;
-    return status();
-}
-
-// double
-status qml::command::set_field_val(int uid, int node, int field, double& val)
-{
-    //std::cout << "command double changed\n";
-    typedef field::Field<double>* fielddata;
-    fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
-    if(!f)
-        std::cout << "NULL DOUBLE FIELD\n";
+        std::cout << "NULL REAL FIELD\n";
     else  
         f->value=val;
     return status();
