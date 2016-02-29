@@ -35,7 +35,10 @@ ListModel {
     //ListElement { text: "Deformer"; type: Node.Deformer }
     // Manipulator
     ListElement { text: "Time"; nid: 4; type: Node.Time }
-    ListElement { text: "Transform"; nid: 5; type: Node.Manipulator }
+    ListElement { text: "Transform"; nid: 7; type: Node.Manipulator }
+    // Tool
+    ListElement { text: "Multiply"; nid: 5; type: Node.Tool }
+    ListElement { text: "Divide"; nid: 6; type: Node.Tool }
     //ListElement { text: "Shader"; type: Node.Shader }
     // Object
     //ListElement { text: "Empty"; nid: 0; type: Node.Object }
