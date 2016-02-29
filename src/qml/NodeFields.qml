@@ -59,13 +59,15 @@ FieldModel {
         addFieldName("parent",5,1)
         addFieldName("child",5,2)
         addFieldName("value",5,3)
-        addFieldName("value",5,4)
+        addFieldName("mult",5,4)
+        addFieldName("value",5,5)
  
         // Divide 
         addFieldName("parent",6,1)
         addFieldName("child",6,2)
         addFieldName("value",6,3)
-        addFieldName("value",6,4)
+        addFieldName("div",6,4)
+        addFieldName("value",6,5)
 
         // Transform
         addFieldName("parent",7,1)
