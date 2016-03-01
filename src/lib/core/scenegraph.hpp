@@ -302,6 +302,7 @@ namespace feather
      */
     field::FieldBase* get_fieldBase(int uid, int nid, int fid) {
         field::FieldBase* f = plugins.get_fieldBase(uid,nid,fid,sg[uid].fields); 
+        std::cout << "CALLING get_fieldBase - uid:" << uid << " nid:" << nid << " fid:" << fid << " connected:" << f->connected << std::endl;
         if(!f || f->connected) {
             //f = sg[uid].fields.at(fid); // TODO fix this once the rest works!
             //if(!f)
@@ -310,7 +311,7 @@ namespace feather
             //    return f;
             //}
             if(f->connected){
-                //std::cout << "field is connected to uid:" << f->puid << ", node:" << f->pn << ", field " << f->pf << std::endl;
+                std::cout << "field is connected to uid:" << f->puid << ", node:" << f->pn << ", field " << f->pf << std::endl;
                 f = get_fieldBase(f->puid,f->pn,f->pf);
             //} else {
                 //std::cout << "field is not connected, returning the default field\n";

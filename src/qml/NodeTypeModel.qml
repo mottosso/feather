@@ -38,6 +38,5 @@ ListModel {
     //ListElement { text: "Object"; type: Node.Object }
     //ListElement { text: "Curve"; type: Node.Curve }
     ListElement { text: "Polygon"; type: Node.Polygon }
-    ListElement { text: "Shape"; type: Node.Shape}
-    ListElement { text: "Tool"; type: Node.Tool}
+    //ListElement { text: "Shape"; type: Node.Shape}
 }

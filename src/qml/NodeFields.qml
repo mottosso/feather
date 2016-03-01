@@ -107,7 +107,7 @@ FieldModel {
         // Out
         addFieldName("child",320,2)
 
-        // Polygon Shape 
+        // Polygon Plane 
         addFieldName("parent",321,1)
         addFieldName("subX",321,3)
         addFieldName("subY",321,4)

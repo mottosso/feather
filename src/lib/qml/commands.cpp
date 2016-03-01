@@ -118,6 +118,7 @@ bool qml::command::node_exists(int uid)
 
 status qml::command::connect_nodes(int n1, int f1, int n2, int f2)
 {
+    // TODO - check to see if update() is needed
     status p = scenegraph::connect(n1,f1,n2,f2);
     //scenegraph::update();
     return p;
@@ -327,8 +328,10 @@ status qml::command::set_field_val(int uid, int node, int field, int& val)
     fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
     if(!f)
         std::cout << "NULL INT FIELD\n";
-    else  
+    else { 
         f->value=val;
+        scenegraph::update();
+    } 
     return status();
 }
 
@@ -339,8 +342,11 @@ status qml::command::set_field_val(int uid, int node, int field, FReal& val)
     fielddata f = static_cast<fielddata>(scenegraph::get_fieldBase(uid,node,field));
     if(!f)
         std::cout << "NULL REAL FIELD\n";
-    else  
+    else {
+        std::cout << "setting real value for uid:" << uid << " nid:" << node << " fid:" << field << " value:" << val << std::endl; 
         f->value=val;
+        scenegraph::update();
+    }
     return status();
 }
 
