@@ -245,7 +245,27 @@ Mesh::~Mesh()
 void Mesh::update()
 {
     // clean out v array
-    //m_paMeshVData->clean();
+    //m_paMeshVData->erase(m_paMeshVData->begin(),m_paMeshVData->end());
+    //m_paMeshVnData->erase(m_paMeshVnData->begin(),m_paMeshVnData->end());
+
+    /*
+    delete m_paMeshVData;
+    delete m_paMeshVnData;
+    m_paMeshVData = new feather::FVertex3DArray();
+    m_paMeshVnData = new feather::FVertex3DArray();
+    m_vertexBytes.clear();
+    m_normalBytes.clear();
+    delete m_vertexBuffer;
+    delete m_normalBuffer;
+    m_vertexBuffer = new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this);
+    m_normalBuffer = new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this);
+
+    m_vertexBuffer->setData(m_vertexBytes);
+    m_pVAttribute->setBuffer(m_vertexBuffer);
+
+    m_normalBuffer->setData(m_normalBytes);
+    m_pVAttribute->setBuffer(m_normalBuffer);
+    */
 
     feather::FMesh mesh;
     feather::qml::command::get_field_val(uid(),nid(),static_cast<feather::draw::Mesh*>(item())->fid,mesh);
@@ -281,6 +301,7 @@ void Mesh::update()
             }
 
             //std::cout << "v" << id << ":" << _face.at(id).v << ",";
+            std::cout << "v.y" << id << ":" << mesh.v.at(_face.at(id).v).y << ",";
             m_paMeshVData->push_back(mesh.v.at(_face.at(id).v));
             m_paMeshVnData->push_back(mesh.vn.at(_face.at(id).vn));
             //glvn.push_back(vn.at(_face.at(id).vn));
@@ -897,21 +918,25 @@ void Viewport2::updateScene()
     /* 
     feather::draw::DrawItems items;
     feather::qml::command::get_node_draw_items(1,items);
+    */
+    std::cout << "There are " << m_apDrawItems.size() << " draw items\n";
 
-    std::cout << "There are " << items.size() << " draw items\n";
-
-
+    /* 
     if(m_apDrawItems.isEmpty()) {
         buildScene(items);
         //buildScene();
     } else {
+    
     */
-        /*
+    /* 
         Q_FOREACH (DrawItem* item, m_apDrawItems) {
             item->setParent(this);
         }
-        */
+    */
     //}
+    Q_FOREACH(DrawItem* item, m_apDrawItems){
+        item->update();
+    }
 }
 
 bool Viewport2::buildItems(feather::draw::DrawItems& items)

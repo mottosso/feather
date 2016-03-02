@@ -208,9 +208,14 @@ Rectangle {
         vp.updateItems(uid)
     }
 
+    function updateViewport(uid,nid,fid) {
+        vp.doUpdate()
+    }
+
     Component.onCompleted: {
         SceneGraph.nodeAdded.connect(addNode)
         SceneGraph.nodeAddDrawItems.connect(addDrawItems)
         SceneGraph.nodeUpdateDrawItems.connect(updateDrawItems)
+        SceneGraph.nodeFieldChanged.connect(updateViewport)
     }
 }

@@ -212,7 +212,7 @@ Rectangle {
                 case Field.Int || Field.IntArray: field.intVal = field.intVal + 1; break;
                 //case Field.Float || Field.FloatArray: field.realVal = field.floatVal + 1 ; break;
                 //case Field.Double || Field.DoubleArray: field.realVal = field.realVal + 0.1; valueText.text = field.realVal.toFixed(2); SceneGraph.nodeFieldChanged(uId,nodeKey,fieldKey); break;
-                case Field.Real || Field.DoubleArray: field.realVal = field.realVal + 0.1; valueText.text = field.realVal.toFixed(2); SceneGraph.nodeFieldChanged(uId,nodeKey,fieldKey); break;
+                case Field.Real || Field.DoubleArray: field.realVal = field.realVal + 0.1; valueText.text = field.realVal.toFixed(2); SceneGraph.triggerUpdate(); SceneGraph.nodeFieldChanged(uId,nodeKey,fieldKey); break;
                 case Field.Vertex || Field.VertexArray: ; break;
                 case Field.Vector || Field.VectorArray: ; break;
                 case Field.Mesh: ; break;
