@@ -120,6 +120,8 @@ status qml::command::connect_nodes(int n1, int f1, int n2, int f2)
 {
     // TODO - check to see if update() is needed
     status p = scenegraph::connect(n1,f1,n2,f2);
+    if(!p.state)
+        std::cout << "CONNECTION FAILURE:\n" << p.msg << std::endl;
     //scenegraph::update();
     return p;
 }
@@ -330,6 +332,7 @@ status qml::command::set_field_val(int uid, int node, int field, int& val)
         std::cout << "NULL INT FIELD\n";
     else { 
         f->value=val;
+        f->update=true;
         scenegraph::update();
     } 
     return status();
@@ -345,6 +348,7 @@ status qml::command::set_field_val(int uid, int node, int field, FReal& val)
     else {
         std::cout << "setting real value for uid:" << uid << " nid:" << node << " fid:" << field << " value:" << val << std::endl; 
         f->value=val;
+        f->update=true;
         scenegraph::update();
     }
     return status();
