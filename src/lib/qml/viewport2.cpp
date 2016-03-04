@@ -53,7 +53,7 @@ PerspCamera::~PerspCamera()
     QNode::cleanup();
 }
 
-void PerspCamera::update()
+void PerspCamera::updateItem()
 {
 
 }
@@ -139,6 +139,7 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     m_pVnAttribute(new Qt3D::QAttribute(this)),
     m_paMeshVData(new feather::FVertex3DArray),
     m_paMeshVnData(new feather::FVertex3DArray),
+    m_clearBuffer(new Qt3D::QClearBuffer(this)),
     m_vertexBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this)),
     m_normalBuffer(new Qt3D::QBuffer(Qt3D::QBuffer::VertexBuffer, this)),
     m_pLight(new Qt3D::QPointLight())
@@ -176,6 +177,7 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     m_pVnAttribute->setByteStride(sizeof(feather::FVertex3D));
     m_pVnAttribute->setBuffer(m_normalBuffer);
 
+    m_clearBuffer->setBuffers(Qt3D::QClearBuffer::ColorBuffer);
 
     //setVerticesPerPatch(4);
     m_pMesh->setGeometry(new Qt3D::QGeometry(this));
@@ -227,22 +229,24 @@ Mesh::~Mesh()
 {
     QNode::cleanup();
 
-    delete m_pVAttribute;
-    m_pVAttribute=0;
     delete m_paMeshVData;
     m_paMeshVData=0;
     delete m_vertexBuffer;
     m_vertexBuffer=0;
 
-    delete m_pVnAttribute;
-    m_pVnAttribute=0;
     delete m_paMeshVnData;
     m_paMeshVnData=0;
     delete m_normalBuffer;
     m_normalBuffer=0;
+
+    delete m_pVAttribute;
+    m_pVAttribute=0;
+    delete m_pVnAttribute;
+    m_pVnAttribute=0;
+ 
 }
 
-void Mesh::update()
+void Mesh::updateItem()
 {
     // clean out v array
     //m_paMeshVData->erase(m_paMeshVData->begin(),m_paMeshVData->end());
@@ -265,6 +269,27 @@ void Mesh::update()
 
     m_normalBuffer->setData(m_normalBytes);
     m_pVAttribute->setBuffer(m_normalBuffer);
+    */
+    //removeComponent(m_pTransform);
+    //removeComponent(m_pMaterial);
+    //removeComponent(m_pMesh);
+
+    m_paMeshVData->erase(m_paMeshVData->begin(),m_paMeshVData->end());
+    m_paMeshVnData->erase(m_paMeshVnData->begin(),m_paMeshVnData->end());
+
+    m_vertexBuffer->data().clear();
+    m_normalBuffer->data().clear();
+
+    //m_pMesh->geometry()->removeAttribute(m_pVAttribute);
+    //m_pMesh->geometry()->removeAttribute(m_pVnAttribute);
+    //delete m_pMesh;
+    //m_pMesh = new Qt3D::QGeometryRenderer();
+
+    /*
+    delete m_pVAttribute;
+    m_pVAttribute=new Qt3D::QAttribute(this);
+    delete m_pVnAttribute;
+    m_pVnAttribute=new Qt3D::QAttribute(this);
     */
 
     feather::FMesh mesh;
@@ -342,12 +367,61 @@ void Mesh::update()
     memcpy(m_vertexBytes.data(), m_paMeshVData->data(), m_paMeshVData->size() * sizeof(feather::FVertex3D));
     memcpy(m_normalBytes.data(), m_paMeshVnData->data(), m_paMeshVnData->size() * sizeof(feather::FVertex3D));
 
+    // Vertex Data
     m_vertexBuffer->setData(m_vertexBytes);
+
+    m_pVAttribute->setName(Qt3D::QAttribute::defaultPositionAttributeName());
+    m_pVAttribute->setDataType(Qt3D::QAttribute::Double);
+    m_pVAttribute->setDataSize(3);
     m_pVAttribute->setCount(m_paMeshVData->size());
+    m_pVAttribute->setByteStride(sizeof(feather::FVertex3D));
+    m_pVAttribute->setBuffer(m_vertexBuffer);
 
+    // Normal Data
     m_normalBuffer->setData(m_normalBytes);
-    m_pVnAttribute->setCount(m_paMeshVnData->size());
 
+    m_pVnAttribute->setName(Qt3D::QAttribute::defaultNormalAttributeName());
+    m_pVnAttribute->setDataType(Qt3D::QAttribute::Double);
+    m_pVnAttribute->setDataSize(3);
+    m_pVnAttribute->setCount(m_paMeshVnData->size());
+    m_pVnAttribute->setByteStride(sizeof(feather::FVertex3D));
+    m_pVnAttribute->setBuffer(m_normalBuffer);
+
+    m_pMesh->setInstanceCount(1);
+    m_pMesh->setBaseVertex(0);
+    m_pMesh->setBaseInstance(1);
+    m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::Triangles);
+
+    //setVerticesPerPatch(4);
+    m_pMesh->setGeometry(new Qt3D::QGeometry(this));
+    m_pMesh->geometry()->addAttribute(m_pVAttribute);
+    m_pMesh->geometry()->addAttribute(m_pVnAttribute);
+
+    //m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::Lines);
+    //m_pMesh->setGeometry(new QGeometry(this));
+
+
+
+    
+    std::cout << "VIEWPORT MESH SPECS\n"
+        << "\tFeather V Array size:" << m_paMeshVData->size() << std::endl
+        << "\tFeather Vn Array size:" << m_paMeshVnData->size() << std::endl
+        << "\tFeather V QBuffer size:" << m_vertexBuffer->data().count() << std::endl
+        << "\tFeather V QByteArray size:" << m_vertexBytes.count() << std::endl
+        << "\tFeather V QAttribute size:" << m_pVAttribute->count() << std::endl
+        << "\tFeather Vn QBuffer size:" << m_normalBuffer->data().count() << std::endl
+        << "\tFeather Vn QByteArray size:" << m_normalBytes.count() << std::endl
+        << "\tFeather Vn QAttribute size:" << m_pVnAttribute->count() << std::endl;
+
+
+    //addComponent(m_pTransform);
+    //addComponent(m_pMaterial);
+    //addComponent(m_pMesh);
+
+
+    //removeComponent(m_pMesh);
+    //addComponent(m_pMesh);
+ 
     //removeComponent(m_pMaterial);
     //addComponent(m_pWireMaterial);
     //m_pMesh->setPrimitiveType(Qt3D::QGeometryRenderer::LineLoop);
@@ -368,6 +442,27 @@ void Mesh::update()
     */
 }
 
+void Mesh::test()
+{
+    //std::for_each(m_pVAttribute->buffer()->data().begin(),m_pVAttribute->buffer()->data().end(),[](auto n){ std::cout << n << std::endl; });
+    std::for_each(m_paMeshVData->begin(), m_paMeshVData->end(),[](auto v){ v.y += 0.1; }); 
+
+    std::cout << "ATTRIBUTE V MESH SPECS\n"
+        << "\tAtribute V buffer data count:" << m_pVAttribute->buffer()->data().count() << std::endl
+        << "\tAttribute V count:" << m_pVAttribute->count() << std::endl;
+
+
+
+
+    memcpy(m_vertexBytes.data(), m_paMeshVData->data(), m_paMeshVData->size() * sizeof(feather::FVertex3D));
+    m_pVAttribute->buffer()->setData(m_vertexBytes);
+    //m_pVAttribute->buffer()->setData(m_paMeshVData->data(),m_paMeshVData->size() * sizeof(feather::FVertex3D));
+    /*
+    Q_FOREACH(QVector3D v, m_apVAttribute->asVector3D()){
+        v.y += 0.1; 
+    }
+    */
+}
 
 /*
 void Mesh::mouseClicked()
@@ -436,7 +531,7 @@ Line::~Line()
     m_vertexBuffer=0;
 }
 
-void Line::update()
+void Line::updateItem()
 {
 
 }
@@ -934,9 +1029,31 @@ void Viewport2::updateScene()
         }
     */
     //}
-    Q_FOREACH(DrawItem* item, m_apDrawItems){
-        item->update();
+    for(auto item : m_apDrawItems) {
+        switch(item->item()->type){
+            case feather::draw::Item::Mesh:
+                std::cout << "updating Mesh draw item\n";
+                static_cast<Mesh*>(item)->test();
+                break;
+            case feather::draw::Item::Line:
+                std::cout << "updating Line draw item\n";
+                static_cast<Line*>(item)->updateItem();
+                break;
+            case feather::draw::Item::PerspCamera:
+                std::cout << "updating Perspective Camear draw item\n";
+                static_cast<PerspCamera*>(item)->updateItem();
+                break;
+            default:
+                std::cout << "nothing built\n";
+        }
     }
+    /*
+    Q_FOREACH(DrawItem* item, m_apDrawItems){
+        //item->updateItem();
+        
+        delete item;
+    }
+    */
 }
 
 bool Viewport2::buildItems(feather::draw::DrawItems& items)
@@ -1049,8 +1166,10 @@ void Viewport2::addItems(unsigned int uid)
             default:
                 std::cout << "nothing built\n";
         }
-        m_apDrawItems.at(m_apDrawItems.size()-1)->update();
+        m_apDrawItems.at(m_apDrawItems.size()-1)->updateItem();
     }
+
+
 }
 
 void Viewport2::updateItems(unsigned int uid)
@@ -1060,15 +1179,15 @@ void Viewport2::updateItems(unsigned int uid)
             switch(item->item()->type){
                 case feather::draw::Item::Mesh:
                     std::cout << "updating Mesh draw item\n";
-                    static_cast<Mesh*>(item)->update();
+                    static_cast<Mesh*>(item)->updateItem();
                     break;
                 case feather::draw::Item::Line:
                     std::cout << "updating Line draw item\n";
-                    static_cast<Line*>(item)->update();
+                    static_cast<Line*>(item)->updateItem();
                     break;
                 case feather::draw::Item::PerspCamera:
                     std::cout << "updating Perspective Camear draw item\n";
-                    static_cast<PerspCamera*>(item)->update();
+                    static_cast<PerspCamera*>(item)->updateItem();
                     break;
                  default:
                     std::cout << "nothing built\n";

@@ -33,12 +33,6 @@ Rectangle {
     id: frame
     color: "yellow"
 
-    /*
-        Viewport3 {
-            id: vp
-        }
-    */
-
     Scene3D {
         id: scene3d
         anchors.fill: parent
@@ -46,155 +40,146 @@ Rectangle {
         focus: true
         aspects: "input"
 
-        Entity {
-            id : sceneRoot
- 
-            Camera {
-                id: camera
-                projectionType: CameraLens.PerspectiveProjection
-                fieldOfView: 45
-                aspectRatio: frame.width/frame.height
-                nearPlane : 0.1
-                farPlane : 1000.0
-                position: Qt.vector3d( 0.0, 0.0, 20.0 )
-                upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
-                viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
-            }
-
-            Configuration  {
-                controlledCamera: camera
-            }
-
-            MouseController { id: mouseController }
-
-            //Viewport3 {}
-
-            FrameGraph {
-                id : frameGraph
-
-                /*
-                activeFrameGraph: DeferredRenderer {
-                    id: renderer
-                    clearColor: "grey"
-                    //camera: camera
-                }
-                */
-
-                activeFrameGraph: ForwardRenderer {
-                    id : mainViewport
-                    clearColor: "grey"
-                    camera: camera 
-                } // mainViewport
-
-            } // frameGraph
 
             Viewport2 {
                 id: vp
-                MouseInput {
-                    id: mouseInput
-                    controller: mouseController
-                    onClicked: { console.log("VP CLICKED") }
-                }   
-                components: [mouseInput]
-            } 
+
+                Camera {
+                    id: camera1
+                    projectionType: CameraLens.PerspectiveProjection
+                    fieldOfView: 45
+                    aspectRatio: frame.width/frame.height
+                    nearPlane : 0.1
+                    farPlane : 1000.0
+                    position: Qt.vector3d( 0.0, 0.0, 20.0 )
+                    upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
+                    viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
+                }
+
+                Camera {
+                    id: camera2
+                    projectionType: CameraLens.PerspectiveProjection
+                    fieldOfView: 45
+                    aspectRatio: frame.width/frame.height
+                    nearPlane : 0.1
+                    farPlane : 1000.0
+                    position: Qt.vector3d( 0.0, 0.0, 20.0 )
+                    upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
+                    viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
+                }
+
+               Configuration  {
+                    controlledCamera: camera1
+                }
+
+
+               Configuration  {
+                    controlledCamera: camera2
+                }
+
+                    FrameGraph {
+                        id: frameGraph                
+                        //activeFrameGraph: Viewport {
+
+                        Viewport {
+                            rect: Qt.rect(0, 0, 1, 1)
+                            clearColor: "grey"
+
+                                ClearBuffer {
+                                    buffers : ClearBuffer.ColorDepthBuffer
+                                }
+
+                            /*
+                            CameraSelector { 
+                                id : cameraSelectorViewport
+                                camera : camera
+
+                                ClearBuffer {
+                                    buffers : ClearBuffer.ColorDepthBuffer
+                                }
+
+                            }
+                            */
+
+                            Viewport {
+                                id : topLeftViewport
+                                rect : Qt.rect(0, 0, 0.5, 0.5)
+                                //clearColor: "grey"
+
+                                CameraSelector { 
+                                    camera : camera1
+                                }
+                            }
+
+                            Viewport {
+                                id : topRightViewport
+                                rect : Qt.rect(0.5, 0, 0.5, 0.5)
+                                //clearColor: "grey"
+
+                                CameraSelector { 
+                                    camera : camera2
+                                }
+                            }
+
+                       }
  
+                    } 
+ 
+
+                components: [ frameGraph ]
+                /*
+                components: [
+
+                    FrameGraph {
+                
+                        activeFrameGraph: Viewport {
+                            rect: Qt.rect(0, 0, 1, 1)
+                            //clearColor: "grey"
+
+                                ClearBuffer {
+                                    buffers : ClearBuffer.ColorDepthBuffer
+                                }
+
+
+                            CameraSelector { 
+                                id : cameraSelectorViewport
+                                camera : camera
+
+                                ClearBuffer {
+                                    buffers : ClearBuffer.ColorDepthBuffer
+                                }
+
+                            }
+
+                            Viewport {
+                                id : topLeftViewport
+                                rect : Qt.rect(0, 0, 0.5, 0.5)
+                                clearColor: "grey"
+
+                                CameraSelector { 
+                                    camera : camera
+                                }
+                            }
+
+                            Viewport {
+                                id : topRightViewport
+                                rect : Qt.rect(0.5, 0, 0.5, 0.5)
+                                clearColor: "grey"
+
+                                CameraSelector { 
+                                    camera : camera
+                                }
+                            }
+
+                        }
+ 
+                    } 
+            ] 
+            */
+
         }
 
-        /*
-        Entity {
-            id : sceneRoot
-            property real rotationAngle : 0
- 
-            Camera {
-                id: camera
-                projectionType: CameraLens.PerspectiveProjection
-                fieldOfView: 45
-                //aspectRatio: frame.width/frame.height
-                nearPlane : 0.1
-                farPlane : 1000.0
-                position: Qt.vector3d( 0.0, 0.0, 20.0 )
-                upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
-                viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
-            }
-
-            Configuration  {
-                controlledCamera: camera
-            }
-
-            MouseController { id: mouseController }
-
-            FrameGraph {
-                id : frameGraph
-
-                activeFrameGraph: ForwardRenderer {
-                    id : mainViewport
-                    clearColor: "grey"
-                    camera: camera 
-                } // mainViewport
-
-            } // frameGraph
-
-            Viewport2 {
-                id: vp
-                MouseInput {
-                    id: mouseInput
-                    controller: mouseController
-                    onClicked: { console.log("VP CLICKED") }
-                }   
-                components: [mouseInput]
-            } 
-            */
-
-            //property MouseInput mouseInput: MouseInput {
-            /*
-            MouseInput {
-                id: mouseInput
-                controller: mouseController
-                onClicked: { console.log("ENTITY CLICKED") }
-            }
-
-            PhongMaterial {
-                id: material
-                ambient: "red"
-            }
-
-            SphereMesh {
-                id: sphereMesh
-                radius: 1
-            }
-
-            Transform {
-                id: sphereTransform
-                Translate {
-                    translation: Qt.vector3d(0, 0, 0)
-                }
-
-                Rotate {
-                    id: sphereRotation
-                    axis: Qt.vector3d(0, 1, 0)
-                }
-            }
-            
-            Entity {
-                id: sphereEntity
-                components: [ sphereMesh, material, sphereTransform]
-            }
- 
-            components: [frameGraph, sphereEntity, mouseInput]
-            */
-            //components: [frameGraph, sphereEntity]
- 
-        //}
-
     } //sceneRoot
-
-    /*
-    MouseArea {
-        anchors.fill: parent
-        propagateComposedEvents: true 
-        onClicked: { console.log("RECT CLICKED") }
-    }
-    */
 
     function addNode(uid) {
         vp.addItems(uid) 

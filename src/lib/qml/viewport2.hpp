@@ -43,7 +43,7 @@ class DrawItem : public Qt3D::QEntity
         ~DrawItem();
         inline void setType(Type t) { m_type=t; };
         inline Type type() { return m_type; };
-        virtual void update(){};
+        virtual void updateItem(){};
         inline unsigned int uid() { return m_item->uid; };
         inline unsigned int nid() { return m_item->nid; };
         feather::draw::Item* item() { return m_item; };
@@ -63,7 +63,7 @@ class PerspCamera : public DrawItem
     public:
         PerspCamera(feather::draw::Item* _item, Qt3D::QNode *parent=0);
         ~PerspCamera();
-        void update();
+        void updateItem();
 };
 
 
@@ -93,8 +93,8 @@ class Mesh : public DrawItem
     public:
         Mesh(feather::draw::Item* _item, Qt3D::QNode *parent=0);
         ~Mesh();
-        void update();
-
+        void updateItem();
+        void test();
     /*
     private Q_SLOTS:
         void mouseClicked();
@@ -114,6 +114,7 @@ class Mesh : public DrawItem
         Qt3D::QAttribute* m_pVnAttribute;
         feather::FVertex3DArray* m_paMeshVData;
         feather::FVertex3DArray* m_paMeshVnData;
+        Qt3D::QClearBuffer* m_clearBuffer;
         Qt3D::QBuffer *m_vertexBuffer;
         QByteArray m_vertexBytes;
         Qt3D::QBuffer *m_normalBuffer;
@@ -132,7 +133,7 @@ class Line : public DrawItem
     public:
         Line(feather::draw::Item* _item, Qt3D::QNode *parent=0);
         ~Line();
-        void update();
+        void updateItem();
 
     /*
     private Q_SLOTS:
