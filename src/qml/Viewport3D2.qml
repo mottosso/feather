@@ -40,11 +40,9 @@ Rectangle {
         focus: true
         aspects: "input"
 
-
-            Viewport2 {
-                id: vp
-
-                Camera {
+        Viewport2 {
+            id: vp
+            Camera {
                     id: camera1
                     projectionType: CameraLens.PerspectiveProjection
                     fieldOfView: 45
@@ -54,129 +52,30 @@ Rectangle {
                     position: Qt.vector3d( 0.0, 0.0, 20.0 )
                     upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
                     viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
-                }
+            }
 
-                Camera {
-                    id: camera2
-                    projectionType: CameraLens.PerspectiveProjection
-                    fieldOfView: 45
-                    aspectRatio: frame.width/frame.height
-                    nearPlane : 0.1
-                    farPlane : 1000.0
-                    position: Qt.vector3d( 0.0, 0.0, 20.0 )
-                    upVector: Qt.vector3d( 0.0, 1.0, 0.0 )
-                    viewCenter: Qt.vector3d( 0.0, 0.0, 0.0 )
-                }
+            Configuration  {
+                controlledCamera: camera1
+            }
 
-               Configuration  {
-                    controlledCamera: camera1
-                }
+            FrameGraph {
+                id: frameGraph                
+                activeFrameGraph: Viewport {
+                    rect: Qt.rect(0, 0, 1, 1)
+                    clearColor: "grey"
 
+                    CameraSelector { 
+                        id : cameraSelectorViewport
+                        camera : camera1
 
-               Configuration  {
-                    controlledCamera: camera2
-                }
-
-                    FrameGraph {
-                        id: frameGraph                
-                        //activeFrameGraph: Viewport {
-
-                        Viewport {
-                            rect: Qt.rect(0, 0, 1, 1)
-                            clearColor: "grey"
-
-                                ClearBuffer {
-                                    buffers : ClearBuffer.ColorDepthBuffer
-                                }
-
-                            /*
-                            CameraSelector { 
-                                id : cameraSelectorViewport
-                                camera : camera
-
-                                ClearBuffer {
-                                    buffers : ClearBuffer.ColorDepthBuffer
-                                }
-
-                            }
-                            */
-
-                            Viewport {
-                                id : topLeftViewport
-                                rect : Qt.rect(0, 0, 0.5, 0.5)
-                                //clearColor: "grey"
-
-                                CameraSelector { 
-                                    camera : camera1
-                                }
-                            }
-
-                            Viewport {
-                                id : topRightViewport
-                                rect : Qt.rect(0.5, 0, 0.5, 0.5)
-                                //clearColor: "grey"
-
-                                CameraSelector { 
-                                    camera : camera2
-                                }
-                            }
-
-                       }
- 
-                    } 
- 
-
-                components: [ frameGraph ]
-                /*
-                components: [
-
-                    FrameGraph {
-                
-                        activeFrameGraph: Viewport {
-                            rect: Qt.rect(0, 0, 1, 1)
-                            //clearColor: "grey"
-
-                                ClearBuffer {
-                                    buffers : ClearBuffer.ColorDepthBuffer
-                                }
-
-
-                            CameraSelector { 
-                                id : cameraSelectorViewport
-                                camera : camera
-
-                                ClearBuffer {
-                                    buffers : ClearBuffer.ColorDepthBuffer
-                                }
-
-                            }
-
-                            Viewport {
-                                id : topLeftViewport
-                                rect : Qt.rect(0, 0, 0.5, 0.5)
-                                clearColor: "grey"
-
-                                CameraSelector { 
-                                    camera : camera
-                                }
-                            }
-
-                            Viewport {
-                                id : topRightViewport
-                                rect : Qt.rect(0.5, 0, 0.5, 0.5)
-                                clearColor: "grey"
-
-                                CameraSelector { 
-                                    camera : camera
-                                }
-                            }
-
+                        ClearBuffer {
+                            buffers : ClearBuffer.ColorDepthBuffer
                         }
+                    }
+                }
+            } 
  
-                    } 
-            ] 
-            */
-
+            components: [ frameGraph ]
         }
 
     } //sceneRoot

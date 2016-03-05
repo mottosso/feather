@@ -86,6 +86,28 @@ class WireEffect : public Qt3D::QEffect
 
 // MESH 
 
+class MeshGeometry : public Qt3D::QGeometry
+{
+    Q_OBJECT
+
+    public:
+        MeshGeometry(int _uid=0, int _nid=0, int _fid=0, Qt3D::QNode *parent=0);
+        ~MeshGeometry();
+ 
+    private:
+        void build();
+        int uid;
+        int nid;
+        int fid;
+        std::vector<feather::FVertex3D> m_aMeshVData;
+        std::vector<feather::FVertex3D> m_aMeshVnData;
+        Qt3D::QAttribute *m_pVAttribute;
+        Qt3D::QBuffer *m_pVertexBuffer;
+        Qt3D::QAttribute *m_pVnAttribute;
+        Qt3D::QBuffer *m_pNormalBuffer;
+};
+
+
 class Mesh : public DrawItem 
 {
     Q_OBJECT
@@ -94,31 +116,12 @@ class Mesh : public DrawItem
         Mesh(feather::draw::Item* _item, Qt3D::QNode *parent=0);
         ~Mesh();
         void updateItem();
-        void test();
-    /*
-    private Q_SLOTS:
-        void mouseClicked();
-    */
- 
+
     private:
         void build();
         Qt3D::QTransform *m_pTransform;
-        //Qt3D::QMaterial *m_pMaterial;
-        //WireEffect* m_pMaterialEffect;
         Qt3D::QPhongMaterial *m_pMaterial;
-        //Qt3D::QPhongMaterial *m_pWireMaterial;
         Qt3D::QGeometryRenderer *m_pMesh;
-        //Qt3D::QMouseInput *m_pMouseInput;
-        std::vector<feather::FVertex3D> m_aVertex;
-        Qt3D::QAttribute* m_pVAttribute;
-        Qt3D::QAttribute* m_pVnAttribute;
-        feather::FVertex3DArray* m_paMeshVData;
-        feather::FVertex3DArray* m_paMeshVnData;
-        Qt3D::QClearBuffer* m_clearBuffer;
-        Qt3D::QBuffer *m_vertexBuffer;
-        QByteArray m_vertexBytes;
-        Qt3D::QBuffer *m_normalBuffer;
-        QByteArray m_normalBytes;
         Qt3D::QPointLight* m_pLight;
 };
 
@@ -135,11 +138,6 @@ class Line : public DrawItem
         ~Line();
         void updateItem();
 
-    /*
-    private Q_SLOTS:
-        void mouseClicked();
-    */
-
     private:
         void build();
         Qt3D::QTransform *m_pTransform;
@@ -152,7 +150,7 @@ class Line : public DrawItem
 };
 
 
-// GRID
+// Axis 
 
 class AxisGeometry : public Qt3D::QGeometry
 {
