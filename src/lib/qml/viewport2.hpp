@@ -30,7 +30,7 @@
 
 class DrawItem : public Qt3D::QEntity
 {
-    //Q_OBJECT
+    Q_OBJECT
 
     public:
         enum Type{
@@ -56,7 +56,7 @@ class DrawItem : public Qt3D::QEntity
 
 // PERSPECTIVE CAMERA 
 
-class PerspCamera : public DrawItem 
+class PerspCamera : public DrawItem
 {
     Q_OBJECT
     
@@ -65,7 +65,6 @@ class PerspCamera : public DrawItem
         ~PerspCamera();
         void updateItem();
 };
-
 
 // WIREFRAME EFFECT
 /*
@@ -116,6 +115,7 @@ class Mesh : public DrawItem
         Mesh(feather::draw::Item* _item, Qt3D::QNode *parent=0);
         ~Mesh();
         void updateItem();
+        void test();
 
     private:
         void build();
@@ -292,6 +292,22 @@ class Object: public Qt3D::QEntity
 };
 
 
+class FrameGraph : public Qt3D::QFrameGraph
+{
+    Q_OBJECT
+
+    public:
+        FrameGraph(Qt3D::QNode* parent=0);
+        ~FrameGraph();
+        void setCamera(Qt3D::QCamera* camera);
+
+    private:
+        Qt3D::QViewport* m_pViewport;
+        Qt3D::QClearBuffer* m_pClearBuffer;
+        Qt3D::QCameraSelector* m_pCameraSelector;
+};
+
+
 class Viewport2 : public Qt3D::QEntity
 {
     Q_OBJECT
@@ -318,6 +334,7 @@ class Viewport2 : public Qt3D::QEntity
         int minorSubDividLevel();
         bool showGrid();
         bool showAxis();
+        FrameGraph* frameGraph() { return m_pFrameGraph; };
         Q_INVOKABLE void doUpdate(){ updateScene(); };
         Q_INVOKABLE void addItems(unsigned int uid);
         Q_INVOKABLE void updateItems(unsigned int uid);
@@ -350,6 +367,11 @@ class Viewport2 : public Qt3D::QEntity
         Qt3D::QMouseInput *m_pMouseInput;
         Line* m_pLine;
         Qt3D::QPointLight* m_pLight;
+        Qt3D::QClearBuffer m_clearBuffer;
+        Qt3D::QTorusMesh* m_pTorus;
+        Qt3D::QCamera* m_pCamera;
+        Qt3D::Quick::Quick3DConfiguration* m_pConfiguration;
+        FrameGraph* m_pFrameGraph;
 };
 
 #endif

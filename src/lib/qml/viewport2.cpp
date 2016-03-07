@@ -40,8 +40,8 @@ DrawItem::~DrawItem()
     QNode::cleanup();
 }
 
-// PERSPECTIVE CAMERA 
 
+// PERSPECTIVE CAMERA 
 PerspCamera::PerspCamera(feather::draw::Item* _item, QNode *parent)
     : DrawItem(_item,DrawItem::PerspCamera,parent)
 {
@@ -175,7 +175,15 @@ MeshGeometry::MeshGeometry(int _uid, int _nid, int _fid, QNode *parent)
 
 MeshGeometry::~MeshGeometry()
 {
-
+    QNode::cleanup();
+    delete m_pVAttribute;
+    m_pVAttribute=0;
+    delete m_pVertexBuffer;
+    m_pVertexBuffer=0;
+    delete m_pVnAttribute;
+    m_pVnAttribute=0;
+    delete m_pNormalBuffer;
+    m_pNormalBuffer=0;
 }
 
 void MeshGeometry::build()
@@ -283,7 +291,8 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
     m_pLight->setIntensity(10.5f);
     m_pLight->setPosition(QVector3D(4,4,4)); 
 
-    addComponent(m_pTransform);
+    addComponent(static_cast<Viewport2*>(parent)->frameGraph());
+    //addComponent(m_pTransform);
     addComponent(m_pMaterial);
     addComponent(m_pMesh);
     //addComponent(m_pLight);
@@ -294,12 +303,22 @@ Mesh::Mesh(feather::draw::Item* _item, QNode *parent)
 Mesh::~Mesh()
 {
     QNode::cleanup();
+    
 }
 
 
 void Mesh::updateItem()
 {
 }
+
+void Mesh::test()
+{
+    //m_pTransform->matrix().translate(1,0,0); 
+    //removeComponent(m_pMesh);
+    //setParent(Q_NULLPTR);
+    //removeAllComponents();
+}
+
 
 
 // LINE
@@ -790,20 +809,65 @@ void Object::onEvent(Qt3D::Q3DMouseEvent* event)
 */
 
 
+// FRAMEGRAPH
+FrameGraph::FrameGraph(QNode* parent)
+    : QFrameGraph(parent),
+    m_pViewport(new Qt3D::QViewport()),
+    m_pClearBuffer(new Qt3D::QClearBuffer(this)),
+    m_pCameraSelector(new Qt3D::QCameraSelector())
+{
+    m_pViewport->setRect(QRect(0,0,1,1));
+    m_pViewport->setClearColor(QColor("grey"));
+
+    m_pClearBuffer->setBuffers(Qt3D::QClearBuffer::AllBuffers);
+    m_pCameraSelector->setParent(m_pClearBuffer);
+
+    setActiveFrameGraph(m_pViewport);
+}
+
+FrameGraph::~FrameGraph()
+{
+    QNode::cleanup();
+}
+
+void FrameGraph::setCamera(Qt3D::QCamera* camera)
+{
+    m_pCameraSelector->setCamera(camera); 
+}
+
+
 // VIEWPORT
-Viewport2::Viewport2(QNode *parent)
+Viewport2::Viewport2(QNode* parent)
     : Qt3D::QEntity(parent),
     m_showGrid(true),
     m_showAxis(true),
     m_pMouseController(new Qt3D::QMouseController()),
-    m_pLight(new Qt3D::QPointLight())
+    m_pLight(new Qt3D::QPointLight()),
+    m_pCamera(new Qt3D::QCamera(this)),
+    m_pConfiguration(new Qt3D::Quick::Quick3DConfiguration(this)),
+    m_pFrameGraph(new FrameGraph(this))
 {
 
+    m_pCamera->setProjectionType(Qt3D::QCameraLens::PerspectiveProjection);
+    m_pCamera->setFieldOfView(45);
+    m_pCamera->setNearPlane(0.1);
+    m_pCamera->setFarPlane(100.0);
+    m_pCamera->setAspectRatio(1.3);
+    m_pCamera->setPosition(QVector3D(0,0,20));
+    m_pCamera->setUpVector(QVector3D(0,1,0));
+    m_pCamera->setViewCenter(QVector3D(0,0,0));
+
+    m_pConfiguration->setControlledCamera(m_pCamera);
+    
+    m_pFrameGraph->setCamera(m_pCamera);
+
+    m_clearBuffer.setBuffers(Qt3D::QClearBuffer::ColorBuffer);
     m_pMouseInput = new Qt3D::QMouseInput(this);
     m_pMouseInput->setController(m_pMouseController);
  
     m_pGrid = new Grid(this);
     m_pAxis = new Axis(this);
+    m_pTorus = new Qt3D::QTorusMesh();
 
     // update the draw items
     feather::draw::DrawItems items;
@@ -815,7 +879,7 @@ Viewport2::Viewport2(QNode *parent)
     updateScene();
     //addComponent(m_pMouseInput);
     //connect(m_pMouseInput,SIGNAL(entered()),this,SLOT(onEntered()));
-    connect(m_pMouseInput,SIGNAL(clicked(Qt3D::Q3DMouseEvent*)),this,SLOT(onClicked(Qt3D::Q3DMouseEvent*)));
+    //connect(m_pMouseInput,SIGNAL(clicked(Qt3D::Q3DMouseEvent*)),this,SLOT(onClicked(Qt3D::Q3DMouseEvent*)));
 
     // Light testing
     //m_pLight->setColor(Qt::blue);
@@ -823,8 +887,9 @@ Viewport2::Viewport2(QNode *parent)
    
     //m_pLight->setPosition(QVector3D(0,4,0)); 
     //Qt3D::QClearBuffer clearBuffer(this);
-    //clearBuffer.setBuffers(Qt3D::QClearBuffer::ColorBuffer);
-    //addComponent(clearBuffer);
+    //addComponent(m_pCamera);
+    //addComponent(m_pFrameGraph);
+
 }
 
 Viewport2::~Viewport2()
@@ -862,7 +927,9 @@ void Viewport2::updateScene()
         switch(item->item()->type){
             case feather::draw::Item::Mesh:
                 std::cout << "updating Mesh draw item\n";
-                static_cast<Mesh*>(item)->updateItem();
+                static_cast<Mesh*>(item)->test();
+                removeAllComponents();
+                //delete item;
                 break;
             case feather::draw::Item::Line:
                 std::cout << "updating Line draw item\n";

@@ -21,6 +21,9 @@ SET(feather_qml_SRCS
     layer_model.cpp
     tree_model.cpp
     sg_editor.cpp
+    gl_scene.cpp
+    viewport.cpp
+    viewportthread.cpp
     viewport2.cpp
     viewport3.cpp
     qml.cpp

@@ -33,6 +33,13 @@ Rectangle {
     id: frame
     color: "yellow"
 
+    Viewport {
+        id: vp
+        anchors.fill: parent
+        anchors.margins: 2
+    }
+
+    /*
     Scene3D {
         id: scene3d
         anchors.fill: parent
@@ -74,7 +81,7 @@ Rectangle {
                     }
                 }
             } 
- 
+            
             components: [ frameGraph ]
         }
 
@@ -95,11 +102,20 @@ Rectangle {
     function updateViewport(uid,nid,fid) {
         vp.doUpdate()
     }
+    */
+
+    function addNode(uid) {
+        vp.addItems(uid) 
+    }
+
+    function addDrawItems(item) {
+        vp.addItems(item)
+    }
 
     Component.onCompleted: {
         SceneGraph.nodeAdded.connect(addNode)
         SceneGraph.nodeAddDrawItems.connect(addDrawItems)
-        SceneGraph.nodeUpdateDrawItems.connect(updateDrawItems)
-        SceneGraph.nodeFieldChanged.connect(updateViewport)
+        //SceneGraph.nodeUpdateDrawItems.connect(updateDrawItems)
+        //SceneGraph.nodeFieldChanged.connect(updateViewport)
     }
 }
