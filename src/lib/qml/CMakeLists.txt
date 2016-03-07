@@ -21,6 +21,9 @@ SET(feather_qml_SRCS
     layer_model.cpp
     tree_model.cpp
     sg_editor.cpp
+    gl_scene.cpp
+    viewport.cpp
+    viewportthread.cpp
     viewport2.cpp
     viewport3.cpp
     qml.cpp
@@ -93,7 +96,7 @@ SET(CMAKE_CXX_FLAGS "-I/usr/include/boost")
 
 SET_TARGET_PROPERTIES(feather_qml
     PROPERTIES
-    CMAKE_CXX_STANDARD 11
+    CMAKE_CXX_STANDARD 14
     CMAKE_CXX_STANDARD_REQUIRED ON
 )
 

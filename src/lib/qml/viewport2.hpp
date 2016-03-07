@@ -30,7 +30,7 @@
 
 class DrawItem : public Qt3D::QEntity
 {
-    //Q_OBJECT
+    Q_OBJECT
 
     public:
         enum Type{
@@ -43,7 +43,7 @@ class DrawItem : public Qt3D::QEntity
         ~DrawItem();
         inline void setType(Type t) { m_type=t; };
         inline Type type() { return m_type; };
-        virtual void update(){};
+        virtual void updateItem(){};
         inline unsigned int uid() { return m_item->uid; };
         inline unsigned int nid() { return m_item->nid; };
         feather::draw::Item* item() { return m_item; };
@@ -56,16 +56,15 @@ class DrawItem : public Qt3D::QEntity
 
 // PERSPECTIVE CAMERA 
 
-class PerspCamera : public DrawItem 
+class PerspCamera : public DrawItem
 {
     Q_OBJECT
     
     public:
         PerspCamera(feather::draw::Item* _item, Qt3D::QNode *parent=0);
         ~PerspCamera();
-        void update();
+        void updateItem();
 };
-
 
 // WIREFRAME EFFECT
 /*
@@ -86,6 +85,28 @@ class WireEffect : public Qt3D::QEffect
 
 // MESH 
 
+class MeshGeometry : public Qt3D::QGeometry
+{
+    Q_OBJECT
+
+    public:
+        MeshGeometry(int _uid=0, int _nid=0, int _fid=0, Qt3D::QNode *parent=0);
+        ~MeshGeometry();
+ 
+    private:
+        void build();
+        int uid;
+        int nid;
+        int fid;
+        std::vector<feather::FVertex3D> m_aMeshVData;
+        std::vector<feather::FVertex3D> m_aMeshVnData;
+        Qt3D::QAttribute *m_pVAttribute;
+        Qt3D::QBuffer *m_pVertexBuffer;
+        Qt3D::QAttribute *m_pVnAttribute;
+        Qt3D::QBuffer *m_pNormalBuffer;
+};
+
+
 class Mesh : public DrawItem 
 {
     Q_OBJECT
@@ -93,31 +114,14 @@ class Mesh : public DrawItem
     public:
         Mesh(feather::draw::Item* _item, Qt3D::QNode *parent=0);
         ~Mesh();
-        void update();
+        void updateItem();
+        void test();
 
-    /*
-    private Q_SLOTS:
-        void mouseClicked();
-    */
- 
     private:
         void build();
         Qt3D::QTransform *m_pTransform;
-        //Qt3D::QMaterial *m_pMaterial;
-        //WireEffect* m_pMaterialEffect;
         Qt3D::QPhongMaterial *m_pMaterial;
-        //Qt3D::QPhongMaterial *m_pWireMaterial;
         Qt3D::QGeometryRenderer *m_pMesh;
-        //Qt3D::QMouseInput *m_pMouseInput;
-        std::vector<feather::FVertex3D> m_aVertex;
-        Qt3D::QAttribute* m_pVAttribute;
-        Qt3D::QAttribute* m_pVnAttribute;
-        feather::FVertex3DArray* m_paMeshVData;
-        feather::FVertex3DArray* m_paMeshVnData;
-        Qt3D::QBuffer *m_vertexBuffer;
-        QByteArray m_vertexBytes;
-        Qt3D::QBuffer *m_normalBuffer;
-        QByteArray m_normalBytes;
         Qt3D::QPointLight* m_pLight;
 };
 
@@ -132,12 +136,7 @@ class Line : public DrawItem
     public:
         Line(feather::draw::Item* _item, Qt3D::QNode *parent=0);
         ~Line();
-        void update();
-
-    /*
-    private Q_SLOTS:
-        void mouseClicked();
-    */
+        void updateItem();
 
     private:
         void build();
@@ -151,7 +150,7 @@ class Line : public DrawItem
 };
 
 
-// GRID
+// Axis 
 
 class AxisGeometry : public Qt3D::QGeometry
 {
@@ -293,6 +292,22 @@ class Object: public Qt3D::QEntity
 };
 
 
+class FrameGraph : public Qt3D::QFrameGraph
+{
+    Q_OBJECT
+
+    public:
+        FrameGraph(Qt3D::QNode* parent=0);
+        ~FrameGraph();
+        void setCamera(Qt3D::QCamera* camera);
+
+    private:
+        Qt3D::QViewport* m_pViewport;
+        Qt3D::QClearBuffer* m_pClearBuffer;
+        Qt3D::QCameraSelector* m_pCameraSelector;
+};
+
+
 class Viewport2 : public Qt3D::QEntity
 {
     Q_OBJECT
@@ -319,6 +334,7 @@ class Viewport2 : public Qt3D::QEntity
         int minorSubDividLevel();
         bool showGrid();
         bool showAxis();
+        FrameGraph* frameGraph() { return m_pFrameGraph; };
         Q_INVOKABLE void doUpdate(){ updateScene(); };
         Q_INVOKABLE void addItems(unsigned int uid);
         Q_INVOKABLE void updateItems(unsigned int uid);
@@ -351,6 +367,11 @@ class Viewport2 : public Qt3D::QEntity
         Qt3D::QMouseInput *m_pMouseInput;
         Line* m_pLine;
         Qt3D::QPointLight* m_pLight;
+        Qt3D::QClearBuffer m_clearBuffer;
+        Qt3D::QTorusMesh* m_pTorus;
+        Qt3D::QCamera* m_pCamera;
+        Qt3D::Quick::Quick3DConfiguration* m_pConfiguration;
+        FrameGraph* m_pFrameGraph;
 };
 
 #endif

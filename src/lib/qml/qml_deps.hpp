@@ -68,6 +68,7 @@
 #include <Qt3DCore/QCamera>
 
 #include <Qt3DRenderer/QCuboidMesh>
+#include <Qt3DRenderer/QTorusMesh>
 #include <Qt3DRenderer/QPhongMaterial>
 #include <Qt3DRenderer/QShaderProgram>
 #include <Qt3DRenderer/QPointLight>
@@ -102,5 +103,7 @@
 #include <Qt3DInput/QMouseInput>
 #include <Qt3DInput/QMouseController>
 #include <Qt3DInput/Q3DMouseEvent>
+
+#include <Qt3DQuick/quick3dconfiguration.h>
 
 #endif
