@@ -241,7 +241,7 @@ Item {
         */
     }
 
-    function updateGL() { viewport.updateGL() }
+    //function updateGL() { viewport.updateGL() }
 
 
     Component.onCompleted: { 
