@@ -251,7 +251,8 @@ namespace feather
                         VkShaderStageFlags stageFlags,
                         uint32_t size,
                         uint32_t offset);
-            }
+
+            } // namespace initializer
 
         } // namespace tools
 

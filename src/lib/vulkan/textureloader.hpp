@@ -25,6 +25,7 @@
 #define TEXTURELOADER_HPP
 
 #include "deps.hpp"
+#include "tools.hpp"
 
 namespace feather
 {
