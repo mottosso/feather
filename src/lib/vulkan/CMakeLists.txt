@@ -17,6 +17,8 @@ ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
 SET(feather_vulkan_SRCS
     tools.cpp
     debug.cpp
+    node.cpp
+    mesh.cpp
     window.cpp
 )
 

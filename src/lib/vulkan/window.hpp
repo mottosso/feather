@@ -4,7 +4,7 @@
  *
  * Description: base vulkan window.
  *
- * Copyright (C) 2015 Richard Layman, rlayman2000@yahoo.com 
+ * Copyright (C) 2016 Richard Layman, rlayman2000@yahoo.com 
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 #include "vulkan_deps.hpp"
 #include "swapchain.hpp"
 #include "textureloader.hpp"
+#include "mesh.hpp"
 
 #define VERTEX_BUFFER_BIND_ID 0
 #define ENABLE_VALIDATION false
@@ -93,6 +94,9 @@ namespace feather
                 void createPipelineCache();
                 void setupFrameBuffer();
                 void flushSetupCommandBuffer();
+
+                // MOVED TO NODE
+                /*
                 // Prepare - setup data
                 void prepareSemaphore();
                 void prepareVertices();
@@ -104,8 +108,12 @@ namespace feather
                 void buildCommandBuffers();
 
                 void updateUniformBuffers();
+                */
+
+
                 void keyPressed(uint32_t keyCode);
-                void viewChanged();
+                // MOVED TO NODE
+                //void viewChanged();
                 void render();
                 void draw();
 
@@ -162,7 +170,8 @@ namespace feather
                 VkResult createInstance(bool enabled);
                 VkResult createDevice(VkDeviceQueueCreateInfo requestedQueues, bool validation);
                 VkBool32 getMemoryType(uint32_t typeBits, VkFlags properties, uint32_t *typeIndex);
-                VkPipelineShaderStageCreateInfo loadShader(const char * fileName, VkShaderStageFlagBits stage);
+                // MOVED TO NODE
+                //VkPipelineShaderStageCreateInfo loadShader(const char * fileName, VkShaderStageFlagBits stage);
                 
                 // MESH TESTING
 
@@ -196,7 +205,9 @@ namespace feather
                     VkPipeline solid;
                 } m_pipelines;
 
-
+                // Feather Methods
+                void load_sg();
+                std::vector<Node> m_aNodes;
         };
 
     } // namespace vulkan

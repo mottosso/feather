@@ -47,6 +47,9 @@ m_defaultClearColor({ { 0.025f, 0.025f, 0.025f, 1.0f } })
     initConnection();
     initVulkan(m_validation);
 
+    // add the nodes
+    m_aNodes.push_back(new Node(&m_device,&m_queue,&m_instance));
+
     // startup
     setupWindow();
     initSwapChain();
@@ -348,6 +351,14 @@ void Window::prepare()
     m_pTextureLoader = new feather::vulkan::tools::VulkanTextureLoader(m_physicalDevice, m_device, m_queue, m_commandPool);
 
     // Setup Data
+
+    bool prep=false;
+
+    for(auto node : m_aNodes)
+        prep = node->prepare();
+
+    // moved to node
+    /*
     prepareSemaphore();
     prepareVertices();
     prepareUniformBuffers();
@@ -356,7 +367,9 @@ void Window::prepare()
     setupDescriptorPool();
     setupDescriptorSet();
     buildCommandBuffers();
-    m_prepared = true;
+    */
+
+    m_prepared = prep;
 }
 
 void Window::createCommandPool()
@@ -618,6 +631,11 @@ void Window::flushSetupCommandBuffer()
     m_setupCommandBuffer = VK_NULL_HANDLE; // todo : check if still necessary
 }
 
+
+// MOVED TO NODE
+
+/*
+ 
 void Window::prepareSemaphore()
 {
     VkSemaphoreCreateInfo semaphoreCreateInfo = {};
@@ -1140,6 +1158,9 @@ void Window::buildCommandBuffers()
     }
 }
 
+*/
+
+
 void Window::renderLoop()
 {
     xcb_flush(m_pConnection);
@@ -1167,9 +1188,15 @@ void Window::render()
 
     if (!m_prepared)
         return;
+
+    for(auto node : m_aNodes)
+        node->render();
+    // MOVED TO NODE
+    /*
     vkDeviceWaitIdle(m_device);
     draw();
     vkDeviceWaitIdle(m_device);
+    */
 }
 
 void Window::draw()
@@ -1280,12 +1307,14 @@ void Window::handleEvent(const xcb_generic_event_t *event)
                 {
                     m_rotation.x += (m_mousePos.y - (float)motion->event_y) * 1.25f;
                     m_rotation.y -= (m_mousePos.x - (float)motion->event_x) * 1.25f;
-                    viewChanged();
+                    for(auto node: m_aNodes)
+                        node->viewChanged();
                 }
                 if (m_mouseButtons.right)
                 {
                     m_zoom += (m_mousePos.y - (float)motion->event_y) * .005f;
-                    viewChanged();
+                    for(auto node : m_aNodes)
+                        node->viewChanged();
                 }
                 m_mousePos = glm::vec2((float)motion->event_x, (float)motion->event_y);
             }
@@ -1327,9 +1356,15 @@ void Window::keyPressed(uint32_t keyCode)
     // TODO
 }
 
+// MOVED TO NODE
+/*
 void Window::viewChanged()
 {
     updateUniformBuffers();
 }
+*/
 
+void Window::load_sg()
+{
 
+}
