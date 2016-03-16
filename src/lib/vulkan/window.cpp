@@ -48,7 +48,7 @@ m_defaultClearColor({ { 0.025f, 0.025f, 0.025f, 1.0f } })
     initVulkan(m_validation);
 
     // add the nodes
-    m_aNodes.push_back(new Node(&m_device,&m_queue,&m_instance));
+    m_aNodes.push_back(new Node(&m_device));
 
     // startup
     setupWindow();
@@ -354,11 +354,6 @@ void Window::prepare()
 
     bool prep=false;
 
-    for(auto node : m_aNodes)
-        prep = node->prepare();
-
-    // moved to node
-    /*
     prepareSemaphore();
     prepareVertices();
     prepareUniformBuffers();
@@ -367,7 +362,6 @@ void Window::prepare()
     setupDescriptorPool();
     setupDescriptorSet();
     buildCommandBuffers();
-    */
 
     m_prepared = prep;
 }
@@ -632,10 +626,6 @@ void Window::flushSetupCommandBuffer()
 }
 
 
-// MOVED TO NODE
-
-/*
- 
 void Window::prepareSemaphore()
 {
     VkSemaphoreCreateInfo semaphoreCreateInfo = {};
@@ -655,7 +645,46 @@ void Window::prepareSemaphore()
 
 void Window::prepareVertices()
 {
-    // TODO replace this with the mesh vertex
+    for(auto node : m_aNodes)
+        node->prepareVertices();
+
+    struct Vertex {
+        float pos[3];
+        float col[3];
+    };
+
+    // Binding description
+    m_vertices.bindingDescriptions.resize(1);
+    m_vertices.bindingDescriptions[0].binding = VERTEX_BUFFER_BIND_ID;
+    m_vertices.bindingDescriptions[0].stride = sizeof(Vertex);
+    m_vertices.bindingDescriptions[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+    // Attribute descriptions
+    // Describes memory layout and shader attribute locations
+    m_vertices.attributeDescriptions.resize(2);
+    // Location 0 : Position
+    m_vertices.attributeDescriptions[0].binding = VERTEX_BUFFER_BIND_ID;
+    m_vertices.attributeDescriptions[0].location = 0;
+    m_vertices.attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+    m_vertices.attributeDescriptions[0].offset = 0;
+    m_vertices.attributeDescriptions[0].binding = 0;
+    // Location 1 : Color
+    m_vertices.attributeDescriptions[1].binding = VERTEX_BUFFER_BIND_ID;
+    m_vertices.attributeDescriptions[1].location = 1;
+    m_vertices.attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+    m_vertices.attributeDescriptions[1].offset = sizeof(float) * 3;
+    m_vertices.attributeDescriptions[1].binding = 0;
+
+    // Assign to vertex buffer
+    m_vertices.vi.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+    m_vertices.vi.pNext = NULL;
+    m_vertices.vi.vertexBindingDescriptionCount = m_vertices.bindingDescriptions.size();
+    m_vertices.vi.pVertexBindingDescriptions = m_vertices.bindingDescriptions.data();
+    m_vertices.vi.vertexAttributeDescriptionCount = m_vertices.attributeDescriptions.size();
+    m_vertices.vi.pVertexAttributeDescriptions = m_vertices.attributeDescriptions.data();
+ 
+
+    /*
     struct Vertex {
         float pos[3];
         float col[3];
@@ -761,6 +790,7 @@ void Window::prepareVertices()
     m_vertices.vi.pVertexBindingDescriptions = m_vertices.bindingDescriptions.data();
     m_vertices.vi.vertexAttributeDescriptionCount = m_vertices.attributeDescriptions.size();
     m_vertices.vi.pVertexAttributeDescriptions = m_vertices.attributeDescriptions.data();
+    */
 }
 
 void Window::prepareUniformBuffers()
@@ -1116,6 +1146,7 @@ void Window::buildCommandBuffers()
         // Bind the rendering pipeline (including the shaders)
         vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.solid);
 
+        /*
         // Bind triangle vertices
         VkDeviceSize offsets[1] = { 0 };
         vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &m_vertices.buf, offsets);
@@ -1125,6 +1156,18 @@ void Window::buildCommandBuffers()
 
         // Draw indexed triangle
         vkCmdDrawIndexed(m_drawCommandBuffers[i], m_indices.count, 1, 0, 0, 1);
+        */
+        for(auto node : m_aNodes){
+            // Bind triangle vertices
+            VkDeviceSize offsets[1] = { 0 };
+            vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, node->vbuffer(), offsets);
+
+            // Bind triangle indices
+            vkCmdBindIndexBuffer(m_drawCommandBuffers[i], node->ibuffer(), 0, VK_INDEX_TYPE_UINT32);
+
+            // Draw indexed triangle
+            vkCmdDrawIndexed(m_drawCommandBuffers[i], node->icount(), 1, 0, 0, 1);
+        }
 
         vkCmdEndRenderPass(m_drawCommandBuffers[i]);
 
@@ -1158,8 +1201,6 @@ void Window::buildCommandBuffers()
     }
 }
 
-*/
-
 
 void Window::renderLoop()
 {
@@ -1189,14 +1230,9 @@ void Window::render()
     if (!m_prepared)
         return;
 
-    for(auto node : m_aNodes)
-        node->render();
-    // MOVED TO NODE
-    /*
     vkDeviceWaitIdle(m_device);
     draw();
     vkDeviceWaitIdle(m_device);
-    */
 }
 
 void Window::draw()
@@ -1307,14 +1343,12 @@ void Window::handleEvent(const xcb_generic_event_t *event)
                 {
                     m_rotation.x += (m_mousePos.y - (float)motion->event_y) * 1.25f;
                     m_rotation.y -= (m_mousePos.x - (float)motion->event_x) * 1.25f;
-                    for(auto node: m_aNodes)
-                        node->viewChanged();
+                    viewChanged();
                 }
                 if (m_mouseButtons.right)
                 {
                     m_zoom += (m_mousePos.y - (float)motion->event_y) * .005f;
-                    for(auto node : m_aNodes)
-                        node->viewChanged();
+                    viewChanged();
                 }
                 m_mousePos = glm::vec2((float)motion->event_x, (float)motion->event_y);
             }
@@ -1356,13 +1390,10 @@ void Window::keyPressed(uint32_t keyCode)
     // TODO
 }
 
-// MOVED TO NODE
-/*
 void Window::viewChanged()
 {
     updateUniformBuffers();
 }
-*/
 
 void Window::load_sg()
 {

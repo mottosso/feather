@@ -36,63 +36,34 @@ namespace feather
         class Node
         {
             public:
-                Node(VkDevice* device=0, VkQueue* queue=0, VkInstance* m_instance=0);
+                Node(VkDevice* device=0);
                 ~Node();
-                bool prepare();
-                void render();
-                void viewChanged();
+                VkBuffer* vbuffer() { return &m_vertices.buf; };
+                VkBuffer* ibuffer() { return &m_indices.buf; };
+                int icount() { return m_indices.count; };
 
             protected:
                 // vulkan system
                 VkDevice* m_device;
-                VkQueue m_queue;
-                VkInstance m_instance;
  
                 // node methods and members
-                void prepareSemaphore();
                 void prepareVertices();
-                void prepareUniformBuffers();
-                void setupDescriptorSetLayout();
-                void preparePipelines();
-                void setupDescriptorPool();
-                void setupDescriptorSet();
-                void buildCommandBuffers();
 
-                void updateUniformBuffers();
-                VkPipelineShaderStageCreateInfo loadShader(const char * fileName, VkShaderStageFlagBits stage);
-
-                void draw();
-
+                // Vertex Buffer
                 struct {
                     VkBuffer buf;
                     VkDeviceMemory mem;
-                    VkPipelineVertexInputStateCreateInfo vi;
-                    std::vector<VkVertexInputBindingDescription> bindingDescriptions;
-                    std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
+                    //VkPipelineVertexInputStateCreateInfo vi;
+                    //std::vector<VkVertexInputBindingDescription> bindingDescriptions;
+                    //std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
                 } m_vertices;
 
+                // Indic Buffer
                 struct {
                     int count;
                     VkBuffer buf;
                     VkDeviceMemory mem;
                 } m_indices;
-
-                struct {
-                    VkBuffer buffer;
-                    VkDeviceMemory memory;
-                    VkDescriptorBufferInfo descriptor;
-                }  m_uniformDataVS;
-
-                struct {
-                    glm::mat4 projectionMatrix;
-                    glm::mat4 modelMatrix;
-                    glm::mat4 viewMatrix;
-                } m_uboVS;
-
-                struct {
-                    VkPipeline solid;
-                } m_pipelines;
-
 
         };
 

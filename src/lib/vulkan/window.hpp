@@ -95,8 +95,6 @@ namespace feather
                 void setupFrameBuffer();
                 void flushSetupCommandBuffer();
 
-                // MOVED TO NODE
-                /*
                 // Prepare - setup data
                 void prepareSemaphore();
                 void prepareVertices();
@@ -108,12 +106,10 @@ namespace feather
                 void buildCommandBuffers();
 
                 void updateUniformBuffers();
-                */
 
 
                 void keyPressed(uint32_t keyCode);
-                // MOVED TO NODE
-                //void viewChanged();
+                void viewChanged();
                 void render();
                 void draw();
 
@@ -171,10 +167,12 @@ namespace feather
                 VkResult createDevice(VkDeviceQueueCreateInfo requestedQueues, bool validation);
                 VkBool32 getMemoryType(uint32_t typeBits, VkFlags properties, uint32_t *typeIndex);
                 // MOVED TO NODE
-                //VkPipelineShaderStageCreateInfo loadShader(const char * fileName, VkShaderStageFlagBits stage);
+                VkPipelineShaderStageCreateInfo loadShader(const char * fileName, VkShaderStageFlagBits stage);
                 
                 // MESH TESTING
 
+                // MOVED TO NODE
+                /*
                 struct {
                     VkBuffer buf;
                     VkDeviceMemory mem;
@@ -188,6 +186,15 @@ namespace feather
                     VkBuffer buf;
                     VkDeviceMemory mem;
                 } m_indices;
+                */
+
+                // buf and mem are in the Node
+                struct {
+                    VkPipelineVertexInputStateCreateInfo vi;
+                    std::vector<VkVertexInputBindingDescription> bindingDescriptions;
+                    std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
+                } m_vertices;
+
 
                 struct {
                     VkBuffer buffer;
