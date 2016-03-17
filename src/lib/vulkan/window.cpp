@@ -41,8 +41,13 @@ m_setupCommandBuffer(VK_NULL_HANDLE),
 m_postPresentCommandBuffer(VK_NULL_HANDLE),
 m_prePresentCommandBuffer(VK_NULL_HANDLE),
 m_colorFormat(VK_FORMAT_B8G8R8A8_UNORM),
-m_defaultClearColor({ { 0.025f, 0.025f, 0.025f, 1.0f } })
+m_defaultClearColor({ { 0.325f, 0.325f, 0.325f, 1.0f } })
 {
+    // add the nodes
+    m_aNodes.push_back(new Node());
+    //m_aNodes.push_back(new Node());
+
+
     // setup    
     initConnection();
     initVulkan(m_validation);
@@ -348,6 +353,9 @@ void Window::prepare()
     m_pTextureLoader = new feather::vulkan::tools::VulkanTextureLoader(m_physicalDevice, m_device, m_queue, m_commandPool);
 
     // Setup Data
+
+    bool prep=true;
+
     prepareSemaphore();
     prepareVertices();
     prepareUniformBuffers();
@@ -356,7 +364,8 @@ void Window::prepare()
     setupDescriptorPool();
     setupDescriptorSet();
     buildCommandBuffers();
-    m_prepared = true;
+
+    m_prepared = prep;
 }
 
 void Window::createCommandPool()
@@ -618,6 +627,7 @@ void Window::flushSetupCommandBuffer()
     m_setupCommandBuffer = VK_NULL_HANDLE; // todo : check if still necessary
 }
 
+
 void Window::prepareSemaphore()
 {
     VkSemaphoreCreateInfo semaphoreCreateInfo = {};
@@ -637,7 +647,46 @@ void Window::prepareSemaphore()
 
 void Window::prepareVertices()
 {
-    // TODO replace this with the mesh vertex
+    struct Vertex {
+        float pos[3];
+        float col[3];
+    };
+
+    for(auto node : m_aNodes) {
+        node->prepareVertices(m_device,m_deviceMemoryProperties,&meshBuffer);
+
+        // Binding description
+        m_vertices.bindingDescriptions.resize(1);
+        m_vertices.bindingDescriptions[0].binding = VERTEX_BUFFER_BIND_ID;
+        m_vertices.bindingDescriptions[0].stride = sizeof(Vertex);
+        m_vertices.bindingDescriptions[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+        // Attribute descriptions
+        // Describes memory layout and shader attribute locations
+        m_vertices.attributeDescriptions.resize(2);
+        // Location 0 : Position
+        m_vertices.attributeDescriptions[0].binding = VERTEX_BUFFER_BIND_ID;
+        m_vertices.attributeDescriptions[0].location = 0;
+        m_vertices.attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+        m_vertices.attributeDescriptions[0].offset = 0;
+        m_vertices.attributeDescriptions[0].binding = 0;
+        // Location 1 : Color
+        m_vertices.attributeDescriptions[1].binding = VERTEX_BUFFER_BIND_ID;
+        m_vertices.attributeDescriptions[1].location = 1;
+        m_vertices.attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+        m_vertices.attributeDescriptions[1].offset = sizeof(float) * 3;
+        m_vertices.attributeDescriptions[1].binding = 0;
+
+        // Assign to vertex buffer
+        m_vertices.vi.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+        m_vertices.vi.pNext = NULL;
+        m_vertices.vi.vertexBindingDescriptionCount = m_vertices.bindingDescriptions.size();
+        m_vertices.vi.pVertexBindingDescriptions = m_vertices.bindingDescriptions.data();
+        m_vertices.vi.vertexAttributeDescriptionCount = m_vertices.attributeDescriptions.size();
+        m_vertices.vi.pVertexAttributeDescriptions = m_vertices.attributeDescriptions.data();
+    }
+
+    /*
     struct Vertex {
         float pos[3];
         float col[3];
@@ -743,6 +792,7 @@ void Window::prepareVertices()
     m_vertices.vi.pVertexBindingDescriptions = m_vertices.bindingDescriptions.data();
     m_vertices.vi.vertexAttributeDescriptionCount = m_vertices.attributeDescriptions.size();
     m_vertices.vi.pVertexAttributeDescriptions = m_vertices.attributeDescriptions.data();
+    */
 }
 
 void Window::prepareUniformBuffers()
@@ -1098,6 +1148,7 @@ void Window::buildCommandBuffers()
         // Bind the rendering pipeline (including the shaders)
         vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.solid);
 
+        /*
         // Bind triangle vertices
         VkDeviceSize offsets[1] = { 0 };
         vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &m_vertices.buf, offsets);
@@ -1107,6 +1158,19 @@ void Window::buildCommandBuffers()
 
         // Draw indexed triangle
         vkCmdDrawIndexed(m_drawCommandBuffers[i], m_indices.count, 1, 0, 0, 1);
+        */
+        for(auto node : m_aNodes){
+            //std::cout << "binding node, i count=" << meshBuffer.indexCount << std::endl;
+            // Bind triangle vertices
+            VkDeviceSize offsets[1] = { 0 };
+            vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &meshBuffer.vertices.buf, offsets);
+
+            // Bind triangle indices
+            vkCmdBindIndexBuffer(m_drawCommandBuffers[i], meshBuffer.indices.buf, 0, VK_INDEX_TYPE_UINT32);
+
+            // Draw indexed triangle
+            vkCmdDrawIndexed(m_drawCommandBuffers[i], meshBuffer.indexCount, 1, 0, 0, 1);
+        }
 
         vkCmdEndRenderPass(m_drawCommandBuffers[i]);
 
@@ -1140,6 +1204,7 @@ void Window::buildCommandBuffers()
     }
 }
 
+
 void Window::renderLoop()
 {
     xcb_flush(m_pConnection);
@@ -1167,9 +1232,12 @@ void Window::render()
 
     if (!m_prepared)
         return;
+
     vkDeviceWaitIdle(m_device);
     draw();
     vkDeviceWaitIdle(m_device);
+
+    updateUniformBuffers();
 }
 
 void Window::draw()
@@ -1332,4 +1400,7 @@ void Window::viewChanged()
     updateUniformBuffers();
 }
 
+void Window::load_sg()
+{
 
+}
