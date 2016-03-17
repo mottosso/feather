@@ -45,6 +45,8 @@ m_defaultClearColor({ { 0.325f, 0.325f, 0.325f, 1.0f } })
 {
     // add the nodes
     m_aNodes.push_back(new Node());
+    //m_aNodes.push_back(new Node());
+
 
     // setup    
     initConnection();
