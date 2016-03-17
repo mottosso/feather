@@ -195,6 +195,7 @@ namespace feather
                     std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
                 } m_vertices;
 
+                MeshBuffer meshBuffer;
 
                 struct {
                     VkBuffer buffer;
@@ -214,7 +215,7 @@ namespace feather
 
                 // Feather Methods
                 void load_sg();
-                std::vector<Node> m_aNodes;
+                std::vector<Node*> m_aNodes;
         };
 
     } // namespace vulkan

@@ -40,8 +40,6 @@ namespace feather
                 Mesh();
                 ~Mesh();
 
-            private:
-
         };
 
     } // namespace vulkan

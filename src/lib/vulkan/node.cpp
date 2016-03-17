@@ -25,8 +25,7 @@
 
 using namespace feather::vulkan;
 
-Node::Node(VkDevice* device) :
-m_device(device)
+Node::Node()
 {
 
 }
@@ -36,7 +35,7 @@ Node::~Node()
 
 }
 
-void Node::prepareVertices()
+void Node::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer)
 {
     struct Vertex {
         float pos[3];
@@ -74,19 +73,19 @@ void Node::prepareVertices()
     bufInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
     bufInfo.flags = 0;
     //	Copy vertex data to VRAM
-    memset(&m_vertices, 0, sizeof(m_vertices));
-    err = vkCreateBuffer(*m_device, &bufInfo, nullptr, &m_vertices.buf);
+    //memset(&m_vertices, 0, sizeof(m_vertices));
+    err = vkCreateBuffer(device, &bufInfo, nullptr, &meshBuffer->vertices.buf);
     assert(!err);
-    vkGetBufferMemoryRequirements(*m_device, m_vertices.buf, &memReqs);
+    vkGetBufferMemoryRequirements(device, meshBuffer->vertices.buf, &memReqs);
     memAlloc.allocationSize = memReqs.size;
-    getMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
-    err = vkAllocateMemory(*m_device, &memAlloc, nullptr, &m_vertices.mem);
+    getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
+    err = vkAllocateMemory(device, &memAlloc, nullptr, &meshBuffer->vertices.mem);
     assert(!err);
-    err = vkMapMemory(*m_device, m_vertices.mem, 0, memAlloc.allocationSize, 0, &data);
+    err = vkMapMemory(device, meshBuffer->vertices.mem, 0, memAlloc.allocationSize, 0, &data);
     assert(!err);
     memcpy(data, vertexBuffer.data(), vertexBufferSize);
-    vkUnmapMemory(*m_device, m_vertices.mem);
-    err = vkBindBufferMemory(*m_device, m_vertices.buf, m_vertices.mem, 0);
+    vkUnmapMemory(device, meshBuffer->vertices.mem);
+    err = vkBindBufferMemory(device, meshBuffer->vertices.buf, meshBuffer->vertices.mem, 0);
     assert(!err);
 
     // Generate index buffer
@@ -98,21 +97,21 @@ void Node::prepareVertices()
     indexbufferInfo.usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
     indexbufferInfo.flags = 0;
     // Copy index data to VRAM
-    memset(&m_indices, 0, sizeof(m_indices));
-    err = vkCreateBuffer(*m_device, &indexbufferInfo, nullptr, &m_indices.buf);
+    //memset(&m_indices, 0, sizeof(m_indices));
+    err = vkCreateBuffer(device, &indexbufferInfo, nullptr, &meshBuffer->indices.buf);
     assert(!err);
-    vkGetBufferMemoryRequirements(*m_device, m_indices.buf, &memReqs);
+    vkGetBufferMemoryRequirements(device, meshBuffer->indices.buf, &memReqs);
     memAlloc.allocationSize = memReqs.size;
-    getMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
-    err = vkAllocateMemory(*m_device, &memAlloc, nullptr, &m_indices.mem);
+    getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
+    err = vkAllocateMemory(device, &memAlloc, nullptr, &meshBuffer->indices.mem);
     assert(!err);
-    err = vkMapMemory(*m_device, m_indices.mem, 0, indexBufferSize, 0, &data);
+    err = vkMapMemory(device, meshBuffer->indices.mem, 0, indexBufferSize, 0, &data);
     assert(!err);
     memcpy(data, indexBuffer.data(), indexBufferSize);
-    vkUnmapMemory(*m_device, m_indices.mem);
-    err = vkBindBufferMemory(*m_device, m_indices.buf, m_indices.mem, 0);
+    vkUnmapMemory(device, meshBuffer->indices.mem);
+    err = vkBindBufferMemory(device, meshBuffer->indices.buf, meshBuffer->indices.mem, 0);
     assert(!err);
-    m_indices.count = indexBuffer.size();
+    meshBuffer->indexCount = indexBuffer.size();
 
     // Putting this back into the Window for now
     /*
@@ -148,3 +147,22 @@ void Node::prepareVertices()
     */
 
 }
+
+
+VkBool32 Node::getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t typeBits, VkFlags properties, uint32_t *typeIndex)
+{
+    for (uint32_t i = 0; i < 32; i++)
+    {
+        if ((typeBits & 1) == 1)
+        {
+            if ((deviceMemoryProperties.memoryTypes[i].propertyFlags & properties) == properties)
+            {
+                *typeIndex = i;
+                return true;
+            }
+        }
+        typeBits >>= 1;
+    }
+    return false;
+}
+

@@ -21,8 +21,8 @@
  *
  ***********************************************************************/
 
-#ifndef MESH_HPP
-#define MESH_HPP
+#ifndef NODE_HPP
+#define NODE_HPP
 
 #include "deps.hpp"
 #include "vulkan_deps.hpp"
@@ -33,23 +33,33 @@ namespace feather
     namespace vulkan
     {
 
+        struct MeshBufferInfo {
+            VkBuffer buf = VK_NULL_HANDLE;
+            VkDeviceMemory mem = VK_NULL_HANDLE;
+        };
+    
+        struct MeshBuffer {
+            MeshBufferInfo vertices;
+            MeshBufferInfo indices;
+            uint32_t indexCount;
+        };
+
         class Node
         {
             public:
-                Node(VkDevice* device=0);
+                Node();
                 ~Node();
-                VkBuffer* vbuffer() { return &m_vertices.buf; };
-                VkBuffer* ibuffer() { return &m_indices.buf; };
-                int icount() { return m_indices.count; };
-
-            protected:
-                // vulkan system
-                VkDevice* m_device;
+                //VkBuffer* vbuffer() { return &m_vertices.buf; };
+                //VkBuffer* ibuffer() { return &m_indices.buf; };
+                //int icount() { return m_indices.count; };
+                void prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer);
  
+            protected:
                 // node methods and members
-                void prepareVertices();
-
+               VkBool32 getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t typeBits, VkFlags properties, uint32_t *typeIndex);
+ 
                 // Vertex Buffer
+                /*
                 struct {
                     VkBuffer buf;
                     VkDeviceMemory mem;
@@ -64,6 +74,7 @@ namespace feather
                     VkBuffer buf;
                     VkDeviceMemory mem;
                 } m_indices;
+                */
 
         };
 
