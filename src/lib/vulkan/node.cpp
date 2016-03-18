@@ -52,6 +52,7 @@ void Node::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties dev
     int vertexBufferSize = vertexBuffer.size() * sizeof(Vertex);
 
     // Setup indices
+    //std::vector<uint32_t> indexBuffer = { 0, 1, 2, 0, 2, 3 };
     std::vector<uint32_t> indexBuffer = { 0, 1, 2, 0, 2, 3 };
     int indexBufferSize = indexBuffer.size() * sizeof(uint32_t);
 

@@ -24,6 +24,10 @@
 #include "window.hpp"
 #include "debug.hpp"
 
+// KEYCODES
+#define KEY_c 0x36
+#define KEY_space 0x41
+
 using namespace feather::vulkan;
 
 Window::Window(std::string _title, unsigned int _width, unsigned int _height, float _zoom, bool _validation) :
@@ -845,6 +849,7 @@ void Window::updateUniformBuffers()
     m_uboVS.viewMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, m_zoom));
 
     m_uboVS.modelMatrix = glm::mat4();
+    m_uboVS.modelMatrix = m_uboVS.viewMatrix * glm::translate(m_uboVS.modelMatrix, glm::vec3(0,1*step,0));
     m_uboVS.modelMatrix = glm::rotate(m_uboVS.modelMatrix, glm::radians(m_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
     m_uboVS.modelMatrix = glm::rotate(m_uboVS.modelMatrix, glm::radians(m_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     m_uboVS.modelMatrix = glm::rotate(m_uboVS.modelMatrix, glm::radians(m_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -855,6 +860,19 @@ void Window::updateUniformBuffers()
     assert(!err);
     memcpy(pData, &m_uboVS, sizeof(m_uboVS));
     vkUnmapMemory(m_device, m_uniformDataVS.memory);
+    assert(!err);
+}
+
+
+void Window::updateNodeBuffers()
+{
+    // Map uniform buffer and update it
+    uint8_t *pData;
+    VkResult err = vkMapMemory(m_device, m_uniformDataVS.memory, 0, sizeof(m_uboVS), 0, (void **)&pData);
+    assert(!err);
+    memcpy(pData, &m_uboVS, sizeof(m_uboVS));
+    vkUnmapMemory(m_device, m_uniformDataVS.memory);
+
     assert(!err);
 }
 
@@ -1393,11 +1411,28 @@ void Window::handleEvent(const xcb_generic_event_t *event)
 void Window::keyPressed(uint32_t keyCode)
 {
     // TODO
+    std::cout << "keycode: " << keyCode  << std::endl;
+    switch(keyCode){
+        case KEY_c:
+            std::cout << "c pressed\n";
+            nodeChanged();
+            break;
+        case KEY_space:
+            break;
+        default:
+            break;
+    } 
 }
 
 void Window::viewChanged()
 {
     updateUniformBuffers();
+}
+
+void Window::nodeChanged()
+{
+    step += 0.2;
+    viewChanged();
 }
 
 void Window::load_sg()
