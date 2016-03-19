@@ -49,33 +49,13 @@ namespace feather
             public:
                 Node();
                 ~Node();
-                //VkBuffer* vbuffer() { return &m_vertices.buf; };
-                //VkBuffer* ibuffer() { return &m_indices.buf; };
-                //int icount() { return m_indices.count; };
                 void prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer);
+                void updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer,float step=1.0);
  
             protected:
                 // node methods and members
                VkBool32 getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t typeBits, VkFlags properties, uint32_t *typeIndex);
  
-                // Vertex Buffer
-                /*
-                struct {
-                    VkBuffer buf;
-                    VkDeviceMemory mem;
-                    //VkPipelineVertexInputStateCreateInfo vi;
-                    //std::vector<VkVertexInputBindingDescription> bindingDescriptions;
-                    //std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
-                } m_vertices;
-
-                // Indic Buffer
-                struct {
-                    int count;
-                    VkBuffer buf;
-                    VkDeviceMemory mem;
-                } m_indices;
-                */
-
         };
 
     } // namespace vulkan
