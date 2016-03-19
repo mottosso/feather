@@ -106,10 +106,11 @@ namespace feather
                 void buildCommandBuffers();
 
                 void updateUniformBuffers();
-
+                void updateNodeBuffers();
 
                 void keyPressed(uint32_t keyCode);
                 void viewChanged();
+                void nodeChanged();
                 void render();
                 void draw();
 
@@ -216,6 +217,9 @@ namespace feather
                 // Feather Methods
                 void load_sg();
                 std::vector<Node*> m_aNodes;
+
+                // TESTING
+                float step=1.0;
         };
 
     } // namespace vulkan

@@ -52,6 +52,7 @@ void Node::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties dev
     int vertexBufferSize = vertexBuffer.size() * sizeof(Vertex);
 
     // Setup indices
+    //std::vector<uint32_t> indexBuffer = { 0, 1, 2, 0, 2, 3 };
     std::vector<uint32_t> indexBuffer = { 0, 1, 2, 0, 2, 3 };
     int indexBufferSize = indexBuffer.size() * sizeof(uint32_t);
 
@@ -113,40 +114,6 @@ void Node::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties dev
     err = vkBindBufferMemory(device, meshBuffer->indices.buf, meshBuffer->indices.mem, 0);
     assert(!err);
     meshBuffer->indexCount = indexBuffer.size();
-
-    // Putting this back into the Window for now
-    /*
-    // Binding description
-    m_vertices.bindingDescriptions.resize(1);
-    m_vertices.bindingDescriptions[0].binding = VERTEX_BUFFER_BIND_ID;
-    m_vertices.bindingDescriptions[0].stride = sizeof(Vertex);
-    m_vertices.bindingDescriptions[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-
-    // Attribute descriptions
-    // Describes memory layout and shader attribute locations
-    m_vertices.attributeDescriptions.resize(2);
-    // Location 0 : Position
-    m_vertices.attributeDescriptions[0].binding = VERTEX_BUFFER_BIND_ID;
-    m_vertices.attributeDescriptions[0].location = 0;
-    m_vertices.attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-    m_vertices.attributeDescriptions[0].offset = 0;
-    m_vertices.attributeDescriptions[0].binding = 0;
-    // Location 1 : Color
-    m_vertices.attributeDescriptions[1].binding = VERTEX_BUFFER_BIND_ID;
-    m_vertices.attributeDescriptions[1].location = 1;
-    m_vertices.attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-    m_vertices.attributeDescriptions[1].offset = sizeof(float) * 3;
-    m_vertices.attributeDescriptions[1].binding = 0;
-
-    // Assign to vertex buffer
-    m_vertices.vi.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    m_vertices.vi.pNext = NULL;
-    m_vertices.vi.vertexBindingDescriptionCount = m_vertices.bindingDescriptions.size();
-    m_vertices.vi.pVertexBindingDescriptions = m_vertices.bindingDescriptions.data();
-    m_vertices.vi.vertexAttributeDescriptionCount = m_vertices.attributeDescriptions.size();
-    m_vertices.vi.pVertexAttributeDescriptions = m_vertices.attributeDescriptions.data();
-    */
-
 }
 
 
@@ -167,3 +134,70 @@ VkBool32 Node::getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProper
     return false;
 }
 
+
+void Node::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer, float step)
+{
+    // free the vertex buffer
+    vkDestroyBuffer(device, meshBuffer->vertices.buf, nullptr);
+    vkFreeMemory(device, meshBuffer->vertices.mem, nullptr);
+    /*
+    if (meshBuffer->indices.buf != VK_NULL_HANDLE)
+    {
+        vkDestroyBuffer(device, meshBuffer->indices.buf, nullptr);
+        vkFreeMemory(device, meshBuffer->indices.mem, nullptr);
+    }
+    */
+
+    struct Vertex {
+        float pos[3];
+        float col[3];
+    };
+
+    // Setup vertices
+    std::vector<Vertex> vertexBuffer = {
+        { { 1.0f * step,  1.0f * step, 0.0f },{ 1.0f, 0.0f, 0.0f } },
+        { { -1.0f,  1.0f, 0.0f },{ 0.0f, 1.0f, 0.0f } },
+        { { 0.0f, -1.0f, 0.0f },{ 0.0f, 0.0f, 1.0f } },
+        { { 2.0f, -1.0f, 0.0f },{ 0.0f, 0.0f, 1.0f } }
+    };
+    int vertexBufferSize = vertexBuffer.size() * sizeof(Vertex);
+
+    // Setup indices
+    //std::vector<uint32_t> indexBuffer = { 0, 1, 2, 0, 2, 3 };
+    std::vector<uint32_t> indexBuffer = { 0, 1, 2, 0, 2, 3 };
+    int indexBufferSize = indexBuffer.size() * sizeof(uint32_t);
+
+    VkMemoryAllocateInfo memAlloc = {};
+    memAlloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    memAlloc.pNext = NULL;
+    memAlloc.allocationSize = 0;
+    memAlloc.memoryTypeIndex = 0;
+    VkMemoryRequirements memReqs;
+
+    VkResult err;
+    void *data;
+
+    // Generate vertex buffer
+    //	Setup
+    VkBufferCreateInfo bufInfo = {};
+    bufInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    bufInfo.pNext = NULL;
+    bufInfo.size = vertexBufferSize;
+    bufInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+    bufInfo.flags = 0;
+    //	Copy vertex data to VRAM
+    //memset(&m_vertices, 0, sizeof(m_vertices));
+    err = vkCreateBuffer(device, &bufInfo, nullptr, &meshBuffer->vertices.buf);
+    assert(!err);
+    vkGetBufferMemoryRequirements(device, meshBuffer->vertices.buf, &memReqs);
+    memAlloc.allocationSize = memReqs.size;
+    getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
+    err = vkAllocateMemory(device, &memAlloc, nullptr, &meshBuffer->vertices.mem);
+    assert(!err);
+    err = vkMapMemory(device, meshBuffer->vertices.mem, 0, memAlloc.allocationSize, 0, &data);
+    assert(!err);
+    memcpy(data, vertexBuffer.data(), vertexBufferSize);
+    vkUnmapMemory(device, meshBuffer->vertices.mem);
+    err = vkBindBufferMemory(device, meshBuffer->vertices.buf, meshBuffer->vertices.mem, 0);
+    assert(!err);
+}

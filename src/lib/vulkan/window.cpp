@@ -24,6 +24,10 @@
 #include "window.hpp"
 #include "debug.hpp"
 
+// KEYCODES
+#define KEY_c 0x36
+#define KEY_space 0x41
+
 using namespace feather::vulkan;
 
 Window::Window(std::string _title, unsigned int _width, unsigned int _height, float _zoom, bool _validation) :
@@ -685,114 +689,6 @@ void Window::prepareVertices()
         m_vertices.vi.vertexAttributeDescriptionCount = m_vertices.attributeDescriptions.size();
         m_vertices.vi.pVertexAttributeDescriptions = m_vertices.attributeDescriptions.data();
     }
-
-    /*
-    struct Vertex {
-        float pos[3];
-        float col[3];
-    };
-
-    // Setup vertices
-    std::vector<Vertex> vertexBuffer = {
-        { { 1.0f,  1.0f, 0.0f },{ 1.0f, 0.0f, 0.0f } },
-        { { -1.0f,  1.0f, 0.0f },{ 0.0f, 1.0f, 0.0f } },
-        { { 0.0f, -1.0f, 0.0f },{ 0.0f, 0.0f, 1.0f } }
-    };
-    int vertexBufferSize = vertexBuffer.size() * sizeof(Vertex);
-
-    // Setup indices
-    std::vector<uint32_t> indexBuffer = { 0, 1, 2 };
-    int indexBufferSize = indexBuffer.size() * sizeof(uint32_t);
-
-    VkMemoryAllocateInfo memAlloc = {};
-    memAlloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    memAlloc.pNext = NULL;
-    memAlloc.allocationSize = 0;
-    memAlloc.memoryTypeIndex = 0;
-    VkMemoryRequirements memReqs;
-
-    VkResult err;
-    void *data;
-
-    // Generate vertex buffer
-    //	Setup
-    VkBufferCreateInfo bufInfo = {};
-    bufInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufInfo.pNext = NULL;
-    bufInfo.size = vertexBufferSize;
-    bufInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    bufInfo.flags = 0;
-    //	Copy vertex data to VRAM
-    memset(&m_vertices, 0, sizeof(m_vertices));
-    err = vkCreateBuffer(m_device, &bufInfo, nullptr, &m_vertices.buf);
-    assert(!err);
-    vkGetBufferMemoryRequirements(m_device, m_vertices.buf, &memReqs);
-    memAlloc.allocationSize = memReqs.size;
-    getMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
-    err = vkAllocateMemory(m_device, &memAlloc, nullptr, &m_vertices.mem);
-    assert(!err);
-    err = vkMapMemory(m_device, m_vertices.mem, 0, memAlloc.allocationSize, 0, &data);
-    assert(!err);
-    memcpy(data, vertexBuffer.data(), vertexBufferSize);
-    vkUnmapMemory(m_device, m_vertices.mem);
-    err = vkBindBufferMemory(m_device, m_vertices.buf, m_vertices.mem, 0);
-    assert(!err);
-
-    // Generate index buffer
-    //	Setup
-    VkBufferCreateInfo indexbufferInfo = {};
-    indexbufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    indexbufferInfo.pNext = NULL;
-    indexbufferInfo.size = indexBufferSize;
-    indexbufferInfo.usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
-    indexbufferInfo.flags = 0;
-    // Copy index data to VRAM
-    memset(&m_indices, 0, sizeof(m_indices));
-    err = vkCreateBuffer(m_device, &indexbufferInfo, nullptr, &m_indices.buf);
-    assert(!err);
-    vkGetBufferMemoryRequirements(m_device, m_indices.buf, &memReqs);
-    memAlloc.allocationSize = memReqs.size;
-    getMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
-    err = vkAllocateMemory(m_device, &memAlloc, nullptr, &m_indices.mem);
-    assert(!err);
-    err = vkMapMemory(m_device, m_indices.mem, 0, indexBufferSize, 0, &data);
-    assert(!err);
-    memcpy(data, indexBuffer.data(), indexBufferSize);
-    vkUnmapMemory(m_device, m_indices.mem);
-    err = vkBindBufferMemory(m_device, m_indices.buf, m_indices.mem, 0);
-    assert(!err);
-    m_indices.count = indexBuffer.size();
-
-    // Binding description
-    m_vertices.bindingDescriptions.resize(1);
-    m_vertices.bindingDescriptions[0].binding = VERTEX_BUFFER_BIND_ID;
-    m_vertices.bindingDescriptions[0].stride = sizeof(Vertex);
-    m_vertices.bindingDescriptions[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-
-    // Attribute descriptions
-    // Describes memory layout and shader attribute locations
-    m_vertices.attributeDescriptions.resize(2);
-    // Location 0 : Position
-    m_vertices.attributeDescriptions[0].binding = VERTEX_BUFFER_BIND_ID;
-    m_vertices.attributeDescriptions[0].location = 0;
-    m_vertices.attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-    m_vertices.attributeDescriptions[0].offset = 0;
-    m_vertices.attributeDescriptions[0].binding = 0;
-    // Location 1 : Color
-    m_vertices.attributeDescriptions[1].binding = VERTEX_BUFFER_BIND_ID;
-    m_vertices.attributeDescriptions[1].location = 1;
-    m_vertices.attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-    m_vertices.attributeDescriptions[1].offset = sizeof(float) * 3;
-    m_vertices.attributeDescriptions[1].binding = 0;
-
-    // Assign to vertex buffer
-    m_vertices.vi.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    m_vertices.vi.pNext = NULL;
-    m_vertices.vi.vertexBindingDescriptionCount = m_vertices.bindingDescriptions.size();
-    m_vertices.vi.pVertexBindingDescriptions = m_vertices.bindingDescriptions.data();
-    m_vertices.vi.vertexAttributeDescriptionCount = m_vertices.attributeDescriptions.size();
-    m_vertices.vi.pVertexAttributeDescriptions = m_vertices.attributeDescriptions.data();
-    */
 }
 
 void Window::prepareUniformBuffers()
@@ -845,6 +741,7 @@ void Window::updateUniformBuffers()
     m_uboVS.viewMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, m_zoom));
 
     m_uboVS.modelMatrix = glm::mat4();
+    //m_uboVS.modelMatrix = m_uboVS.viewMatrix * glm::translate(m_uboVS.modelMatrix, glm::vec3(0,1*step,0));
     m_uboVS.modelMatrix = glm::rotate(m_uboVS.modelMatrix, glm::radians(m_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
     m_uboVS.modelMatrix = glm::rotate(m_uboVS.modelMatrix, glm::radians(m_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     m_uboVS.modelMatrix = glm::rotate(m_uboVS.modelMatrix, glm::radians(m_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -855,6 +752,19 @@ void Window::updateUniformBuffers()
     assert(!err);
     memcpy(pData, &m_uboVS, sizeof(m_uboVS));
     vkUnmapMemory(m_device, m_uniformDataVS.memory);
+    assert(!err);
+}
+
+
+void Window::updateNodeBuffers()
+{
+    // Map uniform buffer and update it
+    uint8_t *pData;
+    VkResult err = vkMapMemory(m_device, m_uniformDataVS.memory, 0, sizeof(m_uboVS), 0, (void **)&pData);
+    assert(!err);
+    memcpy(pData, &m_uboVS, sizeof(m_uboVS));
+    vkUnmapMemory(m_device, m_uniformDataVS.memory);
+
     assert(!err);
 }
 
@@ -1393,11 +1303,43 @@ void Window::handleEvent(const xcb_generic_event_t *event)
 void Window::keyPressed(uint32_t keyCode)
 {
     // TODO
+    std::cout << "keycode: " << keyCode  << std::endl;
+    switch(keyCode){
+        case KEY_c:
+            std::cout << "c pressed\n";
+            step += 0.2;
+            nodeChanged();
+            break;
+        case KEY_space:
+            std::cout << "space pressed\n";
+            step -= 0.2;
+            nodeChanged();
+            break;
+        default:
+            break;
+    } 
 }
 
 void Window::viewChanged()
 {
     updateUniformBuffers();
+}
+
+void Window::nodeChanged()
+{
+    // update the vertex buffer
+    for (int32_t i = 0; i < m_drawCommandBuffers.size(); ++i)
+    {
+        for(auto node : m_aNodes){
+            //std::cout << "binding node, i count=" << meshBuffer.indexCount << std::endl;
+            // Bind triangle vertices
+            node->updateVertices(m_device,m_deviceMemoryProperties,&meshBuffer,step);
+            VkDeviceSize offsets[1] = { 0 };
+            vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &meshBuffer.vertices.buf, offsets);
+        }
+    }
+
+    viewChanged();
 }
 
 void Window::load_sg()
