@@ -32,7 +32,6 @@ namespace feather
 
     namespace vulkan
     {
-
         struct MeshBufferInfo {
             VkBuffer buf = VK_NULL_HANDLE;
             VkDeviceMemory mem = VK_NULL_HANDLE;
@@ -55,7 +54,7 @@ namespace feather
             protected:
                 // node methods and members
                VkBool32 getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t typeBits, VkFlags properties, uint32_t *typeIndex);
- 
+               void loadMesh(std::vector<float>& vertexBuffer);
         };
 
     } // namespace vulkan

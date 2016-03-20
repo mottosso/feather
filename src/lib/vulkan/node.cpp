@@ -39,9 +39,22 @@ void Node::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties dev
 {
     struct Vertex {
         float pos[3];
+        float norm[3];
+        float uv[2];
         float col[3];
     };
 
+    //std::vector<float> vertexBuffer;
+    //loadMesh(vertexBuffer);
+
+    std::vector<Vertex> vertexBuffer = {
+        { {1.0f,1.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f} },
+        { {-1.0f,1.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f} },
+        { {0.0f,-1.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} },
+        { {2.0f,-1.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} }
+    };
+    
+    /*
     // Setup vertices
     std::vector<Vertex> vertexBuffer = {
         { { 1.0f,  1.0f, 0.0f },{ 1.0f, 0.0f, 0.0f } },
@@ -49,6 +62,8 @@ void Node::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties dev
         { { 0.0f, -1.0f, 0.0f },{ 0.0f, 0.0f, 1.0f } },
         { { 2.0f, -1.0f, 0.0f },{ 0.0f, 0.0f, 1.0f } }
     };
+    */
+
     int vertexBufferSize = vertexBuffer.size() * sizeof(Vertex);
 
     // Setup indices
@@ -148,6 +163,7 @@ void Node::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties devi
     }
     */
 
+    /*
     struct Vertex {
         float pos[3];
         float col[3];
@@ -160,6 +176,25 @@ void Node::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties devi
         { { 0.0f, -1.0f, 0.0f },{ 0.0f, 0.0f, 1.0f } },
         { { 2.0f, -1.0f, 0.0f },{ 0.0f, 0.0f, 1.0f } }
     };
+    */
+
+    struct Vertex {
+        float pos[3];
+        float norm[3];
+        float uv[2];
+        float col[3];
+    };
+
+    std::vector<Vertex> vertexBuffer = {
+        { {1.0f * step,1.0f * step,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f} },
+        { {-1.0f,1.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f} },
+        { {0.0f,-1.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} },
+        { {2.0f,-1.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} }
+    };
+ 
+    //std::vector<float> vertexBuffer;
+    //loadMesh(vertexBuffer);
+
     int vertexBufferSize = vertexBuffer.size() * sizeof(Vertex);
 
     // Setup indices
@@ -200,4 +235,77 @@ void Node::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties devi
     vkUnmapMemory(device, meshBuffer->vertices.mem);
     err = vkBindBufferMemory(device, meshBuffer->vertices.buf, meshBuffer->vertices.mem, 0);
     assert(!err);
+}
+
+void Node::loadMesh(std::vector<float>& vertexBuffer)
+{
+    // TESTING
+
+    // p1
+    // position
+    vertexBuffer.push_back(0.0); // x
+    vertexBuffer.push_back(1.0); // y
+    vertexBuffer.push_back(0.0); // z
+    // normal 
+    vertexBuffer.push_back(0.0); // x
+    vertexBuffer.push_back(1.0); // y
+    vertexBuffer.push_back(0.0); // z
+    // uv 
+    vertexBuffer.push_back(0.0); // s
+    vertexBuffer.push_back(1.0); // t
+    // color 
+    vertexBuffer.push_back(1.0); // r
+    vertexBuffer.push_back(0.0); // g
+    vertexBuffer.push_back(0.0); // b
+
+    // p2
+    // position
+    vertexBuffer.push_back(0.0); // x
+    vertexBuffer.push_back(0.0); // y
+    vertexBuffer.push_back(0.0); // z
+    // normal 
+    vertexBuffer.push_back(0.0); // x
+    vertexBuffer.push_back(1.0); // y
+    vertexBuffer.push_back(0.0); // z
+    // uv 
+    vertexBuffer.push_back(0.0); // s
+    vertexBuffer.push_back(1.0); // t
+    // color 
+    vertexBuffer.push_back(0.0); // r
+    vertexBuffer.push_back(1.0); // g
+    vertexBuffer.push_back(0.0); // b
+ 
+    // p3
+    // position
+    vertexBuffer.push_back(1.0); // x
+    vertexBuffer.push_back(0.0); // y
+    vertexBuffer.push_back(0.0); // z
+    // normal 
+    vertexBuffer.push_back(0.0); // x
+    vertexBuffer.push_back(1.0); // y
+    vertexBuffer.push_back(0.0); // z
+    // uv 
+    vertexBuffer.push_back(0.0); // s
+    vertexBuffer.push_back(1.0); // t
+    // color 
+    vertexBuffer.push_back(0.0); // r
+    vertexBuffer.push_back(0.0); // g
+    vertexBuffer.push_back(1.0); // b
+ 
+    // p3
+    // position
+    vertexBuffer.push_back(1.0); // x
+    vertexBuffer.push_back(1.0); // y
+    vertexBuffer.push_back(0.0); // z
+    // normal 
+    vertexBuffer.push_back(0.0); // x
+    vertexBuffer.push_back(1.0); // y
+    vertexBuffer.push_back(0.0); // z
+    // uv 
+    vertexBuffer.push_back(0.0); // s
+    vertexBuffer.push_back(1.0); // t
+    // color 
+    vertexBuffer.push_back(1.0); // r
+    vertexBuffer.push_back(0.0); // g
+    vertexBuffer.push_back(1.0); // b
 }

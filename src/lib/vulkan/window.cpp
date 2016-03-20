@@ -652,8 +652,10 @@ void Window::prepareSemaphore()
 void Window::prepareVertices()
 {
     struct Vertex {
-        float pos[3];
-        float col[3];
+	float pos[3];
+	float normal[3];
+	float uv[2];
+	float col[3];
     };
 
     for(auto node : m_aNodes) {
@@ -665,6 +667,8 @@ void Window::prepareVertices()
         m_vertices.bindingDescriptions[0].stride = sizeof(Vertex);
         m_vertices.bindingDescriptions[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
+
+        /*
         // Attribute descriptions
         // Describes memory layout and shader attribute locations
         m_vertices.attributeDescriptions.resize(2);
@@ -680,6 +684,69 @@ void Window::prepareVertices()
         m_vertices.attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
         m_vertices.attributeDescriptions[1].offset = sizeof(float) * 3;
         m_vertices.attributeDescriptions[1].binding = 0;
+        */
+
+        // Attribute descriptions
+        // Describes memory layout and shader positions
+        m_vertices.attributeDescriptions.resize(4);
+        // Location 0 : Position
+        m_vertices.attributeDescriptions[0].binding = VERTEX_BUFFER_BIND_ID;
+        m_vertices.attributeDescriptions[0].location = 0;
+        m_vertices.attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+        m_vertices.attributeDescriptions[0].offset = 0;
+        m_vertices.attributeDescriptions[0].binding = 0;
+        /*
+         vertices.attributeDescriptions[0] =
+            vkTools::initializers::vertexInputAttributeDescription(
+                    VERTEX_BUFFER_BIND_ID,
+                    0,
+                    VK_FORMAT_R32G32B32_SFLOAT,
+                    0);
+        */
+        // Location 1 : Normal
+        m_vertices.attributeDescriptions[1].binding = VERTEX_BUFFER_BIND_ID;
+        m_vertices.attributeDescriptions[1].location = 1;
+        m_vertices.attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+        m_vertices.attributeDescriptions[1].offset = sizeof(float) * 3;
+        m_vertices.attributeDescriptions[1].binding = 0;
+        /*
+         vertices.attributeDescriptions[1] =
+            vkTools::initializers::vertexInputAttributeDescription(
+                    VERTEX_BUFFER_BIND_ID,
+                    1,
+                    VK_FORMAT_R32G32B32_SFLOAT,
+                    sizeof(float) * 3);
+        */
+        // Location 2 : Texture coordinates
+        m_vertices.attributeDescriptions[2].binding = VERTEX_BUFFER_BIND_ID;
+        m_vertices.attributeDescriptions[2].location = 2;
+        m_vertices.attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+        m_vertices.attributeDescriptions[2].offset = sizeof(float) * 6;
+        m_vertices.attributeDescriptions[2].binding = 0;
+        /*
+         vertices.attributeDescriptions[2] =
+            vkTools::initializers::vertexInputAttributeDescription(
+                    VERTEX_BUFFER_BIND_ID,
+                    2,
+                    VK_FORMAT_R32G32_SFLOAT,
+                    sizeof(float) * 6);
+        */
+        // Location 3 : Color
+        m_vertices.attributeDescriptions[3].binding = VERTEX_BUFFER_BIND_ID;
+        m_vertices.attributeDescriptions[3].location = 3;
+        m_vertices.attributeDescriptions[3].format = VK_FORMAT_R32G32B32_SFLOAT;
+        m_vertices.attributeDescriptions[3].offset = sizeof(float) * 8;
+        m_vertices.attributeDescriptions[3].binding = 0;
+        /*
+        vertices.attributeDescriptions[3] =
+            vkTools::initializers::vertexInputAttributeDescription(
+                    VERTEX_BUFFER_BIND_ID,
+                    3,
+                    VK_FORMAT_R32G32B32_SFLOAT,
+                    sizeof(float) * 8);
+        */
+
+
 
         // Assign to vertex buffer
         m_vertices.vi.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -912,8 +979,8 @@ void Window::preparePipelines()
     // Load shaders
     // Shaders are loaded from the SPIR-V format, which can be generated from glsl
     VkPipelineShaderStageCreateInfo shaderStages[2] = { {},{} };
-    shaderStages[0] = loadShader("shaders/spv/triangle.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader("shaders/spv/triangle.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[0] = loadShader("shaders/spv/mesh.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader("shaders/spv/mesh.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
 
     // Assign states
     // Two shader stages
