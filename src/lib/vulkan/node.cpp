@@ -48,10 +48,10 @@ void Node::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties dev
     //loadMesh(vertexBuffer);
 
     std::vector<Vertex> vertexBuffer = {
-        { {1.0f,1.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f} },
-        { {-1.0f,1.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f} },
-        { {0.0f,-1.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} },
-        { {2.0f,-1.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} }
+        { {1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f} },
+        { {-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f} },
+        { {0.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} },
+        { {2.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} }
     };
     
     /*
@@ -186,10 +186,10 @@ void Node::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties devi
     };
 
     std::vector<Vertex> vertexBuffer = {
-        { {1.0f * step,1.0f * step,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f} },
-        { {-1.0f,1.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f} },
-        { {0.0f,-1.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} },
-        { {2.0f,-1.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} }
+        { {1.0f * step,1.0f * step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f} },
+        { {-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f} },
+        { {0.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} },
+        { {2.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} }
     };
  
     //std::vector<float> vertexBuffer;

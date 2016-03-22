@@ -98,6 +98,8 @@ namespace feather
                 // Prepare - setup data
                 void prepareSemaphore();
                 void prepareVertices();
+                VkBool32 createBuffer(VkBufferUsageFlags usage, VkDeviceSize size, void * data, VkBuffer *buffer, VkDeviceMemory *memory);
+                VkBool32 createBuffer(VkBufferUsageFlags usage, VkDeviceSize size, void * data, VkBuffer *buffer, VkDeviceMemory *memory, VkDescriptorBufferInfo * descriptor);
                 void prepareUniformBuffers();
                 void setupDescriptorSetLayout();
                 void preparePipelines();
@@ -198,17 +200,17 @@ namespace feather
 
                 MeshBuffer meshBuffer;
 
-                struct {
+                struct uniformData {
                     VkBuffer buffer;
                     VkDeviceMemory memory;
                     VkDescriptorBufferInfo descriptor;
-                }  m_uniformDataVS;
+                } m_uniformDataVS, m_uniformDataGS;
 
                 struct {
-                    glm::mat4 projectionMatrix;
-                    glm::mat4 modelMatrix;
-                    glm::mat4 viewMatrix;
-                } m_uboVS;
+                    glm::mat4 projection;
+                    glm::mat4 model;
+                    glm::mat4 view;
+                } m_uboVS, m_uboGS;
 
                 struct {
                     VkPipeline solid;
