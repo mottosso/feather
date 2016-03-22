@@ -66,7 +66,24 @@ m_defaultClearColor({ { 0.325f, 0.325f, 0.325f, 1.0f } })
 
 Window::~Window()
 {
+    // Clean up used Vulkan resources 
+    // Note : Inherited destructor cleans up resources stored in base class
+    vkDestroyPipeline(m_device, m_pipelines.solid, nullptr);
+    //vkDestroyPipeline(m_device, m_pipelines.normals, nullptr);
 
+    vkDestroyPipelineLayout(m_device, m_pipelineLayout, nullptr);
+    vkDestroyDescriptorSetLayout(m_device, m_descriptorSetLayout, nullptr);
+
+    // go through each node and clean it up
+    //vkMeshLoader::freeMeshBufferResources(device, &meshes.object);
+
+    // destroy vert unifom data
+    vkDestroyBuffer(m_device, m_uniformDataVS.buffer, nullptr);
+    vkFreeMemory(m_device, m_uniformDataVS.memory, nullptr);
+
+    // destroy geom unifom data
+    vkDestroyBuffer(m_device, m_uniformDataGS.buffer, nullptr);
+    vkFreeMemory(m_device, m_uniformDataGS.memory, nullptr);
 }
 
 
@@ -758,60 +775,96 @@ void Window::prepareVertices()
     }
 }
 
-void Window::prepareUniformBuffers()
+
+VkBool32 Window::createBuffer(VkBufferUsageFlags usage, VkDeviceSize size, void * data, VkBuffer *buffer, VkDeviceMemory *memory)
 {
     // Prepare and initialize uniform buffer containing shader uniforms
     VkMemoryRequirements memReqs;
-
-    // Vertex shader uniform buffer block
-    VkBufferCreateInfo bufferInfo = {};
-    VkMemoryAllocateInfo allocInfo = {};
-    allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    allocInfo.pNext = NULL;
-    allocInfo.allocationSize = 0;
-    allocInfo.memoryTypeIndex = 0;
-    VkResult err;
-
-    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufferInfo.size = sizeof(m_uboVS);
-    bufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+    
+    VkMemoryAllocateInfo memAlloc = tools::initializers::memoryAllocateInfo();
+    VkBufferCreateInfo bufferCreateInfo = tools::initializers::bufferCreateInfo(usage, size);
 
     // Create a new buffer
-    err = vkCreateBuffer(m_device, &bufferInfo, nullptr, &m_uniformDataVS.buffer);
+     VkResult err = vkCreateBuffer(m_device, &bufferCreateInfo, nullptr, buffer);
     assert(!err);
     // Get memory requirements including size, alignment and memory type 
-    vkGetBufferMemoryRequirements(m_device, m_uniformDataVS.buffer, &memReqs);
-    allocInfo.allocationSize = memReqs.size;
+     vkGetBufferMemoryRequirements(m_device, *buffer, &memReqs);
+    memAlloc.allocationSize = memReqs.size;
     // Gets the appropriate memory type for this type of buffer allocation
     // Only memory types that are visible to the host
-    getMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &allocInfo.memoryTypeIndex);
+     getMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
     // Allocate memory for the uniform buffer
-    err = vkAllocateMemory(m_device, &allocInfo, nullptr, &(m_uniformDataVS.memory));
+     err = vkAllocateMemory(m_device, &memAlloc, nullptr, memory);
     assert(!err);
+    if (data != nullptr)
+    {
+        void *mapped;
+        err = vkMapMemory(m_device, *memory, 0, size, 0, &mapped);
+        assert(!err);
+        memcpy(mapped, data, size);
+        vkUnmapMemory(m_device, *memory);
+    }
     // Bind memory to buffer
-    err = vkBindBufferMemory(m_device, m_uniformDataVS.buffer, m_uniformDataVS.memory, 0);
+     err = vkBindBufferMemory(m_device, *buffer, *memory, 0);
     assert(!err);
+    return true;
+}
 
-    // Store information in the uniform's descriptor
-    m_uniformDataVS.descriptor.buffer = m_uniformDataVS.buffer;
-    m_uniformDataVS.descriptor.offset = 0;
-    m_uniformDataVS.descriptor.range = sizeof(m_uboVS);
+
+VkBool32 Window::createBuffer(VkBufferUsageFlags usage, VkDeviceSize size, void * data, VkBuffer * buffer, VkDeviceMemory * memory, VkDescriptorBufferInfo * descriptor)
+{
+	VkBool32 res = createBuffer(usage, size, data, buffer, memory);
+	if (res)
+	{
+		descriptor->offset = 0;
+		descriptor->buffer = *buffer;
+		descriptor->range = size;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+void Window::prepareUniformBuffers()
+{
+    // Vertex shader uniform buffer block
+    createBuffer(
+            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+            sizeof(m_uboVS),
+            &m_uboVS,
+            &m_uniformDataVS.buffer,
+            &m_uniformDataVS.memory,
+            &m_uniformDataVS.descriptor);
+
+    // Geometry shader uniform buffer block
+    createBuffer(
+            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+            sizeof(m_uboGS),
+            &m_uboGS,
+            &m_uniformDataGS.buffer,
+            &m_uniformDataGS.memory,
+            &m_uniformDataGS.descriptor);
 
     updateUniformBuffers();
 }
 
 void Window::updateUniformBuffers()
 {
+    glm::mat4 viewMatrix = glm::mat4();
+
     // Update matrices
-    m_uboVS.projectionMatrix = glm::perspective(glm::radians(60.0f), (float)m_width / (float)m_height, 0.1f, 256.0f);
+    m_uboVS.projection = glm::perspective(glm::radians(60.0f), (float)m_width / (float)m_height, 0.1f, 256.0f);
 
-    m_uboVS.viewMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, m_zoom));
+    viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, 0.0f, m_zoom));
 
-    m_uboVS.modelMatrix = glm::mat4();
-    //m_uboVS.modelMatrix = m_uboVS.viewMatrix * glm::translate(m_uboVS.modelMatrix, glm::vec3(0,1*step,0));
-    m_uboVS.modelMatrix = glm::rotate(m_uboVS.modelMatrix, glm::radians(m_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-    m_uboVS.modelMatrix = glm::rotate(m_uboVS.modelMatrix, glm::radians(m_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-    m_uboVS.modelMatrix = glm::rotate(m_uboVS.modelMatrix, glm::radians(m_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+    m_uboVS.model = glm::mat4();
+    m_uboVS.model = viewMatrix * glm::translate(m_uboVS.model, glm::vec3(0,0,0));
+    m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 
     // Map uniform buffer and update it
     uint8_t *pData;
@@ -819,7 +872,14 @@ void Window::updateUniformBuffers()
     assert(!err);
     memcpy(pData, &m_uboVS, sizeof(m_uboVS));
     vkUnmapMemory(m_device, m_uniformDataVS.memory);
+
+    // Geometry shader
+    m_uboGS.model = m_uboVS.model;
+    m_uboGS.projection = m_uboVS.projection;
+    err = vkMapMemory(m_device, m_uniformDataGS.memory, 0, sizeof(m_uboGS), 0, (void **)&pData);
     assert(!err);
+    memcpy(pData, &m_uboGS, sizeof(m_uboGS));
+    vkUnmapMemory(m_device, m_uniformDataGS.memory);
 }
 
 
@@ -838,12 +898,44 @@ void Window::updateNodeBuffers()
 
 void Window::setupDescriptorSetLayout()
 {
+
     // Setup layout of descriptors used in this example
     // Basically connects the different shader stages to descriptors
     // for binding uniform buffers, image samplers, etc.
     // So every shader binding should map to one descriptor set layout
     // binding
 
+    std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings =
+    {
+        // Binding 0 : Vertex shader ubo
+        tools::initializers::descriptorSetLayoutBinding(
+                VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                VK_SHADER_STAGE_VERTEX_BIT,
+                0),
+        // Binding 1 : Geometry shader ubo
+        tools::initializers::descriptorSetLayoutBinding(
+                VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                VK_SHADER_STAGE_GEOMETRY_BIT,
+                1)
+    };
+
+    VkDescriptorSetLayoutCreateInfo descriptorLayout =
+        tools::initializers::descriptorSetLayoutCreateInfo(
+                setLayoutBindings.data(),
+                setLayoutBindings.size());
+
+    VkResult err = vkCreateDescriptorSetLayout(m_device, &descriptorLayout, nullptr, &m_descriptorSetLayout);
+    assert(!err);
+
+    VkPipelineLayoutCreateInfo pPipelineLayoutCreateInfo =
+        tools::initializers::pipelineLayoutCreateInfo(
+                &m_descriptorSetLayout,
+                1);
+
+    err = vkCreatePipelineLayout(m_device, &pPipelineLayoutCreateInfo, nullptr, &m_pipelineLayout);
+    assert(!err);
+
+    /*
     // Binding 0 : Uniform buffer (Vertex shader)
     VkDescriptorSetLayoutBinding layoutBinding = {};
     layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -872,6 +964,7 @@ void Window::setupDescriptorSetLayout()
 
     err = vkCreatePipelineLayout(m_device, &pPipelineLayoutCreateInfo, nullptr, &m_pipelineLayout);
     assert(!err);
+    */
 }
 
 void Window::preparePipelines()
@@ -949,6 +1042,7 @@ void Window::preparePipelines()
     std::vector<VkDynamicState> dynamicStateEnables;
     dynamicStateEnables.push_back(VK_DYNAMIC_STATE_VIEWPORT);
     dynamicStateEnables.push_back(VK_DYNAMIC_STATE_SCISSOR);
+    dynamicStateEnables.push_back(VK_DYNAMIC_STATE_LINE_WIDTH);
     dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
     dynamicState.pDynamicStates = dynamicStateEnables.data();
     dynamicState.dynamicStateCount = dynamicStateEnables.size();
@@ -978,13 +1072,14 @@ void Window::preparePipelines()
 
     // Load shaders
     // Shaders are loaded from the SPIR-V format, which can be generated from glsl
-    VkPipelineShaderStageCreateInfo shaderStages[2] = { {},{} };
-    shaderStages[0] = loadShader("shaders/spv/mesh.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader("shaders/spv/mesh.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+    VkPipelineShaderStageCreateInfo shaderStages[3] = { {},{} };
+    shaderStages[0] = loadShader("shaders/spv/wireframe.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader("shaders/spv/wireframe.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[2] = loadShader("shaders/spv/wireframe.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
 
     // Assign states
     // Two shader stages
-    pipelineCreateInfo.stageCount = 2;
+    pipelineCreateInfo.stageCount = 3;
     // Assign pipeline state create information
     pipelineCreateInfo.pVertexInputState = &m_vertices.vi;
     pipelineCreateInfo.pInputAssemblyState = &inputAssemblyState;
@@ -1016,6 +1111,22 @@ VkPipelineShaderStageCreateInfo Window::loadShader(const char * fileName, VkShad
 
 void Window::setupDescriptorPool()
 {
+    // uses two ubos
+    std::vector<VkDescriptorPoolSize> poolSizes =
+    {
+        tools::initializers::descriptorPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 2),
+    };
+
+    VkDescriptorPoolCreateInfo descriptorPoolInfo =
+        tools::initializers::descriptorPoolCreateInfo(
+                poolSizes.size(),
+                poolSizes.data(),
+                2);
+
+    VkResult vkRes = vkCreateDescriptorPool(m_device, &descriptorPoolInfo, nullptr, &m_descriptorPool);
+    assert(!vkRes);
+
+    /*
     // We need to tell the API the number of max. requested descriptors per type
     VkDescriptorPoolSize typeCounts[1];
     // This example only uses one descriptor type (uniform buffer) and only
@@ -1040,6 +1151,7 @@ void Window::setupDescriptorPool()
 
     VkResult vkRes = vkCreateDescriptorPool(m_device, &descriptorPoolInfo, nullptr, &m_descriptorPool);
     assert(!vkRes);
+    */
 }
 
 void Window::setupDescriptorSet()
@@ -1047,6 +1159,43 @@ void Window::setupDescriptorSet()
     // Update descriptor sets determining the shader binding points
     // For every binding point used in a shader there needs to be one
     // descriptor set matching that binding point
+
+    VkDescriptorSetAllocateInfo allocInfo = {};
+    allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    allocInfo.descriptorPool = m_descriptorPool;
+    allocInfo.descriptorSetCount = 1;
+    allocInfo.pSetLayouts = &m_descriptorSetLayout;
+
+    /* 
+    VkDescriptorSetAllocateInfo allocInfo =
+        tools::initializers::descriptorSetAllocateInfo(
+                m_descriptorPool,
+                &m_descriptorSetLayout,
+                1);
+    */
+
+    VkResult vkRes = vkAllocateDescriptorSets(m_device, &allocInfo, &m_descriptorSet);
+    assert(!vkRes);
+
+    std::vector<VkWriteDescriptorSet> writeDescriptorSets =
+    {
+        // Binding 0 : Vertex shader shader ubo
+        tools::initializers::writeDescriptorSet(
+                m_descriptorSet,
+                VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                0,
+                &m_uniformDataVS.descriptor),
+        // Binding 1 : Geometry shader ubo
+        tools::initializers::writeDescriptorSet(
+                m_descriptorSet,
+                VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+                1,
+                &m_uniformDataGS.descriptor)
+    };
+
+    vkUpdateDescriptorSets(m_device, writeDescriptorSets.size(), writeDescriptorSets.data(), 0, NULL);
+
+    /*
     VkWriteDescriptorSet writeDescriptorSet = {};
 
     VkDescriptorSetAllocateInfo allocInfo = {};
@@ -1068,6 +1217,7 @@ void Window::setupDescriptorSet()
     writeDescriptorSet.dstBinding = 0;
 
     vkUpdateDescriptorSets(m_device, 1, &writeDescriptorSet, 0, NULL);
+    */
 }
 
 void Window::buildCommandBuffers()
