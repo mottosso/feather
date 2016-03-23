@@ -36,6 +36,15 @@ Node::~Node()
 
 }
 
+void Node::freeBuffer(VkDevice device)
+{
+    // vertices
+    vkDestroyBuffer(device, m_pMeshBuffer->vertices.buf, nullptr);
+    vkFreeMemory(device, m_pMeshBuffer->vertices.mem, nullptr);
+    // indices
+    vkDestroyBuffer(device, m_pMeshBuffer->indices.buf, nullptr);
+    vkFreeMemory(device, m_pMeshBuffer->indices.mem, nullptr);
+}
 
 VkBool32 Node::getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t typeBits, VkFlags properties, uint32_t *typeIndex)
 {

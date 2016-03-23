@@ -54,6 +54,7 @@ namespace feather
                 virtual void updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, float step=1.0)=0;
                 Type type() { return m_type; }; 
                 MeshBuffer* buffer() { return m_pMeshBuffer; };
+                void freeBuffer(VkDevice device);
 
             protected:
                 // node methods and members

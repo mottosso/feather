@@ -75,6 +75,14 @@ Window::~Window()
     vkDestroyDescriptorSetLayout(m_device, m_descriptorSetLayout, nullptr);
 
     // go through each node and clean it up
+    for(auto node : m_aNodes) {
+        node->freeBuffer(m_device);
+        if(node->type()==Node::Mesh){
+           delete static_cast<Mesh*>(node); 
+        } else {
+           delete static_cast<PointLight*>(node); 
+        }
+    }
     //vkMeshLoader::freeMeshBufferResources(device, &meshes.object);
 
     // destroy vert unifom data
