@@ -29,6 +29,7 @@
 #include "swapchain.hpp"
 #include "textureloader.hpp"
 #include "mesh.hpp"
+#include "pointlight.hpp"
 
 #define VERTEX_BUFFER_BIND_ID 0
 #define ENABLE_VALIDATION false

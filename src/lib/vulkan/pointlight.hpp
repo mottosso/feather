@@ -1,8 +1,8 @@
 /***********************************************************************
  *
- * Filename: mesh.hpp
+ * Filename: pointlight.hpp
  *
- * Description: vulkan mesh node.
+ * Description: vulkan point light node.
  *
  * Copyright (C) 2016 Richard Layman, rlayman2000@yahoo.com 
  *
@@ -21,8 +21,8 @@
  *
  ***********************************************************************/
 
-#ifndef MESH_HPP
-#define MESH_HPP
+#ifndef POINTLIGHT_HPP
+#define POINTLIGHT_HPP
 
 #include "deps.hpp"
 #include "vulkan_deps.hpp"
@@ -34,11 +34,11 @@ namespace feather
     namespace vulkan
     {
 
-        class Mesh : public Node
+        class PointLight : public Node
         {
             public:
-                Mesh();
-                ~Mesh();
+                PointLight();
+                ~PointLight();
                 void prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer);
                 void updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer,float step=1.0);
         };

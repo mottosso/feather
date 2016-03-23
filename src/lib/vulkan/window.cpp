@@ -48,8 +48,8 @@ m_colorFormat(VK_FORMAT_B8G8R8A8_UNORM),
 m_defaultClearColor({ { 0.325f, 0.325f, 0.325f, 1.0f } })
 {
     // add the nodes
-    m_aNodes.push_back(new Node());
-    //m_aNodes.push_back(new Node());
+    m_aNodes.push_back(new Mesh());
+    m_aNodes.push_back(new PointLight());
 
 
     // setup    
@@ -676,7 +676,10 @@ void Window::prepareVertices()
     };
 
     for(auto node : m_aNodes) {
-        node->prepareVertices(m_device,m_deviceMemoryProperties,&meshBuffer);
+        if(node->type()==Node::Mesh)
+            static_cast<Mesh*>(node)->prepareVertices(m_device,m_deviceMemoryProperties,&meshBuffer);
+        else
+            static_cast<PointLight*>(node)->prepareVertices(m_device,m_deviceMemoryProperties,&meshBuffer);
 
         // Binding description
         m_vertices.bindingDescriptions.resize(1);
@@ -1550,7 +1553,11 @@ void Window::nodeChanged()
         for(auto node : m_aNodes){
             //std::cout << "binding node, i count=" << meshBuffer.indexCount << std::endl;
             // Bind triangle vertices
-            node->updateVertices(m_device,m_deviceMemoryProperties,&meshBuffer,step);
+            if(node->type()==Node::Mesh)
+                static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties,&meshBuffer);
+            else
+                static_cast<PointLight*>(node)->updateVertices(m_device,m_deviceMemoryProperties,&meshBuffer);
+
             VkDeviceSize offsets[1] = { 0 };
             vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &meshBuffer.vertices.buf, offsets);
         }
