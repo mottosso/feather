@@ -46,15 +46,21 @@ namespace feather
         class Node
         {
             public:
-                Node();
+                enum Type { Null, Camera, Light, Mesh };
+
+                Node(Type type=Null);
                 ~Node();
-                void prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer);
-                void updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer,float step=1.0);
- 
+                virtual void prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)=0;
+                virtual void updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, float step=1.0)=0;
+                Type type() { return m_type; }; 
+                MeshBuffer* buffer() { return m_pMeshBuffer; };
+                void freeBuffer(VkDevice device);
+
             protected:
                 // node methods and members
-               VkBool32 getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t typeBits, VkFlags properties, uint32_t *typeIndex);
-               void loadMesh(std::vector<float>& vertexBuffer);
+                VkBool32 getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t typeBits, VkFlags properties, uint32_t *typeIndex);
+                Type m_type;
+                MeshBuffer* m_pMeshBuffer;
         };
 
     } // namespace vulkan

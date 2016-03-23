@@ -19,6 +19,7 @@ SET(feather_vulkan_SRCS
     debug.cpp
     node.cpp
     mesh.cpp
+    pointlight.cpp
     window.cpp
 )
 

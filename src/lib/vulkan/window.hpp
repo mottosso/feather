@@ -29,6 +29,7 @@
 #include "swapchain.hpp"
 #include "textureloader.hpp"
 #include "mesh.hpp"
+#include "pointlight.hpp"
 
 #define VERTEX_BUFFER_BIND_ID 0
 #define ENABLE_VALIDATION false
@@ -172,25 +173,6 @@ namespace feather
                 // MOVED TO NODE
                 VkPipelineShaderStageCreateInfo loadShader(const char * fileName, VkShaderStageFlagBits stage);
                 
-                // MESH TESTING
-
-                // MOVED TO NODE
-                /*
-                struct {
-                    VkBuffer buf;
-                    VkDeviceMemory mem;
-                    VkPipelineVertexInputStateCreateInfo vi;
-                    std::vector<VkVertexInputBindingDescription> bindingDescriptions;
-                    std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
-                } m_vertices;
-
-                struct {
-                    int count;
-                    VkBuffer buf;
-                    VkDeviceMemory mem;
-                } m_indices;
-                */
-
                 // buf and mem are in the Node
                 struct {
                     VkPipelineVertexInputStateCreateInfo vi;
@@ -198,7 +180,6 @@ namespace feather
                     std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
                 } m_vertices;
 
-                MeshBuffer meshBuffer;
 
                 struct uniformData {
                     VkBuffer buffer;

@@ -1,8 +1,8 @@
 /***********************************************************************
  *
- * Filename: mesh.cpp
+ * Filename: pointlight.cpp
  *
- * Description: vulkan mesh node.
+ * Description: vulkan point light node.
  *
  * Copyright (C) 2016 Richard Layman, rlayman2000@yahoo.com 
  *
@@ -21,23 +21,23 @@
  *
  ***********************************************************************/
 
-#include "mesh.hpp"
+#include "pointlight.hpp"
 
 using namespace feather::vulkan;
 
-Mesh::Mesh() : Node(Node::Mesh)
+PointLight::PointLight() : Node(Node::Light)
 {
 
 }
 
 
-Mesh::~Mesh()
+PointLight::~PointLight()
 {
 
 }
 
 
-void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
+void PointLight::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
 {
     struct Vertex {
         float pos[3];
@@ -47,10 +47,10 @@ void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties dev
     };
 
     std::vector<Vertex> vertexBuffer = {
-        { {1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f} },
-        { {-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f} },
-        { {0.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} },
-        { {2.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} }
+        { {1.0f,3.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f} },
+        { {-1.0f,3.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,1.0f,0.0f} },
+        { {0.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,1.0f} },
+        { {2.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,1.0f,1.0f} }
     };
     
     int vertexBufferSize = vertexBuffer.size() * sizeof(Vertex);
@@ -120,7 +120,7 @@ void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties dev
 }
 
 
-void Mesh::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, float step)
+void PointLight::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, float step)
 {
     // free the vertex buffer
     vkDestroyBuffer(device, m_pMeshBuffer->vertices.buf, nullptr);
@@ -134,12 +134,12 @@ void Mesh::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties devi
     };
 
     std::vector<Vertex> vertexBuffer = {
-        { {1.0f * step,1.0f * step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f} },
-        { {-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f} },
-        { {0.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} },
-        { {2.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} }
+        { {1.0f,3.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f} },
+        { {-1.0f,3.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,1.0f,0.0f} },
+        { {0.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,1.0f} },
+        { {2.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,1.0f,1.0f} }
     };
- 
+
     int vertexBufferSize = vertexBuffer.size() * sizeof(Vertex);
 
     // Setup indices

@@ -25,112 +25,26 @@
 
 using namespace feather::vulkan;
 
-Node::Node()
+Node::Node(Node::Type type) : m_type(type)
 {
-
+    m_pMeshBuffer = new MeshBuffer();
 }
+
 
 Node::~Node()
 {
 
 }
 
-void Node::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer)
+void Node::freeBuffer(VkDevice device)
 {
-    struct Vertex {
-        float pos[3];
-        float norm[3];
-        float uv[2];
-        float col[3];
-    };
-
-    //std::vector<float> vertexBuffer;
-    //loadMesh(vertexBuffer);
-
-    std::vector<Vertex> vertexBuffer = {
-        { {1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f} },
-        { {-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f} },
-        { {0.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} },
-        { {2.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} }
-    };
-    
-    /*
-    // Setup vertices
-    std::vector<Vertex> vertexBuffer = {
-        { { 1.0f,  1.0f, 0.0f },{ 1.0f, 0.0f, 0.0f } },
-        { { -1.0f,  1.0f, 0.0f },{ 0.0f, 1.0f, 0.0f } },
-        { { 0.0f, -1.0f, 0.0f },{ 0.0f, 0.0f, 1.0f } },
-        { { 2.0f, -1.0f, 0.0f },{ 0.0f, 0.0f, 1.0f } }
-    };
-    */
-
-    int vertexBufferSize = vertexBuffer.size() * sizeof(Vertex);
-
-    // Setup indices
-    //std::vector<uint32_t> indexBuffer = { 0, 1, 2, 0, 2, 3 };
-    std::vector<uint32_t> indexBuffer = { 0, 1, 2, 0, 2, 3 };
-    int indexBufferSize = indexBuffer.size() * sizeof(uint32_t);
-
-    VkMemoryAllocateInfo memAlloc = {};
-    memAlloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    memAlloc.pNext = NULL;
-    memAlloc.allocationSize = 0;
-    memAlloc.memoryTypeIndex = 0;
-    VkMemoryRequirements memReqs;
-
-    VkResult err;
-    void *data;
-
-    // Generate vertex buffer
-    //	Setup
-    VkBufferCreateInfo bufInfo = {};
-    bufInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufInfo.pNext = NULL;
-    bufInfo.size = vertexBufferSize;
-    bufInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    bufInfo.flags = 0;
-    //	Copy vertex data to VRAM
-    //memset(&m_vertices, 0, sizeof(m_vertices));
-    err = vkCreateBuffer(device, &bufInfo, nullptr, &meshBuffer->vertices.buf);
-    assert(!err);
-    vkGetBufferMemoryRequirements(device, meshBuffer->vertices.buf, &memReqs);
-    memAlloc.allocationSize = memReqs.size;
-    getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
-    err = vkAllocateMemory(device, &memAlloc, nullptr, &meshBuffer->vertices.mem);
-    assert(!err);
-    err = vkMapMemory(device, meshBuffer->vertices.mem, 0, memAlloc.allocationSize, 0, &data);
-    assert(!err);
-    memcpy(data, vertexBuffer.data(), vertexBufferSize);
-    vkUnmapMemory(device, meshBuffer->vertices.mem);
-    err = vkBindBufferMemory(device, meshBuffer->vertices.buf, meshBuffer->vertices.mem, 0);
-    assert(!err);
-
-    // Generate index buffer
-    //	Setup
-    VkBufferCreateInfo indexbufferInfo = {};
-    indexbufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    indexbufferInfo.pNext = NULL;
-    indexbufferInfo.size = indexBufferSize;
-    indexbufferInfo.usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
-    indexbufferInfo.flags = 0;
-    // Copy index data to VRAM
-    //memset(&m_indices, 0, sizeof(m_indices));
-    err = vkCreateBuffer(device, &indexbufferInfo, nullptr, &meshBuffer->indices.buf);
-    assert(!err);
-    vkGetBufferMemoryRequirements(device, meshBuffer->indices.buf, &memReqs);
-    memAlloc.allocationSize = memReqs.size;
-    getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
-    err = vkAllocateMemory(device, &memAlloc, nullptr, &meshBuffer->indices.mem);
-    assert(!err);
-    err = vkMapMemory(device, meshBuffer->indices.mem, 0, indexBufferSize, 0, &data);
-    assert(!err);
-    memcpy(data, indexBuffer.data(), indexBufferSize);
-    vkUnmapMemory(device, meshBuffer->indices.mem);
-    err = vkBindBufferMemory(device, meshBuffer->indices.buf, meshBuffer->indices.mem, 0);
-    assert(!err);
-    meshBuffer->indexCount = indexBuffer.size();
+    // vertices
+    vkDestroyBuffer(device, m_pMeshBuffer->vertices.buf, nullptr);
+    vkFreeMemory(device, m_pMeshBuffer->vertices.mem, nullptr);
+    // indices
+    vkDestroyBuffer(device, m_pMeshBuffer->indices.buf, nullptr);
+    vkFreeMemory(device, m_pMeshBuffer->indices.mem, nullptr);
 }
-
 
 VkBool32 Node::getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t typeBits, VkFlags properties, uint32_t *typeIndex)
 {
@@ -149,163 +63,3 @@ VkBool32 Node::getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProper
     return false;
 }
 
-
-void Node::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer, float step)
-{
-    // free the vertex buffer
-    vkDestroyBuffer(device, meshBuffer->vertices.buf, nullptr);
-    vkFreeMemory(device, meshBuffer->vertices.mem, nullptr);
-    /*
-    if (meshBuffer->indices.buf != VK_NULL_HANDLE)
-    {
-        vkDestroyBuffer(device, meshBuffer->indices.buf, nullptr);
-        vkFreeMemory(device, meshBuffer->indices.mem, nullptr);
-    }
-    */
-
-    /*
-    struct Vertex {
-        float pos[3];
-        float col[3];
-    };
-
-    // Setup vertices
-    std::vector<Vertex> vertexBuffer = {
-        { { 1.0f * step,  1.0f * step, 0.0f },{ 1.0f, 0.0f, 0.0f } },
-        { { -1.0f,  1.0f, 0.0f },{ 0.0f, 1.0f, 0.0f } },
-        { { 0.0f, -1.0f, 0.0f },{ 0.0f, 0.0f, 1.0f } },
-        { { 2.0f, -1.0f, 0.0f },{ 0.0f, 0.0f, 1.0f } }
-    };
-    */
-
-    struct Vertex {
-        float pos[3];
-        float norm[3];
-        float uv[2];
-        float col[3];
-    };
-
-    std::vector<Vertex> vertexBuffer = {
-        { {1.0f * step,1.0f * step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f} },
-        { {-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f} },
-        { {0.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} },
-        { {2.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} }
-    };
- 
-    //std::vector<float> vertexBuffer;
-    //loadMesh(vertexBuffer);
-
-    int vertexBufferSize = vertexBuffer.size() * sizeof(Vertex);
-
-    // Setup indices
-    //std::vector<uint32_t> indexBuffer = { 0, 1, 2, 0, 2, 3 };
-    std::vector<uint32_t> indexBuffer = { 0, 1, 2, 0, 2, 3 };
-    int indexBufferSize = indexBuffer.size() * sizeof(uint32_t);
-
-    VkMemoryAllocateInfo memAlloc = {};
-    memAlloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    memAlloc.pNext = NULL;
-    memAlloc.allocationSize = 0;
-    memAlloc.memoryTypeIndex = 0;
-    VkMemoryRequirements memReqs;
-
-    VkResult err;
-    void *data;
-
-    // Generate vertex buffer
-    //	Setup
-    VkBufferCreateInfo bufInfo = {};
-    bufInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufInfo.pNext = NULL;
-    bufInfo.size = vertexBufferSize;
-    bufInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    bufInfo.flags = 0;
-    //	Copy vertex data to VRAM
-    //memset(&m_vertices, 0, sizeof(m_vertices));
-    err = vkCreateBuffer(device, &bufInfo, nullptr, &meshBuffer->vertices.buf);
-    assert(!err);
-    vkGetBufferMemoryRequirements(device, meshBuffer->vertices.buf, &memReqs);
-    memAlloc.allocationSize = memReqs.size;
-    getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
-    err = vkAllocateMemory(device, &memAlloc, nullptr, &meshBuffer->vertices.mem);
-    assert(!err);
-    err = vkMapMemory(device, meshBuffer->vertices.mem, 0, memAlloc.allocationSize, 0, &data);
-    assert(!err);
-    memcpy(data, vertexBuffer.data(), vertexBufferSize);
-    vkUnmapMemory(device, meshBuffer->vertices.mem);
-    err = vkBindBufferMemory(device, meshBuffer->vertices.buf, meshBuffer->vertices.mem, 0);
-    assert(!err);
-}
-
-void Node::loadMesh(std::vector<float>& vertexBuffer)
-{
-    // TESTING
-
-    // p1
-    // position
-    vertexBuffer.push_back(0.0); // x
-    vertexBuffer.push_back(1.0); // y
-    vertexBuffer.push_back(0.0); // z
-    // normal 
-    vertexBuffer.push_back(0.0); // x
-    vertexBuffer.push_back(1.0); // y
-    vertexBuffer.push_back(0.0); // z
-    // uv 
-    vertexBuffer.push_back(0.0); // s
-    vertexBuffer.push_back(1.0); // t
-    // color 
-    vertexBuffer.push_back(1.0); // r
-    vertexBuffer.push_back(0.0); // g
-    vertexBuffer.push_back(0.0); // b
-
-    // p2
-    // position
-    vertexBuffer.push_back(0.0); // x
-    vertexBuffer.push_back(0.0); // y
-    vertexBuffer.push_back(0.0); // z
-    // normal 
-    vertexBuffer.push_back(0.0); // x
-    vertexBuffer.push_back(1.0); // y
-    vertexBuffer.push_back(0.0); // z
-    // uv 
-    vertexBuffer.push_back(0.0); // s
-    vertexBuffer.push_back(1.0); // t
-    // color 
-    vertexBuffer.push_back(0.0); // r
-    vertexBuffer.push_back(1.0); // g
-    vertexBuffer.push_back(0.0); // b
- 
-    // p3
-    // position
-    vertexBuffer.push_back(1.0); // x
-    vertexBuffer.push_back(0.0); // y
-    vertexBuffer.push_back(0.0); // z
-    // normal 
-    vertexBuffer.push_back(0.0); // x
-    vertexBuffer.push_back(1.0); // y
-    vertexBuffer.push_back(0.0); // z
-    // uv 
-    vertexBuffer.push_back(0.0); // s
-    vertexBuffer.push_back(1.0); // t
-    // color 
-    vertexBuffer.push_back(0.0); // r
-    vertexBuffer.push_back(0.0); // g
-    vertexBuffer.push_back(1.0); // b
- 
-    // p3
-    // position
-    vertexBuffer.push_back(1.0); // x
-    vertexBuffer.push_back(1.0); // y
-    vertexBuffer.push_back(0.0); // z
-    // normal 
-    vertexBuffer.push_back(0.0); // x
-    vertexBuffer.push_back(1.0); // y
-    vertexBuffer.push_back(0.0); // z
-    // uv 
-    vertexBuffer.push_back(0.0); // s
-    vertexBuffer.push_back(1.0); // t
-    // color 
-    vertexBuffer.push_back(1.0); // r
-    vertexBuffer.push_back(0.0); // g
-    vertexBuffer.push_back(1.0); // b
-}
