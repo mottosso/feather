@@ -199,7 +199,7 @@ namespace feather
                     std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
                 } m_vertices;
 
-                MeshBuffer meshBuffer;
+                //MeshBuffer meshBuffer;
 
                 struct uniformData {
                     VkBuffer buffer;

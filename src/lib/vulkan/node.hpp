@@ -50,13 +50,16 @@ namespace feather
 
                 Node(Type type=Null);
                 ~Node();
-                virtual void prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer)=0;
-                virtual void updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer,float step=1.0)=0;
+                virtual void prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)=0;
+                virtual void updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, float step=1.0)=0;
                 Type type() { return m_type; }; 
+                MeshBuffer* buffer() { return m_pMeshBuffer; };
+
             protected:
                 // node methods and members
                 VkBool32 getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t typeBits, VkFlags properties, uint32_t *typeIndex);
                 Type m_type;
+                MeshBuffer* m_pMeshBuffer;
         };
 
     } // namespace vulkan

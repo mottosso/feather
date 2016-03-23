@@ -677,9 +677,9 @@ void Window::prepareVertices()
 
     for(auto node : m_aNodes) {
         if(node->type()==Node::Mesh)
-            static_cast<Mesh*>(node)->prepareVertices(m_device,m_deviceMemoryProperties,&meshBuffer);
+            static_cast<Mesh*>(node)->prepareVertices(m_device,m_deviceMemoryProperties);
         else
-            static_cast<PointLight*>(node)->prepareVertices(m_device,m_deviceMemoryProperties,&meshBuffer);
+            static_cast<PointLight*>(node)->prepareVertices(m_device,m_deviceMemoryProperties);
 
         // Binding description
         m_vertices.bindingDescriptions.resize(1);
@@ -1292,6 +1292,26 @@ void Window::buildCommandBuffers()
         for(auto node : m_aNodes){
             //std::cout << "binding node, i count=" << meshBuffer.indexCount << std::endl;
             // Bind triangle vertices
+
+            VkDeviceSize offsets[1] = { 0 };
+ 
+            if(node->type()==Node::Mesh){
+                static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
+                vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<Mesh*>(node)->buffer()->vertices.buf, offsets);
+                // Bind triangle indices
+                vkCmdBindIndexBuffer(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->indices.buf, 0, VK_INDEX_TYPE_UINT32);
+                // Draw indexed triangle
+                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->indexCount, 1, 0, 0, 1);
+            } else {
+                static_cast<PointLight*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
+                vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<PointLight*>(node)->buffer()->vertices.buf, offsets);
+                // Bind triangle indices
+                vkCmdBindIndexBuffer(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->indices.buf, 0, VK_INDEX_TYPE_UINT32);
+                // Draw indexed triangle
+                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->indexCount, 1, 0, 0, 1);
+            }
+
+            /*
             VkDeviceSize offsets[1] = { 0 };
             vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &meshBuffer.vertices.buf, offsets);
 
@@ -1300,6 +1320,7 @@ void Window::buildCommandBuffers()
 
             // Draw indexed triangle
             vkCmdDrawIndexed(m_drawCommandBuffers[i], meshBuffer.indexCount, 1, 0, 0, 1);
+            */
         }
 
         vkCmdEndRenderPass(m_drawCommandBuffers[i]);
@@ -1553,13 +1574,16 @@ void Window::nodeChanged()
         for(auto node : m_aNodes){
             //std::cout << "binding node, i count=" << meshBuffer.indexCount << std::endl;
             // Bind triangle vertices
-            if(node->type()==Node::Mesh)
-                static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties,&meshBuffer);
-            else
-                static_cast<PointLight*>(node)->updateVertices(m_device,m_deviceMemoryProperties,&meshBuffer);
-
             VkDeviceSize offsets[1] = { 0 };
-            vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &meshBuffer.vertices.buf, offsets);
+            if(node->type()==Node::Mesh){
+                static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
+                vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<Mesh*>(node)->buffer()->vertices.buf, offsets);
+            } else {
+                static_cast<PointLight*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
+                vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<PointLight*>(node)->buffer()->vertices.buf, offsets);
+            }
+
+            // vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &meshBuffer.vertices.buf, offsets);
         }
     }
 

@@ -27,7 +27,7 @@ using namespace feather::vulkan;
 
 Node::Node(Node::Type type) : m_type(type)
 {
-
+    m_pMeshBuffer = new MeshBuffer();
 }
 
 

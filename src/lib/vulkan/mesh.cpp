@@ -37,7 +37,7 @@ Mesh::~Mesh()
 }
 
 
-void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer)
+void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
 {
     struct Vertex {
         float pos[3];
@@ -79,18 +79,18 @@ void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties dev
     bufInfo.flags = 0;
     //	Copy vertex data to VRAM
     //memset(&m_vertices, 0, sizeof(m_vertices));
-    err = vkCreateBuffer(device, &bufInfo, nullptr, &meshBuffer->vertices.buf);
+    err = vkCreateBuffer(device, &bufInfo, nullptr, &m_pMeshBuffer->vertices.buf);
     assert(!err);
-    vkGetBufferMemoryRequirements(device, meshBuffer->vertices.buf, &memReqs);
+    vkGetBufferMemoryRequirements(device, m_pMeshBuffer->vertices.buf, &memReqs);
     memAlloc.allocationSize = memReqs.size;
     getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
-    err = vkAllocateMemory(device, &memAlloc, nullptr, &meshBuffer->vertices.mem);
+    err = vkAllocateMemory(device, &memAlloc, nullptr, &m_pMeshBuffer->vertices.mem);
     assert(!err);
-    err = vkMapMemory(device, meshBuffer->vertices.mem, 0, memAlloc.allocationSize, 0, &data);
+    err = vkMapMemory(device, m_pMeshBuffer->vertices.mem, 0, memAlloc.allocationSize, 0, &data);
     assert(!err);
     memcpy(data, vertexBuffer.data(), vertexBufferSize);
-    vkUnmapMemory(device, meshBuffer->vertices.mem);
-    err = vkBindBufferMemory(device, meshBuffer->vertices.buf, meshBuffer->vertices.mem, 0);
+    vkUnmapMemory(device, m_pMeshBuffer->vertices.mem);
+    err = vkBindBufferMemory(device, m_pMeshBuffer->vertices.buf, m_pMeshBuffer->vertices.mem, 0);
     assert(!err);
 
     // Generate index buffer
@@ -103,28 +103,28 @@ void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties dev
     indexbufferInfo.flags = 0;
     // Copy index data to VRAM
     //memset(&m_indices, 0, sizeof(m_indices));
-    err = vkCreateBuffer(device, &indexbufferInfo, nullptr, &meshBuffer->indices.buf);
+    err = vkCreateBuffer(device, &indexbufferInfo, nullptr, &m_pMeshBuffer->indices.buf);
     assert(!err);
-    vkGetBufferMemoryRequirements(device, meshBuffer->indices.buf, &memReqs);
+    vkGetBufferMemoryRequirements(device, m_pMeshBuffer->indices.buf, &memReqs);
     memAlloc.allocationSize = memReqs.size;
     getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
-    err = vkAllocateMemory(device, &memAlloc, nullptr, &meshBuffer->indices.mem);
+    err = vkAllocateMemory(device, &memAlloc, nullptr, &m_pMeshBuffer->indices.mem);
     assert(!err);
-    err = vkMapMemory(device, meshBuffer->indices.mem, 0, indexBufferSize, 0, &data);
+    err = vkMapMemory(device, m_pMeshBuffer->indices.mem, 0, indexBufferSize, 0, &data);
     assert(!err);
     memcpy(data, indexBuffer.data(), indexBufferSize);
-    vkUnmapMemory(device, meshBuffer->indices.mem);
-    err = vkBindBufferMemory(device, meshBuffer->indices.buf, meshBuffer->indices.mem, 0);
+    vkUnmapMemory(device, m_pMeshBuffer->indices.mem);
+    err = vkBindBufferMemory(device, m_pMeshBuffer->indices.buf, m_pMeshBuffer->indices.mem, 0);
     assert(!err);
-    meshBuffer->indexCount = indexBuffer.size();
+    m_pMeshBuffer->indexCount = indexBuffer.size();
 }
 
 
-void Mesh::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, MeshBuffer* meshBuffer, float step)
+void Mesh::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, float step)
 {
     // free the vertex buffer
-    vkDestroyBuffer(device, meshBuffer->vertices.buf, nullptr);
-    vkFreeMemory(device, meshBuffer->vertices.mem, nullptr);
+    vkDestroyBuffer(device, m_pMeshBuffer->vertices.buf, nullptr);
+    vkFreeMemory(device, m_pMeshBuffer->vertices.mem, nullptr);
 
     struct Vertex {
         float pos[3];
@@ -166,17 +166,17 @@ void Mesh::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties devi
     bufInfo.flags = 0;
     //	Copy vertex data to VRAM
     //memset(&m_vertices, 0, sizeof(m_vertices));
-    err = vkCreateBuffer(device, &bufInfo, nullptr, &meshBuffer->vertices.buf);
+    err = vkCreateBuffer(device, &bufInfo, nullptr, &m_pMeshBuffer->vertices.buf);
     assert(!err);
-    vkGetBufferMemoryRequirements(device, meshBuffer->vertices.buf, &memReqs);
+    vkGetBufferMemoryRequirements(device, m_pMeshBuffer->vertices.buf, &memReqs);
     memAlloc.allocationSize = memReqs.size;
     getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
-    err = vkAllocateMemory(device, &memAlloc, nullptr, &meshBuffer->vertices.mem);
+    err = vkAllocateMemory(device, &memAlloc, nullptr, &m_pMeshBuffer->vertices.mem);
     assert(!err);
-    err = vkMapMemory(device, meshBuffer->vertices.mem, 0, memAlloc.allocationSize, 0, &data);
+    err = vkMapMemory(device, m_pMeshBuffer->vertices.mem, 0, memAlloc.allocationSize, 0, &data);
     assert(!err);
     memcpy(data, vertexBuffer.data(), vertexBufferSize);
-    vkUnmapMemory(device, meshBuffer->vertices.mem);
-    err = vkBindBufferMemory(device, meshBuffer->vertices.buf, meshBuffer->vertices.mem, 0);
+    vkUnmapMemory(device, m_pMeshBuffer->vertices.mem);
+    err = vkBindBufferMemory(device, m_pMeshBuffer->vertices.buf, m_pMeshBuffer->vertices.mem, 0);
     assert(!err);
 }
