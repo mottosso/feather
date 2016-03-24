@@ -12,16 +12,16 @@ layout (binding = 1) uniform UBO
 	mat4 model;
 } ubo;
 
-layout (location = 0) in vec3 VNormal[]; 
-layout (location = 1) in vec2 VUV[];
-layout (location = 2) in vec3 VColor[];
-layout (location = 3) in vec3 VPosition[];
+layout (location = 0) in vec3 inNormal[]; 
+layout (location = 1) in vec2 inUV[];
+layout (location = 2) in vec3 inColor[];
+layout (location = 3) in vec3 inPosition[];
 
-layout (location = 0) out vec3 GNormal;
-layout (location = 1) out vec2 GUV;
-layout (location = 2) out vec3 GColor;
-layout (location = 3) out vec3 GPosition;
-layout (location = 4) out vec3 GEdgeDistance;
+layout (location = 0) out vec3 outNormal;
+layout (location = 1) out vec2 outUV;
+layout (location = 2) out vec3 outColor;
+layout (location = 3) out vec3 outPosition;
+layout (location = 4) out vec3 outEdgeDistance;
 
 void main() 
 {
@@ -42,27 +42,27 @@ void main()
 
     // pass the triangle
 
-    GEdgeDistance = vec3(ha,0,0);
-    GUV = VUV[0];
-    GColor = VColor[0];
-    GPosition = VPosition[0];
-    GNormal = VNormal[0];
+    outEdgeDistance = vec3(ha,0,0);
+    outUV = inUV[0];
+    outColor = inColor[0];
+    outPosition = inPosition[0];
+    outNormal = inNormal[0];
     gl_Position = gl_in[0].gl_Position;
     EmitVertex();
 
-    GEdgeDistance = vec3(0,hb,0);
-    GUV = VUV[1];
-    GColor = VColor[1];
-    GPosition = VPosition[1];
-    GNormal = VNormal[1];
+    outEdgeDistance = vec3(0,hb,0);
+    outUV = inUV[1];
+    outColor = inColor[1];
+    outPosition = inPosition[1];
+    outNormal = inNormal[1];
     gl_Position = gl_in[1].gl_Position;
     EmitVertex();
 
-    GEdgeDistance = vec3(0,0,hc);
-    GUV = VUV[2];
-    GColor = VColor[2];
-    GPosition = VPosition[2];
-    GNormal = VNormal[2];
+    outEdgeDistance = vec3(0,0,hc);
+    outUV = inUV[2];
+    outColor = inColor[2];
+    outPosition = inPosition[2];
+    outNormal = inNormal[2];
     gl_Position = gl_in[2].gl_Position;
     EmitVertex();
 
