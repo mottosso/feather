@@ -22,6 +22,9 @@ layout (location = 1) out vec2 outUV;
 layout (location = 2) out vec3 outColor;
 layout (location = 3) out vec3 outPosition;
 layout (location = 4) out vec3 outEdgeDistance;
+layout (location = 5) out int outId;
+layout (location = 6) out float outPointSize;
+layout (location = 7) out vec3 outPointPosition;
 
 void main() 
 {
@@ -40,8 +43,10 @@ void main()
     float hb = abs(c*sin(alpha));
     float hc = abs(b*sin(alpha));
 
-    // pass the triangle
-
+    // P0
+    outPointPosition = vec3(1,0,0);
+    outId = gl_PrimitiveIDIn;
+    outPointSize = gl_PointSize;
     outEdgeDistance = vec3(ha,0,0);
     outUV = inUV[0];
     outColor = inColor[0];
@@ -50,6 +55,10 @@ void main()
     gl_Position = gl_in[0].gl_Position;
     EmitVertex();
 
+    // P1
+    outPointPosition = vec3(0,1,0);
+    outId = gl_PrimitiveIDIn;
+    outPointSize = gl_PointSize;
     outEdgeDistance = vec3(0,hb,0);
     outUV = inUV[1];
     outColor = inColor[1];
@@ -58,6 +67,10 @@ void main()
     gl_Position = gl_in[1].gl_Position;
     EmitVertex();
 
+    // P2
+    outPointPosition = vec3(0,0,1);
+    outId = gl_PrimitiveIDIn;
+    outPointSize = gl_PointSize;
     outEdgeDistance = vec3(0,0,hc);
     outUV = inUV[2];
     outColor = inColor[2];
