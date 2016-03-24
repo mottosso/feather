@@ -160,6 +160,8 @@ void Window::initVulkan(bool validation)
         feather::vulkan::tools::exitFatal("Could not enumerate phyiscal devices : \n" + feather::vulkan::tools::errorString(err), "Fatal error");
     }
 
+    std::cout << "Vulkan GPU count: " << gpuCount << std::endl;
+
     // Note : 
     // This example will always use the first physical device reported, 
     // change the vector index if you have multiple Vulkan devices installed 
