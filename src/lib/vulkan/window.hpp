@@ -195,6 +195,7 @@ namespace feather
 
                 struct {
                     VkPipeline wire;
+                    VkPipeline point;
                     VkPipeline solid;
                 } m_pipelines;
 

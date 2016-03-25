@@ -19,16 +19,20 @@ layout (location = 0) out vec3 outColor;
 void main() 
 {
     float normalLength = 0.15;
+    float pointSize = 4.0;
+
     for(int i=0; i<gl_in.length(); i++)
     {
         vec3 pos = gl_in[i].gl_Position.xyz;
         vec3 normal = inNormal[i].xyz;
 
         gl_Position = ubo.projection * (ubo.model * vec4(pos, 1.0));
+        gl_PointSize = pointSize;
         outColor = vec3(1.0, 0.0, 0.0);
         EmitVertex();
 
         gl_Position = ubo.projection * (ubo.model * vec4(pos + normal * normalLength, 1.0));
+        gl_PointSize = pointSize;
         outColor = vec3(0.0, 0.0, 1.0);
         EmitVertex();
 

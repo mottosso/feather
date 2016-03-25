@@ -1024,6 +1024,7 @@ void Window::preparePipelines()
     rasterizationState.depthClampEnable = VK_FALSE;
     rasterizationState.rasterizerDiscardEnable = VK_FALSE;
     rasterizationState.depthBiasEnable = VK_FALSE;
+    rasterizationState.lineWidth = 4.0;
 
     // Color blend state
     // Describes blend modes and color masks
@@ -1084,8 +1085,10 @@ void Window::preparePipelines()
     multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 
     // Load shaders
-    // Shaders are loaded from the SPIR-V format, which can be generated from glsl
+
     VkPipelineShaderStageCreateInfo shaderStages[3] = { {},{} };
+
+    // Wireframe shader
     shaderStages[0] = loadShader("shaders/spv/wire.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
     shaderStages[1] = loadShader("shaders/spv/wire.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
     shaderStages[2] = loadShader("shaders/spv/wire.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
@@ -1109,6 +1112,15 @@ void Window::preparePipelines()
     err = vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipelines.wire);
     assert(!err);
 
+    // Point shader
+    shaderStages[0] = loadShader("shaders/spv/point.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader("shaders/spv/point.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[2] = loadShader("shaders/spv/point.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
+
+    // Point rendering pipeline 
+    err = vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipelines.point);
+    assert(!err);
+
     // Base solid shader
     shaderStages[0] = loadShader("shaders/spv/base.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
     shaderStages[1] = loadShader("shaders/spv/base.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
@@ -1117,6 +1129,7 @@ void Window::preparePipelines()
     pipelineCreateInfo.stageCount = 2;
     err = vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipelines.solid);
     assert(!err);
+
 }
 
 VkPipelineShaderStageCreateInfo Window::loadShader(const char * fileName, VkShaderStageFlagBits stage)
@@ -1312,6 +1325,11 @@ void Window::buildCommandBuffers()
                 // Draw indexed triangle
                 vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->indexCount, 1, 0, 0, 1);
 
+                // Point Shading 
+                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.point);
+                // Draw indexed triangle
+                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->indexCount, 1, 0, 0, 1);
+
                 // Wireframe Shading
                 vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.wire);
                 // Draw indexed triangle
@@ -1328,7 +1346,12 @@ void Window::buildCommandBuffers()
                 vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.solid);
                 // Draw indexed triangle
                 vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->indexCount, 1, 0, 0, 1);
-                
+ 
+                // Point Shading 
+                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.point);
+                // Draw indexed triangle
+                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->indexCount, 1, 0, 0, 1);
+
                 // Wireframe Shading
                 vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.wire);
                 // Draw indexed triangle
