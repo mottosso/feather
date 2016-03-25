@@ -69,7 +69,7 @@ Window::~Window()
     // Clean up used Vulkan resources 
     // Note : Inherited destructor cleans up resources stored in base class
     vkDestroyPipeline(m_device, m_pipelines.solid, nullptr);
-    //vkDestroyPipeline(m_device, m_pipelines.normals, nullptr);
+    vkDestroyPipeline(m_device, m_pipelines.wire, nullptr);
 
     vkDestroyPipelineLayout(m_device, m_pipelineLayout, nullptr);
     vkDestroyDescriptorSetLayout(m_device, m_descriptorSetLayout, nullptr);
@@ -1086,9 +1086,9 @@ void Window::preparePipelines()
     // Load shaders
     // Shaders are loaded from the SPIR-V format, which can be generated from glsl
     VkPipelineShaderStageCreateInfo shaderStages[3] = { {},{} };
-    shaderStages[0] = loadShader("shaders/spv/wireframe.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader("shaders/spv/wireframe.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-    shaderStages[2] = loadShader("shaders/spv/wireframe.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
+    shaderStages[0] = loadShader("shaders/spv/wire.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader("shaders/spv/wire.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[2] = loadShader("shaders/spv/wire.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
 
     // Assign states
     // Two shader stages
@@ -1105,7 +1105,16 @@ void Window::preparePipelines()
     pipelineCreateInfo.renderPass = m_renderPass;
     pipelineCreateInfo.pDynamicState = &dynamicState;
 
-    // Create rendering pipeline
+    // wireframe rendering pipeline 
+    err = vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipelines.wire);
+    assert(!err);
+
+    // Base solid shader
+    shaderStages[0] = loadShader("shaders/spv/base.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader("shaders/spv/base.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+
+    // solid rendering pipeline 
+    pipelineCreateInfo.stageCount = 2;
     err = vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipelines.solid);
     assert(!err);
 }
@@ -1285,20 +1294,6 @@ void Window::buildCommandBuffers()
         // Bind descriptor sets describing shader binding points
         vkCmdBindDescriptorSets(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1, &m_descriptorSet, 0, NULL);
 
-        // Bind the rendering pipeline (including the shaders)
-        vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.solid);
-
-        /*
-        // Bind triangle vertices
-        VkDeviceSize offsets[1] = { 0 };
-        vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &m_vertices.buf, offsets);
-
-        // Bind triangle indices
-        vkCmdBindIndexBuffer(m_drawCommandBuffers[i], m_indices.buf, 0, VK_INDEX_TYPE_UINT32);
-
-        // Draw indexed triangle
-        vkCmdDrawIndexed(m_drawCommandBuffers[i], m_indices.count, 1, 0, 0, 1);
-        */
         for(auto node : m_aNodes){
             //std::cout << "binding node, i count=" << meshBuffer.indexCount << std::endl;
             // Bind triangle vertices
@@ -1310,27 +1305,36 @@ void Window::buildCommandBuffers()
                 vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<Mesh*>(node)->buffer()->vertices.buf, offsets);
                 // Bind triangle indices
                 vkCmdBindIndexBuffer(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->indices.buf, 0, VK_INDEX_TYPE_UINT32);
+
+                // Solid Shading
+                // Bind the rendering pipeline (including the shaders)
+                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.solid);
                 // Draw indexed triangle
                 vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->indexCount, 1, 0, 0, 1);
+
+                // Wireframe Shading
+                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.wire);
+                // Draw indexed triangle
+                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->indexCount, 1, 0, 0, 1);
+
             } else {
                 static_cast<PointLight*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
                 vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<PointLight*>(node)->buffer()->vertices.buf, offsets);
                 // Bind triangle indices
                 vkCmdBindIndexBuffer(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->indices.buf, 0, VK_INDEX_TYPE_UINT32);
+
+                // Solid Shading
+                // Bind the rendering pipeline (including the shaders)
+                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.solid);
+                // Draw indexed triangle
+                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->indexCount, 1, 0, 0, 1);
+                
+                // Wireframe Shading
+                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.wire);
                 // Draw indexed triangle
                 vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->indexCount, 1, 0, 0, 1);
             }
 
-            /*
-            VkDeviceSize offsets[1] = { 0 };
-            vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &meshBuffer.vertices.buf, offsets);
-
-            // Bind triangle indices
-            vkCmdBindIndexBuffer(m_drawCommandBuffers[i], meshBuffer.indices.buf, 0, VK_INDEX_TYPE_UINT32);
-
-            // Draw indexed triangle
-            vkCmdDrawIndexed(m_drawCommandBuffers[i], meshBuffer.indexCount, 1, 0, 0, 1);
-            */
         }
 
         vkCmdEndRenderPass(m_drawCommandBuffers[i]);

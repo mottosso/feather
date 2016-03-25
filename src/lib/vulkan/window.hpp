@@ -194,6 +194,7 @@ namespace feather
                 } m_uboVS, m_uboGS;
 
                 struct {
+                    VkPipeline wire;
                     VkPipeline solid;
                 } m_pipelines;
 
