@@ -36,28 +36,21 @@ Mesh::~Mesh()
 
 }
 
-
-void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
+void Mesh::build()
 {
-    struct Vertex {
-        float pos[3];
-        float norm[3];
-        float uv[2];
-        float col[3];
-    };
+    m_vertexBuffer.clear();
+    m_indexBuffer.clear();
+    m_vertexBuffer.push_back({{1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f}});
+    m_vertexBuffer.push_back({{-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f}});
+    m_vertexBuffer.push_back({{0.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f}});
+    m_vertexBuffer.push_back({{2.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f}});
+    m_indexBuffer = {{0},{1},{2},{0},{2},{3}};
+    m_edgeBuffer = {{1},{1},{0},{0},{1},{1}};
+}
 
-    std::vector<Vertex> vertexBuffer = {
-        { {1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f} },
-        { {-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f} },
-        { {0.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} },
-        { {2.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} }
-    };
-    
-    int vertexBufferSize = vertexBuffer.size() * sizeof(Vertex);
-
-    // Setup indices
-    std::vector<uint32_t> indexBuffer = { 0, 1, 2, 0, 2, 3 };
-    int indexBufferSize = indexBuffer.size() * sizeof(uint32_t);
+void Mesh::buildVertex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
+{
+    int vertexBufferSize = m_vertexBuffer.size() * sizeof(Vertex);
 
     VkMemoryAllocateInfo memAlloc = {};
     memAlloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -88,10 +81,26 @@ void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties dev
     assert(!err);
     err = vkMapMemory(device, m_pMeshBuffer->vertices.mem, 0, memAlloc.allocationSize, 0, &data);
     assert(!err);
-    memcpy(data, vertexBuffer.data(), vertexBufferSize);
+    memcpy(data, m_vertexBuffer.data(), vertexBufferSize);
     vkUnmapMemory(device, m_pMeshBuffer->vertices.mem);
     err = vkBindBufferMemory(device, m_pMeshBuffer->vertices.buf, m_pMeshBuffer->vertices.mem, 0);
     assert(!err);
+}
+
+void Mesh::buildIndex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
+{
+    // Setup indices
+    int indexBufferSize = m_indexBuffer.size() * sizeof(uint32_t);
+
+    VkMemoryAllocateInfo memAlloc = {};
+    memAlloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    memAlloc.pNext = NULL;
+    memAlloc.allocationSize = 0;
+    memAlloc.memoryTypeIndex = 0;
+    VkMemoryRequirements memReqs;
+
+    VkResult err;
+    void *data;
 
     // Generate index buffer
     //	Setup
@@ -112,11 +121,24 @@ void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties dev
     assert(!err);
     err = vkMapMemory(device, m_pMeshBuffer->indices.mem, 0, indexBufferSize, 0, &data);
     assert(!err);
-    memcpy(data, indexBuffer.data(), indexBufferSize);
+    memcpy(data, m_indexBuffer.data(), indexBufferSize);
     vkUnmapMemory(device, m_pMeshBuffer->indices.mem);
     err = vkBindBufferMemory(device, m_pMeshBuffer->indices.buf, m_pMeshBuffer->indices.mem, 0);
     assert(!err);
-    m_pMeshBuffer->indexCount = indexBuffer.size();
+    m_pMeshBuffer->indexCount = m_indexBuffer.size();
+}
+
+void Mesh::buildEdge(VkDevice devic, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
+{
+
+}
+
+void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
+{
+    build();
+
+    buildVertex(device, deviceMemoryProperties);
+    buildIndex(device, deviceMemoryProperties);
 }
 
 
@@ -126,57 +148,8 @@ void Mesh::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties devi
     vkDestroyBuffer(device, m_pMeshBuffer->vertices.buf, nullptr);
     vkFreeMemory(device, m_pMeshBuffer->vertices.mem, nullptr);
 
-    struct Vertex {
-        float pos[3];
-        float norm[3];
-        float uv[2];
-        float col[3];
-    };
+    //build();
 
-    std::vector<Vertex> vertexBuffer = {
-        { {1.0f * step,1.0f * step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f} },
-        { {-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f} },
-        { {0.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} },
-        { {2.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f} }
-    };
- 
-    int vertexBufferSize = vertexBuffer.size() * sizeof(Vertex);
-
-    // Setup indices
-    std::vector<uint32_t> indexBuffer = { 0, 1, 2, 0, 2, 3 };
-    int indexBufferSize = indexBuffer.size() * sizeof(uint32_t);
-
-    VkMemoryAllocateInfo memAlloc = {};
-    memAlloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    memAlloc.pNext = NULL;
-    memAlloc.allocationSize = 0;
-    memAlloc.memoryTypeIndex = 0;
-    VkMemoryRequirements memReqs;
-
-    VkResult err;
-    void *data;
-
-    // Generate vertex buffer
-    //	Setup
-    VkBufferCreateInfo bufInfo = {};
-    bufInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    bufInfo.pNext = NULL;
-    bufInfo.size = vertexBufferSize;
-    bufInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    bufInfo.flags = 0;
-    //	Copy vertex data to VRAM
-    //memset(&m_vertices, 0, sizeof(m_vertices));
-    err = vkCreateBuffer(device, &bufInfo, nullptr, &m_pMeshBuffer->vertices.buf);
-    assert(!err);
-    vkGetBufferMemoryRequirements(device, m_pMeshBuffer->vertices.buf, &memReqs);
-    memAlloc.allocationSize = memReqs.size;
-    getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
-    err = vkAllocateMemory(device, &memAlloc, nullptr, &m_pMeshBuffer->vertices.mem);
-    assert(!err);
-    err = vkMapMemory(device, m_pMeshBuffer->vertices.mem, 0, memAlloc.allocationSize, 0, &data);
-    assert(!err);
-    memcpy(data, vertexBuffer.data(), vertexBufferSize);
-    vkUnmapMemory(device, m_pMeshBuffer->vertices.mem);
-    err = vkBindBufferMemory(device, m_pMeshBuffer->vertices.buf, m_pMeshBuffer->vertices.mem, 0);
-    assert(!err);
+    m_vertexBuffer.at(0)={{1.0f*step,1.0f*step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f}};
+    buildVertex(device, deviceMemoryProperties);
 }

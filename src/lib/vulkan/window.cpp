@@ -1024,7 +1024,7 @@ void Window::preparePipelines()
     rasterizationState.depthClampEnable = VK_FALSE;
     rasterizationState.rasterizerDiscardEnable = VK_FALSE;
     rasterizationState.depthBiasEnable = VK_FALSE;
-    rasterizationState.lineWidth = 4.0;
+    rasterizationState.lineWidth = 4.0; // this does not work yet, have to enable wide lines?
 
     // Color blend state
     // Describes blend modes and color masks
@@ -1613,7 +1613,7 @@ void Window::nodeChanged()
             // Bind triangle vertices
             VkDeviceSize offsets[1] = { 0 };
             if(node->type()==Node::Mesh){
-                static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
+                static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties,step);
                 vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<Mesh*>(node)->buffer()->vertices.buf, offsets);
             } else {
                 static_cast<PointLight*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
