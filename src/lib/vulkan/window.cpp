@@ -678,12 +678,15 @@ void Window::prepareSemaphore()
 
 void Window::prepareVertices()
 {
+    /*
     struct Vertex {
 	float pos[3];
 	float normal[3];
 	float uv[2];
 	float col[3];
+        uint32_t edge;
     };
+    */
 
     for(auto node : m_aNodes) {
         if(node->type()==Node::Mesh)
@@ -718,7 +721,7 @@ void Window::prepareVertices()
 
         // Attribute descriptions
         // Describes memory layout and shader positions
-        m_vertices.attributeDescriptions.resize(4);
+        m_vertices.attributeDescriptions.resize(5);
         // Location 0 : Position
         m_vertices.attributeDescriptions[0].binding = VERTEX_BUFFER_BIND_ID;
         m_vertices.attributeDescriptions[0].location = 0;
@@ -775,7 +778,13 @@ void Window::prepareVertices()
                     VK_FORMAT_R32G32B32_SFLOAT,
                     sizeof(float) * 8);
         */
-
+        // Location 4 : Edges 
+        m_vertices.attributeDescriptions[4].binding = VERTEX_BUFFER_BIND_ID;
+        m_vertices.attributeDescriptions[4].location = 4;
+        m_vertices.attributeDescriptions[4].format = VK_FORMAT_R32_UINT;
+        m_vertices.attributeDescriptions[4].offset = sizeof(float) * 11;
+        m_vertices.attributeDescriptions[4].binding = 0;
+ 
 
 
         // Assign to vertex buffer

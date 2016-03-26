@@ -40,14 +40,15 @@ void Mesh::build()
 {
     m_vertexBuffer.clear();
     m_indexBuffer.clear();
-    m_vertexBuffer.push_back({{1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f}});
-    m_vertexBuffer.push_back({{-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f}});
-    m_vertexBuffer.push_back({{0.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f}});
-    m_vertexBuffer.push_back({{2.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f}});
+    m_vertexBuffer.push_back({{1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f},1});
+    m_vertexBuffer.push_back({{-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f},1});
+    m_vertexBuffer.push_back({{0.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},1});
+    m_vertexBuffer.push_back({{2.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},0});
     m_indexBuffer = {{0},{1},{2},{0},{2},{3}};
-    m_edgeBuffer = {{1},{1},{0},{0},{1},{1}};
+    //m_faceBuffer = {{{0},{6}},{{1},{6}}};
 }
 
+/*
 void Mesh::buildVertex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
 {
     int vertexBufferSize = m_vertexBuffer.size() * sizeof(Vertex);
@@ -128,10 +129,47 @@ void Mesh::buildIndex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMe
     m_pMeshBuffer->indexCount = m_indexBuffer.size();
 }
 
-void Mesh::buildEdge(VkDevice devic, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
+void Mesh::buildFace(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
 {
+    // Setup indices
+    int faceBufferSize = m_faceBuffer.size() * sizeof(Face);
 
+    VkMemoryAllocateInfo memAlloc = {};
+    memAlloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    memAlloc.pNext = NULL;
+    memAlloc.allocationSize = 0;
+    memAlloc.memoryTypeIndex = 0;
+    VkMemoryRequirements memReqs;
+
+    VkResult err;
+    void *data;
+
+    // Generate index buffer
+    //	Setup
+    VkBufferCreateInfo faceBufferInfo = {};
+    faceBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    faceBufferInfo.pNext = NULL;
+    faceBufferInfo.size = faceBufferSize;
+    faceBufferInfo.usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+    faceBufferInfo.flags = 0;
+    // Copy index data to VRAM
+    //memset(&m_faces, 0, sizeof(m_faces));
+    err = vkCreateBuffer(device, &faceBufferInfo, nullptr, &m_pMeshBuffer->faces.buf);
+    assert(!err);
+    vkGetBufferMemoryRequirements(device, m_pMeshBuffer->faces.buf, &memReqs);
+    memAlloc.allocationSize = memReqs.size;
+    getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
+    err = vkAllocateMemory(device, &memAlloc, nullptr, &m_pMeshBuffer->faces.mem);
+    assert(!err);
+    err = vkMapMemory(device, m_pMeshBuffer->faces.mem, 0, faceBufferSize, 0, &data);
+    assert(!err);
+    memcpy(data, m_faceBuffer.data(), faceBufferSize);
+    vkUnmapMemory(device, m_pMeshBuffer->faces.mem);
+    err = vkBindBufferMemory(device, m_pMeshBuffer->faces.buf, m_pMeshBuffer->faces.mem, 0);
+    assert(!err);
+    m_pMeshBuffer->faceCount = m_faceBuffer.size();
 }
+*/
 
 void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
 {
@@ -141,7 +179,6 @@ void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties dev
     buildIndex(device, deviceMemoryProperties);
 }
 
-
 void Mesh::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, float step)
 {
     // free the vertex buffer
@@ -150,6 +187,6 @@ void Mesh::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties devi
 
     //build();
 
-    m_vertexBuffer.at(0)={{1.0f*step,1.0f*step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f}};
+    m_vertexBuffer.at(0)={{1.0f*step,1.0f*step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f},1};
     buildVertex(device, deviceMemoryProperties);
 }
