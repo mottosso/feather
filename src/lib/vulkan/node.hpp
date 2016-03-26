@@ -40,7 +40,17 @@ namespace feather
         struct MeshBuffer {
             MeshBufferInfo vertices;
             MeshBufferInfo indices;
+            MeshBufferInfo faces;
+            uint32_t faceCount;
             uint32_t indexCount;
+        };
+
+        struct Vertex {
+            float pos[3];
+            float norm[3];
+            float uv[2];
+            float col[3];
+            uint32_t selected;
         };
 
         class Node
@@ -55,13 +65,19 @@ namespace feather
                 Type type() { return m_type; }; 
                 MeshBuffer* buffer() { return m_pMeshBuffer; };
                 void freeBuffer(VkDevice device);
+                virtual void build()=0;
 
             protected:
                 // node methods and members
                 VkBool32 getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t typeBits, VkFlags properties, uint32_t *typeIndex);
+                void buildVertex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
+                void buildIndex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
+
                 Type m_type;
                 MeshBuffer* m_pMeshBuffer;
-        };
+                std::vector<Vertex> m_vertexBuffer;
+                std::vector<uint32_t> m_indexBuffer;
+         };
 
     } // namespace vulkan
 

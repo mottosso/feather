@@ -41,6 +41,9 @@ namespace feather
                 ~Mesh();
                 void prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
                 void updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, float step=1.0);
+                void build();
+
+            private:
         };
 
     } // namespace vulkan
