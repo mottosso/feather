@@ -42,24 +42,6 @@ namespace feather
                 void prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
                 void updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, float step=1.0);
                 void build();
-            
-            private:
-                /*
-                struct Vertex {
-                    float pos[3];
-                    float norm[3];
-                    float uv[2];
-                    float col[3];
-                    uint32_t selected;
-                };
-
-                void build();
-                void buildVertex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
-                void buildIndex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
-                void buildEdge(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
-                std::vector<Vertex> m_vertexBuffer;
-                std::vector<uint32_t> m_indexBuffer;
-                */
         };
 
     } // namespace vulkan

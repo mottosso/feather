@@ -678,16 +678,6 @@ void Window::prepareSemaphore()
 
 void Window::prepareVertices()
 {
-    /*
-    struct Vertex {
-	float pos[3];
-	float normal[3];
-	float uv[2];
-	float col[3];
-        uint32_t edge;
-    };
-    */
-
     for(auto node : m_aNodes) {
         if(node->type()==Node::Mesh)
             static_cast<Mesh*>(node)->prepareVertices(m_device,m_deviceMemoryProperties);
@@ -700,25 +690,6 @@ void Window::prepareVertices()
         m_vertices.bindingDescriptions[0].stride = sizeof(Vertex);
         m_vertices.bindingDescriptions[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
-
-        /*
-        // Attribute descriptions
-        // Describes memory layout and shader attribute locations
-        m_vertices.attributeDescriptions.resize(2);
-        // Location 0 : Position
-        m_vertices.attributeDescriptions[0].binding = VERTEX_BUFFER_BIND_ID;
-        m_vertices.attributeDescriptions[0].location = 0;
-        m_vertices.attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-        m_vertices.attributeDescriptions[0].offset = 0;
-        m_vertices.attributeDescriptions[0].binding = 0;
-        // Location 1 : Color
-        m_vertices.attributeDescriptions[1].binding = VERTEX_BUFFER_BIND_ID;
-        m_vertices.attributeDescriptions[1].location = 1;
-        m_vertices.attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-        m_vertices.attributeDescriptions[1].offset = sizeof(float) * 3;
-        m_vertices.attributeDescriptions[1].binding = 0;
-        */
-
         // Attribute descriptions
         // Describes memory layout and shader positions
         m_vertices.attributeDescriptions.resize(5);
@@ -728,65 +699,35 @@ void Window::prepareVertices()
         m_vertices.attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
         m_vertices.attributeDescriptions[0].offset = 0;
         m_vertices.attributeDescriptions[0].binding = 0;
-        /*
-         vertices.attributeDescriptions[0] =
-            vkTools::initializers::vertexInputAttributeDescription(
-                    VERTEX_BUFFER_BIND_ID,
-                    0,
-                    VK_FORMAT_R32G32B32_SFLOAT,
-                    0);
-        */
+
         // Location 1 : Normal
         m_vertices.attributeDescriptions[1].binding = VERTEX_BUFFER_BIND_ID;
         m_vertices.attributeDescriptions[1].location = 1;
         m_vertices.attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
         m_vertices.attributeDescriptions[1].offset = sizeof(float) * 3;
         m_vertices.attributeDescriptions[1].binding = 0;
-        /*
-         vertices.attributeDescriptions[1] =
-            vkTools::initializers::vertexInputAttributeDescription(
-                    VERTEX_BUFFER_BIND_ID,
-                    1,
-                    VK_FORMAT_R32G32B32_SFLOAT,
-                    sizeof(float) * 3);
-        */
+
         // Location 2 : Texture coordinates
         m_vertices.attributeDescriptions[2].binding = VERTEX_BUFFER_BIND_ID;
         m_vertices.attributeDescriptions[2].location = 2;
         m_vertices.attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
         m_vertices.attributeDescriptions[2].offset = sizeof(float) * 6;
         m_vertices.attributeDescriptions[2].binding = 0;
-        /*
-         vertices.attributeDescriptions[2] =
-            vkTools::initializers::vertexInputAttributeDescription(
-                    VERTEX_BUFFER_BIND_ID,
-                    2,
-                    VK_FORMAT_R32G32_SFLOAT,
-                    sizeof(float) * 6);
-        */
+
         // Location 3 : Color
         m_vertices.attributeDescriptions[3].binding = VERTEX_BUFFER_BIND_ID;
         m_vertices.attributeDescriptions[3].location = 3;
         m_vertices.attributeDescriptions[3].format = VK_FORMAT_R32G32B32_SFLOAT;
         m_vertices.attributeDescriptions[3].offset = sizeof(float) * 8;
         m_vertices.attributeDescriptions[3].binding = 0;
-        /*
-        vertices.attributeDescriptions[3] =
-            vkTools::initializers::vertexInputAttributeDescription(
-                    VERTEX_BUFFER_BIND_ID,
-                    3,
-                    VK_FORMAT_R32G32B32_SFLOAT,
-                    sizeof(float) * 8);
-        */
-        // Location 4 : Edges 
+
+        // Location 4 : Selection 
         m_vertices.attributeDescriptions[4].binding = VERTEX_BUFFER_BIND_ID;
         m_vertices.attributeDescriptions[4].location = 4;
         m_vertices.attributeDescriptions[4].format = VK_FORMAT_R32_UINT;
         m_vertices.attributeDescriptions[4].offset = sizeof(float) * 11;
         m_vertices.attributeDescriptions[4].binding = 0;
  
-
-
         // Assign to vertex buffer
         m_vertices.vi.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
         m_vertices.vi.pNext = NULL;

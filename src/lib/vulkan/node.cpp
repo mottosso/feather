@@ -143,4 +143,3 @@ void Node::buildIndex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMe
     m_pMeshBuffer->indexCount = m_indexBuffer.size();
 }
 
-
