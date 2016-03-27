@@ -143,3 +143,44 @@ void Node::buildIndex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMe
     m_pMeshBuffer->indexCount = m_indexBuffer.size();
 }
 
+void Node::buildEdge(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
+{
+    // Setup indices
+    int edgeBufferSize = m_edgeBuffer.size() * sizeof(uint32_t);
+
+    VkMemoryAllocateInfo memAlloc = {};
+    memAlloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    memAlloc.pNext = NULL;
+    memAlloc.allocationSize = 0;
+    memAlloc.memoryTypeIndex = 0;
+    VkMemoryRequirements memReqs;
+
+    VkResult err;
+    void *data;
+
+    // Generate edge buffer
+    //	Setup
+    VkBufferCreateInfo edgebufferInfo = {};
+    edgebufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    edgebufferInfo.pNext = NULL;
+    edgebufferInfo.size = edgeBufferSize;
+    edgebufferInfo.usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+    edgebufferInfo.flags = 0;
+    // Copy edge data to VRAM
+    //memset(&m_indices, 0, sizeof(m_indices));
+    err = vkCreateBuffer(device, &edgebufferInfo, nullptr, &m_pMeshBuffer->edges.buf);
+    assert(!err);
+    vkGetBufferMemoryRequirements(device, m_pMeshBuffer->edges.buf, &memReqs);
+    memAlloc.allocationSize = memReqs.size;
+    getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
+    err = vkAllocateMemory(device, &memAlloc, nullptr, &m_pMeshBuffer->edges.mem);
+    assert(!err);
+    err = vkMapMemory(device, m_pMeshBuffer->edges.mem, 0, edgeBufferSize, 0, &data);
+    assert(!err);
+    memcpy(data, m_edgeBuffer.data(), edgeBufferSize);
+    vkUnmapMemory(device, m_pMeshBuffer->edges.mem);
+    err = vkBindBufferMemory(device, m_pMeshBuffer->edges.buf, m_pMeshBuffer->edges.mem, 0);
+    assert(!err);
+    m_pMeshBuffer->edgeCount = m_edgeBuffer.size();
+}
+

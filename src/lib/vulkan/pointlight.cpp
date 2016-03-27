@@ -45,6 +45,7 @@ void PointLight::build()
     m_vertexBuffer.push_back({{0.0f,3.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},1});
     m_vertexBuffer.push_back({{2.0f,3.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},1});
     m_indexBuffer = {{0},{1},{2},{0},{2},{3}};
+    m_edgeBuffer = {{0},{1},{1},{2},{2},{3},{3},{0}};
 }
 
 void PointLight::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
@@ -53,6 +54,7 @@ void PointLight::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperti
 
     buildVertex(device, deviceMemoryProperties);
     buildIndex(device, deviceMemoryProperties);
+    buildEdge(device, deviceMemoryProperties);
 }
 
 void PointLight::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, float step)
