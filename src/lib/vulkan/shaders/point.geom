@@ -10,6 +10,7 @@ layout (binding = 1) uniform UBO
 {
 	mat4 projection;
 	mat4 model;
+        int mode;
 } ubo;
 
 layout (location = 0) in vec3 inPosition[]; 
@@ -24,6 +25,9 @@ void main()
     vec3 p1 = gl_in[1].gl_Position.xyz;
     vec3 p2 = gl_in[2].gl_Position.xyz;
 
+    int draw =  ubo.mode & 0x0001;
+    if(draw>0)
+    {
     // p0
     gl_Position = ubo.projection * (ubo.model * vec4(p0, 1.0));
     gl_PointSize = pointSize;
@@ -43,4 +47,6 @@ void main()
     EmitVertex();
 
     EndPrimitive();
+    }
+
 }

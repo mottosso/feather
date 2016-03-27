@@ -10,6 +10,7 @@ layout (binding = 1) uniform UBO
 {
 	mat4 projection;
 	mat4 model;
+        int mode;
 } ubo;
 
 layout (location = 0) in vec3 inNormal[]; 
