@@ -9,6 +9,7 @@ layout (binding = 0) uniform UBO
 {
 	mat4 projection;
 	mat4 model;
+        int mode;
 } ubo;
 
 layout (location = 0) out vec3 outPosition;

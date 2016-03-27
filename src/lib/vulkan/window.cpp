@@ -47,6 +47,9 @@ m_prePresentCommandBuffer(VK_NULL_HANDLE),
 m_colorFormat(VK_FORMAT_B8G8R8A8_UNORM),
 m_defaultClearColor({ { 0.325f, 0.325f, 0.325f, 1.0f } })
 {
+    // set the view mode
+    m_mode = POINT | WIREFRAME | SHADED;
+ 
     // add the nodes
     m_aNodes.push_back(new Mesh());
     m_aNodes.push_back(new PointLight());
@@ -828,6 +831,10 @@ void Window::updateUniformBuffers()
     m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
     m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+    //m_uboVS.point_mode = (m_mode && POINT) ? true : false;
+    //m_uboVS.point_mode = true;
+    //m_uboVS.wireframe_mode = (m_mode && WIREFRAME) ? true : false;
+    m_uboVS.mode = m_mode;
 
     // Map uniform buffer and update it
     uint8_t *pData;
@@ -839,6 +846,7 @@ void Window::updateUniformBuffers()
     // Geometry shader
     m_uboGS.model = m_uboVS.model;
     m_uboGS.projection = m_uboVS.projection;
+    m_uboGS.mode = m_uboVS.mode;
     err = vkMapMemory(m_device, m_uniformDataGS.memory, 0, sizeof(m_uboGS), 0, (void **)&pData);
     assert(!err);
     memcpy(pData, &m_uboGS, sizeof(m_uboGS));

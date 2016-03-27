@@ -46,6 +46,8 @@ namespace feather
         {
 
             public:
+                enum Mode { POINT=0x0001, WIREFRAME=0x0002, SHADED=0x0004, POINT_NORMALS=0x0008, FACE_NORMALS=0x0010 };
+ 
                 Window(std::string _title="", unsigned int _width=1280, unsigned int _height=720, float _zoom=-2.0, bool _validation=false);
                 ~Window();
                 std::vector<unsigned int> cameras();
@@ -190,7 +192,7 @@ namespace feather
                 struct {
                     glm::mat4 projection;
                     glm::mat4 model;
-                    glm::mat4 view;
+                    int mode;
                 } m_uboVS, m_uboGS;
 
                 struct {
@@ -205,6 +207,7 @@ namespace feather
 
                 // TESTING
                 float step=1.0;
+                unsigned int m_mode;
         };
 
     } // namespace vulkan
