@@ -44,8 +44,8 @@ m_frameTimer(1.0),
 m_setupCommandBuffer(VK_NULL_HANDLE),
 m_postPresentCommandBuffer(VK_NULL_HANDLE),
 m_prePresentCommandBuffer(VK_NULL_HANDLE),
-//m_colorFormat(VK_FORMAT_B8G8R8A8_UNORM),
-m_colorFormat(VK_FORMAT_B8G8R8A8_SRGB),
+m_colorFormat(VK_FORMAT_B8G8R8A8_UNORM),
+//m_colorFormat(VK_FORMAT_B8G8R8A8_SRGB),
 //m_colorFormat(VK_FORMAT_R32G32B32A32_SFLOAT),
 m_defaultClearColor({ { 0.325f, 0.325f, 0.325f, 1.0f } })
 {
@@ -484,7 +484,7 @@ void Window::setupDepthStencil()
     image.imageType = VK_IMAGE_TYPE_2D;
     image.format = m_depthFormat;
     image.extent = { m_width, m_height, 1 };
-    image.mipLevels = 1;
+    image.mipLevels = 2;
     image.arrayLayers = 1;
     //image.samples = VK_SAMPLE_COUNT_1_BIT;
     image.samples = VK_SAMPLE_COUNT_4_BIT;
