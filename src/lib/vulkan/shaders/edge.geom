@@ -26,12 +26,10 @@ void main()
     vec3 p1 = gl_in[1].gl_Position.xyz;
 
     gl_Position = ubo.projection * (ubo.model * vec4(p0, 1.0));
-    gl_PointSize = pointSize;
     outColor = vec3(0.0, 0.0, 0.0);
     EmitVertex();
 
     gl_Position = ubo.projection * (ubo.model * vec4(p1, 1.0));
-    gl_PointSize = pointSize;
     outColor = vec3(0.0, 0.0, 0.0);
     EmitVertex();
 

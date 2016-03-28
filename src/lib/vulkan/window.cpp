@@ -1335,6 +1335,9 @@ void Window::buildCommandBuffers()
 
                 // EDGES
 
+                // set line width
+                vkCmdSetLineWidth(m_drawCommandBuffers[i], 2.0);
+
                 // Shading
                 vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.wire);
 
@@ -1387,6 +1390,10 @@ void Window::buildCommandBuffers()
                 vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
 
             }
+
+            // reset line width
+            vkCmdSetLineWidth(m_drawCommandBuffers[i], 1.0);
+
 
         }
 
