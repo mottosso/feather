@@ -1333,18 +1333,18 @@ void Window::buildCommandBuffers()
                 // Bind indices
                 vkCmdBindIndexBuffer(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->edges.buf, 0, VK_INDEX_TYPE_UINT32);
 
-                // POINTS
-
-                // Shading 
-                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.point);
-
-                // Draw indexed 
-                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
-
                 // EDGES
 
                 // Shading
                 vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.wire);
+
+                // Draw indexed 
+                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
+
+                // POINTS
+
+                // Shading 
+                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.point);
 
                 // Draw indexed 
                 vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
@@ -1371,13 +1371,6 @@ void Window::buildCommandBuffers()
                 // Bind indices
                 vkCmdBindIndexBuffer(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->edges.buf, 0, VK_INDEX_TYPE_UINT32);
 
-                // POINT
- 
-                // Shading 
-                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.point);
-                // Draw indexed 
-                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
-
                 // EDGES
 
                 // Shading
@@ -1385,6 +1378,14 @@ void Window::buildCommandBuffers()
 
                 // Draw indexed 
                 vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
+
+                // POINT
+ 
+                // Shading 
+                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.point);
+                // Draw indexed 
+                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
+
             }
 
         }
