@@ -45,6 +45,8 @@ m_setupCommandBuffer(VK_NULL_HANDLE),
 m_postPresentCommandBuffer(VK_NULL_HANDLE),
 m_prePresentCommandBuffer(VK_NULL_HANDLE),
 m_colorFormat(VK_FORMAT_B8G8R8A8_UNORM),
+//m_colorFormat(VK_FORMAT_B8G8R8A8_SRGB),
+//m_colorFormat(VK_FORMAT_R32G32B32A32_SFLOAT),
 m_defaultClearColor({ { 0.325f, 0.325f, 0.325f, 1.0f } })
 {
     // set the view mode
@@ -482,9 +484,10 @@ void Window::setupDepthStencil()
     image.imageType = VK_IMAGE_TYPE_2D;
     image.format = m_depthFormat;
     image.extent = { m_width, m_height, 1 };
-    image.mipLevels = 1;
+    image.mipLevels = 2;
     image.arrayLayers = 1;
-    image.samples = VK_SAMPLE_COUNT_1_BIT;
+    //image.samples = VK_SAMPLE_COUNT_1_BIT;
+    image.samples = VK_SAMPLE_COUNT_4_BIT;
     image.tiling = VK_IMAGE_TILING_OPTIMAL;
     image.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
     image.flags = 0;
@@ -549,7 +552,8 @@ void Window::setupRenderPass()
 {
     VkAttachmentDescription attachments[2];
     attachments[0].format = m_colorFormat;
-    attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
+    //attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
+    attachments[0].samples = VK_SAMPLE_COUNT_4_BIT;
     attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
     attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -558,7 +562,8 @@ void Window::setupRenderPass()
     attachments[0].finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
     attachments[1].format = m_depthFormat;
-    attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
+    //attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
+    attachments[1].samples = VK_SAMPLE_COUNT_4_BIT;
     attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
     attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -1061,7 +1066,9 @@ void Window::preparePipelines()
     multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
     multisampleState.pSampleMask = NULL;
     // No multi sampling used in this example
-    multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+    //multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+    multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_4_BIT;
+
 
     // Load shaders
 
@@ -1326,18 +1333,21 @@ void Window::buildCommandBuffers()
                 // Bind indices
                 vkCmdBindIndexBuffer(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->edges.buf, 0, VK_INDEX_TYPE_UINT32);
 
-                // POINTS
+                // EDGES
 
-                // Shading 
-                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.point);
+                // set line width
+                vkCmdSetLineWidth(m_drawCommandBuffers[i], 2.0);
+
+                // Shading
+                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.wire);
 
                 // Draw indexed 
                 vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
 
-                // EDGES
+                // POINTS
 
-                // Shading
-                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.wire);
+                // Shading 
+                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.point);
 
                 // Draw indexed 
                 vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
@@ -1364,13 +1374,6 @@ void Window::buildCommandBuffers()
                 // Bind indices
                 vkCmdBindIndexBuffer(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->edges.buf, 0, VK_INDEX_TYPE_UINT32);
 
-                // POINT
- 
-                // Shading 
-                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.point);
-                // Draw indexed 
-                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
-
                 // EDGES
 
                 // Shading
@@ -1378,7 +1381,19 @@ void Window::buildCommandBuffers()
 
                 // Draw indexed 
                 vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
+
+                // POINT
+ 
+                // Shading 
+                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.point);
+                // Draw indexed 
+                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
+
             }
+
+            // reset line width
+            vkCmdSetLineWidth(m_drawCommandBuffers[i], 1.0);
+
 
         }
 
