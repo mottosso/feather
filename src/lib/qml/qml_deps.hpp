@@ -57,13 +57,14 @@
 #include <QtOpenGL/QtOpenGL>
 #include <QtOpenGL/QGLFunctions>
 
+/*
 // Qt3D
 #include <Qt3DCore/QEntity>
 #include <Qt3DCore/QNode>
 #include <Qt3DCore/QEntity>
 #include <Qt3DCore/QTransform>
-#include <Qt3DCore/QTranslateTransform>
-#include <Qt3DCore/QScaleTransform>
+//#include <Qt3DCore/QTranslateTransform>
+//#include <Qt3DCore/QScaleTransform>
 #include <Qt3DCore/QCameraLens>
 #include <Qt3DCore/QCamera>
 
@@ -105,5 +106,6 @@
 #include <Qt3DInput/Q3DMouseEvent>
 
 #include <Qt3DQuick/quick3dconfiguration.h>
+*/
 
 #endif

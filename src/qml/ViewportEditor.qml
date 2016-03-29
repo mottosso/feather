@@ -225,13 +225,14 @@ Item {
 
     } 
 
+    /*
     Viewport3D2 { 
         id: viewport
         anchors.top: toolBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-
+    */
         /*
         MouseArea {
             anchors.fill: parent
@@ -239,7 +240,7 @@ Item {
             propagateComposedEvents: true
         }
         */
-    }
+    //}
 
     //function updateGL() { viewport.updateGL() }
 
