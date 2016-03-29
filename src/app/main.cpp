@@ -24,7 +24,7 @@
 #include "deps.hpp"
 #include "curves.hpp"
 //#include "viewportthread.hpp"
-#include "viewport2.hpp"
+//#include "viewport2.hpp"
 //#include "viewport3.hpp"
 #include "sg_editor.hpp"
 #include "field_model.hpp"
@@ -36,7 +36,7 @@
 #include <QQmlApplicationEngine>
 
 #include <QtQuick/QQuickView>
-#include <Qt3DRenderer/QRenderAspect>
+//#include <Qt3DRenderer/QRenderAspect>
 #include <Qt3DInput/QInputAspect>
 #include <Qt3DQuick/QQmlAspectEngine>
 
@@ -205,7 +205,7 @@ int main(int argc, char **argv)
 
     qmlRegisterType<BezierCurve>("feather.ui.curves", 1, 0, "BezierCurve");
     //qmlRegisterType<ViewportThread>("feather.viewport", 1, 0, "Viewport");
-    qmlRegisterType<Viewport2>("feather.viewport", 1, 0, "Viewport2");
+    //qmlRegisterType<Viewport2>("feather.viewport", 1, 0, "Viewport2");
     //qmlRegisterType<DeferredRenderer>("feather.viewport", 1, 0, "DeferredRenderer");
     //qmlRegisterType<Viewport3>("feather.viewport", 1, 0, "Viewport3");
     qmlRegisterType<SceneGraphEditor>("feather.editors", 1, 0, "SceneGraphEditor");
