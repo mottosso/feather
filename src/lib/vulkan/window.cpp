@@ -61,6 +61,8 @@ m_defaultClearColor({ { 0.325f, 0.325f, 0.325f, 1.0f } })
     initConnection();
     initVulkan(m_validation);
 
+    m_pPipelines = new Pipelines();
+
     // startup
     setupWindow();
     initSwapChain();
@@ -73,11 +75,18 @@ Window::~Window()
 {
     // Clean up used Vulkan resources 
     // Note : Inherited destructor cleans up resources stored in base class
+    /*
     vkDestroyPipeline(m_device, m_pipelines.solid, nullptr);
     vkDestroyPipeline(m_device, m_pipelines.wire, nullptr);
     vkDestroyPipeline(m_device, m_pipelines.point, nullptr);
 
     vkDestroyPipelineLayout(m_device, m_pipelineLayout, nullptr);
+    */
+
+    m_pPipelines->cleanup(m_device);
+    delete m_pPipelines;
+    m_pPipelines=0;
+
     vkDestroyDescriptorSetLayout(m_device, m_descriptorSetLayout, nullptr);
 
     // go through each node and clean it up
@@ -381,7 +390,8 @@ void Window::prepare()
     createCommandBuffers();
     setupDepthStencil();
     setupRenderPass();
-    createPipelineCache();
+    m_pPipelines->createCache(m_device);
+    //createPipelineCache();
     setupFrameBuffer();
     flushSetupCommandBuffer();
     // Recreate setup command buffer for derived class
@@ -397,7 +407,8 @@ void Window::prepare()
     prepareVertices();
     prepareUniformBuffers();
     setupDescriptorSetLayout();
-    preparePipelines();
+    m_pPipelines->prepare(m_device, m_renderPass, &m_vertices.vi);
+    //preparePipelines();
     setupDescriptorPool();
     setupDescriptorSet();
     buildCommandBuffers();
@@ -607,6 +618,7 @@ void Window::setupRenderPass()
     assert(!err);
 }
 
+/*
 void Window::createPipelineCache()
 {
     VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
@@ -614,6 +626,7 @@ void Window::createPipelineCache()
     VkResult err = vkCreatePipelineCache(m_device, &pipelineCacheCreateInfo, nullptr, &m_pipelineCache);
     assert(!err);
 }
+*/
 
 void Window::setupFrameBuffer()
 {
@@ -909,8 +922,12 @@ void Window::setupDescriptorSetLayout()
                 &m_descriptorSetLayout,
                 1);
 
+    m_pPipelines->createLayout(m_device, pPipelineLayoutCreateInfo);
+
+    /*
     err = vkCreatePipelineLayout(m_device, &pPipelineLayoutCreateInfo, nullptr, &m_pipelineLayout);
     assert(!err);
+    */
 
     /*
     // Binding 0 : Uniform buffer (Vertex shader)
@@ -960,7 +977,7 @@ void Window::preparePipelines()
     // pipeline only stores that they are used with this pipeline,
     // but not their states
 
-
+/*
 
     // Solid Shading Pipeline
     VkGraphicsPipelineCreateInfo pipelineCreateInfo = {};
@@ -1131,9 +1148,10 @@ void Window::preparePipelines()
     //pipelineCreateInfo.stageCount = 2;
     err = vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipelines.solid);
     assert(!err);
-
+*/
 }
 
+/*
 VkPipelineShaderStageCreateInfo Window::loadShader(const char * fileName, VkShaderStageFlagBits stage)
 {
     VkPipelineShaderStageCreateInfo shaderStage = {};
@@ -1145,6 +1163,7 @@ VkPipelineShaderStageCreateInfo Window::loadShader(const char * fileName, VkShad
     m_shaderModules.push_back(shaderStage.module);
     return shaderStage;
 }
+*/
 
 void Window::setupDescriptorPool()
 {
@@ -1307,7 +1326,8 @@ void Window::buildCommandBuffers()
         vkCmdSetScissor(m_drawCommandBuffers[i], 0, 1, &scissor);
 
         // Bind descriptor sets describing shader binding points
-        vkCmdBindDescriptorSets(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1, &m_descriptorSet, 0, NULL);
+        //vkCmdBindDescriptorSets(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1, &m_descriptorSet, 0, NULL);
+        vkCmdBindDescriptorSets(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pPipelines->layout(), 0, 1, &m_descriptorSet, 0, NULL);
 
         for(auto node : m_aNodes){
             //std::cout << "binding node, i count=" << meshBuffer.indexCount << std::endl;
@@ -1317,6 +1337,9 @@ void Window::buildCommandBuffers()
  
             if(node->type()==Node::Mesh){
                 static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
+                m_pPipelines->bind(m_device, m_drawCommandBuffers[i], node, offsets);
+
+                /*
                 vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<Mesh*>(node)->buffer()->vertices.buf, offsets);
 
                 // Bind triangle indices
@@ -1351,10 +1374,14 @@ void Window::buildCommandBuffers()
 
                 // Draw indexed 
                 vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
+                */
 
             } else {
                 static_cast<PointLight*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
-                
+ 
+                m_pPipelines->bind(m_device, m_drawCommandBuffers[i], node, offsets);
+
+                /*               
                 vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<PointLight*>(node)->buffer()->vertices.buf, offsets);
 
                 // SHADED
@@ -1388,7 +1415,7 @@ void Window::buildCommandBuffers()
                 vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.point);
                 // Draw indexed 
                 vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
-
+                */
             }
 
             // reset line width
@@ -1413,6 +1440,7 @@ void Window::buildCommandBuffers()
         prePresentBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         prePresentBarrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };			
         prePresentBarrier.image = m_swapChain.buffers[i].image;
+
 
         VkImageMemoryBarrier *pMemoryBarrier = &prePresentBarrier;
         vkCmdPipelineBarrier(

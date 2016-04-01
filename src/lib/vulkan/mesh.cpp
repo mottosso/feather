@@ -27,7 +27,21 @@ using namespace feather::vulkan;
 
 Mesh::Mesh() : Node(Node::Mesh)
 {
+    /*
+    // edge shaders
+    m_vertexEdgeShader = "shaders/spv/edge.vert.spv";
+    m_geometryEdgeShader = "shaders/spv/edge.geom.spv";
+    m_fragmentEdgeShader = "shaders/spv/edge.frag.spv";
 
+    // point shaders
+    m_vertexPointShader = "shaders/spv/point.vert.spv";
+    m_geometryPointShader = "shaders/spv/point.geom.spv";
+    m_fragmentPointShader = "shaders/spv/point.frag.spv";
+
+    // solid shaders
+    m_vertexSolidShader = "shaders/spv/base.vert.spv";
+    m_fragmentSolidShader = "shaders/spv/base.frag.spv";
+    */
 }
 
 
@@ -67,4 +81,9 @@ void Mesh::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties devi
 
     m_vertexBuffer.at(0)={{1.0f*step,1.0f*step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f},1};
     buildVertex(device, deviceMemoryProperties);
+}
+
+void Mesh::loadShaders()
+{
+
 }

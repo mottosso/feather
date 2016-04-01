@@ -66,6 +66,7 @@ namespace feather
                 MeshBuffer* buffer() { return m_pMeshBuffer; };
                 void freeBuffer(VkDevice device);
                 virtual void build()=0;
+                virtual void loadShaders()=0;
 
             protected:
                 // node methods and members

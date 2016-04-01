@@ -30,6 +30,7 @@
 #include "textureloader.hpp"
 #include "mesh.hpp"
 #include "pointlight.hpp"
+#include "pipelines.hpp"
 
 #define VERTEX_BUFFER_BIND_ID 0
 #define ENABLE_VALIDATION false
@@ -152,7 +153,7 @@ namespace feather
                 // List of available frame buffers (same as number of swap chain images)
                 std::vector<VkFramebuffer> m_aFrameBuffers;
                 // List of shader modules created (stored for cleanup)
-                std::vector<VkShaderModule> m_shaderModules;
+                //std::vector<VkShaderModule> m_shaderModules;
                 VkClearColorValue m_defaultClearColor;
 
 
@@ -182,7 +183,6 @@ namespace feather
                     std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
                 } m_vertices;
 
-
                 struct uniformData {
                     VkBuffer buffer;
                     VkDeviceMemory memory;
@@ -195,11 +195,15 @@ namespace feather
                     int mode;
                 } m_uboVS, m_uboGS;
 
+                /*
                 struct {
                     VkPipeline wire;
                     VkPipeline point;
                     VkPipeline solid;
                 } m_pipelines;
+                */
+
+                Pipelines* m_pPipelines;
 
                 // Feather Methods
                 void load_sg();
