@@ -63,7 +63,7 @@ void Pipelines::bind(VkDevice device, VkCommandBuffer buffer, Node* node, VkDevi
             bindMesh(device, buffer, node, offsets);
             break;
         case Node::Light:
-            bindMesh(device, buffer, node, offsets);
+            bindLight(device, buffer, node, offsets);
             break;
         case Node::Mesh:
             bindMesh(device, buffer, node, offsets);
@@ -85,7 +85,6 @@ void Pipelines::bindMesh(VkDevice device, VkCommandBuffer buffer, Node* node, Vk
     vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_meshPipelines.solid);
     // Draw indexed triangle
     vkCmdDrawIndexed(buffer, static_cast<Mesh*>(node)->buffer()->indexCount, 1, 0, 0, 1);
-
     // change over to edge index
 
     // Bind indices
@@ -109,13 +108,13 @@ void Pipelines::bindMesh(VkDevice device, VkCommandBuffer buffer, Node* node, Vk
 
     // Draw indexed 
     vkCmdDrawIndexed(buffer, static_cast<Mesh*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
-
 }
 
 void Pipelines::bindLight(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1])
 {
     vkCmdBindVertexBuffers(buffer, VERTEX_BUFFER_BIND_ID, 1, &static_cast<Mesh*>(node)->buffer()->vertices.buf, offsets);
 
+    /*
     // Bind triangle indices
     vkCmdBindIndexBuffer(buffer, static_cast<PointLight*>(node)->buffer()->indices.buf, 0, VK_INDEX_TYPE_UINT32);
 
@@ -129,6 +128,7 @@ void Pipelines::bindLight(VkDevice device, VkCommandBuffer buffer, Node* node, V
 
     // Bind indices
     vkCmdBindIndexBuffer(buffer, static_cast<PointLight*>(node)->buffer()->edges.buf, 0, VK_INDEX_TYPE_UINT32);
+    */
 
     // EDGES
 
@@ -141,6 +141,7 @@ void Pipelines::bindLight(VkDevice device, VkCommandBuffer buffer, Node* node, V
     // Draw indexed 
     vkCmdDrawIndexed(buffer, static_cast<PointLight*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
 
+    /*
     // POINTS
 
     // Shading 
@@ -148,6 +149,7 @@ void Pipelines::bindLight(VkDevice device, VkCommandBuffer buffer, Node* node, V
 
     // Draw indexed 
     vkCmdDrawIndexed(buffer, static_cast<PointLight*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
+    */
 
 }
 
@@ -324,6 +326,10 @@ void Pipelines::prepare(VkDevice device, VkRenderPass renderPass, VkPipelineVert
     // wireframe rendering pipeline 
     err = vkCreateGraphicsPipelines(device, m_pipelineCache, 1, &pipelineEdgeCreateInfo, nullptr, &m_meshPipelines.wire);
     assert(!err);
+    // wireframe rendering pipeline 
+    err = vkCreateGraphicsPipelines(device, m_pipelineCache, 1, &pipelineEdgeCreateInfo, nullptr, &m_lightPipelines.wire);
+    assert(!err);
+
 
     // Point shader
     shaderStages[0] = loadShader(device, "shaders/spv/point.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
@@ -356,7 +362,7 @@ void Pipelines::prepare(VkDevice device, VkRenderPass renderPass, VkPipelineVert
 
     // solid rendering pipeline 
     //pipelineCreateInfo.stageCount = 2;
-    err = vkCreateGraphicsPipelines(device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_lightPipelines.solid);
+    err = vkCreateGraphicsPipelines(device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_meshPipelines.solid);
     assert(!err);
 
 }
