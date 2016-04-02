@@ -43,16 +43,6 @@ namespace feather
                 void updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, float step=1.0);
                 void build();
                 void loadShaders();
-
-            private:
-                std::string m_vertexEdgeShader;
-                std::string m_geometryEdgeShader;
-                std::string m_fragmentEdgeShader;
-                std::string m_vertexPointShader;
-                std::string m_geometryPointShader;
-                std::string m_fragmentPointShader;
-                std::string m_vertexSolidShader;
-                std::string m_fragmentSolidShader;
         };
 
     } // namespace vulkan

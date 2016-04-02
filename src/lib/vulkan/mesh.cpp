@@ -27,23 +27,8 @@ using namespace feather::vulkan;
 
 Mesh::Mesh() : Node(Node::Mesh)
 {
-    /*
-    // edge shaders
-    m_vertexEdgeShader = "shaders/spv/edge.vert.spv";
-    m_geometryEdgeShader = "shaders/spv/edge.geom.spv";
-    m_fragmentEdgeShader = "shaders/spv/edge.frag.spv";
 
-    // point shaders
-    m_vertexPointShader = "shaders/spv/point.vert.spv";
-    m_geometryPointShader = "shaders/spv/point.geom.spv";
-    m_fragmentPointShader = "shaders/spv/point.frag.spv";
-
-    // solid shaders
-    m_vertexSolidShader = "shaders/spv/base.vert.spv";
-    m_fragmentSolidShader = "shaders/spv/base.frag.spv";
-    */
 }
-
 
 Mesh::~Mesh()
 {

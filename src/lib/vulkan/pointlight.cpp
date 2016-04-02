@@ -27,24 +27,8 @@ using namespace feather::vulkan;
 
 PointLight::PointLight() : Node(Node::Light)
 {
-    /*
-    // edge shaders
-    m_vertexEdgeShader="shaders/spv/edge.vert.spv";
-    m_geometryEdgeShader="shaders/spv/edge.vert.spv";
-    m_fragmentEdgeShader="shaders/spv/edge.vert.spv";
 
-    // point shaders
-    m_vertexPointShader="shaders/spv/point.vert.spv";
-    m_geometryPointShader="shaders/spv/point.vert.spv";
-    m_fragmentPointShader="shaders/spv/.vert.spv";
-
-
-    // solid shaders
-    m_vertexSolidShader="shaders/spv/base.vert.spv";
-    m_fragmentSolidShader="shaders/spv/base.vert.spv";
-    */
 }
-
 
 PointLight::~PointLight()
 {
