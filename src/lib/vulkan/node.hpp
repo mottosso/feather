@@ -67,6 +67,29 @@ namespace feather
                 void freeBuffer(VkDevice device);
                 virtual void build()=0;
                 virtual void loadShaders()=0;
+                // wire
+                void setWireVertShader(std::string path) { m_wireVertShader = path; };
+                void setWireGeomShader(std::string path) { m_wireGeomShader = path; };
+                void setWireFragShader(std::string path) { m_wireFragShader = path; };
+                // point
+                void setPointVertShader(std::string path) { m_pointVertShader = path; };
+                void setPointGeomShader(std::string path) { m_pointGeomShader = path; };
+                void setPointFragShader(std::string path) { m_pointFragShader = path; };
+                // shade
+                void setShadeVertShader(std::string path) { m_shadeVertShader = path; };
+                void setShadeFragShader(std::string path) { m_shadeFragShader = path; };
+
+                // wire 
+                std::string wireVertShader() { return m_wireVertShader; };
+                std::string wireGeomShader() { return m_wireGeomShader; };
+                std::string wireFragShader() { return m_wireFragShader; };
+                // point
+                std::string pointVertShader() { return m_pointVertShader; };
+                std::string pointGeomShader() { return m_pointGeomShader; };
+                std::string pointFragShader() { return m_pointFragShader; };
+                // shaded
+                std::string shadeVertShader() { return m_shadeVertShader; };
+                std::string shadeFragShader() { return m_shadeFragShader; };
 
             protected:
                 // node methods and members
@@ -80,6 +103,20 @@ namespace feather
                 std::vector<Vertex> m_vertexBuffer;
                 std::vector<uint32_t> m_indexBuffer;
                 std::vector<uint32_t> m_edgeBuffer;
+
+                // wire
+                std::string m_wireVertShader;
+                std::string m_wireGeomShader;
+                std::string m_wireFragShader;
+
+                // point
+                std::string m_pointVertShader;
+                std::string m_pointGeomShader;
+                std::string m_pointFragShader;
+
+                // shaded
+                std::string m_shadeVertShader;
+                std::string m_shadeFragShader;
          };
 
     } // namespace vulkan
