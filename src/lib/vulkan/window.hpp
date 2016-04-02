@@ -95,7 +95,6 @@ namespace feather
                 void createCommandBuffers();
                 void setupDepthStencil();
                 void setupRenderPass();
-                void createPipelineCache();
                 void setupFrameBuffer();
                 void flushSetupCommandBuffer();
 
@@ -106,7 +105,6 @@ namespace feather
                 VkBool32 createBuffer(VkBufferUsageFlags usage, VkDeviceSize size, void * data, VkBuffer *buffer, VkDeviceMemory *memory, VkDescriptorBufferInfo * descriptor);
                 void prepareUniformBuffers();
                 void setupDescriptorSetLayout();
-                void preparePipelines();
                 void setupDescriptorPool();
                 void setupDescriptorSet();
                 void buildCommandBuffers();
@@ -173,8 +171,6 @@ namespace feather
                 VkResult createInstance(bool enabled);
                 VkResult createDevice(VkDeviceQueueCreateInfo requestedQueues, bool validation);
                 VkBool32 getMemoryType(uint32_t typeBits, VkFlags properties, uint32_t *typeIndex);
-                // MOVED TO NODE
-                VkPipelineShaderStageCreateInfo loadShader(const char * fileName, VkShaderStageFlagBits stage);
                 
                 // buf and mem are in the Node
                 struct {
@@ -195,18 +191,8 @@ namespace feather
                     int mode;
                 } m_uboVS, m_uboGS;
 
-                /*
-                struct {
-                    VkPipeline wire;
-                    VkPipeline point;
-                    VkPipeline solid;
-                } m_pipelines;
-                */
-
                 Pipelines* m_pPipelines;
 
-                // Feather Methods
-                void load_sg();
                 std::vector<Node*> m_aNodes;
 
                 // TESTING
