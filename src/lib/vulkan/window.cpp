@@ -61,6 +61,8 @@ m_defaultClearColor({ { 0.325f, 0.325f, 0.325f, 1.0f } })
     initConnection();
     initVulkan(m_validation);
 
+    m_pPipelines = new Pipelines();
+
     // startup
     setupWindow();
     initSwapChain();
@@ -73,11 +75,10 @@ Window::~Window()
 {
     // Clean up used Vulkan resources 
     // Note : Inherited destructor cleans up resources stored in base class
-    vkDestroyPipeline(m_device, m_pipelines.solid, nullptr);
-    vkDestroyPipeline(m_device, m_pipelines.wire, nullptr);
-    vkDestroyPipeline(m_device, m_pipelines.point, nullptr);
+    m_pPipelines->cleanup(m_device);
+    delete m_pPipelines;
+    m_pPipelines=0;
 
-    vkDestroyPipelineLayout(m_device, m_pipelineLayout, nullptr);
     vkDestroyDescriptorSetLayout(m_device, m_descriptorSetLayout, nullptr);
 
     // go through each node and clean it up
@@ -381,7 +382,8 @@ void Window::prepare()
     createCommandBuffers();
     setupDepthStencil();
     setupRenderPass();
-    createPipelineCache();
+    m_pPipelines->createCache(m_device);
+    //createPipelineCache();
     setupFrameBuffer();
     flushSetupCommandBuffer();
     // Recreate setup command buffer for derived class
@@ -397,7 +399,7 @@ void Window::prepare()
     prepareVertices();
     prepareUniformBuffers();
     setupDescriptorSetLayout();
-    preparePipelines();
+    m_pPipelines->prepare(m_device, m_renderPass, &m_vertices.vi);
     setupDescriptorPool();
     setupDescriptorSet();
     buildCommandBuffers();
@@ -604,14 +606,6 @@ void Window::setupRenderPass()
     VkResult err;
 
     err = vkCreateRenderPass(m_device, &renderPassInfo, nullptr, &m_renderPass);
-    assert(!err);
-}
-
-void Window::createPipelineCache()
-{
-    VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
-    pipelineCacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-    VkResult err = vkCreatePipelineCache(m_device, &pipelineCacheCreateInfo, nullptr, &m_pipelineCache);
     assert(!err);
 }
 
@@ -909,241 +903,7 @@ void Window::setupDescriptorSetLayout()
                 &m_descriptorSetLayout,
                 1);
 
-    err = vkCreatePipelineLayout(m_device, &pPipelineLayoutCreateInfo, nullptr, &m_pipelineLayout);
-    assert(!err);
-
-    /*
-    // Binding 0 : Uniform buffer (Vertex shader)
-    VkDescriptorSetLayoutBinding layoutBinding = {};
-    layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    layoutBinding.descriptorCount = 1;
-    layoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-    layoutBinding.pImmutableSamplers = NULL;
-
-    VkDescriptorSetLayoutCreateInfo descriptorLayout = {};
-    descriptorLayout.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    descriptorLayout.pNext = NULL;
-    descriptorLayout.bindingCount = 1;
-    descriptorLayout.pBindings = &layoutBinding;
-
-    VkResult err = vkCreateDescriptorSetLayout(m_device, &descriptorLayout, NULL, &m_descriptorSetLayout);
-    assert(!err);
-
-    // Create the pipeline layout that is used to generate the rendering pipelines that
-    // are based on this descriptor set layout
-    // In a more complex scenario you would have different pipeline layouts for different
-    // descriptor set layouts that could be reused
-    VkPipelineLayoutCreateInfo pPipelineLayoutCreateInfo = {};
-    pPipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pPipelineLayoutCreateInfo.pNext = NULL;
-    pPipelineLayoutCreateInfo.setLayoutCount = 1;
-    pPipelineLayoutCreateInfo.pSetLayouts = &m_descriptorSetLayout;
-
-    err = vkCreatePipelineLayout(m_device, &pPipelineLayoutCreateInfo, nullptr, &m_pipelineLayout);
-    assert(!err);
-    */
-}
-
-void Window::preparePipelines()
-{
-    // Create our rendering pipeline used in this example
-    // Vulkan uses the concept of rendering pipelines to encapsulate
-    // fixed states
-    // This replaces OpenGL's huge (and cumbersome) state machine
-    // A pipeline is then stored and hashed on the GPU making
-    // pipeline changes much faster than having to set dozens of 
-    // states
-    // In a real world application you'd have dozens of pipelines
-    // for every shader set used in a scene
-    // Note that there are a few states that are not stored with
-    // the pipeline. These are called dynamic states and the 
-    // pipeline only stores that they are used with this pipeline,
-    // but not their states
-
-
-
-    // Solid Shading Pipeline
-    VkGraphicsPipelineCreateInfo pipelineCreateInfo = {};
-
-    pipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-    // The layout used for this pipeline
-    pipelineCreateInfo.layout = m_pipelineLayout;
-    // Renderpass this pipeline is attached to
-    pipelineCreateInfo.renderPass = m_renderPass;
-
-    // Edge Shading Pipeline
-    VkGraphicsPipelineCreateInfo pipelineEdgeCreateInfo = {};
-
-    pipelineEdgeCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-    // The layout used for this pipeline
-    pipelineEdgeCreateInfo.layout = m_pipelineLayout;
-    // Renderpass this pipeline is attached to
-    pipelineEdgeCreateInfo.renderPass = m_renderPass;
-
-    VkResult err;
-
-    // Vertex input state for solid shading 
-    // Describes the topoloy used with this pipeline
-    VkPipelineInputAssemblyStateCreateInfo inputSolidAssemblyState = {};
-    inputSolidAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    // This pipeline renders vertex data as triangle lists
-    inputSolidAssemblyState.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-
-    // Vertex input state for edge shading 
-    // Describes the topoloy used with this pipeline
-    VkPipelineInputAssemblyStateCreateInfo inputEdgeAssemblyState = {};
-    inputEdgeAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    // This pipeline renders vertex data as line lists
-    inputEdgeAssemblyState.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
-
-
-    // Rasterization state
-    VkPipelineRasterizationStateCreateInfo rasterizationState = {};
-    rasterizationState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-    // Solid polygon mode
-    rasterizationState.polygonMode = VK_POLYGON_MODE_FILL;
-    // No culling
-    rasterizationState.cullMode = VK_CULL_MODE_NONE;
-    rasterizationState.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
-    rasterizationState.depthClampEnable = VK_FALSE;
-    rasterizationState.rasterizerDiscardEnable = VK_FALSE;
-    rasterizationState.depthBiasEnable = VK_FALSE;
-    rasterizationState.lineWidth = 4.0; // this does not work yet, have to enable wide lines?
-
-    // Color blend state
-    // Describes blend modes and color masks
-    VkPipelineColorBlendStateCreateInfo colorBlendState = {};
-    colorBlendState.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-    // One blend attachment state
-    // Blending is not used in this example
-    VkPipelineColorBlendAttachmentState blendAttachmentState[1] = {};
-    blendAttachmentState[0].colorWriteMask = 0xf;
-    blendAttachmentState[0].blendEnable = VK_FALSE;
-    colorBlendState.attachmentCount = 1;
-    colorBlendState.pAttachments = blendAttachmentState;
-
-    // Viewport state
-    VkPipelineViewportStateCreateInfo viewportState = {};
-    viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-    // One viewport
-    viewportState.viewportCount = 1;
-    // One scissor rectangle
-    viewportState.scissorCount = 1;
-
-    // Enable dynamic states
-    // Describes the dynamic states to be used with this pipeline
-    // Dynamic states can be set even after the pipeline has been created
-    // So there is no need to create new pipelines just for changing
-    // a viewport's dimensions or a scissor box
-    VkPipelineDynamicStateCreateInfo dynamicState = {};
-    // The dynamic state properties themselves are stored in the command buffer
-    std::vector<VkDynamicState> dynamicStateEnables;
-    dynamicStateEnables.push_back(VK_DYNAMIC_STATE_VIEWPORT);
-    dynamicStateEnables.push_back(VK_DYNAMIC_STATE_SCISSOR);
-    dynamicStateEnables.push_back(VK_DYNAMIC_STATE_LINE_WIDTH);
-    dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
-    dynamicState.pDynamicStates = dynamicStateEnables.data();
-    dynamicState.dynamicStateCount = dynamicStateEnables.size();
-
-    // Depth and stencil state
-    // Describes depth and stenctil test and compare ops
-    VkPipelineDepthStencilStateCreateInfo depthStencilState = {};
-    // Basic depth compare setup with depth writes and depth test enabled
-    // No stencil used 
-    depthStencilState.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-    depthStencilState.depthTestEnable = VK_TRUE;
-    depthStencilState.depthWriteEnable = VK_TRUE;
-    depthStencilState.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
-    depthStencilState.depthBoundsTestEnable = VK_FALSE;
-    depthStencilState.back.failOp = VK_STENCIL_OP_KEEP;
-    depthStencilState.back.passOp = VK_STENCIL_OP_KEEP;
-    depthStencilState.back.compareOp = VK_COMPARE_OP_ALWAYS;
-    depthStencilState.stencilTestEnable = VK_FALSE;
-    depthStencilState.front = depthStencilState.back;
-
-    // Multi sampling state
-    VkPipelineMultisampleStateCreateInfo multisampleState = {};
-    multisampleState.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-    multisampleState.pSampleMask = NULL;
-    // No multi sampling used in this example
-    //multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-    multisampleState.rasterizationSamples = VK_SAMPLE_COUNT_4_BIT;
-
-
-    // Load shaders
-
-    VkPipelineShaderStageCreateInfo shaderStages[3] = { {},{} };
-
-    // Wireframe shader
-    shaderStages[0] = loadShader("shaders/spv/edge.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader("shaders/spv/edge.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-    shaderStages[2] = loadShader("shaders/spv/edge.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
-
-    // Assign states to solid shading
-    // Three shader stages
-    pipelineEdgeCreateInfo.stageCount = 3;
-    // Assign pipeline state create information
-    pipelineEdgeCreateInfo.pVertexInputState = &m_vertices.vi;
-    pipelineEdgeCreateInfo.pInputAssemblyState = &inputEdgeAssemblyState;
-    pipelineEdgeCreateInfo.pRasterizationState = &rasterizationState;
-    pipelineEdgeCreateInfo.pColorBlendState = &colorBlendState;
-    pipelineEdgeCreateInfo.pMultisampleState = &multisampleState;
-    pipelineEdgeCreateInfo.pViewportState = &viewportState;
-    pipelineEdgeCreateInfo.pDepthStencilState = &depthStencilState;
-    pipelineEdgeCreateInfo.pStages = shaderStages;
-    pipelineEdgeCreateInfo.renderPass = m_renderPass;
-    pipelineEdgeCreateInfo.pDynamicState = &dynamicState;
-
-    // wireframe rendering pipeline 
-    err = vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineEdgeCreateInfo, nullptr, &m_pipelines.wire);
-    assert(!err);
-
-    // Point shader
-    shaderStages[0] = loadShader("shaders/spv/point.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader("shaders/spv/point.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-    shaderStages[2] = loadShader("shaders/spv/point.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
-
-    // Point rendering pipeline 
-    err = vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineEdgeCreateInfo, nullptr, &m_pipelines.point);
-    assert(!err);
-
-    // Base solid shader
-    shaderStages[0] = loadShader("shaders/spv/base.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader("shaders/spv/base.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-
-    // Assign states to solid shading
-    // Three shader stages
-    pipelineCreateInfo.stageCount = 2;
-    // Assign pipeline state create information
-    pipelineCreateInfo.pVertexInputState = &m_vertices.vi;
-    pipelineCreateInfo.pInputAssemblyState = &inputSolidAssemblyState;
-    pipelineCreateInfo.pRasterizationState = &rasterizationState;
-    pipelineCreateInfo.pColorBlendState = &colorBlendState;
-    pipelineCreateInfo.pMultisampleState = &multisampleState;
-    pipelineCreateInfo.pViewportState = &viewportState;
-    pipelineCreateInfo.pDepthStencilState = &depthStencilState;
-    pipelineCreateInfo.pStages = shaderStages;
-    pipelineCreateInfo.renderPass = m_renderPass;
-    pipelineCreateInfo.pDynamicState = &dynamicState;
-
-
-    // solid rendering pipeline 
-    //pipelineCreateInfo.stageCount = 2;
-    err = vkCreateGraphicsPipelines(m_device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_pipelines.solid);
-    assert(!err);
-
-}
-
-VkPipelineShaderStageCreateInfo Window::loadShader(const char * fileName, VkShaderStageFlagBits stage)
-{
-    VkPipelineShaderStageCreateInfo shaderStage = {};
-    shaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    shaderStage.stage = stage;
-    shaderStage.module = feather::vulkan::tools::loadShader(fileName, m_device, stage);
-    shaderStage.pName = "main"; // todo : make param
-    assert(shaderStage.module != NULL);
-    m_shaderModules.push_back(shaderStage.module);
-    return shaderStage;
+    m_pPipelines->createLayout(m_device, pPipelineLayoutCreateInfo);
 }
 
 void Window::setupDescriptorPool()
@@ -1307,94 +1067,26 @@ void Window::buildCommandBuffers()
         vkCmdSetScissor(m_drawCommandBuffers[i], 0, 1, &scissor);
 
         // Bind descriptor sets describing shader binding points
-        vkCmdBindDescriptorSets(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelineLayout, 0, 1, &m_descriptorSet, 0, NULL);
+        vkCmdBindDescriptorSets(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pPipelines->layout(), 0, 1, &m_descriptorSet, 0, NULL);
 
         for(auto node : m_aNodes){
             //std::cout << "binding node, i count=" << meshBuffer.indexCount << std::endl;
             // Bind triangle vertices
 
             VkDeviceSize offsets[1] = { 0 };
- 
+
             if(node->type()==Node::Mesh){
                 static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
-                vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<Mesh*>(node)->buffer()->vertices.buf, offsets);
-
-                // Bind triangle indices
-                vkCmdBindIndexBuffer(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->indices.buf, 0, VK_INDEX_TYPE_UINT32);
-
-                // Solid Shading
-                // Bind the rendering pipeline (including the shaders)
-                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.solid);
-                // Draw indexed triangle
-                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->indexCount, 1, 0, 0, 1);
-
-                // change over to edge index
-
-                // Bind indices
-                vkCmdBindIndexBuffer(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->edges.buf, 0, VK_INDEX_TYPE_UINT32);
-
-                // EDGES
-
-                // set line width
-                vkCmdSetLineWidth(m_drawCommandBuffers[i], 2.0);
-
-                // Shading
-                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.wire);
-
-                // Draw indexed 
-                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
-
-                // POINTS
-
-                // Shading 
-                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.point);
-
-                // Draw indexed 
-                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<Mesh*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
+                m_pPipelines->bind(m_device, m_drawCommandBuffers[i], node, offsets);
 
             } else {
                 static_cast<PointLight*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
-                
-                vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<PointLight*>(node)->buffer()->vertices.buf, offsets);
 
-                // SHADED
-
-                // Bind indices
-                vkCmdBindIndexBuffer(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->indices.buf, 0, VK_INDEX_TYPE_UINT32);
-
-                // Shading
-                // Bind the rendering pipeline (including the shaders)
-                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.solid);
-
-                // Draw indexed 
-                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->indexCount, 1, 0, 0, 1);
-
-                // Change over to edge index
-
-                // Bind indices
-                vkCmdBindIndexBuffer(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->edges.buf, 0, VK_INDEX_TYPE_UINT32);
-
-                // EDGES
-
-                // Shading
-                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.wire);
-
-                // Draw indexed 
-                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
-
-                // POINT
- 
-                // Shading 
-                vkCmdBindPipeline(m_drawCommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipelines.point);
-                // Draw indexed 
-                vkCmdDrawIndexed(m_drawCommandBuffers[i], static_cast<PointLight*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
-
+                m_pPipelines->bind(m_device, m_drawCommandBuffers[i], node, offsets);
             }
 
             // reset line width
             vkCmdSetLineWidth(m_drawCommandBuffers[i], 1.0);
-
-
         }
 
         vkCmdEndRenderPass(m_drawCommandBuffers[i]);
@@ -1664,7 +1356,3 @@ void Window::nodeChanged()
     viewChanged();
 }
 
-void Window::load_sg()
-{
-
-}

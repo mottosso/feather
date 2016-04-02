@@ -27,8 +27,8 @@
 #include "deps.hpp"
 #include "field.hpp"
 #include "node.hpp"
-#include <QtGui/QOpenGLShaderProgram>
-#include <QtGui/QOpenGLShader>
+//#include <QtGui/QOpenGLShaderProgram>
+//#include <QtGui/QOpenGLShader>
 
 namespace feather
 {

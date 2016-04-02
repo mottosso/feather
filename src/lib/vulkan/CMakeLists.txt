@@ -20,6 +20,7 @@ SET(feather_vulkan_SRCS
     node.cpp
     mesh.cpp
     pointlight.cpp
+    pipelines.cpp
     window.cpp
 )
 
