@@ -1,3 +1,9 @@
+# AXIS
+# Wireframe Shaders
+glslangValidator -V wire.axis.vert -o wire.axis.vert.spv
+glslangValidator -V wire.axis.geom -o wire.axis.geom.spv
+glslangValidator -V wire.axis.frag -o wire.axis.frag.spv
+
 # MESH
 # Wireframe Shaders
 glslangValidator -V wire.mesh.vert -o wire.mesh.vert.spv

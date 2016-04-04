@@ -53,9 +53,9 @@ m_defaultClearColor({ { 0.325f, 0.325f, 0.325f, 1.0f } })
     m_mode = POINT | WIREFRAME | SHADED;
  
     // add the nodes
+    m_aNodes.push_back(new Axis());
     m_aNodes.push_back(new Mesh());
     m_aNodes.push_back(new PointLight());
-
 
     // setup    
     initConnection();
@@ -84,12 +84,20 @@ Window::~Window()
     // go through each node and clean it up
     for(auto node : m_aNodes) {
         node->freeBuffer(m_device);
-        if(node->type()==Node::Mesh){
-           delete static_cast<Mesh*>(node); 
-        } else {
-           delete static_cast<PointLight*>(node); 
+        switch(node->type())
+        {
+             case Node::Axis:
+                delete static_cast<Axis*>(node);
+                break;
+             case Node::Mesh:
+                delete static_cast<Mesh*>(node);
+                break;
+            case Node::Light:
+                delete static_cast<PointLight*>(node); 
+                break;
         }
     }
+
     //vkMeshLoader::freeMeshBufferResources(device, &meshes.object);
 
     // destroy vert unifom data
@@ -682,10 +690,18 @@ void Window::prepareSemaphore()
 void Window::prepareVertices()
 {
     for(auto node : m_aNodes) {
-        if(node->type()==Node::Mesh)
-            static_cast<Mesh*>(node)->prepareVertices(m_device,m_deviceMemoryProperties);
-        else
-            static_cast<PointLight*>(node)->prepareVertices(m_device,m_deviceMemoryProperties);
+        switch(node->type())
+        {
+            case Node::Axis:
+                static_cast<Axis*>(node)->prepareVertices(m_device,m_deviceMemoryProperties);
+                break;
+             case Node::Mesh:
+                static_cast<Mesh*>(node)->prepareVertices(m_device,m_deviceMemoryProperties);
+                break;
+            case Node::Light:
+                static_cast<PointLight*>(node)->prepareVertices(m_device,m_deviceMemoryProperties);
+                break;
+        }
 
         // Binding description
         m_vertices.bindingDescriptions.resize(1);
@@ -1075,16 +1091,20 @@ void Window::buildCommandBuffers()
 
             VkDeviceSize offsets[1] = { 0 };
 
-            if(node->type()==Node::Mesh){
-                static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
-                m_pPipelines->bind(m_device, m_drawCommandBuffers[i], node, offsets);
-
-            } else {
-                static_cast<PointLight*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
-
-                m_pPipelines->bind(m_device, m_drawCommandBuffers[i], node, offsets);
+            switch(node->type())
+            {
+                case Node::Axis:
+                    static_cast<Axis*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
+                    break;
+                case Node::Mesh:
+                    static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
+                    break;
+                case Node::Light:
+                    static_cast<PointLight*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
+                    break;
             }
 
+            m_pPipelines->bind(m_device, m_drawCommandBuffers[i], node, offsets);
             // reset line width
             vkCmdSetLineWidth(m_drawCommandBuffers[i], 1.0);
         }
@@ -1341,12 +1361,20 @@ void Window::nodeChanged()
             //std::cout << "binding node, i count=" << meshBuffer.indexCount << std::endl;
             // Bind triangle vertices
             VkDeviceSize offsets[1] = { 0 };
-            if(node->type()==Node::Mesh){
-                static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties,step);
-                vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<Mesh*>(node)->buffer()->vertices.buf, offsets);
-            } else {
-                static_cast<PointLight*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
-                vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<PointLight*>(node)->buffer()->vertices.buf, offsets);
+            switch(node->type())
+            {
+                case Node::Axis:
+                    static_cast<Axis*>(node)->updateVertices(m_device,m_deviceMemoryProperties,step);
+                    vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<Axis*>(node)->buffer()->vertices.buf, offsets);
+                break;
+                 case Node::Mesh:
+                    static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties,step);
+                    vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<Mesh*>(node)->buffer()->vertices.buf, offsets);
+                break;
+                case Node::Light:
+                    static_cast<PointLight*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
+                    vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<PointLight*>(node)->buffer()->vertices.buf, offsets);
+                break;
             }
 
             // vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &meshBuffer.vertices.buf, offsets);

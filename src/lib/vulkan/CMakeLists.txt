@@ -18,6 +18,7 @@ SET(feather_vulkan_SRCS
     tools.cpp
     debug.cpp
     node.cpp
+    axis.cpp
     mesh.cpp
     pointlight.cpp
     pipelines.cpp

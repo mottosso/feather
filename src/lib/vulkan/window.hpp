@@ -28,6 +28,7 @@
 #include "vulkan_deps.hpp"
 #include "swapchain.hpp"
 #include "textureloader.hpp"
+#include "axis.hpp"
 #include "mesh.hpp"
 #include "pointlight.hpp"
 #include "pipelines.hpp"

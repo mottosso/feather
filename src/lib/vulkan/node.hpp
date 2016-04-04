@@ -56,7 +56,7 @@ namespace feather
         class Node
         {
             public:
-                enum Type { Null, Camera, Light, Mesh };
+                enum Type { Null, Axis, Grid, Camera, Light, Mesh };
 
                 Node(Type type=Null);
                 ~Node();

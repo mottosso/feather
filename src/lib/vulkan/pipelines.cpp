@@ -193,66 +193,75 @@ void Pipeline::prepare(VkDevice device, VkPipelineCache cache, VkPipelineLayout 
 
     VkPipelineShaderStageCreateInfo shaderStages[3] = { {},{} };
 
-    // Wireframe shader
-    shaderStages[0] = loadShader(device, m_wireVertShader.c_str(), VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader(device, m_wireFragShader.c_str(), VK_SHADER_STAGE_FRAGMENT_BIT);
-    shaderStages[2] = loadShader(device, m_wireGeomShader.c_str(), VK_SHADER_STAGE_GEOMETRY_BIT);
+    if(m_wireVertShader!="")
+    {
+        // Wireframe shader
+        shaderStages[0] = loadShader(device, m_wireVertShader.c_str(), VK_SHADER_STAGE_VERTEX_BIT);
+        shaderStages[1] = loadShader(device, m_wireFragShader.c_str(), VK_SHADER_STAGE_FRAGMENT_BIT);
+        shaderStages[2] = loadShader(device, m_wireGeomShader.c_str(), VK_SHADER_STAGE_GEOMETRY_BIT);
 
-    // Assign states to solid shading
-    // Three shader stages
-    pipelineEdgeCreateInfo.stageCount = 3;
-    // Assign pipeline state create information
-    pipelineEdgeCreateInfo.pVertexInputState = vi;
-    pipelineEdgeCreateInfo.pInputAssemblyState = &inputEdgeAssemblyState;
-    pipelineEdgeCreateInfo.pRasterizationState = &rasterizationState;
-    pipelineEdgeCreateInfo.pColorBlendState = &colorBlendState;
-    pipelineEdgeCreateInfo.pMultisampleState = &multisampleState;
-    pipelineEdgeCreateInfo.pViewportState = &viewportState;
-    pipelineEdgeCreateInfo.pDepthStencilState = &depthStencilState;
-    pipelineEdgeCreateInfo.pStages = shaderStages;
-    pipelineEdgeCreateInfo.renderPass = renderPass;
-    pipelineEdgeCreateInfo.pDynamicState = &dynamicState;
+        // Assign states to solid shading
+        // Three shader stages
+        pipelineEdgeCreateInfo.stageCount = 3;
+        // Assign pipeline state create information
+        pipelineEdgeCreateInfo.pVertexInputState = vi;
+        pipelineEdgeCreateInfo.pInputAssemblyState = &inputEdgeAssemblyState;
+        pipelineEdgeCreateInfo.pRasterizationState = &rasterizationState;
+        pipelineEdgeCreateInfo.pColorBlendState = &colorBlendState;
+        pipelineEdgeCreateInfo.pMultisampleState = &multisampleState;
+        pipelineEdgeCreateInfo.pViewportState = &viewportState;
+        pipelineEdgeCreateInfo.pDepthStencilState = &depthStencilState;
+        pipelineEdgeCreateInfo.pStages = shaderStages;
+        pipelineEdgeCreateInfo.renderPass = renderPass;
+        pipelineEdgeCreateInfo.pDynamicState = &dynamicState;
 
-    // wireframe rendering pipeline 
-    //err = vkCreateGraphicsPipelines(device, cache, 1, &pipelineEdgeCreateInfo, nullptr, &m_meshPipelines.wire);
-    //assert(!err);
-    // wireframe rendering pipeline 
-    err = vkCreateGraphicsPipelines(device, cache, 1, &pipelineEdgeCreateInfo, nullptr, &m_wire);
-    assert(!err);
+        // wireframe rendering pipeline 
+        //err = vkCreateGraphicsPipelines(device, cache, 1, &pipelineEdgeCreateInfo, nullptr, &m_meshPipelines.wire);
+        //assert(!err);
+        // wireframe rendering pipeline 
+        err = vkCreateGraphicsPipelines(device, cache, 1, &pipelineEdgeCreateInfo, nullptr, &m_wire);
+        assert(!err);
+    }
+
+    if(m_pointVertShader!="")
+    {
+        // Point shader
+        shaderStages[0] = loadShader(device, m_pointVertShader.c_str(), VK_SHADER_STAGE_VERTEX_BIT);
+        shaderStages[1] = loadShader(device, m_pointFragShader.c_str(), VK_SHADER_STAGE_FRAGMENT_BIT);
+        shaderStages[2] = loadShader(device, m_pointGeomShader.c_str(), VK_SHADER_STAGE_GEOMETRY_BIT);
+
+        // Point rendering pipeline 
+        err = vkCreateGraphicsPipelines(device, cache, 1, &pipelineEdgeCreateInfo, nullptr, &m_point);
+        assert(!err);
+    }
+
+    if(m_shadeVertShader!="")
+    {
+ 
+        // Base solid shader
+        shaderStages[0] = loadShader(device, m_shadeVertShader.c_str(), VK_SHADER_STAGE_VERTEX_BIT);
+        shaderStages[1] = loadShader(device, m_shadeFragShader.c_str(), VK_SHADER_STAGE_FRAGMENT_BIT);
+
+        // Assign states to solid shading
+        // Three shader stages
+        pipelineCreateInfo.stageCount = 2;
+        // Assign pipeline state create information
+        pipelineCreateInfo.pVertexInputState = vi;
+        pipelineCreateInfo.pInputAssemblyState = &inputSolidAssemblyState;
+        pipelineCreateInfo.pRasterizationState = &rasterizationState;
+        pipelineCreateInfo.pColorBlendState = &colorBlendState;
+        pipelineCreateInfo.pMultisampleState = &multisampleState;
+        pipelineCreateInfo.pViewportState = &viewportState;
+        pipelineCreateInfo.pDepthStencilState = &depthStencilState;
+        pipelineCreateInfo.pStages = shaderStages;
+        pipelineCreateInfo.renderPass = renderPass;
+        pipelineCreateInfo.pDynamicState = &dynamicState;
 
 
-    // Point shader
-    shaderStages[0] = loadShader(device, m_pointVertShader.c_str(), VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader(device, m_pointFragShader.c_str(), VK_SHADER_STAGE_FRAGMENT_BIT);
-    shaderStages[2] = loadShader(device, m_pointGeomShader.c_str(), VK_SHADER_STAGE_GEOMETRY_BIT);
-
-    // Point rendering pipeline 
-    err = vkCreateGraphicsPipelines(device, cache, 1, &pipelineEdgeCreateInfo, nullptr, &m_point);
-    assert(!err);
-
-    // Base solid shader
-    shaderStages[0] = loadShader(device, m_shadeVertShader.c_str(), VK_SHADER_STAGE_VERTEX_BIT);
-    shaderStages[1] = loadShader(device, m_shadeFragShader.c_str(), VK_SHADER_STAGE_FRAGMENT_BIT);
-
-    // Assign states to solid shading
-    // Three shader stages
-    pipelineCreateInfo.stageCount = 2;
-    // Assign pipeline state create information
-    pipelineCreateInfo.pVertexInputState = vi;
-    pipelineCreateInfo.pInputAssemblyState = &inputSolidAssemblyState;
-    pipelineCreateInfo.pRasterizationState = &rasterizationState;
-    pipelineCreateInfo.pColorBlendState = &colorBlendState;
-    pipelineCreateInfo.pMultisampleState = &multisampleState;
-    pipelineCreateInfo.pViewportState = &viewportState;
-    pipelineCreateInfo.pDepthStencilState = &depthStencilState;
-    pipelineCreateInfo.pStages = shaderStages;
-    pipelineCreateInfo.renderPass = renderPass;
-    pipelineCreateInfo.pDynamicState = &dynamicState;
-
-
-    // solid rendering pipeline 
-    err = vkCreateGraphicsPipelines(device, cache, 1, &pipelineCreateInfo, nullptr, &m_shade);
-    assert(!err);
+        // solid rendering pipeline 
+        err = vkCreateGraphicsPipelines(device, cache, 1, &pipelineCreateInfo, nullptr, &m_shade);
+        assert(!err);
+    }
 }
 
 VkPipelineShaderStageCreateInfo Pipeline::loadShader(VkDevice device, const char * fileName, VkShaderStageFlagBits stage)
@@ -284,15 +293,7 @@ void Pipelines::cleanup(VkDevice device)
 {
     // Clean up used Vulkan resources 
     // Note : Inherited destructor cleans up resources stored in base class
-    /*
-    vkDestroyPipeline(device, m_meshPipelines.solid, nullptr);
-    vkDestroyPipeline(device, m_meshPipelines.wire, nullptr);
-    vkDestroyPipeline(device, m_meshPipelines.point, nullptr);
-
-    vkDestroyPipeline(device, m_lightPipelines.solid, nullptr);
-    vkDestroyPipeline(device, m_lightPipelines.wire, nullptr);
-    vkDestroyPipeline(device, m_lightPipelines.point, nullptr);
-    */
+    m_axisPipeline.cleanup(device);
     m_meshPipeline.cleanup(device);
     m_lightPipeline.cleanup(device);
     vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
@@ -303,6 +304,12 @@ void Pipelines::bind(VkDevice device, VkCommandBuffer buffer, Node* node, VkDevi
     switch(node->type())
     {
         case Node::Null:
+            bindMesh(device, buffer, node, offsets);
+            break;
+        case Node::Axis:
+            bindAxis(device, buffer, node, offsets);
+            break;
+        case Node::Grid:
             bindMesh(device, buffer, node, offsets);
             break;
         case Node::Camera:
@@ -321,6 +328,13 @@ void Pipelines::bind(VkDevice device, VkCommandBuffer buffer, Node* node, VkDevi
 
 void Pipelines::prepare(VkDevice device, VkRenderPass renderPass, VkPipelineVertexInputStateCreateInfo* vi)
 {
+    m_axisPipeline.prepare(
+            device,
+            m_pipelineCache,
+            m_pipelineLayout,
+            renderPass,
+            vi);
+
     m_meshPipeline.prepare(
             device,
             m_pipelineCache,
@@ -336,6 +350,24 @@ void Pipelines::prepare(VkDevice device, VkRenderPass renderPass, VkPipelineVert
             vi);
 }
  
+void Pipelines::bindAxis(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1])
+{
+    vkCmdBindVertexBuffers(buffer, VERTEX_BUFFER_BIND_ID, 1, &static_cast<Axis*>(node)->buffer()->vertices.buf, offsets);
+
+    // EDGES
+
+    // set line width
+    vkCmdSetLineWidth(buffer, 2.0);
+
+    // Shading
+    vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_axisPipeline.wire());
+
+    // Draw indexed 
+    vkCmdDrawIndexed(buffer, static_cast<Axis*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
+
+}
+
+
 void Pipelines::bindMesh(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1])
 {
     vkCmdBindVertexBuffers(buffer, VERTEX_BUFFER_BIND_ID, 1, &static_cast<Mesh*>(node)->buffer()->vertices.buf, offsets);
@@ -377,23 +409,6 @@ void Pipelines::bindMesh(VkDevice device, VkCommandBuffer buffer, Node* node, Vk
 void Pipelines::bindLight(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1])
 {
     vkCmdBindVertexBuffers(buffer, VERTEX_BUFFER_BIND_ID, 1, &static_cast<PointLight*>(node)->buffer()->vertices.buf, offsets);
-
-    // Uncomment this to shade the light mesh
-    /*
-    // Bind triangle indices
-    vkCmdBindIndexBuffer(buffer, static_cast<PointLight*>(node)->buffer()->indices.buf, 0, VK_INDEX_TYPE_UINT32);
-
-    // Solid Shading
-    // Bind the rendering pipeline (including the shaders)
-    vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_lightPipeline.shade());
-
-    // Draw indexed triangle
-    vkCmdDrawIndexed(buffer, static_cast<PointLight*>(node)->buffer()->indexCount, 1, 0, 0, 1);
-    // change over to edge index
-
-    // Bind indices
-    vkCmdBindIndexBuffer(buffer, static_cast<PointLight*>(node)->buffer()->edges.buf, 0, VK_INDEX_TYPE_UINT32);
-    */
 
     // EDGES
 
