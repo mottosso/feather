@@ -1,15 +1,19 @@
 Feather
 =======
 
-Current Status
----------------
-Feather is still a WIP that has not yet reached v0.1. I hope to release v0.1 sometime in 2016.
-
 ![Feather Logo](https://raw.githubusercontent.com/richardlayman/feather/master/assets/images/logo.png)
 
 3d modeling and animation application.
 
 ![Feather UI](https://raw.githubusercontent.com/richardlayman/feather/master/assets/images/ui_v0_1.png)
+
+Current Status
+---------------
+Feather is still a WIP that has not yet reached v0.1. I hope to release v0.1 sometime in 2016. Below is a list of tasks to be completed for the v0.1 release.
+* Integrate Vulkan viewport into Qt (in progress)
+* Feather file format IO
+* Undo/Redo system
+* Finish up nodes
 
 Introduction
 ---------------
@@ -33,6 +37,4 @@ v0.1 Features
 * Selection Tools - Pick, Box, Ring, Loop
 * Component Selection - Vertex, Edge, Face, Object
 * Transformation Tools (all components) - Translate, Rotate, Scale
-* Limited Lux Support - Camera, MeshLight, MatteShader, GlossyShader, Scene, Globals
-* Export lxs files
 
