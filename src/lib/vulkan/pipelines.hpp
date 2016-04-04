@@ -27,7 +27,7 @@
 #include "deps.hpp"
 #include "vulkan_deps.hpp"
 #include "node.hpp"
-
+#include "axis.hpp"
 #include "mesh.hpp"
 #include "pointlight.hpp"
 
@@ -102,8 +102,13 @@ namespace feather
                 VkPipelineCache m_pipelineCache;
                 VkPipelineLayout m_pipelineLayout;
 
+                // bind axis
+                void bindAxis(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1]);
+                // bind mesh
                 void bindMesh(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1]);
+                // bind light
                 void bindLight(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1]);
+
                 VkPipelineShaderStageCreateInfo loadShader(VkDevice device, const char * fileName, VkShaderStageFlagBits stage);
                 //void bindPipeline(VkCommandBuffer buffer, Node* node, Pipeline::Type type);
 
@@ -121,6 +126,21 @@ namespace feather
                     VkPipeline solid;
                 } m_lightPipelines;
                 */
+
+                // AXIS
+                Pipeline m_axisPipeline = Pipeline(
+                        "",
+                        "",
+                        "shaders/spv/wire.axis.vert.spv",
+                        "shaders/spv/wire.axis.frag.spv",
+                        "shaders/spv/wire.axis.geom.spv",
+                        "",
+                        "",
+                        ""
+                        );
+
+
+                // MESHES
                 Pipeline m_meshPipeline = Pipeline(
                         "shaders/spv/shade.mesh.vert.spv",
                         "shaders/spv/shade.mesh.frag.spv",
@@ -131,6 +151,8 @@ namespace feather
                         "shaders/spv/point.mesh.frag.spv",
                         "shaders/spv/point.mesh.geom.spv"
                         );
+
+                // LIGHTS
                 Pipeline m_lightPipeline = Pipeline(
                         "shaders/spv/shade.light.vert.spv",
                         "shaders/spv/shade.light.frag.spv",
