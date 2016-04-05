@@ -29,41 +29,156 @@
 
 using namespace feather::vulkan;
 
-Pipeline::Pipeline(
-        std::string shadeVertShader,
-        std::string shadeFragShader,
-        std::string wireVertShader,
-        std::string wireFragShader,
-        std::string wireGeomShader,
-        std::string pointVertShader,
-        std::string pointFragShader,
-        std::string pointGeomShader
-        ) : 
-    m_shadeVertShader(shadeVertShader),
-    m_shadeFragShader(shadeFragShader),
-    m_wireVertShader(wireVertShader),
-    m_wireFragShader(wireFragShader),
-    m_wireGeomShader(wireGeomShader),
-    m_pointVertShader(pointVertShader),
-    m_pointFragShader(pointFragShader),
-    m_pointGeomShader(pointGeomShader)
+
+// PIPELINES
+
+
+Pipelines::Pipelines()
 {
 
 }
 
-Pipeline::~Pipeline()
+Pipelines::~Pipelines()
 {
+}
+
+void Pipelines::cleanup(VkDevice device)
+{
+    // Clean up used Vulkan resources 
+    // Note : Inherited destructor cleans up resources stored in base class
+
+    // axis
+    vkDestroyPipeline(device, m_axisPipeline.wire, nullptr);
+    // light
+    vkDestroyPipeline(device, m_lightPipeline.wire, nullptr);
+    // mesh 
+    vkDestroyPipeline(device, m_meshPipeline.wire, nullptr);
+    vkDestroyPipeline(device, m_meshPipeline.point, nullptr);
+    vkDestroyPipeline(device, m_meshPipeline.shade, nullptr);
+
+    vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
+}
+
+void Pipelines::bind(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1])
+{
+    switch(node->type())
+    {
+        case Node::Null:
+            bindMesh(device, buffer, node, offsets);
+            break;
+        case Node::Axis:
+            bindAxis(device, buffer, node, offsets);
+            break;
+        case Node::Grid:
+            bindMesh(device, buffer, node, offsets);
+            break;
+        case Node::Camera:
+            bindMesh(device, buffer, node, offsets);
+            break;
+        case Node::Light:
+            bindLight(device, buffer, node, offsets);
+            break;
+        case Node::Mesh:
+            bindMesh(device, buffer, node, offsets);
+            break;
+        default:
+            bindMesh(device, buffer, node, offsets);
+    }
+}
+
+
+void Pipelines::bindAxis(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1])
+{
+    vkCmdBindVertexBuffers(buffer, VERTEX_BUFFER_BIND_ID, 1, &static_cast<Axis*>(node)->buffer()->vertices.buf, offsets);
+
+    // EDGES
+
+    // set line width
+    vkCmdSetLineWidth(buffer, 2.0);
+
+    // Shading
+    vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_axisPipeline.wire);
+
+    // Draw indexed 
+    vkCmdDrawIndexed(buffer, static_cast<Axis*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
 
 }
 
-void Pipeline::cleanup(VkDevice device)
+
+void Pipelines::bindMesh(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1])
 {
-    vkDestroyPipeline(device, m_shade, nullptr);
-    vkDestroyPipeline(device, m_wire, nullptr);
-    vkDestroyPipeline(device, m_point, nullptr);
+    vkCmdBindVertexBuffers(buffer, VERTEX_BUFFER_BIND_ID, 1, &static_cast<Mesh*>(node)->buffer()->vertices.buf, offsets);
+
+    // Bind triangle indices
+    vkCmdBindIndexBuffer(buffer, static_cast<Mesh*>(node)->buffer()->indices.buf, 0, VK_INDEX_TYPE_UINT32);
+
+    // Solid Shading
+    // Bind the rendering pipeline (including the shaders)
+    vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_meshPipeline.shade);
+
+    // Draw indexed triangle
+    vkCmdDrawIndexed(buffer, static_cast<Mesh*>(node)->buffer()->indexCount, 1, 0, 0, 1);
+    // change over to edge index
+
+    // Bind indices
+    vkCmdBindIndexBuffer(buffer, static_cast<Mesh*>(node)->buffer()->edges.buf, 0, VK_INDEX_TYPE_UINT32);
+
+    // EDGES
+
+    // set line width
+    vkCmdSetLineWidth(buffer, 2.0);
+
+    // Shading
+    vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_meshPipeline.wire);
+
+    // Draw indexed 
+    vkCmdDrawIndexed(buffer, static_cast<Mesh*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
+
+    // POINTS
+
+    // Shading 
+    vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_meshPipeline.point);
+
+    // Draw indexed 
+    vkCmdDrawIndexed(buffer, static_cast<Mesh*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
 }
 
-void Pipeline::prepare(VkDevice device, VkPipelineCache cache, VkPipelineLayout layout, VkRenderPass renderPass, VkPipelineVertexInputStateCreateInfo* vi)
+void Pipelines::bindLight(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1])
+{
+    vkCmdBindVertexBuffers(buffer, VERTEX_BUFFER_BIND_ID, 1, &static_cast<PointLight*>(node)->buffer()->vertices.buf, offsets);
+
+    // EDGES
+
+    // set line width
+    vkCmdSetLineWidth(buffer, 2.0);
+
+    // Shading
+    vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_lightPipeline.wire);
+
+    // Draw indexed 
+    vkCmdDrawIndexed(buffer, static_cast<PointLight*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
+
+}
+
+
+void Pipelines::createCache(VkDevice device)
+{
+    VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
+    pipelineCacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
+    VkResult err = vkCreatePipelineCache(device, &pipelineCacheCreateInfo, nullptr, &m_pipelineCache);
+    assert(!err);
+}
+
+
+void Pipelines::createLayout(VkDevice device, VkPipelineLayoutCreateInfo info)
+{
+    VkResult err;
+    err = vkCreatePipelineLayout(device, &info, nullptr, &m_pipelineLayout);
+    assert(!err);
+}
+
+
+void Pipelines::prepare(VkDevice device, VkRenderPass renderPass, VkPipelineVertexInputStateCreateInfo* vi)
 {
     // Create our rendering pipeline used in this example
     // Vulkan uses the concept of rendering pipelines to encapsulate
@@ -80,41 +195,24 @@ void Pipeline::prepare(VkDevice device, VkPipelineCache cache, VkPipelineLayout 
     // but not their states
 
 
-
     // Solid Shading Pipeline
     VkGraphicsPipelineCreateInfo pipelineCreateInfo = {};
 
     pipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     // The layout used for this pipeline
-    pipelineCreateInfo.layout = layout;
+    pipelineCreateInfo.layout = m_pipelineLayout;
     // Renderpass this pipeline is attached to
     pipelineCreateInfo.renderPass = renderPass;
 
-    // Edge Shading Pipeline
-    VkGraphicsPipelineCreateInfo pipelineEdgeCreateInfo = {};
-
-    pipelineEdgeCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-    // The layout used for this pipeline
-    pipelineEdgeCreateInfo.layout = layout;
-    // Renderpass this pipeline is attached to
-    pipelineEdgeCreateInfo.renderPass = renderPass;
-
     VkResult err;
-
-    // Vertex input state for solid shading 
-    // Describes the topoloy used with this pipeline
-    VkPipelineInputAssemblyStateCreateInfo inputSolidAssemblyState = {};
-    inputSolidAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-    // This pipeline renders vertex data as triangle lists
-    inputSolidAssemblyState.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 
     // Vertex input state for edge shading 
     // Describes the topoloy used with this pipeline
-    VkPipelineInputAssemblyStateCreateInfo inputEdgeAssemblyState = {};
-    inputEdgeAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+    VkPipelineInputAssemblyStateCreateInfo inputAssemblyState = {};
+    inputAssemblyState.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     // This pipeline renders vertex data as line lists
-    inputEdgeAssemblyState.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
-
+    inputAssemblyState.topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+ 
 
     // Rasterization state
     VkPipelineRasterizationStateCreateInfo rasterizationState = {};
@@ -193,78 +291,71 @@ void Pipeline::prepare(VkDevice device, VkPipelineCache cache, VkPipelineLayout 
 
     VkPipelineShaderStageCreateInfo shaderStages[3] = { {},{} };
 
-    if(m_wireVertShader!="")
-    {
-        // Wireframe shader
-        shaderStages[0] = loadShader(device, m_wireVertShader.c_str(), VK_SHADER_STAGE_VERTEX_BIT);
-        shaderStages[1] = loadShader(device, m_wireFragShader.c_str(), VK_SHADER_STAGE_FRAGMENT_BIT);
-        shaderStages[2] = loadShader(device, m_wireGeomShader.c_str(), VK_SHADER_STAGE_GEOMETRY_BIT);
-
-        // Assign states to solid shading
-        // Three shader stages
-        pipelineEdgeCreateInfo.stageCount = 3;
-        // Assign pipeline state create information
-        pipelineEdgeCreateInfo.pVertexInputState = vi;
-        pipelineEdgeCreateInfo.pInputAssemblyState = &inputEdgeAssemblyState;
-        pipelineEdgeCreateInfo.pRasterizationState = &rasterizationState;
-        pipelineEdgeCreateInfo.pColorBlendState = &colorBlendState;
-        pipelineEdgeCreateInfo.pMultisampleState = &multisampleState;
-        pipelineEdgeCreateInfo.pViewportState = &viewportState;
-        pipelineEdgeCreateInfo.pDepthStencilState = &depthStencilState;
-        pipelineEdgeCreateInfo.pStages = shaderStages;
-        pipelineEdgeCreateInfo.renderPass = renderPass;
-        pipelineEdgeCreateInfo.pDynamicState = &dynamicState;
-
-        // wireframe rendering pipeline 
-        //err = vkCreateGraphicsPipelines(device, cache, 1, &pipelineEdgeCreateInfo, nullptr, &m_meshPipelines.wire);
-        //assert(!err);
-        // wireframe rendering pipeline 
-        err = vkCreateGraphicsPipelines(device, cache, 1, &pipelineEdgeCreateInfo, nullptr, &m_wire);
-        assert(!err);
-    }
-
-    if(m_pointVertShader!="")
-    {
-        // Point shader
-        shaderStages[0] = loadShader(device, m_pointVertShader.c_str(), VK_SHADER_STAGE_VERTEX_BIT);
-        shaderStages[1] = loadShader(device, m_pointFragShader.c_str(), VK_SHADER_STAGE_FRAGMENT_BIT);
-        shaderStages[2] = loadShader(device, m_pointGeomShader.c_str(), VK_SHADER_STAGE_GEOMETRY_BIT);
-
-        // Point rendering pipeline 
-        err = vkCreateGraphicsPipelines(device, cache, 1, &pipelineEdgeCreateInfo, nullptr, &m_point);
-        assert(!err);
-    }
-
-    if(m_shadeVertShader!="")
-    {
- 
-        // Base solid shader
-        shaderStages[0] = loadShader(device, m_shadeVertShader.c_str(), VK_SHADER_STAGE_VERTEX_BIT);
-        shaderStages[1] = loadShader(device, m_shadeFragShader.c_str(), VK_SHADER_STAGE_FRAGMENT_BIT);
-
-        // Assign states to solid shading
-        // Three shader stages
-        pipelineCreateInfo.stageCount = 2;
-        // Assign pipeline state create information
-        pipelineCreateInfo.pVertexInputState = vi;
-        pipelineCreateInfo.pInputAssemblyState = &inputSolidAssemblyState;
-        pipelineCreateInfo.pRasterizationState = &rasterizationState;
-        pipelineCreateInfo.pColorBlendState = &colorBlendState;
-        pipelineCreateInfo.pMultisampleState = &multisampleState;
-        pipelineCreateInfo.pViewportState = &viewportState;
-        pipelineCreateInfo.pDepthStencilState = &depthStencilState;
-        pipelineCreateInfo.pStages = shaderStages;
-        pipelineCreateInfo.renderPass = renderPass;
-        pipelineCreateInfo.pDynamicState = &dynamicState;
+    // Assign states to solid shading
+    // Three shader stages
+    pipelineCreateInfo.stageCount = 3;
+    // Assign pipeline state create information
+    pipelineCreateInfo.pVertexInputState = vi;
+    pipelineCreateInfo.pInputAssemblyState = &inputAssemblyState;
+    pipelineCreateInfo.pRasterizationState = &rasterizationState;
+    pipelineCreateInfo.pColorBlendState = &colorBlendState;
+    pipelineCreateInfo.pMultisampleState = &multisampleState;
+    pipelineCreateInfo.pViewportState = &viewportState;
+    pipelineCreateInfo.pDepthStencilState = &depthStencilState;
+    pipelineCreateInfo.pStages = shaderStages;
+    pipelineCreateInfo.renderPass = renderPass;
+    pipelineCreateInfo.pDynamicState = &dynamicState;
 
 
-        // solid rendering pipeline 
-        err = vkCreateGraphicsPipelines(device, cache, 1, &pipelineCreateInfo, nullptr, &m_shade);
-        assert(!err);
-    }
+    // WIRE
+
+    // mesh
+    shaderStages[0] = loadShader(device, "shaders/spv/wire.mesh.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(device, "shaders/spv/wire.mesh.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[2] = loadShader(device, "shaders/spv/wire.mesh.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
+    err = vkCreateGraphicsPipelines(device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_meshPipeline.wire);
+    assert(!err);
+
+    // axis
+    shaderStages[0] = loadShader(device, "shaders/spv/wire.axis.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(device, "shaders/spv/wire.axis.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[2] = loadShader(device, "shaders/spv/wire.axis.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
+    err = vkCreateGraphicsPipelines(device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_axisPipeline.wire);
+    assert(!err);
+
+    // light 
+    shaderStages[0] = loadShader(device, "shaders/spv/wire.light.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(device, "shaders/spv/wire.light.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[2] = loadShader(device, "shaders/spv/wire.light.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
+    err = vkCreateGraphicsPipelines(device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_lightPipeline.wire);
+    assert(!err);
+
+
+    // POINT
+    
+    // mesh
+    shaderStages[0] = loadShader(device, "shaders/spv/point.mesh.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(device, "shaders/spv/point.mesh.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+    shaderStages[2] = loadShader(device, "shaders/spv/point.mesh.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
+    err = vkCreateGraphicsPipelines(device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_meshPipeline.point);
+    assert(!err);
+
+
+    // SHADE
+
+    pipelineCreateInfo.stageCount = 2;
+    rasterizationState.polygonMode = VK_POLYGON_MODE_FILL;
+    inputAssemblyState.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+
+    // mesh 
+    shaderStages[0] = loadShader(device, "shaders/spv/shade.mesh.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(device, "shaders/spv/shade.mesh.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+    err = vkCreateGraphicsPipelines(device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_meshPipeline.shade);
+
+    assert(!err);
 }
 
-VkPipelineShaderStageCreateInfo Pipeline::loadShader(VkDevice device, const char * fileName, VkShaderStageFlagBits stage)
+VkPipelineShaderStageCreateInfo Pipelines::loadShader(VkDevice device, const char * fileName, VkShaderStageFlagBits stage)
 {
     VkPipelineShaderStageCreateInfo shaderStage = {};
     shaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -274,168 +365,6 @@ VkPipelineShaderStageCreateInfo Pipeline::loadShader(VkDevice device, const char
     assert(shaderStage.module != NULL);
     m_shaderModules.push_back(shaderStage.module);
     return shaderStage;
-}
-
-
-// PIPELINES
-
-
-Pipelines::Pipelines()
-{
-
-}
-
-Pipelines::~Pipelines()
-{
-}
-
-void Pipelines::cleanup(VkDevice device)
-{
-    // Clean up used Vulkan resources 
-    // Note : Inherited destructor cleans up resources stored in base class
-    m_axisPipeline.cleanup(device);
-    m_meshPipeline.cleanup(device);
-    m_lightPipeline.cleanup(device);
-    vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
-}
-
-void Pipelines::bind(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1])
-{
-    switch(node->type())
-    {
-        case Node::Null:
-            bindMesh(device, buffer, node, offsets);
-            break;
-        case Node::Axis:
-            bindAxis(device, buffer, node, offsets);
-            break;
-        case Node::Grid:
-            bindMesh(device, buffer, node, offsets);
-            break;
-        case Node::Camera:
-            bindMesh(device, buffer, node, offsets);
-            break;
-        case Node::Light:
-            bindLight(device, buffer, node, offsets);
-            break;
-        case Node::Mesh:
-            bindMesh(device, buffer, node, offsets);
-            break;
-        default:
-            bindMesh(device, buffer, node, offsets);
-    }
-}
-
-void Pipelines::prepare(VkDevice device, VkRenderPass renderPass, VkPipelineVertexInputStateCreateInfo* vi)
-{
-    m_axisPipeline.prepare(
-            device,
-            m_pipelineCache,
-            m_pipelineLayout,
-            renderPass,
-            vi);
-
-    m_meshPipeline.prepare(
-            device,
-            m_pipelineCache,
-            m_pipelineLayout,
-            renderPass,
-            vi);
-
-    m_lightPipeline.prepare(
-            device,
-            m_pipelineCache,
-            m_pipelineLayout,
-            renderPass,
-            vi);
-}
- 
-void Pipelines::bindAxis(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1])
-{
-    vkCmdBindVertexBuffers(buffer, VERTEX_BUFFER_BIND_ID, 1, &static_cast<Axis*>(node)->buffer()->vertices.buf, offsets);
-
-    // EDGES
-
-    // set line width
-    vkCmdSetLineWidth(buffer, 2.0);
-
-    // Shading
-    vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_axisPipeline.wire());
-
-    // Draw indexed 
-    vkCmdDrawIndexed(buffer, static_cast<Axis*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
-
-}
-
-
-void Pipelines::bindMesh(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1])
-{
-    vkCmdBindVertexBuffers(buffer, VERTEX_BUFFER_BIND_ID, 1, &static_cast<Mesh*>(node)->buffer()->vertices.buf, offsets);
-
-    // Bind triangle indices
-    vkCmdBindIndexBuffer(buffer, static_cast<Mesh*>(node)->buffer()->indices.buf, 0, VK_INDEX_TYPE_UINT32);
-
-    // Solid Shading
-    // Bind the rendering pipeline (including the shaders)
-    vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_meshPipeline.shade());
-
-    // Draw indexed triangle
-    vkCmdDrawIndexed(buffer, static_cast<Mesh*>(node)->buffer()->indexCount, 1, 0, 0, 1);
-    // change over to edge index
-
-    // Bind indices
-    vkCmdBindIndexBuffer(buffer, static_cast<Mesh*>(node)->buffer()->edges.buf, 0, VK_INDEX_TYPE_UINT32);
-
-    // EDGES
-
-    // set line width
-    vkCmdSetLineWidth(buffer, 2.0);
-
-    // Shading
-    vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_meshPipeline.wire());
-
-    // Draw indexed 
-    vkCmdDrawIndexed(buffer, static_cast<Mesh*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
-
-    // POINTS
-
-    // Shading 
-    vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_meshPipeline.point());
-
-    // Draw indexed 
-    vkCmdDrawIndexed(buffer, static_cast<Mesh*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
-}
-
-void Pipelines::bindLight(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1])
-{
-    vkCmdBindVertexBuffers(buffer, VERTEX_BUFFER_BIND_ID, 1, &static_cast<PointLight*>(node)->buffer()->vertices.buf, offsets);
-
-    // EDGES
-
-    // set line width
-    vkCmdSetLineWidth(buffer, 2.0);
-
-    // Shading
-    vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_lightPipeline.wire());
-
-    // Draw indexed 
-    vkCmdDrawIndexed(buffer, static_cast<PointLight*>(node)->buffer()->edgeCount, 1, 0, 0, 1);
-
-}
-
-void Pipelines::createCache(VkDevice device)
-{
-    VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
-    pipelineCacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-    VkResult err = vkCreatePipelineCache(device, &pipelineCacheCreateInfo, nullptr, &m_pipelineCache);
-    assert(!err);
-}
-
-void Pipelines::createLayout(VkDevice device, VkPipelineLayoutCreateInfo info)
-{
-    VkResult err;
-    err = vkCreatePipelineLayout(device, &info, nullptr, &m_pipelineLayout);
-    assert(!err);
 }
 
 
