@@ -40,51 +40,6 @@ namespace feather
     namespace vulkan
     {
 
-        class Pipeline
-        {
-            public:
-                enum Type { Point, Wire, Shade };
-
-                Pipeline(
-                        std::string shadeVertShader,
-                        std::string shadeFragShader,
-                        std::string wireVertShader,
-                        std::string wireGeomShader,
-                        std::string wireFragShader,
-                        std::string pointVertShader,
-                        std::string pointGeomShader,
-                        std::string pointFragShader
-                        );
-                ~Pipeline();
-
-                void cleanup(VkDevice device);
-                void prepare(VkDevice device, VkPipelineCache cache, VkPipelineLayout layout, VkRenderPass renderPass, VkPipelineVertexInputStateCreateInfo* vi);
-                VkPipelineShaderStageCreateInfo loadShader(VkDevice device, const char * fileName, VkShaderStageFlagBits stage);
-                VkPipeline shade() { return m_shade; };
-                VkPipeline wire() { return m_wire; };
-                VkPipeline point() { return m_point; };
-
-            private:
-                // shade
-                std::string m_shadeVertShader;
-                std::string m_shadeFragShader;
-                // wire
-                std::string m_wireVertShader;
-                std::string m_wireFragShader;
-                std::string m_wireGeomShader;
-                // point
-                std::string m_pointVertShader;
-                std::string m_pointFragShader;
-                std::string m_pointGeomShader;
-
-                std::vector<VkShaderModule> m_shaderModules;
-
-                // pipelines
-                VkPipeline m_shade;
-                VkPipeline m_point;
-                VkPipeline m_wire;
-        };
-
         class Pipelines
         {
             public:
@@ -110,60 +65,23 @@ namespace feather
                 void bindLight(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1]);
 
                 VkPipelineShaderStageCreateInfo loadShader(VkDevice device, const char * fileName, VkShaderStageFlagBits stage);
-                //void bindPipeline(VkCommandBuffer buffer, Node* node, Pipeline::Type type);
 
-                //std::vector<VkShaderModule> m_shaderModules;
-                /* 
-                struct {
-                    VkPipeline wire;
-                    VkPipeline point;
-                    VkPipeline solid;
-                } m_meshPipelines;
+                std::vector<VkShaderModule> m_shaderModules;
 
                 struct {
                     VkPipeline wire;
+                } m_axisPipeline;
+
+                struct {
+                    VkPipeline wire;
                     VkPipeline point;
-                    VkPipeline solid;
-                } m_lightPipelines;
-                */
+                    VkPipeline shade;
+                } m_meshPipeline;
 
-                // AXIS
-                Pipeline m_axisPipeline = Pipeline(
-                        "",
-                        "",
-                        "shaders/spv/wire.axis.vert.spv",
-                        "shaders/spv/wire.axis.frag.spv",
-                        "shaders/spv/wire.axis.geom.spv",
-                        "",
-                        "",
-                        ""
-                        );
+                struct {
+                    VkPipeline wire;
+                } m_lightPipeline;
 
-
-                // MESHES
-                Pipeline m_meshPipeline = Pipeline(
-                        "shaders/spv/shade.mesh.vert.spv",
-                        "shaders/spv/shade.mesh.frag.spv",
-                        "shaders/spv/wire.mesh.vert.spv",
-                        "shaders/spv/wire.mesh.frag.spv",
-                        "shaders/spv/wire.mesh.geom.spv",
-                        "shaders/spv/point.mesh.vert.spv",
-                        "shaders/spv/point.mesh.frag.spv",
-                        "shaders/spv/point.mesh.geom.spv"
-                        );
-
-                // LIGHTS
-                Pipeline m_lightPipeline = Pipeline(
-                        "shaders/spv/shade.light.vert.spv",
-                        "shaders/spv/shade.light.frag.spv",
-                        "shaders/spv/wire.light.vert.spv",
-                        "shaders/spv/wire.light.frag.spv",
-                        "shaders/spv/wire.light.geom.spv",
-                        "shaders/spv/point.light.vert.spv",
-                        "shaders/spv/point.light.frag.spv",
-                        "shaders/spv/point.light.geom.spv"
-                        );
- 
         };
 
     } // namespace vulkan
