@@ -19,10 +19,12 @@ layout (binding = 0) uniform UBO
 
 layout (location = 0) out vec3 outNormal;
 layout (location = 1) out uint outSelection;
+layout (location = 2) out vec3 outColor;
 
 void main() 
 {
     outNormal = inNormal;
     outSelection = inSelection;
+    outColor = inColor;
     gl_Position = vec4(inPosition.xyz, 1.0);
 }

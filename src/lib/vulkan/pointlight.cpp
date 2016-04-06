@@ -41,8 +41,8 @@ void PointLight::build()
     m_indexBuffer.clear();
     m_vertexBuffer.push_back({{1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f},1});
     m_vertexBuffer.push_back({{-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f},1});
-    m_vertexBuffer.push_back({{0.0f,3.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},1});
-    m_vertexBuffer.push_back({{2.0f,3.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},1});
+    m_vertexBuffer.push_back({{-1.0f,1.0f,3.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},1});
+    m_vertexBuffer.push_back({{1.0f,1.0f,3.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},1});
     m_indexBuffer = {{0},{1},{2},{0},{2},{3}};
     m_edgeBuffer = {{0},{1},{1},{2},{2},{3},{3},{0}};
 }

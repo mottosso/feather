@@ -28,6 +28,7 @@
 #include "vulkan_deps.hpp"
 #include "node.hpp"
 #include "axis.hpp"
+#include "grid.hpp"
 #include "mesh.hpp"
 #include "pointlight.hpp"
 
@@ -48,7 +49,6 @@ namespace feather
                 void cleanup(VkDevice device);
                 void bind(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offset[1]);
                 void prepare(VkDevice device, VkRenderPass renderPass, VkPipelineVertexInputStateCreateInfo* vi);
-                //VkPipeline pipeline(Node::Type node);
                 void createCache(VkDevice device);
                 void createLayout(VkDevice device, VkPipelineLayoutCreateInfo info);
                 VkPipelineLayout layout() { return m_pipelineLayout; };
@@ -59,6 +59,8 @@ namespace feather
 
                 // bind axis
                 void bindAxis(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1]);
+                // bind grid 
+                void bindGrid(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1]);
                 // bind mesh
                 void bindMesh(VkDevice device, VkCommandBuffer buffer, Node* node, VkDeviceSize offsets[1]);
                 // bind light
@@ -71,6 +73,10 @@ namespace feather
                 struct {
                     VkPipeline wire;
                 } m_axisPipeline;
+
+                struct {
+                    VkPipeline wire;
+                } m_gridPipeline;
 
                 struct {
                     VkPipeline wire;
