@@ -29,6 +29,7 @@
 #include "swapchain.hpp"
 #include "textureloader.hpp"
 #include "axis.hpp"
+#include "grid.hpp"
 #include "mesh.hpp"
 #include "pointlight.hpp"
 #include "pipelines.hpp"

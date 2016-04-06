@@ -54,6 +54,7 @@ m_defaultClearColor({ { 0.325f, 0.325f, 0.325f, 1.0f } })
  
     // add the nodes
     m_aNodes.push_back(new Axis());
+    m_aNodes.push_back(new Grid());
     m_aNodes.push_back(new Mesh());
     m_aNodes.push_back(new PointLight());
 
@@ -86,10 +87,13 @@ Window::~Window()
         node->freeBuffer(m_device);
         switch(node->type())
         {
-             case Node::Axis:
+            case Node::Axis:
                 delete static_cast<Axis*>(node);
                 break;
-             case Node::Mesh:
+            case Node::Grid:
+                delete static_cast<Grid*>(node);
+                break;
+            case Node::Mesh:
                 delete static_cast<Mesh*>(node);
                 break;
             case Node::Light:
@@ -695,7 +699,10 @@ void Window::prepareVertices()
             case Node::Axis:
                 static_cast<Axis*>(node)->prepareVertices(m_device,m_deviceMemoryProperties);
                 break;
-             case Node::Mesh:
+            case Node::Grid:
+                static_cast<Grid*>(node)->prepareVertices(m_device,m_deviceMemoryProperties);
+                break;
+            case Node::Mesh:
                 static_cast<Mesh*>(node)->prepareVertices(m_device,m_deviceMemoryProperties);
                 break;
             case Node::Light:
@@ -1096,6 +1103,9 @@ void Window::buildCommandBuffers()
                 case Node::Axis:
                     static_cast<Axis*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
                     break;
+                case Node::Grid:
+                    static_cast<Grid*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
+                    break;
                 case Node::Mesh:
                     static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
                     break;
@@ -1106,7 +1116,8 @@ void Window::buildCommandBuffers()
 
             m_pPipelines->bind(m_device, m_drawCommandBuffers[i], node, offsets);
             // reset line width
-            vkCmdSetLineWidth(m_drawCommandBuffers[i], 1.0);
+            //vkCmdSetLineWidth(m_drawCommandBuffers[i], 1.0);
+
         }
 
         vkCmdEndRenderPass(m_drawCommandBuffers[i]);
@@ -1367,7 +1378,11 @@ void Window::nodeChanged()
                     static_cast<Axis*>(node)->updateVertices(m_device,m_deviceMemoryProperties,step);
                     vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<Axis*>(node)->buffer()->vertices.buf, offsets);
                 break;
-                 case Node::Mesh:
+                case Node::Grid:
+                static_cast<Grid*>(node)->updateVertices(m_device,m_deviceMemoryProperties,step);
+                vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<Grid*>(node)->buffer()->vertices.buf, offsets);
+                break;
+                case Node::Mesh:
                     static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties,step);
                     vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<Mesh*>(node)->buffer()->vertices.buf, offsets);
                 break;
