@@ -189,20 +189,20 @@ void Window::initVulkan(bool validation)
 
     // Find a queue that supports graphics operations
     uint32_t graphicsQueueIndex = 0;
-    uint32_t queueCount;
-    vkGetPhysicalDeviceQueueFamilyProperties(m_physicalDevice, &queueCount, NULL);
-    assert(queueCount >= 1);
+    //uint32_t m_queueCount;
+    vkGetPhysicalDeviceQueueFamilyProperties(m_physicalDevice, &m_queueCount, NULL);
+    assert(m_queueCount >= 1);
 
-    std::vector<VkQueueFamilyProperties> queueProps;
-    queueProps.resize(queueCount);
-    vkGetPhysicalDeviceQueueFamilyProperties(m_physicalDevice, &queueCount, queueProps.data());
+    //std::vector<VkQueueFamilyProperties> m_queueProps;
+    m_queueProps.resize(m_queueCount);
+    vkGetPhysicalDeviceQueueFamilyProperties(m_physicalDevice, &m_queueCount, m_queueProps.data());
 
-    for (graphicsQueueIndex = 0; graphicsQueueIndex < queueCount; graphicsQueueIndex++)
+    for (graphicsQueueIndex = 0; graphicsQueueIndex < m_queueCount; graphicsQueueIndex++)
     {
-        if (queueProps[graphicsQueueIndex].queueFlags & VK_QUEUE_GRAPHICS_BIT)
+        if (m_queueProps[graphicsQueueIndex].queueFlags & VK_QUEUE_GRAPHICS_BIT)
             break;
     }
-    assert(graphicsQueueIndex < queueCount);
+    assert(graphicsQueueIndex < m_queueCount);
 
     // Vulkan device
     std::array<float, 1> queuePriorities = { 0.0f };
@@ -393,6 +393,7 @@ void Window::prepare()
     setupSwapChain();
     createCommandBuffers();
     setupDepthStencil();
+    setupSelection();
     setupRenderPass();
     m_pPipelines->createCache(m_device);
     //createPipelineCache();
@@ -543,7 +544,166 @@ void Window::setupDepthStencil()
     depthStencilView.image = m_depthStencil.image;
     err = vkCreateImageView(m_device, &depthStencilView, nullptr, &m_depthStencil.view);
     assert(!err);
+
 }
+
+
+void Window::setupSelection()
+{
+
+    VkImageCreateInfo isci{
+        VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
+            nullptr,
+            VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT,
+            VK_IMAGE_TYPE_2D,
+            VK_FORMAT_R8G8B8A8_UINT,
+            {
+                m_width,
+                m_height,
+                1
+            },
+            1,
+            1,
+            VK_SAMPLE_COUNT_1_BIT,
+            VK_IMAGE_TILING_OPTIMAL,//VK_IMAGE_TILING_LINEAR,
+            VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
+            VK_SHARING_MODE_EXCLUSIVE,
+            1,
+            &m_swapChain.queueNodeIndex//&m_queueCount//&queueFamily
+    };
+    VkResult errorCode = vkCreateImage( m_device, &isci, nullptr, &m_selection.image);
+    //RESULT_HANDLER( errorCode, "vkCreateImage" );
+    assert(!errorCode);
+
+    VkMemoryRequirements ismr;
+    vkGetImageMemoryRequirements( m_device, m_selection.image, &ismr );
+
+    uint32_t memoryType = 0;
+    bool found = false;
+
+    for( uint32_t i = 0; i < 32; ++i ){
+        if(  ( ismr.memoryTypeBits & (0x1 << i) )  &&  ( m_deviceMemoryProperties.memoryTypes[i].propertyFlags & ( VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT ) ) == ( VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT ) ){
+            memoryType = i; found = true; break;
+        }
+    }
+
+    if( !found )
+        throw "Can't find compatible mappable memory for image";
+
+    VkMemoryAllocateInfo memoryInfo{
+        VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+            nullptr,
+            ismr.size,
+            memoryType
+    };
+    errorCode = vkAllocateMemory( m_device, &memoryInfo, nullptr, &m_selection.mem);
+    //RESULT_HANDLER( errorCode, "vkAllocateMemory" );
+    assert(!errorCode);
+
+    errorCode = vkBindImageMemory( m_device, m_selection.image, m_selection.mem, 0 );
+    //RESULT_HANDLER( errorCode, "vkBindImageMemory" );
+    assert(!errorCode);
+
+    VkImageViewCreateInfo isvci{
+        VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+            nullptr,
+            0,
+            m_selection.image,
+            VK_IMAGE_VIEW_TYPE_2D,
+            VK_FORMAT_R8G8B8A8_UNORM,
+            {
+                VK_COMPONENT_SWIZZLE_IDENTITY,
+                VK_COMPONENT_SWIZZLE_IDENTITY,
+                VK_COMPONENT_SWIZZLE_IDENTITY,
+                VK_COMPONENT_SWIZZLE_IDENTITY
+            },
+            {
+                VK_IMAGE_ASPECT_COLOR_BIT,
+                0,
+                VK_REMAINING_MIP_LEVELS,
+                0,
+                VK_REMAINING_ARRAY_LAYERS
+            }
+    };
+    errorCode = vkCreateImageView( m_device, &isvci, nullptr, &m_selection.view);
+    //RESULT_HANDLER( errorCode, "vkCreateImageView" );
+    assert(!errorCode);
+
+
+    /*
+    VkFramebuffer framebufferSource;
+    VkFramebufferCreateInfo fsci{
+        VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
+            nullptr,
+            0,
+            m_renderPass,
+            1,
+            &m_selection.view,
+            m_width,
+            m_height,
+            1
+    };
+    errorCode = vkCreateFramebuffer( m_device, &fsci, nullptr, &framebufferSource );
+    //RESULT_HANDLER( errorCode, "vkCreateFramebuffer" );
+    assert(!errorCode);
+    */
+
+
+    /*
+    VkImageCreateInfo image = {};
+    image.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    image.pNext = NULL;
+    image.imageType = VK_IMAGE_TYPE_2D;
+    image.format = VK_FORMAT_R8G8B8A8_UINT;
+    image.extent = { m_width, m_height, 1 };
+    image.mipLevels = 2;
+    image.arrayLayers = 1;
+    //image.samples = VK_SAMPLE_COUNT_1_BIT;
+    image.samples = VK_SAMPLE_COUNT_4_BIT;
+    image.tiling = VK_IMAGE_TILING_OPTIMAL;
+    image.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+    image.flags = 0;
+
+    VkMemoryAllocateInfo mem_alloc = {};
+    mem_alloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    mem_alloc.pNext = NULL;
+    mem_alloc.allocationSize = 0;
+    mem_alloc.memoryTypeIndex = 0;
+
+    VkImageViewCreateInfo depthStencilView = {};
+    depthStencilView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    depthStencilView.pNext = NULL;
+    depthStencilView.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    depthStencilView.format = m_depthFormat;
+    depthStencilView.flags = 0;
+    depthStencilView.subresourceRange = {};
+    depthStencilView.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+    depthStencilView.subresourceRange.baseMipLevel = 0;
+    depthStencilView.subresourceRange.levelCount = 1;
+    depthStencilView.subresourceRange.baseArrayLayer = 0;
+    depthStencilView.subresourceRange.layerCount = 1;
+
+    VkMemoryRequirements memReqs;
+    VkResult err;
+
+    err = vkCreateImage(m_device, &image, nullptr, &m_depthStencil.image);
+    assert(!err);
+    vkGetImageMemoryRequirements(m_device, m_depthStencil.image, &memReqs);
+    mem_alloc.allocationSize = memReqs.size;
+    getMemoryType(memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &mem_alloc.memoryTypeIndex);
+    err = vkAllocateMemory(m_device, &mem_alloc, nullptr, &m_depthStencil.mem);
+    assert(!err);
+
+    err = vkBindImageMemory(m_device, m_depthStencil.image, m_depthStencil.mem, 0);
+    assert(!err);
+    feather::vulkan::tools::setImageLayout(m_setupCommandBuffer, m_depthStencil.image, VK_IMAGE_ASPECT_DEPTH_BIT, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
+    depthStencilView.image = m_depthStencil.image;
+    err = vkCreateImageView(m_device, &depthStencilView, nullptr, &m_depthStencil.view);
+    assert(!err);
+    */
+}
+
 
 VkBool32 Window::getMemoryType(uint32_t typeBits, VkFlags properties, uint32_t *typeIndex)
 {
@@ -564,10 +724,10 @@ VkBool32 Window::getMemoryType(uint32_t typeBits, VkFlags properties, uint32_t *
 
 void Window::setupRenderPass()
 {
-    VkAttachmentDescription attachments[2];
+    VkAttachmentDescription attachments[3];
     attachments[0].format = m_colorFormat;
-    //attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
-    attachments[0].samples = VK_SAMPLE_COUNT_4_BIT;
+    attachments[0].samples = VK_SAMPLE_COUNT_1_BIT;
+    //attachments[0].samples = VK_SAMPLE_COUNT_4_BIT;
     attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
     attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -576,14 +736,26 @@ void Window::setupRenderPass()
     attachments[0].finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
     attachments[1].format = m_depthFormat;
-    //attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
-    attachments[1].samples = VK_SAMPLE_COUNT_4_BIT;
+    attachments[1].samples = VK_SAMPLE_COUNT_1_BIT;
+    //attachments[1].samples = VK_SAMPLE_COUNT_4_BIT;
     attachments[1].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     attachments[1].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
     attachments[1].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     attachments[1].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     attachments[1].initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     attachments[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
+    // ADDED - START
+    attachments[2].format = m_colorFormat;
+    attachments[2].samples = VK_SAMPLE_COUNT_1_BIT;
+    //attachments[2].samples = VK_SAMPLE_COUNT_4_BIT;
+    attachments[2].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    attachments[2].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    attachments[2].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    attachments[2].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    attachments[2].initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    attachments[2].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    // ADDED - END
 
     VkAttachmentReference colorReference = {};
     colorReference.attachment = 0;
@@ -593,13 +765,27 @@ void Window::setupRenderPass()
     depthReference.attachment = 1;
     depthReference.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
+    // ADDED - START
+    VkAttachmentReference selectionReference = {};
+    selectionReference.attachment = 2;
+    selectionReference.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    // ADDED - END
+
+    VkAttachmentReference colorAttachments[2];
+
+    colorAttachments[0] = colorReference;
+    colorAttachments[1] = selectionReference;
+
+
     VkSubpassDescription subpass = {};
     subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     subpass.flags = 0;
     subpass.inputAttachmentCount = 0;
     subpass.pInputAttachments = NULL;
-    subpass.colorAttachmentCount = 1;
-    subpass.pColorAttachments = &colorReference;
+    //subpass.colorAttachmentCount = 1;
+    //subpass.pColorAttachments = &colorReference;
+    subpass.colorAttachmentCount = 2;
+    subpass.pColorAttachments = colorAttachments;
     subpass.pResolveAttachments = NULL;
     subpass.pDepthStencilAttachment = &depthReference;
     subpass.preserveAttachmentCount = 0;
@@ -608,7 +794,7 @@ void Window::setupRenderPass()
     VkRenderPassCreateInfo renderPassInfo = {};
     renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     renderPassInfo.pNext = NULL;
-    renderPassInfo.attachmentCount = 2;
+    renderPassInfo.attachmentCount = 3;
     renderPassInfo.pAttachments = attachments;
     renderPassInfo.subpassCount = 1;
     renderPassInfo.pSubpasses = &subpass;
@@ -623,16 +809,17 @@ void Window::setupRenderPass()
 
 void Window::setupFrameBuffer()
 {
-    VkImageView attachments[2];
+    VkImageView attachments[3];
 
     // Depth/Stencil attachment is the same for all frame buffers
     attachments[1] = m_depthStencil.view;
+    attachments[2] = m_selection.view;
 
     VkFramebufferCreateInfo frameBufferCreateInfo = {};
     frameBufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     frameBufferCreateInfo.pNext = NULL;
     frameBufferCreateInfo.renderPass = m_renderPass;
-    frameBufferCreateInfo.attachmentCount = 2;
+    frameBufferCreateInfo.attachmentCount = 3;
     frameBufferCreateInfo.pAttachments = attachments;
     frameBufferCreateInfo.width = m_width;
     frameBufferCreateInfo.height = m_height;
@@ -874,6 +1061,25 @@ void Window::updateUniformBuffers()
     assert(!err);
     memcpy(pData, &m_uboGS, sizeof(m_uboGS));
     vkUnmapMemory(m_device, m_uniformDataGS.memory);
+
+    /*
+    // see if I can get the depthStencil pixel values
+    err = vkMapMemory(m_device, m_selection.mem, 0, VK_WHOLE_SIZE, 0, &m_selectionData);
+    assert(!err);
+    std::ofstream ofs("/home/richard/out.data",std::ostream::binary);
+    ofs.write((char*)m_selectionData, m_width * m_height * 4);
+    vkUnmapMemory(m_device, m_selection.mem);
+    */
+
+    // see if I can get the depthStencil pixel values
+    void* data;
+    err = vkMapMemory(m_device, m_selection.mem, 0, VK_WHOLE_SIZE, 0, &data);
+    assert(!err);
+    std::ofstream ofs("/home/richard/out.data",std::ostream::binary);
+    ofs.write((char*)data, m_width * m_height * 4);
+    vkUnmapMemory(m_device, m_selection.mem);
+
+
 }
 
 
@@ -1046,9 +1252,10 @@ void Window::buildCommandBuffers()
     cmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     cmdBufInfo.pNext = NULL;
 
-    VkClearValue clearValues[2];
+    VkClearValue clearValues[3];
     clearValues[0].color = m_defaultClearColor;
     clearValues[1].depthStencil = { 1.0f, 0 };
+    clearValues[2].color = {1.0f,0.0f,0.0f,0.0f};
 
     VkRenderPassBeginInfo renderPassBeginInfo = {};
     renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -1058,7 +1265,7 @@ void Window::buildCommandBuffers()
     renderPassBeginInfo.renderArea.offset.y = 0;
     renderPassBeginInfo.renderArea.extent.width = m_width;
     renderPassBeginInfo.renderArea.extent.height = m_height;
-    renderPassBeginInfo.clearValueCount = 2;
+    renderPassBeginInfo.clearValueCount = 3;
     renderPassBeginInfo.pClearValues = clearValues;
 
     VkResult err;
@@ -1129,19 +1336,23 @@ void Window::buildCommandBuffers()
         prePresentBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
         prePresentBarrier.pNext = NULL;
         prePresentBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-        prePresentBarrier.dstAccessMask = 0;
+        //prePresentBarrier.dstAccessMask = 0;
+        prePresentBarrier.dstAccessMask = VK_ACCESS_HOST_READ_BIT | VK_ACCESS_MEMORY_READ_BIT;
         prePresentBarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-        prePresentBarrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        //prePresentBarrier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        prePresentBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL;
         prePresentBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         prePresentBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         prePresentBarrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };			
         prePresentBarrier.image = m_swapChain.buffers[i].image;
+        //prePresentBarrier.image = m_selection.image;
 
         VkImageMemoryBarrier *pMemoryBarrier = &prePresentBarrier;
         vkCmdPipelineBarrier(
                 m_drawCommandBuffers[i], 
                 VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 
-                VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
+                //VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 
+                VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 
                 VK_FLAGS_NONE,
                 0, nullptr,
                 0, nullptr,
@@ -1150,6 +1361,7 @@ void Window::buildCommandBuffers()
         err = vkEndCommandBuffer(m_drawCommandBuffers[i]);
         assert(!err);
     }
+
 }
 
 
@@ -1170,7 +1382,7 @@ void Window::renderLoop()
         auto tEnd = std::chrono::high_resolution_clock::now();
         auto tDiff = std::chrono::duration<double, std::milli>(tEnd - tStart).count();
         m_frameTimer = tDiff / 1000.0f;
-    }
+   }
 }
 
 void Window::render()
@@ -1244,6 +1456,8 @@ void Window::draw()
     postPresentBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     postPresentBarrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
     postPresentBarrier.image = m_swapChain.buffers[m_currentBuffer].image;
+    //postPresentBarrier.image = m_selection.image;
+
 
     // Use dedicated command buffer from example base class for submitting the post present barrier
     VkCommandBufferBeginInfo cmdBufInfo = {};
