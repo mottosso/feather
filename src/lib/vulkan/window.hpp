@@ -96,6 +96,7 @@ namespace feather
                 void setupSwapChain();
                 void createCommandBuffers();
                 void setupDepthStencil();
+                void setupSelection();
                 void setupRenderPass();
                 void setupFrameBuffer();
                 void flushSetupCommandBuffer();
@@ -125,6 +126,8 @@ namespace feather
                 VkPhysicalDeviceMemoryProperties m_deviceMemoryProperties;
                 VkDevice m_device;
                 VkQueue m_queue;
+                std::vector<VkQueueFamilyProperties> m_queueProps;
+                uint32_t m_queueCount;
                 VkInstance m_instance;
                 // Contains command buffers and semaphores to be presented to the queue
                 VkSubmitInfo m_submitInfo;
@@ -196,6 +199,16 @@ namespace feather
                 Pipelines* m_pPipelines;
 
                 std::vector<Node*> m_aNodes;
+
+                // selection testing
+                struct 
+                {
+                    VkImage image;
+                    VkDeviceMemory mem;
+                    VkImageView view;
+                } m_selection;
+
+                void* m_selectionData;
 
                 // TESTING
                 float step=1.0;
