@@ -50,7 +50,7 @@ namespace feather
             float norm[3];
             float uv[2];
             float col[3];
-            uint32_t selected;
+            float id[3];
         };
 
         class Node

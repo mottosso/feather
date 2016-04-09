@@ -14,9 +14,10 @@ layout (binding = 1) uniform UBO
 } ubo;
 
 layout (location = 0) in vec3 inNormal[]; 
-layout (location = 1) in uint inSelection[]; 
+layout (location = 1) in vec3 inId[]; 
 
 layout (location = 0) out vec3 outColor;
+layout (location = 1) out vec3 outId;
 
 void main() 
 {
@@ -31,11 +32,13 @@ void main()
         gl_Position = ubo.projection * (ubo.model * vec4(pos, 1.0));
         gl_PointSize = pointSize;
         outColor = vec3(1.0, 0.0, 0.0);
+        outId = inId[i]
         EmitVertex();
 
         gl_Position = ubo.projection * (ubo.model * vec4(pos + normal * normalLength, 1.0));
         gl_PointSize = pointSize;
         outColor = vec3(0.0, 0.0, 1.0);
+        outId = inId[i]
         EmitVertex();
 
         EndPrimitive();
