@@ -7,7 +7,7 @@ layout (location = 0) in vec3 inPosition;
 layout (location = 1) in vec3 inNormal;
 layout (location = 2) in vec2 inUV;
 layout (location = 3) in vec3 inColor;
-layout (location = 4) in uint inSelection;
+layout (location = 4) in vec3 inId;
 
 
 layout (binding = 0) uniform UBO 
@@ -18,13 +18,14 @@ layout (binding = 0) uniform UBO
 } ubo;
 
 layout (location = 0) out vec3 outNormal;
-layout (location = 1) out uint outSelection;
+layout (location = 1) out vec3 outId;
 layout (location = 2) out vec3 outColor;
+
 
 void main() 
 {
     outNormal = inNormal;
-    outSelection = inSelection;
+    outId = inId;
     outColor = inColor;
     gl_Position = vec4(inPosition.xyz, 1.0);
 }
