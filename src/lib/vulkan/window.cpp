@@ -44,7 +44,7 @@ m_frameTimer(1.0),
 m_setupCommandBuffer(VK_NULL_HANDLE),
 m_postPresentCommandBuffer(VK_NULL_HANDLE),
 m_prePresentCommandBuffer(VK_NULL_HANDLE),
-m_colorFormat(VK_FORMAT_B8G8R8A8_UNORM),
+m_colorFormat(VK_FORMAT_R8G8B8A8_UNORM),
 //m_colorFormat(VK_FORMAT_B8G8R8A8_SRGB),
 //m_colorFormat(VK_FORMAT_R32G32B32A32_SFLOAT),
 m_defaultClearColor({ { 0.325f, 0.325f, 0.325f, 1.0f } })
@@ -501,8 +501,7 @@ void Window::setupDepthStencil()
     image.extent = { m_width, m_height, 1 };
     image.mipLevels = 2;
     image.arrayLayers = 1;
-    //image.samples = VK_SAMPLE_COUNT_1_BIT;
-    image.samples = VK_SAMPLE_COUNT_4_BIT;
+    image.samples = VK_SAMPLE_COUNT_1_BIT; // changing this to 4_BIT removed the depth stencil making objects behind another one appear in front
     image.tiling = VK_IMAGE_TILING_OPTIMAL;
     image.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
     image.flags = 0;
@@ -556,7 +555,8 @@ void Window::setupSelection()
             nullptr,
             VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT,
             VK_IMAGE_TYPE_2D,
-            VK_FORMAT_R8G8B8A8_UINT,
+            //VK_FORMAT_R8G8B8A8_UINT,
+            m_colorFormat,
             {
                 m_width,
                 m_height,
@@ -565,11 +565,11 @@ void Window::setupSelection()
             1,
             1,
             VK_SAMPLE_COUNT_1_BIT,
-            VK_IMAGE_TILING_OPTIMAL,//VK_IMAGE_TILING_LINEAR,
+            VK_IMAGE_TILING_LINEAR,//VK_IMAGE_TILING_OPTIMAL should be used but does not make a full image, have to look into this more.
             VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT,
             VK_SHARING_MODE_EXCLUSIVE,
             1,
-            &m_swapChain.queueNodeIndex//&m_queueCount//&queueFamily
+            &m_queueCount//&m_swapChain.queueNodeIndex//&m_queueCount//&queueFamily
     };
     VkResult errorCode = vkCreateImage( m_device, &isci, nullptr, &m_selection.image);
     //RESULT_HANDLER( errorCode, "vkCreateImage" );

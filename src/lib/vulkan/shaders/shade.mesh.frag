@@ -12,8 +12,7 @@ layout (location = 3) in vec3 inEyePos;
 layout (location = 4) in vec3 inLightVec;
 
 layout (location = 0) out vec4 outColor;
-//layout (location = 1) out float outDepth;
-layout (location = 1) out vec4 outTest;
+layout (location = 1) out vec4 outSelection;
 
 void main() 
 {
@@ -26,7 +25,6 @@ void main()
     vec4 ISpecular = vec4(0.5, 0.5, 0.5, 1.0) * pow(max(dot(Reflected, Eye), 0.0), 0.8) * specular; 
 
     outColor = vec4((IAmbient + IDiffuse) * vec4(inColor, 1.0) + ISpecular);
-    //outDepth = 0.5f;
-    outTest = vec4(0,0,1,1);
+    outSelection= vec4(0,0,1,1);
 
 }
