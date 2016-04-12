@@ -40,11 +40,9 @@ void Grid::build()
     m_vertexBuffer.clear();
     m_indexBuffer.clear();
     m_edgeBuffer.clear();
-    m_vertexBuffer.push_back({{10.0f,0.0f,10.0f},{0.0f,1.0f,0.0f},{0.0f,0.0f},{0.0f,0.0f,0.0f},1});
-    m_vertexBuffer.push_back({{10.0f,0.0f,-10.0f},{0.0f,1.0f,0.0f},{0.0f,0.0f},{0.0f,0.0f,0.0f},1});
-    m_vertexBuffer.push_back({{-10.0f,0.0f,-10.0f},{0.0f,1.0f,0.0f},{0.0f,0.0f},{0.0f,0.0f,0.0f},1});
-    //m_indexBuffer = {{0},{1},{2}};
-    //m_edgeBuffer = {{0},{1},{1},{2},{2},{0}};
+    m_vertexBuffer.push_back({{10.0f,0.0f,10.0f},{0.0f,1.0f,0.0f},{0.0f,0.0f},{0.0f,0.0f,0.0f},{0,0,0,0}});
+    m_vertexBuffer.push_back({{10.0f,0.0f,-10.0f},{0.0f,1.0f,0.0f},{0.0f,0.0f},{0.0f,0.0f,0.0f},{0,0,0,0}});
+    m_vertexBuffer.push_back({{-10.0f,0.0f,-10.0f},{0.0f,1.0f,0.0f},{0.0f,0.0f},{0.0f,0.0f,0.0f},{0,0,0,0}});
     m_edgeBuffer = {{0},{1},{0},{2}};
 }
 

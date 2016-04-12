@@ -7,6 +7,7 @@ layout (location = 0) in vec3 inPosition;
 layout (location = 1) in vec3 inNormal;
 layout (location = 2) in vec2 inUV;
 layout (location = 3) in vec3 inColor;
+layout (location = 4) in vec4 inId;
 
 layout (binding = 0) uniform UBO 
 {
@@ -20,12 +21,14 @@ layout (location = 1) out vec2 outUV;
 layout (location = 2) out vec3 outColor;
 layout (location = 3) out vec3 outEyePos;
 layout (location = 4) out vec3 outLightVec;
+layout (location = 5) out vec4 outId;
 
 void main() 
 {
     outUV = inUV.st;
     outNormal = inNormal;
     outColor = inColor;
+    outId = inId;
     outEyePos = vec3(ubo.model * vec4(inPosition,1.0));
     vec4 lightPos = vec4(0.0, 0.0, 0.0, 1.0) * ubo.model;
     outLightVec = normalize(lightPos.xyz - outEyePos);

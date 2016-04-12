@@ -14,7 +14,7 @@ layout (binding = 1) uniform UBO
 } ubo;
 
 layout (location = 0) in vec3 inNormal[]; 
-layout (location = 1) in uint inSelection[]; 
+layout (location = 1) in vec4 inId[]; 
 
 layout (location = 0) out vec3 outColor;
 
