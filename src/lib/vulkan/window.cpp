@@ -556,7 +556,8 @@ void Window::setupSelection()
             VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT,
             VK_IMAGE_TYPE_2D,
             //VK_FORMAT_R8G8B8A8_UINT,
-            m_colorFormat,
+            VK_FORMAT_R32G32B32A32_UINT,
+            //m_colorFormat,
             {
                 m_width,
                 m_height,
@@ -610,7 +611,8 @@ void Window::setupSelection()
             0,
             m_selection.image,
             VK_IMAGE_VIEW_TYPE_2D,
-            VK_FORMAT_R8G8B8A8_UNORM,
+            //VK_FORMAT_R8G8B8A8_UNORM,
+            VK_FORMAT_R32G32B32A32_UINT,
             {
                 VK_COMPONENT_SWIZZLE_IDENTITY,
                 VK_COMPONENT_SWIZZLE_IDENTITY,
@@ -746,15 +748,15 @@ void Window::setupRenderPass()
     attachments[1].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
     // ADDED - START
-    attachments[2].format = m_colorFormat;
+    attachments[2].format = VK_FORMAT_R32G32B32A32_UINT;
     attachments[2].samples = VK_SAMPLE_COUNT_1_BIT;
     //attachments[2].samples = VK_SAMPLE_COUNT_4_BIT;
     attachments[2].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     attachments[2].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
     attachments[2].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     attachments[2].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-    attachments[2].initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-    attachments[2].finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    attachments[2].initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    attachments[2].finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
     // ADDED - END
 
     VkAttachmentReference colorReference = {};
@@ -945,7 +947,7 @@ void Window::prepareVertices()
         // Location 4 : Selection Id 
         m_vertices.attributeDescriptions[4].binding = VERTEX_BUFFER_BIND_ID;
         m_vertices.attributeDescriptions[4].location = 4;
-        m_vertices.attributeDescriptions[4].format = VK_FORMAT_R32G32B32_SFLOAT;
+        m_vertices.attributeDescriptions[4].format = VK_FORMAT_R32G32B32A32_UINT;
         m_vertices.attributeDescriptions[4].offset = sizeof(float) * 11;
         m_vertices.attributeDescriptions[4].binding = 0;
  
@@ -1076,13 +1078,18 @@ void Window::updateUniformBuffers()
     assert(!err);
     //std::ofstream ofs("/home/richard/out.data",std::ostream::binary);
     //ofs.write((char*)data, m_width * m_height * 4);
-    uint32_t offset = ((m_mousePos.y * m_width) + m_mousePos.x);
-    uint32_t color = ((uint32_t*)data)[offset];
+    uint32_t offset = (m_mousePos.y * (m_width*4)) + (m_mousePos.x * 4);
+    uint32_t r = ((uint32_t*)data)[offset];
+    uint32_t g = ((uint32_t*)data)[offset+1];
+    uint32_t b = ((uint32_t*)data)[offset+2];
+    uint32_t a = ((uint32_t*)data)[offset+3];
+    /*
     uint32_t r = color & 0x000000ff;
     uint32_t g = (color >> 8) & 0x000000ff;
     uint32_t b = (color >> 16) & 0x000000ff;
     uint32_t a = (color >> 24) & 0x000000ff;
-    std::cout << "color=" << color << " r=" << (int)r << " g=" << (int)g << " b=" << (int)b << " a=" << (int)a << std::endl;
+    */
+    std::cout << " r=" << r << " g=" << g << " b=" << b << " a=" << a << std::endl;
     vkUnmapMemory(m_device, m_selection.mem);
 
 
