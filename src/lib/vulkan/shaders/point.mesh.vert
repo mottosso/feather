@@ -5,7 +5,7 @@
 //#extension GL_EXT_gpu_shader4: enable
 
 layout (location = 0) in vec3 inPosition;
-layout (location = 4) in vec4 inId;
+layout (location = 4) in ivec4 inId;
 
 layout (binding = 0) uniform UBO 
 {
@@ -15,7 +15,7 @@ layout (binding = 0) uniform UBO
 } ubo;
 
 layout (location = 0) out vec3 outPosition;
-layout (location = 1) out vec4 outId;
+layout (location = 1) out ivec4 outId;
 
 void main() 
 {
