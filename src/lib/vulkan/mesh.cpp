@@ -39,10 +39,10 @@ void Mesh::build()
 {
     m_vertexBuffer.clear();
     m_indexBuffer.clear();
-    m_vertexBuffer.push_back({{1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f},{1,2,3,4}});
-    m_vertexBuffer.push_back({{-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f},{1,2,3,4}});
-    m_vertexBuffer.push_back({{0.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},{1,2,3,4}});
-    m_vertexBuffer.push_back({{2.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},{1,2,3,4}});
+    m_vertexBuffer.push_back({{1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f},{1,0,0,1}});
+    m_vertexBuffer.push_back({{-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f},{2,0,0,1}});
+    m_vertexBuffer.push_back({{0.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},{3,0,0,1}});
+    m_vertexBuffer.push_back({{2.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},{4,0,0,1}});
     m_indexBuffer = {{0},{1},{2},{0},{2},{3}};
     m_edgeBuffer = {{0},{1},{1},{2},{2},{3},{3},{0}};
 }
@@ -64,7 +64,7 @@ void Mesh::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties devi
 
     //build();
 
-    m_vertexBuffer.at(0)={{1.0f*step,1.0f*step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f},1};
+    m_vertexBuffer.at(0)={{1.0f*step,1.0f*step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f},{1,4,5,1}};
     buildVertex(device, deviceMemoryProperties);
 }
 
