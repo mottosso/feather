@@ -1063,6 +1063,7 @@ void Window::updateUniformBuffers()
     memcpy(pData, &m_uboVS, sizeof(m_uboVS));
     vkUnmapMemory(m_device, m_uniformDataVS.memory);
 
+    /*
     // Geometry shader
     m_uboGS.model = m_uboVS.model;
     m_uboGS.projection = m_uboVS.projection;
@@ -1071,6 +1072,7 @@ void Window::updateUniformBuffers()
     assert(!err);
     memcpy(pData, &m_uboGS, sizeof(m_uboGS));
     vkUnmapMemory(m_device, m_uniformDataGS.memory);
+    */
 
     // see if I can get the depthStencil pixel values
     void* data;
@@ -1091,6 +1093,21 @@ void Window::updateUniformBuffers()
     */
     std::cout << " r=" << r << " g=" << g << " b=" << b << " a=" << a << std::endl;
     vkUnmapMemory(m_device, m_selection.mem);
+
+    // Geometry shader
+    m_uboGS.model = m_uboVS.model;
+    m_uboGS.projection = m_uboVS.projection;
+    m_uboGS.mode = m_uboVS.mode;
+    m_uboGS.point = r;
+    m_uboGS.edge = g;
+    m_uboGS.face = b;
+    m_uboGS.object = a;
+
+    err = vkMapMemory(m_device, m_uniformDataGS.memory, 0, sizeof(m_uboGS), 0, (void **)&pData);
+    assert(!err);
+    memcpy(pData, &m_uboGS, sizeof(m_uboGS));
+    vkUnmapMemory(m_device, m_uniformDataGS.memory);
+
 
 
 }

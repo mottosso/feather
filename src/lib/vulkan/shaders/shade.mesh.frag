@@ -25,6 +25,9 @@ void main()
     float specular = 0.75;
     vec4 ISpecular = vec4(0.5, 0.5, 0.5, 1.0) * pow(max(dot(Reflected, Eye), 0.0), 0.8) * specular; 
 
-    outColor = vec4((IAmbient + IDiffuse) * vec4(inColor, 1.0) + ISpecular);
+    if(inId.b == gl_PrimitiveID)
+        outColor = vec4(1,0,0,1);
+    else
+        outColor = vec4((IAmbient + IDiffuse) * vec4(inColor, 1.0) + ISpecular);
     outSelection= inId;
 }
