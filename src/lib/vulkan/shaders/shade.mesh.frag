@@ -11,6 +11,7 @@ layout (location = 2) in vec3 inColor;
 layout (location = 3) in vec3 inEyePos;
 layout (location = 4) in vec3 inLightVec;
 layout (location = 5) in flat ivec4 inId;
+layout (location = 6) in flat int inSelected;
 
 layout (location = 0) out vec4 outColor;
 layout (location = 1) out ivec4 outSelection;
@@ -25,7 +26,7 @@ void main()
     float specular = 0.75;
     vec4 ISpecular = vec4(0.5, 0.5, 0.5, 1.0) * pow(max(dot(Reflected, Eye), 0.0), 0.8) * specular; 
 
-    if(inId.b == gl_PrimitiveID)
+    if(inSelected != 0)
         outColor = vec4(1,0,0,1);
     else
         outColor = vec4((IAmbient + IDiffuse) * vec4(inColor, 1.0) + ISpecular);
