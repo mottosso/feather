@@ -358,6 +358,7 @@ void Pipelines::prepare(VkDevice device, VkRenderPass renderPass, VkPipelineVert
 
 
     // POINT
+    pipelineCreateInfo.stageCount = 3;
     rasterizationState.polygonMode = VK_POLYGON_MODE_POINT;
     
     // mesh
@@ -369,7 +370,7 @@ void Pipelines::prepare(VkDevice device, VkRenderPass renderPass, VkPipelineVert
 
 
     // SHADE
-    pipelineCreateInfo.stageCount = 3;
+    pipelineCreateInfo.stageCount = 2;
     rasterizationState.polygonMode = VK_POLYGON_MODE_FILL;
     inputAssemblyState.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
     rasterizationState.cullMode = VK_CULL_MODE_FRONT_BIT;
@@ -377,7 +378,7 @@ void Pipelines::prepare(VkDevice device, VkRenderPass renderPass, VkPipelineVert
     // mesh 
     shaderStages[0] = loadShader(device, "shaders/spv/shade.mesh.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
     shaderStages[1] = loadShader(device, "shaders/spv/shade.mesh.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-    shaderStages[2] = loadShader(device, "shaders/spv/shade.mesh.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
+    //shaderStages[2] = loadShader(device, "shaders/spv/shade.mesh.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
     err = vkCreateGraphicsPipelines(device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_meshPipeline.shade);
     assert(!err);
 

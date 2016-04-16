@@ -1039,6 +1039,18 @@ void Window::prepareUniformBuffers()
 
 void Window::updateUniformBuffers()
 {
+
+    void* data;
+    VkResult err = vkMapMemory(m_device, m_selection.mem, 0, VK_WHOLE_SIZE, 0, &data);
+    assert(!err);
+    //std::ofstream ofs("/home/richard/out.data",std::ostream::binary);
+    //ofs.write((char*)data, m_width * m_height * 4);
+    uint32_t offset = (m_mousePos.y * (m_width*4)) + (m_mousePos.x * 4);
+    uint32_t r = ((uint32_t*)data)[offset];
+    uint32_t g = ((uint32_t*)data)[offset+1];
+    uint32_t b = ((uint32_t*)data)[offset+2];
+    uint32_t a = ((uint32_t*)data)[offset+3];
+
     glm::mat4 viewMatrix = glm::mat4();
 
     // Update matrices
@@ -1051,6 +1063,11 @@ void Window::updateUniformBuffers()
     m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
     m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+    m_uboVS.point = r;
+    m_uboVS.edge = g;
+    m_uboVS.face = b;
+    m_uboVS.object = a;
+
     //m_uboVS.point_mode = (m_mode && POINT) ? true : false;
     //m_uboVS.point_mode = true;
     //m_uboVS.wireframe_mode = (m_mode && WIREFRAME) ? true : false;
@@ -1058,7 +1075,7 @@ void Window::updateUniformBuffers()
 
     // Map uniform buffer and update it
     uint8_t *pData;
-    VkResult err = vkMapMemory(m_device, m_uniformDataVS.memory, 0, sizeof(m_uboVS), 0, (void **)&pData);
+    err = vkMapMemory(m_device, m_uniformDataVS.memory, 0, sizeof(m_uboVS), 0, (void **)&pData);
     assert(!err);
     memcpy(pData, &m_uboVS, sizeof(m_uboVS));
     vkUnmapMemory(m_device, m_uniformDataVS.memory);
@@ -1074,7 +1091,7 @@ void Window::updateUniformBuffers()
     vkUnmapMemory(m_device, m_uniformDataGS.memory);
     */
 
-    // see if I can get the depthStencil pixel values
+    /* 
     void* data;
     err = vkMapMemory(m_device, m_selection.mem, 0, VK_WHOLE_SIZE, 0, &data);
     assert(!err);
@@ -1085,6 +1102,8 @@ void Window::updateUniformBuffers()
     uint32_t g = ((uint32_t*)data)[offset+1];
     uint32_t b = ((uint32_t*)data)[offset+2];
     uint32_t a = ((uint32_t*)data)[offset+3];
+    */
+
     /*
     uint32_t r = color & 0x000000ff;
     uint32_t g = (color >> 8) & 0x000000ff;
@@ -1107,8 +1126,6 @@ void Window::updateUniformBuffers()
     assert(!err);
     memcpy(pData, &m_uboGS, sizeof(m_uboGS));
     vkUnmapMemory(m_device, m_uniformDataGS.memory);
-
-
 
 }
 
