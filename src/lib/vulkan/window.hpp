@@ -194,17 +194,12 @@ namespace feather
                     glm::mat4 projection;
                     glm::mat4 model;
                     int mode;
-                } m_uboVS;
-
-                struct {
-                    glm::mat4 projection;
-                    glm::mat4 model;
-                    int mode;
+                    // current selected components
                     int point;
                     int edge;
                     int face;
                     int object;
-                } m_uboGS;
+                } m_uboVS, m_uboGS;
 
                 Pipelines* m_pPipelines;
 

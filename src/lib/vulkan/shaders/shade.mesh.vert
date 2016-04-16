@@ -14,6 +14,11 @@ layout (binding = 0) uniform UBO
 	mat4 projection;
 	mat4 model;
         int mode;
+        // current ids under the mouse
+        int point;
+        int edge;
+        int face;
+        int object;
 } ubo;
 
 layout (location = 0) out vec3 outNormal;
@@ -22,6 +27,10 @@ layout (location = 2) out vec3 outColor;
 layout (location = 3) out vec3 outEyePos;
 layout (location = 4) out vec3 outLightVec;
 layout (location = 5) out ivec4 outId;
+layout (location = 6) out int outPoint;
+layout (location = 7) out int outEdge;
+layout (location = 8) out int outFace;
+layout (location = 9) out int outObject;
 
 void main() 
 {
@@ -32,5 +41,11 @@ void main()
     outEyePos = vec3(ubo.model * vec4(inPosition,1.0));
     vec4 lightPos = vec4(0.0, 0.0, 0.0, 1.0) * ubo.model;
     outLightVec = normalize(lightPos.xyz - outEyePos);
+
+    outPoint = ubo.point;
+    outEdge = ubo.edge;
+    outFace = ubo.face;
+    outObject = ubo.object;
+
     gl_Position = ubo.projection * ubo.model * vec4(inPosition.xyz, 1.0);
 }
