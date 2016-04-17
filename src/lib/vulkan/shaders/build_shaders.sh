@@ -23,8 +23,11 @@ glslangValidator -V point.mesh.geom -o point.mesh.geom.spv
 glslangValidator -V point.mesh.frag -o point.mesh.frag.spv
 # Base Shaders
 glslangValidator -V shade.mesh.vert -o shade.mesh.vert.spv
-#glslangValidator -V shade.mesh.geom -o shade.mesh.geom.spv
+glslangValidator -V shade.mesh.geom -o shade.mesh.geom.spv
 glslangValidator -V shade.mesh.frag -o shade.mesh.frag.spv
+# Select Shaders
+glslangValidator -V select.mesh.vert -o select.mesh.vert.spv
+glslangValidator -V select.mesh.frag -o select.mesh.frag.spv
 
 # LIGHTS 
 # Wireframe Shaders

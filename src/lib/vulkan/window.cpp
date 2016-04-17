@@ -1059,6 +1059,7 @@ void Window::updateUniformBuffers()
     viewMatrix = glm::translate(viewMatrix, glm::vec3(0.0f, 0.0f, m_zoom));
 
     m_uboVS.model = glm::mat4();
+    //m_uboVS.model = glm::scale(m_uboVS.model, glm::vec3(1,-1,1)); // flip the view
     m_uboVS.model = viewMatrix * glm::translate(m_uboVS.model, glm::vec3(0,0,0));
     m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
     m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));

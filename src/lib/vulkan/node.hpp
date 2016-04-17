@@ -40,8 +40,10 @@ namespace feather
         struct MeshBuffer {
             MeshBufferInfo vertices;
             MeshBufferInfo indices;
+            MeshBufferInfo faceSelectIndices;
             MeshBufferInfo edges;
             uint32_t indexCount;
+            uint32_t faceSelectCount;
             uint32_t edgeCount;
         };
 
@@ -96,12 +98,14 @@ namespace feather
                 VkBool32 getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t typeBits, VkFlags properties, uint32_t *typeIndex);
                 void buildVertex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
                 void buildIndex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
+                void buildFaceSelect(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
                 void buildEdge(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
 
                 Type m_type;
                 MeshBuffer* m_pMeshBuffer;
                 std::vector<Vertex> m_vertexBuffer;
                 std::vector<uint32_t> m_indexBuffer;
+                std::vector<uint32_t> m_faceSelectBuffer;
                 std::vector<uint32_t> m_edgeBuffer;
 
                 // wire
