@@ -12,9 +12,9 @@ layout (binding = 1) uniform UBO
 	mat4 model;
         int mode;
         // selection ids
-        int point;
-        int edge;
-        int face;
+        int p1;
+        int p2;
+        int p3;
         int object;
 } ubo;
 
@@ -44,7 +44,7 @@ void main()
     gl_PrimitiveID = gl_PrimitiveIDIn;
     gl_Position = p0;
  
-    if(ubo.face == inId[0].b)
+    if(ubo.p1 == inId[0].r)
         outSelected = 1;
     else
         outSelected = 0; 
@@ -61,8 +61,8 @@ void main()
     */
         outColor = inColor[0];
     outId.r = inId[0].r;
-    outId.g = inId[0].g;
-    outId.b = inId[0].b;
+    outId.g = inId[1].r;
+    outId.b = inId[2].r;
     outId.a = inId[0].a;
     EmitVertex();
 
@@ -70,7 +70,7 @@ void main()
     gl_PrimitiveID = gl_PrimitiveIDIn;
     gl_Position = p1;
   
-    if(ubo.face == inId[1].b)
+    if(ubo.p2 == inId[1].r)
         outSelected = 1;
     else
         outSelected = 0; 
@@ -80,9 +80,9 @@ void main()
     outEyePos = inEyePos[1];
     outLightVec = inLightVec[1];
     outColor = inColor[1];
-    outId.r = inId[1].r;
-    outId.g = inId[1].g;
-    outId.b = inId[1].b;
+    outId.r = inId[0].r;
+    outId.g = inId[1].r;
+    outId.b = inId[2].r;
     outId.a = inId[1].a;
     EmitVertex();
 
@@ -90,7 +90,7 @@ void main()
     gl_PrimitiveID = gl_PrimitiveIDIn;
     gl_Position = p2;
   
-    if(ubo.face == inId[2].b)
+    if(ubo.p3 == inId[2].r)
         outSelected = 1;
     else
         outSelected = 0; 
@@ -100,9 +100,9 @@ void main()
     outEyePos = inEyePos[2];
     outLightVec = inLightVec[2];
     outColor = inColor[2];
-    outId.r = inId[2].r;
-    outId.g = inId[2].g;
-    outId.b = inId[2].b;
+    outId.r = inId[0].r;
+    outId.g = inId[1].r;
+    outId.b = inId[2].r;
     outId.a = inId[2].a;
     EmitVertex();
 

@@ -57,6 +57,7 @@ void Pipelines::cleanup(VkDevice device)
     vkDestroyPipeline(device, m_meshPipeline.wire, nullptr);
     vkDestroyPipeline(device, m_meshPipeline.point, nullptr);
     vkDestroyPipeline(device, m_meshPipeline.shade, nullptr);
+    vkDestroyPipeline(device, m_meshPipeline.faceselect, nullptr);
 
     vkDestroyPipelineLayout(device, m_pipelineLayout, nullptr);
 }
@@ -139,6 +140,17 @@ void Pipelines::bindMesh(VkDevice device, VkCommandBuffer buffer, Node* node, Vk
 
     // Draw indexed triangle
     vkCmdDrawIndexed(buffer, static_cast<Mesh*>(node)->buffer()->indexCount, 1, 0, 0, 1);
+
+    // SELECT
+
+    // Bind triangle indices
+    vkCmdBindIndexBuffer(buffer, static_cast<Mesh*>(node)->buffer()->faceSelectIndices.buf, 0, VK_INDEX_TYPE_UINT32);
+
+    // Bind the rendering pipeline (including the shaders)
+    vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_meshPipeline.faceselect);
+ 
+    // Draw indexed triangle
+    vkCmdDrawIndexed(buffer, static_cast<Mesh*>(node)->buffer()->faceSelectCount, 1, 0, 0, 1);
  
    
     // EDGES
@@ -370,7 +382,7 @@ void Pipelines::prepare(VkDevice device, VkRenderPass renderPass, VkPipelineVert
 
 
     // SHADE
-    pipelineCreateInfo.stageCount = 2;
+    pipelineCreateInfo.stageCount = 3;
     rasterizationState.polygonMode = VK_POLYGON_MODE_FILL;
     inputAssemblyState.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
     rasterizationState.cullMode = VK_CULL_MODE_FRONT_BIT;
@@ -378,8 +390,16 @@ void Pipelines::prepare(VkDevice device, VkRenderPass renderPass, VkPipelineVert
     // mesh 
     shaderStages[0] = loadShader(device, "shaders/spv/shade.mesh.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
     shaderStages[1] = loadShader(device, "shaders/spv/shade.mesh.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-    //shaderStages[2] = loadShader(device, "shaders/spv/shade.mesh.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
+    shaderStages[2] = loadShader(device, "shaders/spv/shade.mesh.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
     err = vkCreateGraphicsPipelines(device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_meshPipeline.shade);
+    assert(!err);
+
+    // MESH FACE SELECT
+    pipelineCreateInfo.stageCount = 2;
+    shaderStages[0] = loadShader(device, "shaders/spv/select.mesh.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
+    shaderStages[1] = loadShader(device, "shaders/spv/select.mesh.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
+    //shaderStages[2] = loadShader(device, "shaders/spv/shade.mesh.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
+    err = vkCreateGraphicsPipelines(device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_meshPipeline.faceselect);
     assert(!err);
 
 }

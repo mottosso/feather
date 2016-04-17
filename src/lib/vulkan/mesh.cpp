@@ -39,12 +39,90 @@ void Mesh::build()
 {
     m_vertexBuffer.clear();
     m_indexBuffer.clear();
-    m_vertexBuffer.push_back({{1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f},{1,0,0,1}});
-    m_vertexBuffer.push_back({{-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f},{2,0,0,1}});
-    m_vertexBuffer.push_back({{0.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},{3,0,0,1}});
-    m_vertexBuffer.push_back({{2.0f,-1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},{4,0,0,1}});
-    m_indexBuffer = {{0},{1},{2},{0},{2},{3}};
-    m_edgeBuffer = {{0},{1},{1},{2},{2},{3},{3},{0}};
+    m_faceSelectBuffer.clear();
+    
+    // vertex layout
+    // [position] [normal] [uv] [color] [ids]
+    // id layout
+    // [r,g,b,a]
+    // r = point
+    // g = reserved
+    // b = reserved
+    // a = object
+    // 
+    // The mouse will return a vec4 layouted out at [r,g,b,a]
+    // r = p1
+    // g = p2
+    // b = p3
+    // a = object
+    // This is used to tell if the mouse is looking at a point, edge, or face.
+    // If the mouse is over a point, the only two valid numbers will be p1 and object. [5,0,0,120] (point 5 in object 120) 
+    // If the mouse is over a edge, the only valid numbers are p1, p2 and object. [5,6,0,120]
+    // if the mouse is over a face, all the numbers are valid. [5,6,7,120]
+    // These values are set in the geometry shader and will pass on if the object is selected to the fragment shader.
+
+    // front
+    m_vertexBuffer.push_back({{1.0f,2.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{1,0,0,1}});
+    m_vertexBuffer.push_back({{-1.0f,2.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{2,0,0,1}});
+    m_vertexBuffer.push_back({{-1.0f,0.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{3,0,0,1}});
+    m_vertexBuffer.push_back({{1.0f,0.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{4,0,0,1}});
+
+    // back
+    m_vertexBuffer.push_back({{1.0f,2.0f,-2.0f},{0.0f,0.0f,-1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{5,0,0,1}});
+    m_vertexBuffer.push_back({{-1.0f,2.0f,-2.0f},{0.0f,0.0f,-1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{6,0,0,1}});
+    m_vertexBuffer.push_back({{-1.0f,0.0f,-2.0f},{0.0f,0.0f,-1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{7,0,0,1}});
+    m_vertexBuffer.push_back({{1.0f,0.0f,-2.0f},{0.0f,0.0f,-1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{8,0,0,1}});
+
+
+    // We can get the face id by using the returned point value matched up with the index value.
+    // The mouse will return the point value of the first index in it's list.
+    // As long as we make sure that none of the 
+    m_indexBuffer = {
+        // front face
+        //{0},{1},{2},
+        //{0},{2},{3},
+        // back face
+        {5},{4},{7},
+        {5},{7},{6},
+        // left face
+        {4},{0},{3},
+        {4},{3},{7},
+        // right face
+        {1},{5},{6},
+        {1},{6},{2},
+        // top face
+        {4},{5},{1},
+        {4},{1},{0},
+        // bottom face
+        {6},{7},{3},
+        {6},{3},{2}
+    };
+
+    m_faceSelectBuffer = {
+        // front face
+        {0},{1},{2},
+        {0},{2},{3}
+    };
+
+    m_edgeBuffer = {
+        // front edges 
+        {0},{1},
+        {1},{2},
+        {2},{3},
+        {3},{0},
+        // back edges 
+        {4},{5},
+        {5},{6},
+        {6},{7},
+        {7},{4},
+        // left edges 
+        {4},{0},
+        {7},{3},
+        // right edges
+        {1},{5},
+        {2},{6}
+    };
+
 }
 
 void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
@@ -53,6 +131,7 @@ void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties dev
 
     buildVertex(device, deviceMemoryProperties);
     buildIndex(device, deviceMemoryProperties);
+    buildFaceSelect(device, deviceMemoryProperties);
     buildEdge(device, deviceMemoryProperties);
 }
 
@@ -64,7 +143,7 @@ void Mesh::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties devi
 
     //build();
 
-    m_vertexBuffer.at(0)={{1.0f*step,1.0f*step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f},{1,4,5,1}};
+    m_vertexBuffer.at(0)={{1.0f*step,2.0f*step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{1,0,0,1}};
     buildVertex(device, deviceMemoryProperties);
 }
 

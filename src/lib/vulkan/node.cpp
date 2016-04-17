@@ -141,6 +141,48 @@ void Node::buildIndex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMe
     err = vkBindBufferMemory(device, m_pMeshBuffer->indices.buf, m_pMeshBuffer->indices.mem, 0);
     assert(!err);
     m_pMeshBuffer->indexCount = m_indexBuffer.size();
+
+}
+
+void Node::buildFaceSelect(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
+{
+    // Setup indices
+    int indexBufferSize = m_faceSelectBuffer.size() * sizeof(uint32_t);
+
+    VkMemoryAllocateInfo memAlloc = {};
+    memAlloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    memAlloc.pNext = NULL;
+    memAlloc.allocationSize = 0;
+    memAlloc.memoryTypeIndex = 0;
+    VkMemoryRequirements memReqs;
+
+    VkResult err;
+    void *data;
+
+    // Generate index buffer
+    //	Setup
+    VkBufferCreateInfo indexbufferInfo = {};
+    indexbufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    indexbufferInfo.pNext = NULL;
+    indexbufferInfo.size = indexBufferSize;
+    indexbufferInfo.usage = VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+    indexbufferInfo.flags = 0;
+    // Copy index data to VRAM
+    //memset(&m_indices, 0, sizeof(m_indices));
+    err = vkCreateBuffer(device, &indexbufferInfo, nullptr, &m_pMeshBuffer->faceSelectIndices.buf);
+    assert(!err);
+    vkGetBufferMemoryRequirements(device, m_pMeshBuffer->faceSelectIndices.buf, &memReqs);
+    memAlloc.allocationSize = memReqs.size;
+    getMemoryType(deviceMemoryProperties, memReqs.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT, &memAlloc.memoryTypeIndex);
+    err = vkAllocateMemory(device, &memAlloc, nullptr, &m_pMeshBuffer->faceSelectIndices.mem);
+    assert(!err);
+    err = vkMapMemory(device, m_pMeshBuffer->faceSelectIndices.mem, 0, indexBufferSize, 0, &data);
+    assert(!err);
+    memcpy(data, m_faceSelectBuffer.data(), indexBufferSize);
+    vkUnmapMemory(device, m_pMeshBuffer->faceSelectIndices.mem);
+    err = vkBindBufferMemory(device, m_pMeshBuffer->faceSelectIndices.buf, m_pMeshBuffer->faceSelectIndices.mem, 0);
+    assert(!err);
+    m_pMeshBuffer->faceSelectCount = m_indexBuffer.size();
 }
 
 void Node::buildEdge(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)

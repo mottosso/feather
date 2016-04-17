@@ -82,6 +82,7 @@ namespace feather
                     VkPipeline wire;
                     VkPipeline point;
                     VkPipeline shade;
+                    VkPipeline faceselect;
                 } m_meshPipeline;
 
                 struct {
