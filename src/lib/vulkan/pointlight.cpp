@@ -68,7 +68,3 @@ void PointLight::updateVertices(VkDevice device, VkPhysicalDeviceMemoryPropertie
     buildVertex(device, deviceMemoryProperties);
 }
 
-void PointLight::loadShaders()
-{
-
-}

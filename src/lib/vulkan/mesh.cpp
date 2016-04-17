@@ -147,7 +147,3 @@ void Mesh::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties devi
     buildVertex(device, deviceMemoryProperties);
 }
 
-void Mesh::loadShaders()
-{
-
-}
