@@ -159,7 +159,7 @@ void Pipelines::bindMesh(VkDevice device, VkCommandBuffer buffer, Node* node, Vk
     vkCmdBindIndexBuffer(buffer, static_cast<Mesh*>(node)->buffer()->edges.buf, 0, VK_INDEX_TYPE_UINT32);
 
     // set line width
-    vkCmdSetLineWidth(buffer, 2.0);
+    vkCmdSetLineWidth(buffer, 4.0);
 
     // Shading
     vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_meshPipeline.wire);
