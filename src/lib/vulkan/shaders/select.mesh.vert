@@ -21,9 +21,22 @@ layout (binding = 0) uniform UBO
         int object;
 } ubo;
 
+layout (location = 0) out vec3 outNormal;
+layout (location = 1) out vec2 outUV;
 layout (location = 2) out vec3 outColor;
+layout (location = 3) out vec3 outEyePos;
+layout (location = 4) out vec3 outLightVec;
+layout (location = 5) out ivec4 outId;
 
 void main() 
 {
+    outUV = inUV.st;
+    outNormal = inNormal;
+    outColor = inColor;
+    outId = inId;
+    outEyePos = vec3(ubo.model * vec4(inPosition,1.0));
+    vec4 lightPos = vec4(0.0, 0.0, 0.0, 1.0) * ubo.model;
+    outLightVec = normalize(lightPos.xyz - outEyePos);
+
     gl_Position = ubo.projection * ubo.model * vec4(inPosition.xyz, 1.0);
 }

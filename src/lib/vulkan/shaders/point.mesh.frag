@@ -12,8 +12,8 @@ layout (location = 1) out ivec4 outSelection;
 
 void main() 
 {
-    if(inId.r == inPoint)
-        outColor = vec4(1,0,0,1);
+    if(inId.r == inPoint && inId.g == 0 && inId.b == 0)
+        outColor = vec4(1,0,1,1);
     else
         outColor = vec4(0,0,1,1);
     outSelection = inId;

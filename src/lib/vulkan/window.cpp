@@ -53,10 +53,10 @@ m_defaultClearColor({ { 0.325f, 0.325f, 0.325f, 1.0f } })
     m_mode = POINT | WIREFRAME | SHADED;
  
     // add the nodes
-    m_aNodes.push_back(new Axis());
-    m_aNodes.push_back(new Grid());
-    m_aNodes.push_back(new Mesh());
-    m_aNodes.push_back(new PointLight());
+    m_aNodes.push_back(new Axis(0));
+    m_aNodes.push_back(new Grid(1));
+    m_aNodes.push_back(new Mesh(2));
+    m_aNodes.push_back(new PointLight(3));
 
     // setup    
     initConnection();
@@ -1064,9 +1064,9 @@ void Window::updateUniformBuffers()
     m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
     m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
     m_uboVS.model = glm::rotate(m_uboVS.model, glm::radians(m_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-    m_uboVS.point = r;
-    m_uboVS.edge = g;
-    m_uboVS.face = b;
+    m_uboVS.p1 = r;
+    m_uboVS.p2 = g;
+    m_uboVS.p3 = b;
     m_uboVS.object = a;
 
     //m_uboVS.point_mode = (m_mode && POINT) ? true : false;
@@ -1118,9 +1118,9 @@ void Window::updateUniformBuffers()
     m_uboGS.model = m_uboVS.model;
     m_uboGS.projection = m_uboVS.projection;
     m_uboGS.mode = m_uboVS.mode;
-    m_uboGS.point = r;
-    m_uboGS.edge = g;
-    m_uboGS.face = b;
+    m_uboGS.p1 = r;
+    m_uboGS.p2 = g;
+    m_uboGS.p3 = b;
     m_uboGS.object = a;
 
     err = vkMapMemory(m_device, m_uniformDataGS.memory, 0, sizeof(m_uboGS), 0, (void **)&pData);
@@ -1128,6 +1128,7 @@ void Window::updateUniformBuffers()
     memcpy(pData, &m_uboGS, sizeof(m_uboGS));
     vkUnmapMemory(m_device, m_uniformDataGS.memory);
 
+    set_selection();
 }
 
 
@@ -1625,6 +1626,25 @@ void Window::viewChanged()
     updateUniformBuffers();
 }
 
+void Window::set_selection()
+{
+    for(auto node : m_aNodes){
+        switch(node->type())
+        {
+            case Node::Mesh:
+                if(node->id()==m_uboGS.object)
+                    static_cast<Mesh*>(node)->set_selection(
+                            m_device,
+                            m_deviceMemoryProperties,
+                            m_uboGS.p1,
+                            m_uboGS.p2,
+                            m_uboGS.p3
+                            );
+                break;
+        }
+    }
+}
+
 void Window::nodeChanged()
 {
     // update the vertex buffer
@@ -1647,7 +1667,7 @@ void Window::nodeChanged()
                 case Node::Mesh:
                     static_cast<Mesh*>(node)->updateVertices(m_device,m_deviceMemoryProperties,step);
                     vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<Mesh*>(node)->buffer()->vertices.buf, offsets);
-                break;
+                   break;
                 case Node::Light:
                     static_cast<PointLight*>(node)->updateVertices(m_device,m_deviceMemoryProperties);
                     vkCmdBindVertexBuffers(m_drawCommandBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &static_cast<PointLight*>(node)->buffer()->vertices.buf, offsets);

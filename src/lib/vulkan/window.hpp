@@ -117,6 +117,7 @@ namespace feather
 
                 void keyPressed(uint32_t keyCode);
                 void viewChanged();
+                void set_selection();
                 void nodeChanged();
                 void render();
                 void draw();
@@ -195,9 +196,9 @@ namespace feather
                     glm::mat4 model;
                     int mode;
                     // current selected components
-                    int point;
-                    int edge;
-                    int face;
+                    int p1;
+                    int p2;
+                    int p3;
                     int object;
                 } m_uboVS, m_uboGS;
 

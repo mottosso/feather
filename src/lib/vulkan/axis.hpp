@@ -37,7 +37,7 @@ namespace feather
         class Axis : public Node
         {
             public:
-                Axis();
+                Axis(uint32_t _id);
                 ~Axis();
                 void prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
                 void updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, float step=1.0);

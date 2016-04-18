@@ -25,7 +25,7 @@
 
 using namespace feather::vulkan;
 
-Grid::Grid() : Node(Node::Grid)
+Grid::Grid(uint32_t _id) : Node(Node::Grid,_id)
 {
 
 }

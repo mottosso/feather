@@ -25,7 +25,7 @@
 
 using namespace feather::vulkan;
 
-PointLight::PointLight() : Node(Node::Light)
+PointLight::PointLight(uint32_t _id) : Node(Node::Light,_id)
 {
 
 }
@@ -39,10 +39,10 @@ void PointLight::build()
 {
     m_vertexBuffer.clear();
     m_indexBuffer.clear();
-    m_vertexBuffer.push_back({{1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f},{1,0,0,2}});
-    m_vertexBuffer.push_back({{-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f},{2,0,0,2}});
-    m_vertexBuffer.push_back({{-1.0f,1.0f,3.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},{3,0,0,2}});
-    m_vertexBuffer.push_back({{1.0f,1.0f,3.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},{4,0,0,2}});
+    m_vertexBuffer.push_back({{1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f},{1,0,0,m_id}});
+    m_vertexBuffer.push_back({{-1.0f,1.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,0.0f},{2,0,0,m_id}});
+    m_vertexBuffer.push_back({{-1.0f,1.0f,3.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},{3,0,0,m_id}});
+    m_vertexBuffer.push_back({{1.0f,1.0f,3.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{0.0f,0.0f,1.0f},{4,0,0,m_id}});
     m_indexBuffer = {{0},{1},{2},{0},{2},{3}};
     m_edgeBuffer = {{0},{1},{1},{2},{2},{3},{3},{0}};
 }
@@ -64,7 +64,7 @@ void PointLight::updateVertices(VkDevice device, VkPhysicalDeviceMemoryPropertie
 
     //build();
 
-    m_vertexBuffer.at(0)={{1.0f*step,1.0f*step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f},{1,3,3,2}};
+    m_vertexBuffer.at(0)={{1.0f*step,1.0f*step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,0.0f,0.0f},{1,3,3,m_id}};
     buildVertex(device, deviceMemoryProperties);
 }
 

@@ -25,7 +25,7 @@
 
 using namespace feather::vulkan;
 
-Node::Node(Node::Type type) : m_type(type)
+Node::Node(Node::Type _type, uint32_t _id) : m_id(_id),m_type(_type)
 {
     m_pMeshBuffer = new MeshBuffer();
 }
@@ -35,6 +35,99 @@ Node::~Node()
 {
 
 }
+
+uint32_t Node::face(uint32_t p1, uint32_t p2, uint32_t p3)
+{
+    // Start at 0 and skip by three until a match is found.
+    // The fourth number is id
+    // For now we are using known face ids but later the
+    // mesh will be crossed reference.
+    for(int i=0; i < m_faceIds.size(); i+=4){
+        if(
+                m_faceIds[i] == (p1-1) 
+                && m_faceIds[i+1] == (p2-1)
+                && m_faceIds[i+2] == (p3-1)
+          )
+            return m_faceIds[i + 3];
+    }
+
+    return 0;    
+}
+
+
+void Node::set_selection(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t face)
+{
+    std::cout << "set selection " << face << std::endl;
+
+    // if face id is 0, there is no face selected
+    if(!face)
+    {
+        // If I clear out the faceSelectBuffer it will crash the program
+        /*
+        // rebuild the indics buffer
+        vkDestroyBuffer(device, m_pMeshBuffer->indices.buf, nullptr);
+        vkFreeMemory(device, m_pMeshBuffer->indices.mem, nullptr);
+
+        // rebuild the indics buffer
+        vkDestroyBuffer(device, m_pMeshBuffer->faceSelectIndices.buf, nullptr);
+        vkFreeMemory(device, m_pMeshBuffer->faceSelectIndices.mem, nullptr);
+
+        m_indexBuffer.clear();
+        m_faceSelectBuffer.clear();
+
+        for(int i=0; i < m_faceIds.size(); i+=3){
+            m_indexBuffer.push_back(m_faceIds[i]);
+            m_indexBuffer.push_back(m_faceIds[i+1]);
+            m_indexBuffer.push_back(m_faceIds[i+2]);
+        }
+
+        buildIndex(device, deviceMemoryProperties);
+        buildFaceSelect(device, deviceMemoryProperties);
+        */
+        return;
+    }
+
+    // rebuild the indics buffer
+    vkDestroyBuffer(device, m_pMeshBuffer->indices.buf, nullptr);
+    vkFreeMemory(device, m_pMeshBuffer->indices.mem, nullptr);
+
+    // rebuild the indics buffer
+    vkDestroyBuffer(device, m_pMeshBuffer->faceSelectIndices.buf, nullptr);
+    vkFreeMemory(device, m_pMeshBuffer->faceSelectIndices.mem, nullptr);
+
+    // rebuilt both the index and selection buffers
+    m_indexBuffer.clear();
+    m_faceSelectBuffer.clear();
+    for(int i=3; i < m_faceIds.size(); i+=4){
+        if(m_faceIds[i] == face){
+            m_faceSelectBuffer.push_back(m_faceIds[i-3]);
+            m_faceSelectBuffer.push_back(m_faceIds[i-2]);
+            m_faceSelectBuffer.push_back(m_faceIds[i-1]);
+        }else{
+            m_indexBuffer.push_back(m_faceIds[i-3]);
+            m_indexBuffer.push_back(m_faceIds[i-2]);
+            m_indexBuffer.push_back(m_faceIds[i-1]);
+        }
+    }
+    
+    // rebuild the indics buffer
+    //vkDestroyBuffer(device, m_pMeshBuffer->indices.buf, nullptr);
+    //vkFreeMemory(device, m_pMeshBuffer->indices.mem, nullptr);
+    buildIndex(device, deviceMemoryProperties);
+ 
+    // rebuild the indics buffer
+    //vkDestroyBuffer(device, m_pMeshBuffer->faceSelectIndices.buf, nullptr);
+    //vkFreeMemory(device, m_pMeshBuffer->faceSelectIndices.mem, nullptr);
+    buildFaceSelect(device, deviceMemoryProperties);
+}
+
+
+void Node::set_selection(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t p1, uint32_t p2, uint32_t p3)
+{
+    uint32_t id = face(p1,p2,p3);
+    set_selection(device, deviceMemoryProperties, id);
+}
+
 
 void Node::freeBuffer(VkDevice device)
 {
