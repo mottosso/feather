@@ -25,7 +25,7 @@
 
 using namespace feather::vulkan;
 
-Mesh::Mesh() : Node(Node::Mesh)
+Mesh::Mesh(uint32_t _id) : Node(Node::Mesh,_id)
 {
 
 }
@@ -62,16 +62,16 @@ void Mesh::build()
     // These values are set in the geometry shader and will pass on if the object is selected to the fragment shader.
 
     // front
-    m_vertexBuffer.push_back({{1.0f,2.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{1,0,0,1}});
-    m_vertexBuffer.push_back({{-1.0f,2.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{2,0,0,1}});
-    m_vertexBuffer.push_back({{-1.0f,0.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{3,0,0,1}});
-    m_vertexBuffer.push_back({{1.0f,0.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{4,0,0,1}});
+    m_vertexBuffer.push_back({{1.0f,2.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{1,0,0,m_id}});
+    m_vertexBuffer.push_back({{-1.0f,2.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{2,0,0,m_id}});
+    m_vertexBuffer.push_back({{-1.0f,0.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{3,0,0,m_id}});
+    m_vertexBuffer.push_back({{1.0f,0.0f,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{4,0,0,m_id}});
 
     // back
-    m_vertexBuffer.push_back({{1.0f,2.0f,-2.0f},{0.0f,0.0f,-1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{5,0,0,1}});
-    m_vertexBuffer.push_back({{-1.0f,2.0f,-2.0f},{0.0f,0.0f,-1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{6,0,0,1}});
-    m_vertexBuffer.push_back({{-1.0f,0.0f,-2.0f},{0.0f,0.0f,-1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{7,0,0,1}});
-    m_vertexBuffer.push_back({{1.0f,0.0f,-2.0f},{0.0f,0.0f,-1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{8,0,0,1}});
+    m_vertexBuffer.push_back({{1.0f,2.0f,-2.0f},{0.0f,0.0f,-1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{5,0,0,m_id}});
+    m_vertexBuffer.push_back({{-1.0f,2.0f,-2.0f},{0.0f,0.0f,-1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{6,0,0,m_id}});
+    m_vertexBuffer.push_back({{-1.0f,0.0f,-2.0f},{0.0f,0.0f,-1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{7,0,0,m_id}});
+    m_vertexBuffer.push_back({{1.0f,0.0f,-2.0f},{0.0f,0.0f,-1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{8,0,0,m_id}});
 
 
     // We can get the face id by using the returned point value matched up with the index value.
@@ -98,6 +98,8 @@ void Mesh::build()
         {6},{3},{2}
     };
 
+    // You need to added a selected face at the beginning
+    // of else the selected face will appear transparent
     m_faceSelectBuffer = {
         // front face
         {0},{1},{2},
@@ -123,6 +125,28 @@ void Mesh::build()
         {2},{6}
     };
 
+    m_faceIds = {
+        // front face
+        {0},{1},{2},{1},
+        {0},{2},{3},{1},
+        //back face
+        {5},{4},{7},{2},
+        {5},{7},{6},{2},
+        // left face
+        {4},{0},{3},{3},
+        {4},{3},{7},{3},
+        // right face
+        {1},{5},{6},{4},
+        {1},{6},{2},{4},
+        // top face
+        {4},{5},{1},{5},
+        {4},{1},{0},{5},
+        // bottom face
+        {6},{7},{3},{6},
+        {6},{3},{2},{6}
+    };
+
+
 }
 
 void Mesh::prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)
@@ -143,11 +167,7 @@ void Mesh::updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties devi
 
     //build();
 
-    m_vertexBuffer.at(0)={{1.0f*step,2.0f*step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{1,0,0,1}};
+    m_vertexBuffer.at(0)={{1.0f*step,2.0f*step,0.0f},{0.0f,0.0f,1.0f},{0.0f,0.0f},{1.0f,1.0f,1.0f},{1,0,0,m_id}};
     buildVertex(device, deviceMemoryProperties);
 }
 
-void Mesh::loadShaders()
-{
-
-}

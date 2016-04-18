@@ -25,7 +25,7 @@
 
 using namespace feather::vulkan;
 
-Axis::Axis() : Node(Node::Axis)
+Axis::Axis(uint32_t _id) : Node(Node::Axis,_id)
 {
 
 }

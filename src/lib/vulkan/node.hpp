@@ -45,6 +45,11 @@ namespace feather
             uint32_t indexCount;
             uint32_t faceSelectCount;
             uint32_t edgeCount;
+
+        };
+
+        struct TriangleIndic {
+            uint32_t p[3];
         };
 
         struct Vertex {
@@ -60,7 +65,7 @@ namespace feather
             public:
                 enum Type { Null, Axis, Grid, Camera, Light, Mesh };
 
-                Node(Type type=Null);
+                Node(Type _type=Null, uint32_t _id=0);
                 ~Node();
                 virtual void prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties)=0;
                 virtual void updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, float step=1.0)=0;
@@ -68,59 +73,27 @@ namespace feather
                 MeshBuffer* buffer() { return m_pMeshBuffer; };
                 void freeBuffer(VkDevice device);
                 virtual void build()=0;
-                virtual void loadShaders()=0;
-                // wire
-                void setWireVertShader(std::string path) { m_wireVertShader = path; };
-                void setWireGeomShader(std::string path) { m_wireGeomShader = path; };
-                void setWireFragShader(std::string path) { m_wireFragShader = path; };
-                // point
-                void setPointVertShader(std::string path) { m_pointVertShader = path; };
-                void setPointGeomShader(std::string path) { m_pointGeomShader = path; };
-                void setPointFragShader(std::string path) { m_pointFragShader = path; };
-                // shade
-                void setShadeVertShader(std::string path) { m_shadeVertShader = path; };
-                void setShadeFragShader(std::string path) { m_shadeFragShader = path; };
-
-                // wire 
-                std::string wireVertShader() { return m_wireVertShader; };
-                std::string wireGeomShader() { return m_wireGeomShader; };
-                std::string wireFragShader() { return m_wireFragShader; };
-                // point
-                std::string pointVertShader() { return m_pointVertShader; };
-                std::string pointGeomShader() { return m_pointGeomShader; };
-                std::string pointFragShader() { return m_pointFragShader; };
-                // shaded
-                std::string shadeVertShader() { return m_shadeVertShader; };
-                std::string shadeFragShader() { return m_shadeFragShader; };
+                uint32_t id() { return m_id; };
+                uint32_t face(uint32_t p1, uint32_t p2, uint32_t p3); // return the id of the face
+                void set_selection(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t face);
+                void set_selection(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t p1, uint32_t p2, uint32_t p3);
 
             protected:
-                // node methods and members
                 VkBool32 getMemoryType(VkPhysicalDeviceMemoryProperties deviceMemoryProperties, uint32_t typeBits, VkFlags properties, uint32_t *typeIndex);
                 void buildVertex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
                 void buildIndex(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
                 void buildFaceSelect(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
                 void buildEdge(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
-
+                
+                uint32_t m_id;
                 Type m_type;
                 MeshBuffer* m_pMeshBuffer;
                 std::vector<Vertex> m_vertexBuffer;
                 std::vector<uint32_t> m_indexBuffer;
                 std::vector<uint32_t> m_faceSelectBuffer;
                 std::vector<uint32_t> m_edgeBuffer;
-
-                // wire
-                std::string m_wireVertShader;
-                std::string m_wireGeomShader;
-                std::string m_wireFragShader;
-
-                // point
-                std::string m_pointVertShader;
-                std::string m_pointGeomShader;
-                std::string m_pointFragShader;
-
-                // shaded
-                std::string m_shadeVertShader;
-                std::string m_shadeFragShader;
+                std::vector<uint32_t> m_faceIds; 
+                
          };
 
     } // namespace vulkan

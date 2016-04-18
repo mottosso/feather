@@ -37,7 +37,7 @@ namespace feather
         class Grid : public Node
         {
             public:
-                Grid();
+                Grid(uint32_t _id);
                 ~Grid();
                 void prepareVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties);
                 void updateVertices(VkDevice device, VkPhysicalDeviceMemoryProperties deviceMemoryProperties, float step=1.0);

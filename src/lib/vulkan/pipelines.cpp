@@ -159,7 +159,7 @@ void Pipelines::bindMesh(VkDevice device, VkCommandBuffer buffer, Node* node, Vk
     vkCmdBindIndexBuffer(buffer, static_cast<Mesh*>(node)->buffer()->edges.buf, 0, VK_INDEX_TYPE_UINT32);
 
     // set line width
-    vkCmdSetLineWidth(buffer, 2.0);
+    vkCmdSetLineWidth(buffer, 4.0);
 
     // Shading
     vkCmdBindPipeline(buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_meshPipeline.wire);
@@ -395,10 +395,10 @@ void Pipelines::prepare(VkDevice device, VkRenderPass renderPass, VkPipelineVert
     assert(!err);
 
     // MESH FACE SELECT
-    pipelineCreateInfo.stageCount = 2;
+    pipelineCreateInfo.stageCount = 3;
     shaderStages[0] = loadShader(device, "shaders/spv/select.mesh.vert.spv", VK_SHADER_STAGE_VERTEX_BIT);
     shaderStages[1] = loadShader(device, "shaders/spv/select.mesh.frag.spv", VK_SHADER_STAGE_FRAGMENT_BIT);
-    //shaderStages[2] = loadShader(device, "shaders/spv/shade.mesh.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
+    shaderStages[2] = loadShader(device, "shaders/spv/shade.mesh.geom.spv", VK_SHADER_STAGE_GEOMETRY_BIT);
     err = vkCreateGraphicsPipelines(device, m_pipelineCache, 1, &pipelineCreateInfo, nullptr, &m_meshPipeline.faceselect);
     assert(!err);
 

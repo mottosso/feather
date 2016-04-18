@@ -31,7 +31,6 @@ layout (location = 2) out vec3 outColor;
 layout (location = 3) out vec3 outEyePos;
 layout (location = 4) out vec3 outLightVec;
 layout (location = 5) out ivec4 outId;
-layout (location = 6) out int outSelected;
 
 void main() 
 {
@@ -44,22 +43,11 @@ void main()
     gl_PrimitiveID = gl_PrimitiveIDIn;
     gl_Position = p0;
  
-    if(ubo.p1 == inId[0].r)
-        outSelected = 1;
-    else
-        outSelected = 0; 
- 
     outNormal = inNormal[0];
     outUV = inUV[0];
     outEyePos = inEyePos[0];
     outLightVec = inLightVec[0];
-   //if(ubo.face == inId[0].b)
-    /*
-    if(ubo.face == gl_PrimitiveIDIn)
-        outColor = vec3(1.0, 0.0, 0.0);
-    else
-    */
-        outColor = inColor[0];
+    outColor = inColor[0];
     outId.r = inId[0].r;
     outId.g = inId[1].r;
     outId.b = inId[2].r;
@@ -70,11 +58,6 @@ void main()
     gl_PrimitiveID = gl_PrimitiveIDIn;
     gl_Position = p1;
   
-    if(ubo.p2 == inId[1].r)
-        outSelected = 1;
-    else
-        outSelected = 0; 
- 
     outNormal = inNormal[1];
     outUV = inUV[1];
     outEyePos = inEyePos[1];
@@ -90,11 +73,6 @@ void main()
     gl_PrimitiveID = gl_PrimitiveIDIn;
     gl_Position = p2;
   
-    if(ubo.p3 == inId[2].r)
-        outSelected = 1;
-    else
-        outSelected = 0; 
- 
     outNormal = inNormal[2];
     outUV = inUV[2];
     outEyePos = inEyePos[2];

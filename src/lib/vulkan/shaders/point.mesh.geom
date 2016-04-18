@@ -23,7 +23,7 @@ layout (location = 2) out int outPoint;
 
 void main() 
 {
-    float pointSize = 6.0;
+    float pointSize = 10.0;
 
     vec3 p0 = gl_in[0].gl_Position.xyz;
     //vec3 p1 = gl_in[1].gl_Position.xyz;
